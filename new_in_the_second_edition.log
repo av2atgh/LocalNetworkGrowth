@@ -360,6 +360,88 @@ PREFACE IMPLICATIONS (for the rewrite at the end)
 
 
 -------------------------------------------------------------------------------
+2026-07-16 — Chapter 1, "Introduction": real data in "What the data demand"
+-------------------------------------------------------------------------------
+
+The 1st-edition section of this name asserted, on citations alone, that real
+networks fall into two families. It now measures four of them and shows the reader.
+Networks come from the Netzschleuder repository (networks.skewed.com) through the
+graph-tool interface, and are exactly the systems the section already named:
+
+  Internet (AS)            internet_as                  n=22,963   technological
+  Gnutella                 gnutella/31                  n=62,561   technological
+  Yeast proteins           interactome_yeast            n=1,458    biological
+  cond-mat co-authorship   arxiv_collab/cond-mat-2005   n=36,458   social
+
+NEW: Table 1.1 — the small world in two numbers per network. Average distance is
+4-7 hops in networks of up to sixty thousand nodes, and every network is far more
+cliquish than chance. Two nulls are given, and the difference between them is the
+point:
+  * <c>_ER, a random network of the same n and <k> — the comparison Watts and
+    Strogatz made, and the one the text already invoked. Real networks beat it by
+    40x to 2500x.
+  * <c>_rew, the same network with links shuffled but every degree held fixed —
+    the null the rest of the book insists on. Real networks still beat it, by 2x
+    to 333x. So the cliquishness is not merely a shadow of the degree distribution.
+
+NEW: Figure 1.6 — p(k), <c>(k) and <k_nn>(k) for all four. The clustering
+hierarchy is visible in all four (measured slopes -0.6 to -1.3, against the
+advertised k^-1), and the two families part company on <k_nn>(k) and ONLY there:
+falling for Internet/Gnutella/yeast, rising for co-authorship. The assortativity
+r says it in one number: -0.052, -0.036, -0.034, and +0.055.
+
+HONESTY NOTES CARRIED IN THE TEXT
+
+  * Gnutella is named as a partial exception: its protocol caps how many peers a
+    client holds, so its tail is cut short and it is the least scale-free of the
+    four (fitted tail exponent ~5.6, outside the "typically between 2 and 3" the
+    section states two pages earlier). The text says so rather than quietly
+    dropping the network — it is one the section itself names.
+  * The measured <c>(k) slopes (-0.6 to -1.3) bracket but do not equal the
+    advertised -1. The text says "of about the advertised steepness". This also
+    supports the caution already in section 1.2 (soffer2005) that part of the
+    decay is a by-product of degree correlations rather than modular design.
+
+TWO MEASUREMENT BUGS CAUGHT AND FIXED BEFORE THEY REACHED THE PAGE
+
+  1. <c>(k) is undefined for k=1 (a degree-1 node has no neighbour pairs, so
+     c = 0/0); graph-tool returns 0. Since degree-1 nodes dominate the small-k
+     bins, including them dragged the low-k end to zero and made <c>(k) appear to
+     RISE with degree in three of the four networks — the exact opposite of the
+     hierarchy the chapter claims. Restricting to k>=2 flips every slope negative.
+     Had this gone unnoticed the figure would have contradicted the book.
+  2. The log-binned p(k) was averaging counts per distinct degree rather than
+     forming a density. In the far tail every degree occurs exactly once, so the
+     mean is pinned at 1 and p(k) went FLAT above k~200 instead of falling.
+     Dividing by the bin width fixes it; the Internet now falls over four decades.
+
+  A third trap avoided: the textbook configuration-model clustering formula,
+  (<k^2>-<k>)^2/(n<k>^3), returns 0.70 for the Internet — ABOVE its measured 0.23,
+  and near 1, which is nonsense. The formula assumes <k^2> converges, and at
+  gamma ~ 2 it does not. The table therefore reports a MEASURED rewiring (0.125),
+  which puts the Internet above its null where the formula put it below. The
+  formula is still computed and kept in the CSV as c_conf_formula, for the record.
+
+PIPELINE
+
+  figs/fetch_intro_data.py measures (needs graph-tool + zstandard + a network
+  connection) and writes data/intro_summary.csv and data/intro_curves.csv;
+  figs/mkfigs_intro.py plots from those CSVs alone. The split means the figure
+  stays reproducible for anyone without graph-tool, which is most people. The
+  script's docstring records the brew + venv recipe that makes graph-tool and
+  zstandard visible to one interpreter.
+
+PREFACE IMPLICATIONS (for the rewrite at the end)
+
+  * "The empirical data set the agenda throughout" is now closer to true: chapters
+    1, 6 and 7 carry data. Chapters 2-5 still have none. If they stay that way, the
+    preface should say the data appear at the start and at the end rather than
+    throughout.
+  * The Introduction now opens the book's empirical case rather than deferring it,
+    which strengthens the "held up against real data" promise in the plan-of-the-
+    book section.
+
+-------------------------------------------------------------------------------
 NOTE FOR THE AUTHOR (not a book change)
 -------------------------------------------------------------------------------
 
