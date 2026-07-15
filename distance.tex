@@ -54,16 +54,39 @@ whole chapter is about one question: how fast does $\langle\mu\rangle$ rise as t
 network gets bigger, and does that rate betray whether the network was grown by a
 local rule?
 
-Three growth rules will do all the work, and we have met them all before. The
-\emph{local-search} model $LS(n,m)$ of Chapter~\ref{ch:search}: a newcomer starts
-at a random node, takes an $m$-step walk, and links to every node it visits. The
-\emph{duplication--split} model $DS(n,q)$ of Chapter~\ref{ch:projects}: with
-probability $q$ a randomly chosen node is copied along with all its links,
-otherwise one of its links is split in two. And the \emph{bubble} model
-$BB(n,L)$ of the previous chapter: a chain of $L$ new nodes is attached by its two
-ends to the two ends of an existing link, closing a fresh cycle of length $L+2$.
-Against these we set the Barab\'asi--Albert model $BA(n,m)$, which is
-\emph{not} local: its newcomers weigh the whole network.
+Four growth rules will do all the work, and we have met them all before. Their
+definitions matter here more than they have so far, because we are about to
+compute their exponents, so let us state them exactly.
+
+\emph{Local search}, $LS(n,m)$, the search rule of Chapter~\ref{ch:search} in
+undirected form. Start from two connected nodes. To add a node, pick an existing
+node at random, take an $m$-step random walk from it, and link the newcomer to
+every node the walk visited. It carries preferential attachment because the chance
+of being visited, beyond the entry node, is proportional to degree; and it makes at
+least one triangle at every step, between the entry point and the first neighbor
+visited. For $m=1$ it \emph{is} the triadic-closure rule of
+Chapter~\ref{ch:friends}.
+
+\emph{Duplication--split}, $DS(n,q)$, the undirected cousin of the project rule of
+Chapter~\ref{ch:projects}. Start from a cycle of four nodes, so that no node has
+degree below two and no cycle is shorter than four. To add a node $i$, pick an
+existing node $j$ at random. With probability $q$, make $i$ a duplicate of $j$,
+linking $i$ to every neighbor of $j$. Otherwise pick a random neighbor $k$ of $j$
+and \emph{split} the link: delete $(j,k)$ and create $(i,j)$ and $(i,k)$. It
+carries preferential attachment because the chance that a node has a neighbor
+duplicated is proportional to its degree. Duplication makes no triangles and
+splitting destroys any that might form; its motif is the square.
+
+The \emph{bubble} model, $BB(n,L)$. Start from a cycle of $L+2$ nodes. At each
+step add a chain of $L$ new nodes and attach the two ends of the chain to the two
+ends of a randomly chosen existing link, closing a fresh cycle of length $L+2$. It
+carries preferential attachment because the chance of sitting at the end of the
+chosen link is proportional to degree. $BB(n,1)$ is the Dorogovtsev--Mendes rule.
+
+Against these we set the \emph{Barab\'asi--Albert} model $BA(n,m)$: start from a
+complete graph of $m+1$ nodes, and let every newcomer attach $m$ links to nodes
+chosen from the \emph{whole} network with probability proportional to degree. It
+is our non-local control.
 
 \section{The baseline: random networks}
 
@@ -81,48 +104,162 @@ node by following one of its links --- its degree, less the link you came in on.
 It is the natural branching factor of a network: from where you stand, $c_2$ is
 how many ways the path onward can continue.
 
-\begin{calculation}{how many shortest paths a random network has}
-Take a random network in which the chance that two nodes are linked depends only
-on their degrees. Fix two nodes and count the paths of length $d$ between them.
-There are about $n^{d-1}$ candidate paths --- that many ways to pick the ordered
-intermediaries --- and each survives only if all $d$ of its links happen to be
-present. Arriving at a node along a link, the onward branching is $c_2$ on
-average, so the expected number of realized paths of length $d$ is
+The cleanest way to see where Eq.~\eqref{eq:path-c2} comes from is to do the
+simplest case first --- the classic random graph of Erd\H{o}s and R\'enyi, in which
+every one of the $\binom{n}{2}$ possible links is present with the same probability
+$p$ --- and then repair it for a general degree distribution.
+
+\begin{calculation}{counting the shortest paths of a random graph}
+Write $c=np$ for the mean degree and $D=\ln n/\ln c$ for the typical distance
+between two nodes, and assume $c>1$ so the graph is connected. Fix two nodes. A
+path of length $d$ between them uses $d-1$ intermediate nodes, in order, drawn from
+the remaining $n-2$, so the number of \emph{candidate} paths is
 \begin{equation}
-  \langle M_d\rangle \approx c_1 c_2^{\,d-D-1},
+  m_d = (n-2)(n-3)\cdots(n-d) \approx n^{\,d-1}
+  \label{eq:path-md}
+\end{equation}
+for $d\ll n$. Each candidate is \emph{realized} only if all $d$ of its links happen
+to be present, which has probability $p^d$; treating the candidates as independent,
+the number realized is binomial, with mean
+\begin{equation}
+  \langle M_d\rangle = m_d\,p^{d} \approx \frac{(np)^{d}}{n} = c^{\,d-D}.
   \label{eq:path-Md}
 \end{equation}
-where $c_1=\langle k\rangle$ and $D = \ln n/\ln c_2$ is the typical distance.
-The shortest paths are the ones at the first $d$ where any path exists at all, so
-we must weight $\langle M_d\rangle$ by the probability $F_{d-1}$ that nothing
-shorter exists. Treating the paths as independent, $F_d \approx \exp(-\langle
-M_d\rangle)$, and
+The shortest paths are those at the smallest $d$ for which any path exists at all,
+so we must weight $\langle M_d\rangle$ by the probability $F_{d-1}$ that nothing
+shorter exists:
 \begin{equation}
-  \langle\mu\rangle \approx \sum_d \langle M_d\rangle\, F_{d-1}.
+  \langle\mu\rangle = \sum_{d}\langle M_d\rangle\,F_{d-1}.
   \label{eq:path-mu-sum}
 \end{equation}
-The summand rises geometrically in $d$ and is then cut off super-exponentially by
-$F_{d-1}$, so it peaks sharply one hop beyond $D$. Evaluating it there leaves
+Since $\Pr(M_d=0)=(1-p^d)^{m_d}\approx e^{-\langle M_d\rangle}$ for $p\ll1$,
 \begin{equation}
-  \langle\mu\rangle \approx \frac{c_2}{e},
-  \label{eq:path-mf}
+  F_d = \prod_{k=1}^{d}\Pr(M_k=0) = \exp\Big(-\sum_{k=1}^{d}\langle M_k\rangle\Big).
+  \label{eq:path-Fsum}
 \end{equation}
-the factor $e$ arriving from the value of $x e^{-x}$ at its peak. The whole
-distribution of degrees enters through the single number $c_2$.
+The sum in the exponent is a geometric series of ratio $c>1$, so it is dominated by
+its last term, $\sum_{k\le d}\langle M_k\rangle\approx c^{\,d-D}$, and
+\begin{equation}
+  F_d \approx \exp\big(-c^{\,d-D}\big).
+  \label{eq:path-Fd}
+\end{equation}
+Substituting Eqs.~\eqref{eq:path-Md} and \eqref{eq:path-Fd} into
+Eq.~\eqref{eq:path-mu-sum},
+\begin{equation}
+  \langle\mu\rangle \approx \sum_{d} c^{\,d-D}\,\exp\big(-c^{\,d-D-1}\big).
+  \label{eq:path-ersum}
+\end{equation}
+The summand is the function $x e^{-x/c}$ evaluated along a geometric ladder: it
+climbs by a factor $c$ per hop while $d<D$, and is then cut down
+super-exponentially. It therefore peaks sharply, one hop beyond the typical
+distance, at $d=D+1$, and evaluating it there leaves
+\begin{equation}
+  \langle\mu\rangle \approx \frac{c}{e} + O(1),
+  \label{eq:path-mfER}
+\end{equation}
+the $e$ being simply the value of $x e^{-x}$ at its maximum.
 \end{calculation}
 
-Equation~\eqref{eq:path-mf} is the baseline, and it is worth pausing on how much
-it explains. The multiplicity of a random network is simply its branching factor,
-divided by $e$. The classic Erd\H{o}s--R\'enyi graph, in which every pair is
-linked with a fixed probability, is the special case $c_2=\langle k\rangle$: its
-multiplicity is a constant when the graph is sparse, and grows in proportion to
-$n$ when it is dense, recovering a result of \citet{dong2025}. But real networks
-are sparse and hub-dominated, and there everything hinges on how $c_2$ behaves as
-the network grows,
-and for a scale-free network, $p(k)\sim k^{-\gamma}$, that depends entirely on the
-exponent $\gamma$. Since $c_2$ involves $\langle k^2\rangle$, it is controlled by
-the hubs, and the largest degree in a network of $n$ nodes grows like
-$k_{\max}\sim n^{1/\gamma}$. Three regimes follow:
+Equation~\eqref{eq:path-mfER} already tells us three things. If the graph is
+\emph{sparse} --- $c$ fixed as $n$ grows, which is the case for every real network
+--- the multiplicity is a \emph{constant}. If it is \emph{minimally connected},
+$c=b\ln n$, the multiplicity grows as $(b/e)\ln n$. And if it is \emph{dense},
+$c\sim n$, it grows in proportion to $n$, recovering a result of
+\citet{dong2025}. But a real network is sparse \emph{and} hub-dominated, and an
+Erd\H{o}s--R\'enyi graph is neither. We need the same calculation for an arbitrary
+degree distribution.
+
+\begin{calculation}{the same count for any degree distribution}
+Let the degrees follow $\pi_k$, with mean $c_1=\sum_k \pi_k k$ and excess degree
+$c_2=\sum_k \pi_k k(k-1)/c_1$. (We write $\pi_k$ rather than $p_k$ here because $p$
+is already the probability that a link exists.) The calculation runs exactly as
+before; only the probability that the next link exists changes.
+
+Build a candidate path node by node. The first step is from a node picked at
+random to another node picked at random, which are linked with probability
+$p_1=c_1/n$, with associated distance $D_1=\ln n/\ln c_1$. Every step after the
+first is different, because we now stand at the \emph{end of a link}, and a node
+reached by following a link is not a typical node: its degree is distributed as
+$k\pi_k/c_1$, and one of those links is the one we arrived on, leaving $k-1$. The
+next node is picked at random and has degree $k'$ with probability $\pi_{k'}$; the
+chance the two are linked is $kk'/(nc_1)$, which on averaging over both gives
+\begin{equation}
+  p_2 = \frac{c_2 c_1}{n c_1} = \frac{c_2}{n},
+  \qquad D_2 = \frac{\ln n}{\ln c_2}.
+  \label{eq:path-p2}
+\end{equation}
+So a path of length $d$ costs one factor of $p_1$ and $d-1$ factors of $p_2$, and
+Eqs.~\eqref{eq:path-Md} and \eqref{eq:path-Fd} become
+\begin{equation}
+  \langle M_d\rangle \approx c_1 c_2^{\,d-D_2-1},
+  \qquad
+  F_d \approx \exp\big(-c_1 c_2^{\,d-D_2-1}\big),
+  \label{eq:path-Mdk}
+\end{equation}
+for $d>1$. Substituting into Eq.~\eqref{eq:path-mu-sum},
+\begin{equation}
+  \langle\mu\rangle \approx \sum_d c_1 c_2^{\,d-D_2-1}
+  \exp\big(-c_1 c_2^{\,d-D_2-2}\big),
+  \label{eq:path-ksum}
+\end{equation}
+whose summand again peaks sharply, now where $c_1 c_2^{\,d-D_2-2}=1$, leaving
+\begin{equation}
+  \langle\mu\rangle \approx \frac{c_2}{e} + O(1).
+  \label{eq:path-mf}
+\end{equation}
+For an Erd\H{o}s--R\'enyi graph $c_2=c_1=c$ and we recover
+Eq.~\eqref{eq:path-mfER}.
+\end{calculation}
+
+Equation~\eqref{eq:path-mf} is the baseline, and it is worth pausing on how much it
+explains. The multiplicity of a random network is simply its branching factor,
+divided by $e$. The mean degree does not appear; the whole distribution of degrees
+enters through the single number $c_2$. And notice what happened between the two
+boxes: $c_1$ was replaced by $c_2$ everywhere it mattered, because after the first
+step a path is always standing at the end of a link, where the branching is the
+\emph{excess} degree and not the degree.
+
+Everything now hinges on how $c_2$ behaves as the network grows, and since $c_2$
+involves $\langle k^2\rangle$, that is a question about hubs.
+
+\begin{calculation}{how the excess degree grows with size}
+Take a scale-free network, $p(k)\sim k^{-\gamma}$. For $\gamma>3$ the second moment
+$\langle k^2\rangle$ converges, so $c_2$ tends to a constant and there is nothing
+to discuss. For $\gamma\le3$ it diverges, and the divergence is cut off only by the
+largest degree actually present. That largest degree follows from asking which $k$
+is rare enough to appear about once in a network of $n$ nodes, $p(k_{\max})=1/n$:
+\begin{equation}
+  k_{\max}\sim n^{1/\gamma}.
+  \label{eq:path-kmax}
+\end{equation}
+Now do the sum. For $\gamma=3$ the summand $k^2 p(k)\sim1/k$, so
+\begin{equation}
+  c_2 \sim \sum_{k=1}^{k_{\max}}\frac{1}{k} \sim \ln k_{\max} \sim \ln n,
+  \label{eq:path-c2log}
+\end{equation}
+the logarithm of the size. For $2<\gamma<3$ the sum is dominated by its upper end,
+$c_2\sim k_{\max}^{3-\gamma}$, and using Eq.~\eqref{eq:path-kmax},
+\begin{equation}
+  c_2 \sim n^{-1+3/\gamma}.
+  \label{eq:path-c2pow}
+\end{equation}
+It is worth doing the $\gamma=3$ case explicitly, since three of our models share
+it. There $p_k = A\,\Gamma(k)/\Gamma(3+k) = A/[(2+k)(1+k)k]$, so
+\begin{equation}
+  \langle k\rangle \sim A\sum_{k\ge2}\frac{1}{(2+k)(1+k)}
+  = A\sum_{k\ge2}\Big(\frac{1}{k+1}-\frac{1}{k+2}\Big) \sim \frac{A}{3},
+  \label{eq:path-k1exp}
+\end{equation}
+a telescoping sum that converges, while
+\begin{equation}
+  \langle k^2\rangle \sim A\sum_{k=1}^{k_{\max}}\frac{1}{k}
+  \sim A\ln k_{\max} \sim \frac{A}{3}\ln n
+  \label{eq:path-k2exp}
+\end{equation}
+does not. Their ratio is $c_2\sim\ln n$, confirming Eq.~\eqref{eq:path-c2log}.
+\end{calculation}
+
+Feeding the three cases into Eq.~\eqref{eq:path-mf} gives the baseline in full:
 \begin{alignat}{2}
   \langle\mu\rangle &= a, &&\qquad \gamma>3,
   \label{eq:path-const}\\
@@ -132,26 +269,121 @@ $k_{\max}\sim n^{1/\gamma}$. Three regimes follow:
     &&\qquad 2<\gamma<3.
   \label{eq:path-power}
 \end{alignat}
-When $\gamma>3$ the second moment converges, $c_2$ tends to a constant, and the
-multiplicity \emph{stops growing altogether}. At $\gamma=3$ the second moment
-diverges logarithmically and the multiplicity creeps up like $\ln n$ --- about as
-slow as growth gets, since to add a fixed amount you must \emph{multiply} the
-size. Below $\gamma=3$ the hubs are heavy enough to drive a genuine power law.
-So there is no single random baseline: the bar that a local rule must clear is
-set by the degree distribution it happens to produce, and we must compare like
-with like.
+When $\gamma>3$ the multiplicity \emph{stops growing altogether}. At $\gamma=3$ it
+creeps up like $\ln n$ --- about as slow as growth gets, since to add a fixed amount
+you must \emph{multiply} the size --- and the predicted slope is not merely
+logarithmic but exactly $1/e$. Below $\gamma=3$ the hubs are heavy enough to drive
+a genuine power law. So there is no single random baseline: the bar that a local
+rule must clear is set by the degree distribution it happens to produce, and we
+must compare like with like.
 
-That is exactly what the simulations do (Figure~\ref{fig:mu-random}). Take a
-network grown by a local rule and shuffle its links at random while leaving every
-node's degree untouched --- the same configuration-model scramble used as a
-control in the previous chapter. The result keeps the degree distribution and
-destroys everything else; we mark it with a star. The randomized local-search
-network $LS(n,1)^*$ has $\gamma=5$, and its multiplicity duly flattens out. The
-randomized $DS(n,1/3)^*$ has $\gamma=3$, and creeps up logarithmically, close to
-the predicted slope $1/e$. The randomized $DS(n,2/5)^*$ has $\gamma=5/2$, and
-climbs as the predicted $n^{1/5}$. Plotted against $c_2$ rather than $n$, all of
-them --- and the Barab\'asi--Albert model with them --- collapse onto the single
-mean-field line $c_2/e$.
+\section{Which rule makes which exponent}
+
+That last sentence obliges us to know the exponent of every model in this chapter.
+Happily one calculation settles them all at once, because all four rules --- and
+the shuffled versions we shall compare them against --- attach in the same way: a
+node gains links at a rate that is affine in its degree.
+
+\begin{calculation}{one rate equation for every model}
+Let $n_k(n)$ be the expected number of nodes of degree $k$ once the network has
+grown to $n$ nodes. Suppose a node of degree $k$ gains a link at rate
+$(a+bk)/n$ --- a constant part $a$ and a preferential part $b$ --- and that the
+newcomer arrives either with degree $2$, with probability $c$, or as a duplicate of
+an existing node, at rate $d/n$. Then
+\begin{equation}
+\begin{split}
+  n_k(n+1) = n_k(n) &+ \frac{a+b(k-1)}{n}\,n_{k-1} - \frac{a+bk}{n}\,n_k \\
+  &+ c\,\delta_{k2} + \frac{d}{n}\,n_k .
+\end{split}
+\label{eq:path-rate}
+\end{equation}
+The first two terms are the traffic in and out of degree $k$; the last two account
+for the newcomer's own degree. This is mean field: the expectation after the step
+is computed from the expectations before it, ignoring the fluctuations of a single
+addition. Look for a steady state in which the shape of the distribution is fixed
+and only its size grows, $n_k(n)=n\,p_k$. Substituting and cancelling one power of
+$n$ gives a recursion in $k$ alone,
+\begin{equation}
+  p_k = \frac{\eta+k-1}{\nu+k}\,p_{k-1}
+  + \frac{c}{b}\,\frac{1}{\nu+k}\,\delta_{k2},
+  \qquad
+  \eta = \frac{a}{b},
+  \quad
+  \nu = \frac{1+a-d}{b},
+  \label{eq:path-pkrec}
+\end{equation}
+which unrolls into a ratio of Gamma functions,
+\begin{equation}
+  p_k = \frac{c}{b}\,\frac{\Gamma(2+\nu)}{\Gamma(2+\eta)}\,
+  \frac{\Gamma(k+\eta)}{\Gamma(k+1+\nu)} .
+  \label{eq:path-pk}
+\end{equation}
+(Check it by induction: it holds at $k=2$, and substituting $p_{k-1}$ from
+Eq.~\eqref{eq:path-pk} into Eq.~\eqref{eq:path-pkrec} returns $p_k$.) For
+$k\gg\max(\eta,\nu)$ the ratio of Gammas behaves as $k^{\eta-\nu-1}$, a power law
+$p_k\sim k^{-\gamma}$ with
+\begin{equation}
+  \gamma = 1 + \frac{1-d}{b} .
+  \label{eq:path-gamma}
+\end{equation}
+Only two of the four constants survive: the preferential rate $b$, and the
+duplication rate $d$.
+\end{calculation}
+
+Equation~\eqref{eq:path-gamma} is a small master key. Read off each rule's
+constants and its exponent falls out.
+
+For $BA(n,2)$ every newcomer brings two links and hands them out in proportion to
+degree, so $a=0$, $b=1/2$, $c=1$, $d=0$, and
+\begin{equation}
+  \gamma_{BA} = 3 .
+  \label{eq:path-gammaBA}
+\end{equation}
+For $LS(n,m)$ the walk lands on the entry node uniformly, which is the constant
+part $a=1$, and thereafter in proportion to degree, giving
+$b=m/\langle k\rangle=m/[2(m+1)]$ with $c=1$, $d=0$, so that
+\begin{equation}
+  \gamma_{LS} = \frac{3m+2}{m} .
+  \label{eq:path-gammaLS}
+\end{equation}
+For $DS(n,q)$ duplication is the only source of preference, $b=q$, and it is also
+the only way the newcomer copies a degree, $d=q$, with $a=0$ and $c=1-q$; then
+$\eta=0$, $\nu=-1+1/q$ and
+\begin{equation}
+  \gamma_{DS} = \frac{1}{q} .
+  \label{eq:path-gammaDS}
+\end{equation}
+For $BB(n,L)$ the chain's ends land on a random link, so $b=2/\langle
+k\rangle=1/(L+1)$ with $a=0$, $c=1$, $d=0$, $\eta=0$, $\nu=L+1$, and
+\begin{equation}
+  \gamma_{BB} = L+2 .
+  \label{eq:path-gammaBB}
+\end{equation}
+
+Two coincidences in this list are worth having. First, $DS(n,q)$ and $BB(n,L)$
+produce the \emph{same} degree distribution whenever $q=(L+2)^{-1}$ --- so any
+difference in their multiplicity cannot be blamed on their degrees. Second, and
+this is what makes the comparisons of the next section fair, $DS(n,1/3)$,
+$BB(n,1)$ and $BA(n,2)$ all sit at $\gamma=3$: three rules, one degree
+distribution, and --- as we are about to see --- three quite different
+multiplicities.
+
+And now the baseline can be made concrete. Take a network grown by a local rule and
+shuffle its links at random while leaving every node's degree untouched --- the same
+configuration-model scramble used as a control in the previous chapter. The result
+keeps the degree distribution and destroys everything else; we mark it with a star.
+By Eq.~\eqref{eq:path-gammaLS} the randomized local-search network $LS(n,1)^*$ has
+$\gamma=5$, and so by Eq.~\eqref{eq:path-const} its multiplicity must
+\emph{stop growing}; it duly flattens out (Figure~\ref{fig:mu-random}a). By
+Eq.~\eqref{eq:path-gammaDS} the randomized $DS(n,1/3)^*$ has $\gamma=3$, and creeps
+up logarithmically, close to the predicted slope $1/e$
+(Figure~\ref{fig:mu-random}b). The randomized $DS(n,2/5)^*$ has $\gamma=5/2$, for
+which Eq.~\eqref{eq:path-power} predicts $\alpha=3/\gamma-1=1/5$, and it climbs as
+$n^{1/5}$ (Figure~\ref{fig:mu-random}c). Plotted against $c_2$ rather than $n$, all
+of them --- and the Barab\'asi--Albert model with them --- collapse onto the single
+mean-field line $c_2/e$ of Eq.~\eqref{eq:path-mf} (Figure~\ref{fig:mu-random}d).
+Three regimes, one formula, and no fitted parameter anywhere except the additive
+constants.
 
 \begin{figure}[t]
 \centering
@@ -170,13 +402,13 @@ Eq.~\eqref{eq:path-mf}.}
 
 The Barab\'asi--Albert model deserves its own note, because it is a
 \emph{growing} network yet lands squarely on the random baseline. With $m=2$ it
-has $\gamma=3$, and its multiplicity creeps up logarithmically, exactly as its
-reshuffled cousins do. It has no local structure to lose: its newcomers attach
-across the whole graph and never consult a neighborhood. This echoes the previous
-chapter, where the very same model failed to develop communities. Lacking
-locality, it builds neither the modules nor the redundant paths, and on both
-counts it behaves as though its links had been shuffled at random.
-
+has $\gamma=3$ by Eq.~\eqref{eq:path-gammaBA}, and its multiplicity creeps up
+logarithmically, exactly as its reshuffled cousins do. It has no local structure to
+lose: its newcomers attach across the whole graph and never consult a neighborhood.
+This echoes the previous chapter, where the very same model failed to develop
+communities. Lacking locality, it builds neither the modules nor the redundant
+paths, and on both counts it behaves as though its links had been shuffled at
+random.
 \section{Local rules boost the multiplicity}
 
 Now run the same models \emph{without} shuffling, and compare each against its own
@@ -339,41 +571,105 @@ is not enough.}
 If randomness and locality together drive the multiplicity up, it is fair to ask
 where the ceiling is. There is one construction for which the question can be
 answered exactly, and it is a close relative of the bubble rule: the \emph{diamond
-lattice} \citep{migdal1975,kadanoff1976}. Start with a single link joining two
-poles $A$ and $B$. At each generation, replace \emph{every} link by two parallel
-paths of two links each (Figure~\ref{fig:mu-diamond}a). Where the bubble model
-drops one bubble on one randomly chosen link, the diamond drops a bubble on all
-links at once, in perfect symmetry.
+lattice} \citep{migdal1975,kadanoff1976}. In its general $(b,s)$ form, start with a
+single link joining two poles $A$ and $B$ and, at each generation, replace
+\emph{every} link by $b$ parallel paths of $s$ links each. The standard diamond is
+$b=s=2$: every link becomes two parallel two-link paths
+(Figure~\ref{fig:mu-diamond}a). Where the bubble model drops one bubble on one
+randomly chosen link, the diamond drops a bubble on all links at once, in perfect
+symmetry. It is the same lattice on which Chapter~\ref{ch:communities} watched the
+Ramsey community number become a renormalization-group crossing.
 
-\begin{calculation}{the multiplicity of the diamond lattice}
-The construction is exactly renormalizable, because distinct copies of the
-previous generation meet only at their corners. Read it backwards: generation
-$G_t$ is two parallel branches, each made of two copies of $G_{t-1}$ in series.
-Along a series, lengths add and multiplicities \emph{multiply}; across parallel
-branches of equal length, multiplicities \emph{add}. So the pole-to-pole distance
-$D_t$ and multiplicity $P_t$ obey
+\begin{calculation}{the multiplicity between the poles}
+The construction is exactly renormalizable, because distinct copies of the previous
+generation meet only at their corners. Read it backwards --- deflation --- and
+generation $G_t$ is $b$ parallel branches, each made of $s$ copies of $G_{t-1}$ in
+series. Two rules suffice. Along a series, lengths add and multiplicities
+\emph{multiply}, since a route must make each choice in turn. Across $b$ parallel
+branches of \emph{equal} length, multiplicities \emph{add}, since each branch offers
+its own routes and all tie. So the pole-to-pole distance $D_t$ and multiplicity
+$P_t\equiv\mu_{AB}$ obey
 \begin{equation}
-  D_t = 2 D_{t-1} = 2^t, \qquad P_t = 2 P_{t-1}^{\,2},
+  D_t = s\,D_{t-1} = s^{\,t},
+  \qquad
+  P_t = b\,P_{t-1}^{\,s},
   \label{eq:diamond-rec}
 \end{equation}
-with $P_0=1$. Taking a logarithm linearizes the recursion and gives
+with $P_0=1$. The second is nonlinear, but taking $\log_b$ linearizes it,
+$\log_b P_t = 1 + s\log_b P_{t-1}$, a geometric recursion whose solution is
 \begin{equation}
-  P_t = 2^{\,2^t-1} = 2^{\,D_t-1},
+  P_t = b^{\,(s^{t}-1)/(s-1)}
+  \;\xrightarrow{\ b=s=2\ }\;
+  2^{\,2^{t}-1} = 2^{\,D_t-1},
   \label{eq:diamond-pole}
 \end{equation}
-a \emph{doubly} exponential count. The reason is transparent: a shortest route
-must thread $D_t$ successive scales, and at each one it independently picks one of
-two parallel branches, so the choices multiply. Averaging over all pairs rather
-than the poles alone changes only the prefactor, $\langle\mu\rangle_t \approx
-2.1\,P_t/n_t$, since the sum is dominated by near-antipodal pairs. Finally, the
-generation carries $n_t = (2\cdot4^t+4)/3$ nodes, so $2^t \simeq \sqrt{3n/2}$, and
-substituting into Eq.~\eqref{eq:diamond-pole} turns the doubly exponential in $t$
-into a \emph{stretched exponential} in $n$:
+a \emph{doubly} exponential count. (Equation~\eqref{eq:diamond-pole} has been
+checked against direct construction of the lattice for $(b,s)$ equal to $(2,2)$,
+$(3,2)$, $(2,3)$, $(4,2)$ and $(3,3)$.) The reason is transparent: a shortest route
+must thread $(s^t-1)/(s-1)$ successive scales, and at each one it independently
+picks one of $b$ parallel branches, so the choices multiply.
+\end{calculation}
+
+The poles are a special pair, so the average over \emph{all} pairs needs its own
+argument --- and it is here that the diamond's rigidity pays off again.
+
+\begin{calculation}{from the poles to the average}
+The key geometric fact is that every vertex lies on some pole-to-pole geodesic,
+\begin{equation}
+  d(v,A) + d(v,B) = D_t ,
+  \label{eq:diamond-onpath}
+\end{equation}
+proved by induction on $t$: within a replaced link the two poles of the sub-copy
+inherit the property, and any detour around a parallel branch is strictly longer.
+So a vertex is characterized by the single number $d(v,A)$ --- the lattice is, in
+this sense, one-dimensional. Now split the pairs into those internal to one copy of
+$G_{t-1}$ and those spanning two copies. The total geodesic count
+$S_t=\sum_{u<v}\mu_{uv}$ then satisfies
+\begin{equation}
+  S_t = 4\,S_{t-1} + \mathrm{Inter}_t ,
+  \label{eq:diamond-S}
+\end{equation}
+the four being the number of copies in the $b=s=2$ cell, and $\mathrm{Inter}_t$ a
+convolution of the two copies' pole-path counts, weighted by the factor $P_{t-1}$
+that any route pays to cross the shared corner. Carrying the recursion out exactly
+gives the average $\langle\mu\rangle_t = S_t/\binom{n_t}{2}$ as
+\begin{equation}
+  \langle\mu\rangle_t \;\sim\; \kappa\,\frac{2^{\,2^{t}}}{4^{t}}
+  \;\approx\; 2.1\,\frac{P_t}{n_t},
+  \qquad \kappa \to 1.576 ,
+  \label{eq:diamond-avg}
+\end{equation}
+where the prefactor $\kappa$ is the fixed point of the corner-transit convolution.
+So the average merely tracks the pole value divided by the node count: the sum is
+dominated by near-antipodal pairs, which inherit a geodesic count of order
+$P_{t-1}^2\sim P_t$.
+\end{calculation}
+
+Equation~\eqref{eq:diamond-avg} is expressed in the generation $t$; the scaling with
+size follows by inverting the node count.
+
+\begin{calculation}{the stretched exponential}
+Generation $t$ carries
+\begin{equation}
+  n_t = \tfrac{1}{3}\big(2\cdot4^{t}+4\big) \simeq \tfrac{2}{3}\,4^{t},
+  \label{eq:diamond-nt}
+\end{equation}
+so $4^{t}\simeq\tfrac32 n$ and therefore $2^{t}\simeq\sqrt{3n/2}$. Substituting both
+into Eq.~\eqref{eq:diamond-avg}, the doubly exponential in $t$ becomes a
+\emph{stretched exponential} in $n$:
 \begin{equation}
   \langle\mu\rangle \approx a\,e^{\,b\sqrt{n}},
-  \qquad b = \sqrt{\tfrac32}\,\ln 2 \approx 0.849 .
+  \qquad
+  b = \sqrt{\tfrac32}\,\ln 2 \approx 0.849,
+  \qquad
+  a = \tfrac{2\kappa}{3} \approx 1.05 .
   \label{eq:diamond-n}
 \end{equation}
+The rate $b$ is exact; $a$ is the amplitude of the leading term, since
+$\ln\langle\mu\rangle\simeq b\sqrt{n}+\ln a$ and the algebraic factor $1/n$ from
+Eq.~\eqref{eq:diamond-avg} is subleading against $\sqrt{n}$. Retaining it, the
+reduced form $\langle\mu\rangle\simeq a\,e^{\,b\sqrt{n}}/n$ reproduces the exact
+values to better than $1\%$ from $t=4$ on.
 \end{calculation}
 
 The numbers are worth seeing, because they are exact rather than fitted
