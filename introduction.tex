@@ -464,16 +464,38 @@ $\tilde{c}_i = c_i$, so nothing is changed where nothing was wrong.
 \end{calculation}
 
 Measure $\tilde{c}$ on real networks and the hierarchy largely evaporates
-(Figure~\ref{fig:intro-data}, panels b and c, which share a vertical scale so that
-the change can be read off directly). For the Internet, $\langle c\rangle(k)$ falls
-by more than a decade across four decades of degree; $\langle\tilde
-c\rangle(k)$ is \emph{flat} --- it varies by a factor of $1.5$ over the whole
-range, and its fitted slope is $+0.02$ where the uncorrected slope was $-0.76$.
-The same happens, less completely, for the others: every slope moves sharply
-toward zero. What is left, when the bias is stripped out, is a clustering
-coefficient that is either roughly constant or decays only logarithmically with
-degree \citep{soffer2005} --- and a logarithm, over the two or three decades of
-degree a real network offers, is very nearly a constant.
+(Figure~\ref{fig:data-clustering}; the two panels share a vertical scale so that
+the change can be read off directly). The four networks used here are introduced
+properly in Section~\ref{sec:intro-data}, and are the ones this book keeps
+returning to: the Internet at the level of its service providers, the Gnutella
+file-sharing network, the protein interactions of yeast, and a physics
+co-authorship network. For the Internet, $\langle c\rangle(k)$ falls by more than a
+decade across four decades of degree; $\langle\tilde c\rangle(k)$ is \emph{flat}
+--- it varies by a factor of $1.5$ over the whole range, and its fitted slope is
+$+0.02$ where the uncorrected slope was $-0.76$. The same happens, less
+completely, for the others: every slope moves sharply toward zero. What is left,
+when the bias is stripped out, is a clustering coefficient that is either roughly
+constant or decays only logarithmically with degree \citep{soffer2005} --- and a
+logarithm, over the two or three decades of degree a real network offers, is very
+nearly a constant.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figs/fig-intro-clustering.pdf}
+\caption{\textbf{The clustering hierarchy, and what is left of it.} Four real
+networks --- the Internet at the autonomous-system level, the Gnutella
+file-sharing overlay, the yeast protein interaction network, and \texttt{cond-mat}
+co-authorship --- drawn from the Netzschleuder repository
+(Section~\ref{sec:intro-data}). (a) The standard clustering coefficient falls with
+degree in every network, roughly as $k^{-1}$ (dashed guide): the hierarchy of
+Eq.~\eqref{eq:intro-hierarchy}. (b) The same networks measured with
+$\tilde{c}$, Eq.~\eqref{eq:intro-ctilde}, which divides by the links the neighbors
+can afford rather than by the pairs one can draw. The vertical scale is the same
+as in (a). The Internet's curve is now flat --- it varies by a factor of $1.5$
+across four decades of degree --- and every other decay is much weakened. Most of
+the hierarchy was in the measure, not in the network.}
+\label{fig:data-clustering}
+\end{figure}
 
 So Eq.~\eqref{eq:intro-hierarchy} should be read with care. It is a robust
 \emph{measurement}: plot $\langle c\rangle(k)$ for almost any real network and you
@@ -557,6 +579,7 @@ Eq.~\eqref{eq:intro-knn}. Three patterns that look independent turn out to share
 a single root.
 
 \section{What the data demand}
+\label{sec:intro-data}
 
 Any explanation has to answer to measurements, so it is worth recording up front
 what those measurements actually look like. Rather than take this on trust, let us
@@ -615,8 +638,8 @@ cond-mat       & $36\,458$ & $9.4$ & $0.657$ & $0.800$ & $0.0003$ & $0.0018$ & $
 \end{tabular}
 \end{table}
 
-Now the three measures that organize the rest of the book
-(Figure~\ref{fig:intro-data}). The degree distributions are broad and
+Now the measures that organize the rest of the book
+(Figure~\ref{fig:data-degree}). The degree distributions are broad and
 hub-dominated: the Internet runs from nodes with a single link to one with more
 than two thousand, four decades of degree in a network four decades in size, and
 the others do the same over a shorter range. Gnutella is the partial exception
@@ -625,11 +648,11 @@ is cut short and it is the least scale-free of the four. Real data are like that
 the power law of Eq.~\eqref{eq:intro-powerlaw} is an idealization that some
 systems wear better than others.
 
-The clustering hierarchy of Eq.~\eqref{eq:intro-hierarchy} is there in all four:
-$\langle c\rangle(k)$ falls with degree in every case, and the dashed $k^{-1}$
-guide shows that the decay is of about the advertised steepness --- the measured
-slopes run from $-0.6$ to $-1.3$. Small nodes sit in tight neighborhoods; hubs
-bridge between them.
+The clustering we have already been through: the hierarchy of
+Eq.~\eqref{eq:intro-hierarchy} is there in all four
+(Figure~\ref{fig:data-clustering}a), with measured slopes from $-0.6$ to $-1.3$,
+and most of it dissolves once the degree-correlation bias is removed
+(Figure~\ref{fig:data-clustering}b).
 
 And then the two families part company, on the last measure and only on the last
 measure. For the Internet, for Gnutella and for the yeast proteins, the average
@@ -648,21 +671,20 @@ whatever mechanism we propose must be able to produce \emph{either} sign of
 correlation, depending on the microscopic move --- and, as the chapters will show,
 local rules can do exactly that. It also tells us the two families are not two
 kinds of network but one kind seen through one dial: everything else in
-Figure~\ref{fig:intro-data} they share.
+Figure~\ref{fig:data-degree} they share.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{figs/fig-intro-data.pdf}
-\caption{\textbf{What the data demand.} Four real networks from the Netzschleuder
-repository, measured through \texttt{graph-tool}. (a) The degree distributions are
-broad and hub-dominated; the Internet spans four decades of degree. Gnutella's
-protocol caps its peers, so its tail is the shortest. (b) The clustering hierarchy
-of Eq.~\eqref{eq:intro-hierarchy}: $\langle c\rangle(k)$ falls with degree in every
-network, at roughly the advertised $k^{-1}$ (dashed guide). (c) The average
-neighbor degree, where the two families part: falling for the Internet, Gnutella
-and the yeast proteins --- \emph{disassortative} --- but rising for cond-mat
-co-authorship, which is \emph{assortative}.}
-\label{fig:intro-data}
+\includegraphics[width=\linewidth]{figs/fig-intro-degree.pdf}
+\caption{\textbf{What the data demand.} The same four networks, from the
+Netzschleuder repository through \texttt{graph-tool}. (a) The degree distributions
+are broad and hub-dominated; the Internet spans four decades of degree. Gnutella's
+protocol caps its peers, so its tail is the shortest. (b) The average neighbor
+degree, where the two families part: falling for the Internet, Gnutella and the
+yeast proteins --- \emph{disassortative} --- but rising for \texttt{cond-mat}
+co-authorship, which is \emph{assortative}. The clustering of these same networks
+is in Figure~\ref{fig:data-clustering}.}
+\label{fig:data-degree}
 \end{figure}
 
 These regularities are robust, they hold across many orders of magnitude in

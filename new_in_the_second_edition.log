@@ -422,6 +422,18 @@ TWO MEASUREMENT BUGS CAUGHT AND FIXED BEFORE THEY REACHED THE PAGE
   which puts the Internet above its null where the formula put it below. The
   formula is still computed and kept in the CSV as c_conf_formula, for the record.
 
+FIGURE LAYOUT
+
+  The data figure was split in two rather than run to four panels, which also
+  fixed a structural problem: section 1.2 had been forward-referencing a figure
+  that lived in 1.4.
+    Fig. 1.7 (in 1.2, beside the Eq. (1.5) discussion) -- <c>(k) and <c~>(k),
+      shared vertical scale.
+    Fig. 1.8 (in 1.4, "What the data demand") -- p(k) and <k_nn>(k).
+  Each names the other. Legends use short network names; the captions carry the
+  full ones, since a half-width panel on a 5x8 page cannot hold "cond-mat
+  co-authorship".
+
 PIPELINE
 
   figs/fetch_intro_data.py measures (needs graph-tool + zstandard + a network
@@ -458,8 +470,9 @@ correlations biases".
     hub of leaves has no clustering to speak of, which is the honest verdict);
     c~_i >= c_i always; and c~_i = c_i when every neighbour is at least as well
     connected as the node, so nothing changes where nothing was wrong.
-  * OUR OWN DATA REPRODUCE THE PAPER. Figure 1.7 gains panel (c), <c~>(k), sharing
-    panel (b)'s vertical scale so the flattening is read off directly. For the
+  * OUR OWN DATA REPRODUCE THE PAPER. A dedicated clustering figure (Fig. 1.7)
+    puts <c>(k) and <c~>(k) side by side on a SHARED vertical scale, so the
+    flattening is read off directly. For the
     Internet the fitted slope moves from -0.76 to +0.02 — the hierarchy vanishes —
     and <c~>(k) varies by a factor of 1.5 across four decades of degree. The paper
     reports "no more than a factor of two" for its (2001-vintage) Internet; we get
