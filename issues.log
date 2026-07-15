@@ -1,0 +1,216 @@
+ISSUES LOG — Local network growth, 2nd edition
+Compiled 2026-07-15 against the 1st-edition source (commit 2ac4e5b).
+Scope: the repo-root .tex files. paperback_edition_1/ is frozen and must NOT be edited,
+even where it carries the same defect.
+
+STATUS 2026-07-15: chapter 7 (distance.tex) rewritten against the newest version of
+vazquezpaths2026 (github.com/av2atgh/ramsey_netcom/tree/master/local_multi_path_2026).
+Items [3], [14], [18] resolved and items [4], [5] resolved FOR CHAPTER 7 ONLY; see the
+CHAPTER 7 section at the end of this file. All other items still open.
+
+
+== VERIFIED DEFECTS ==
+
+[1] walks.tex:397 vs walks.tex:406 — factor-of-two contradiction.  (VERIFIED IN SOURCE)
+    Eq. eq:walk-rec-dou derives
+        <k^out> = (1 - sqrt(1 - 4 q_e)) / (2 q_e),
+    which is real only for q_e <= q_c = 1/4 (line 397). Seven lines later (406-407):
+    "Simulations confirm this picture, with the threshold near q_c ~ 0.5."
+    That presents as confirmation a value the algebra forbids. Either the simulation or
+    the rate constant is off. Check against vazquez2001.
+    Severity: high — an internal contradiction in a headline result.
+
+[2] projects.tex:174 — unjustified inequality.
+    The calculation box derives dc/dn = (1-q) c/n  =>  c ~ n^(1-q), hence c/n ~ n^(-q),
+    i.e. alpha = q EXACTLY. But eq:proj-cpfrac then asserts
+        c/n ~ n^(-alpha(q)),  alpha(q) <= q
+    with no justification for the inequality. Simulations quoted inline give
+        q = 0.20 -> alpha ~ 0.11   (45% below)
+        q = 0.50 -> alpha ~ 0.28   (44% below)
+        q = 0.70 -> alpha ~ 0.43   (39% below)
+    and line 191 calls these "a little below the simple bound q". They are 30-45% below.
+    The mean-field step evidently overestimates, but the chapter never explains why the
+    bound is not tight, nor how alpha = q became alpha <= q.
+    Severity: high — load-bearing for the vanishing-critical-path claim.
+
+[3] distance.tex:29 — wrong self-description.
+    Reads "This closing chapter, following ...", but outlook.tex is the actual closing
+    chapter, and ch:distance is referenced from the outlook as one of six settings.
+    Severity: low — trivial fix, but visible to any reader.
+
+
+== STRUCTURAL / EDITORIAL ==
+
+[4] No data plots anywhere in the book.  <-- highest-leverage change for the 2nd edition
+    All figures across all eight chapters are hand-drawn TikZ schematics. Every
+    quantitative confirmation is asserted in prose only. Specifically unplotted:
+      - walks.tex:      p_k, <c>(k), <k_nn>(k); the exponent overestimate (line 349);
+                        the q_e-dependence of <k_nn> (267-272); the q_c simulation (406)
+      - friends.tex:    the assortativity claim (262-264) — the chapter's headline result,
+                        resting entirely on an unshown simulation; also the million-node
+                        simulations (253-256)
+      - proteins.tex:   p_k, <c>(k), <k_nn>(k), the q_e = 1/2 density transition,
+                        the multifractal moment match, the k^-0.1 correlation slope
+      - projects.tex:   the 77 real construction projects / 323 activity networks; in-vs-out
+                        q agreement; c/n vs n; delay incidence vs p - p_c
+      - distance.tex:   <mu>(n) for all three scaling regimes (eq:path-baseline,
+                        eq:path-typeI, eq:path-typeII) — no fitted a, b, c values shown;
+                        the "<mu> linear in number of communities" claim
+    Severity: high (editorial). If the 2nd edition makes one substantive change,
+    real-data figures are the strongest candidate.
+
+[5] communities.tex and distance.tex analyze no real data at all.
+    Both are entirely model-based (synthetic simulations + rewired controls). Real
+    networks appear only rhetorically, or imported by citation (deng2026, dong2025).
+    Since these two chapters plus the outlook close the book, it ends on its least
+    empirical material. communities.tex:1 sets up "communities are everywhere in real
+    data" and never returns to data.
+
+[6] communities.tex — three uncaptioned, unlabeled `center` tables.
+    (Ramsey numbers by model; r_kappa vs L; r_kappa vs W.) Referred to in the text only
+    as "the table below" / "the last row of the table". Fragile and inconsistent with the
+    figure treatment elsewhere. Same issue for the Mechanism/beta/alpha table in
+    proteins.tex, which is a bare `center`/`tabular` with no caption or label.
+
+
+== NOTATION COLLISIONS ==
+
+[7] alpha is overloaded across chapters:
+      proteins.tex — neighbour-degree correlation slope
+      projects.tex — critical-path exponent
+[8] beta is overloaded WITHIN proteins.tex:
+      eq:dup-beta   — growth exponent, beta = 1 - mu_1
+      comparison table — a different quantity entirely
+[9] walks.tex:245-254 — the clustering box silently switches from k^in to undecorated
+    k and e without saying which degree is meant in a directed network.
+
+
+== UNDERIVED / LOOSE RESULTS ==
+
+[10] proteins.tex — the claim that link removal makes clustering decay "a little faster
+     than 1/k" is asserted, not derived; the box assumes e_i = q_v(k_i - 1) with no loss
+     term. The multifractal spectrum eq:dup-moments is quoted "in the manner of kim2002"
+     with no intermediate steps.
+[11] projects.tex — the percolation section is un-derived. p_c = 1/<k> is imported by
+     citation with no calculation box, and the claimed link "the very same local rule ...
+     also sets the average degree <k>" is never computed: no formula <k>(q) appears
+     anywhere. Also, <k> is defined as mean out-degree, while Molloy-Reed-type thresholds
+     use <k^2>/<k>; for gamma = 1/q <= 2 (q >= 1/2) the second moment diverges, so a plain
+     1/<k> threshold is questionable. The empirical q in [0.1, 0.5] mostly keeps it safe,
+     but the chapter does not address this.
+[12] friends.tex — eq:fr-ck derivation is loose. The integration and the elimination of
+     k* in favour of k are skipped, so the constant 2 mu_1 arrives with no visible route.
+     Relatedly, the amplitude ratio k*_0 / k_0 forced by eq:fr-reduced is needed for
+     eq:fr-ck but never determined.
+[13] friends.tex — eq:fr-limits asserts gamma(1) = 2, but as u -> 1 the prefactor
+     2(1-u)/u -> 0 while the bracket -> infinity. The 0 * infinity resolution giving
+     exactly 2 deserves a line and gets none.
+[14] distance.tex — the exponential law eq:path-typeII is motivated, not derived. The
+     text admits this ("a full account of it remains open"), and the outlook lists it as
+     open problem #1. Fine to leave open, but worth flagging as a known hole.
+[15] communities.tex — the even-odd alternation in the cycle-length table (odd cycles
+     bring communities sooner) is observed but unexplained.
+
+
+== BIBLIOGRAPHY ==
+
+[16] references.bib — 50 entries; every cited key resolves. `jeong2000` is defined but
+     never cited.
+[17] The key `vazquez2025` is the 2002 SISSA PhD thesis (2025 is only the ResearchGate
+     upload year). natbib renders it "Vazquez (2002)", sitting next to the other 2002
+     papers. The key name misleads; consider renaming to vazquez2002thesis.
+     Also: in communities.tex:346 it is cited for a claim about community structure, which
+     the thesis (on degree correlations / clustering hierarchy) does not cover.
+[18] distance.tex rests essentially entirely on one unpublished preprint
+     (vazquezpaths2026, arXiv:2605.25237), cited 3x. Thin for a full chapter.
+
+
+== MINOR / CONSISTENCY ==
+
+[19] outlook.tex has zero \cite commands — a stylistic outlier for a chapter naming open
+     problems (especially the criticality connection and the multilayer/temporal frontier).
+[20] projects.tex has no \ref cross-references to other chapters, unlike proteins.tex;
+     its closing "link to the rest of the book" is prose-only.
+[21] outlook.tex — the self-organised-critical "exhaustive searcher" is recapped without a
+     \ref to the section where it is defined; the only recap item lacking a cross-ref.
+[22] communities.tex — the dedicated Barabasi-Albert section noticeably restates the
+     "Barabasi--Albert." paragraph in the "Local rules grow communities" section.
+[23] walks.tex — q_v is introduced (line 142), shown to drop out of gamma, and survives
+     only inside `a` in eq:walk-gamma, whose role is never discussed.
+[24] friends.tex — holme2002 is named in the history paragraph and never used again; the
+     promised comparison to that model's tunable clustering never lands. sole2002 in
+     proteins.tex has the same problem (cited once in the opener, never reused).
+[25] proteins.tex is named for its application (proteins) but titled for its mechanism
+     ("Gene duplication", label ch:duplication) — a filename/title mismatch that makes
+     grepping by title miss the file. Same pattern: walks.tex -> "Search and connect"
+     (ch:search), distance.tex -> "Boosting shortest path multiplicity" (ch:distance),
+     projects.tex -> "Activity specialization" (ch:projects).
+
+
+== CHAPTER 7 — RESOLVED 2026-07-15 (distance.tex rewritten) ==
+
+Source: newest version of the preprint at
+  github.com/av2atgh/ramsey_netcom/tree/master/local_multi_path_2026
+which is substantially ahead of what the 1st edition was written against.
+
+Fixed:
+  [3]  "This closing chapter" -> "This chapter".
+  [14] The exponential law is still not derived (it remains open upstream too), BUT the
+       chapter now has a real mean-field theory it did not have before: <mu> ~ c_2/e,
+       with c_2 = <k(k-1)>/<k> the average excess degree. Derived in a calculation box.
+  [18] No longer rests on the preprint alone: adds the exactly solvable diamond lattice
+       (migdal1975, kadanoff1976) and three real datasets (snapnets, stark2006,
+       cornellarxiv). Five new bib entries added to references.bib (now 55).
+  [4]/[5] for ch.7 only: the chapter now carries four data figures and a real-network
+       section. It previously had one schematic and no data at all.
+
+Corrected errors the 1st edition actually got WRONG (not merely thin):
+  * The old baseline claim -- "sparse random networks accumulate multiplicity only
+    logarithmically" -- is false as a general statement. It depends on the degree
+    exponent: constant for gamma>3, logarithmic at gamma=3, power law n^(3/gamma - 1)
+    for 2<gamma<3. The old eq:path-baseline has been replaced by eq:path-const,
+    eq:path-log, eq:path-power.
+  * The old box gave the duplication-split exponent as gamma = 1 + 1/q. It is
+    gamma = 1/q (upstream Appendix A, eq. gammaDS) -- which is also what projects.tex
+    already said, so the 1st edition contradicted itself across chapters. Fixed, and
+    the cross-reference retargeted from ch:duplication to ch:projects (DS is the
+    projects-chapter model).
+  * The old text said the deterministic pseudofractal "grows only log-linearly, like
+    the shuffled baseline". Upstream now shows its randomized version follows a POWER
+    law (alpha ~ 0.16) while the deterministic original is log-linear -- i.e. it falls
+    BELOW its own shuffled counterpart, which is a stronger and opposite-signed point
+    about randomness. Fixed.
+  * LS(n,1)* does not creep up logarithmically; it SATURATES (gamma = 5 > 3). The
+    figure now shows the points peeling away from the fitted logarithm.
+
+Still open in chapter 7:
+  * The exponential law eq:path-typeII is motivated (square-counting + compounding),
+    not derived. This is open problem #1 in outlook.tex and is open upstream as well.
+  * The modulation of <mu> by degree correlations (data below MF for disassortative
+    networks, above for assortative) is reported from the real-network data but not
+    calculated; the mean field knows only c_2. Flagged in the chapter text as an
+    invitation, and in the upstream conclusions as "remains to be addressed".
+  * Upstream's conclusions contain a typo the chapter deliberately does NOT copy:
+    "For networks with assortative degree correlations, the average shortest path
+    multiplicity is below the MF approximation. In contrast, for networks with
+    disassortative degree correlations, the average ... is below the MF approximation."
+    Both say "below"; the data show assortative ABOVE, disassortative BELOW. Worth
+    telling Alexei so the preprint gets fixed.
+
+Figure pipeline (new): figs/mkfigs.py + figs/data/*.csv, copied from upstream. The
+figures are deliberately NOT identical to the paper's: grayscale (the book prints b/w),
+panels regrouped for the 5x8 trim, Computer Modern maths. See the docstring in
+figs/mkfigs.py. figs/multiplicity_diamond.py is upstream's exact-arithmetic checker; it
+reproduces the diamond table from scratch and was re-run to verify eq:diamond-pole and
+the kappa -> 1.576 prefactor before either was quoted.
+
+
+== BUILD NOTES (not defects) ==
+
+- `latexmk -pdf main.tex` exits 0 and produces an 84-page main.pdf.
+- The only warnings are benign pdfTeX "destination with the same identifier (name{page.})"
+  duplicates, from \pagenumbering{gobble} in the front matter.
+- main.pdf IS tracked in git, so any rebuild dirties the tree even with no content change
+  (embedded timestamps/IDs). After a test-only build: git checkout main.pdf
+- At the 1st-edition commit the root .tex files are byte-identical to paperback_edition_1/,
+  so any root-vs-paperback_edition_1 diff is exactly the 2nd-edition delta.

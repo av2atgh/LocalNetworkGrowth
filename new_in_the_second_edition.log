@@ -1,0 +1,127 @@
+NEW IN THE SECOND EDITION
+=========================
+
+A running log of what changed between the 1st edition (frozen in
+paperback_edition_1/) and the 2nd edition (the repo root). Kept so the preface can
+be rewritten from it at the end of the work — so entries are phrased as "what a
+reader of the 1st edition would find different", not as commit messages.
+
+Baseline: at the 1st-edition commit the root .tex files were byte-identical to
+paperback_edition_1/, so `diff` against that directory always shows the full delta.
+
+
+-------------------------------------------------------------------------------
+2026-07-15 — Chapter 7, "Boosting shortest path multiplicity": rewritten
+-------------------------------------------------------------------------------
+
+Brought up to date with the newest version of the underlying paper, "Local network
+evolution rules drive shortest path multiplicity" (arXiv:2605.25237), whose source
+is at github.com/av2atgh/ramsey_netcom/tree/master/local_multi_path_2026. The 1st
+edition was written against an earlier version that lacked the mean-field theory,
+the diamond lattice, and the real-network data.
+
+NEW SCIENCE (things the 1st edition simply did not contain)
+
+  * A mean-field theory of the multiplicity. The chapter now derives, rather than
+    asserts, the random-network baseline: <mu> ~ c_2/e, where c_2 = <k(k-1)>/<k>
+    is the average excess degree — the branching factor of the network. This is
+    the single most important addition: the 1st edition had no calculation here at
+    all, and the new box means the baseline is understood rather than measured.
+
+  * The three regimes. Because c_2 is controlled by the hubs, the baseline depends
+    entirely on the degree exponent: <mu> is constant for gamma > 3, logarithmic at
+    gamma = 3, and a power law n^(3/gamma - 1) for 2 < gamma < 3. The 1st edition
+    had a single, universal logarithmic baseline (which is wrong — see below).
+
+  * The diamond lattice — an exactly solvable ceiling. A new section asks how fast
+    multiplicity could possibly grow, and answers it exactly. The pole-to-pole
+    count is doubly exponential in the generation, P_t = 2^(2^t - 1), which in terms
+    of network size is a stretched exponential, <mu> ~ a exp(b sqrt(n)) with
+    b = sqrt(3/2) ln 2 ~ 0.849. By the sixth generation a 2732-node lattice already
+    joins a typical pair by ~7e15 distinct shortest paths. Perfect, maximally
+    symmetric branching therefore bounds the redundancy any growing network can
+    carry, and every stochastic local rule falls below it.
+
+  * Real networks. A new section, and the chapter's first contact with data: the
+    Internet at the autonomous-system level, protein interaction networks of a
+    dozen organisms, and cond-mat co-authorship. The human protein network reaches
+    <mu> ~ 64 — a typical pair of proteins joined by sixty-four equally short chains
+    of interaction — and the protein networks are the ones that climb exponentially,
+    the duplication signature.
+
+  * Degree correlations modulate the redundancy. The real data show which side of
+    the mean-field line a system falls on, and it tracks assortativity: the
+    disassortative Internet sits below its random expectation (a star gives a route
+    no alternatives), the assortative co-authorship network above it (a clique of
+    hubs furnishes many equally short ways across). The mean field, which knows only
+    c_2, cannot yet account for this. Named in the chapter as an open invitation.
+
+CORRECTIONS (places where the 1st edition is wrong, not merely thin)
+
+  * The universal logarithmic baseline is false. "Sparse random networks accumulate
+    multiplicity only logarithmically" holds only at gamma = 3. Corrected to the
+    three regimes above.
+
+  * The duplication-split degree exponent was given as gamma = 1 + 1/q. It is
+    gamma = 1/q. Chapter 5 (Activity specialization) already said 1/q, so the 1st
+    edition contradicted itself across chapters. The cross-reference was also
+    retargeted from Chapter 4 to Chapter 5, duplication-split being Chapter 5's model.
+
+  * The randomized local-search network does not creep up logarithmically; it
+    saturates, having gamma = 5 > 3. The figure now shows the points peeling away
+    from the fitted logarithm.
+
+  * The point about the deterministic pseudofractal had the wrong sign. The 1st
+    edition said it "grows only log-linearly, like the shuffled baseline". In fact
+    its randomized version follows a power law while the deterministic original stays
+    log-linear — it falls BELOW its own shuffle. The moral is stronger than before:
+    clockwork locality does worse than chance, so randomness and locality are needed
+    together.
+
+  * "This closing chapter" — it is not the closing chapter; the Outlook is.
+
+FIGURES
+
+  The chapter went from one hand-drawn schematic and no data whatsoever to five
+  figures: the square-vs-triangle schematic (kept), the random baseline, the boost
+  from local rules, cycle length and randomness, the diamond lattice, and the real
+  networks. This is the first data to appear anywhere in the book.
+
+  A reproducible pipeline now lives in figs/: mkfigs.py plus the simulation and
+  real-network CSVs copied from the paper's repository, and multiplicity_diamond.py,
+  the exact-arithmetic checker that reproduces the diamond results from scratch. The
+  figures are deliberately not reprints of the paper's — grayscale for the black-and-
+  white printing, panels regrouped for the 5x8 trim, Computer Modern maths.
+
+STILL OPEN
+
+  * The exponential law for duplication-split is motivated (square-counting plus
+    compounding) but not derived. Open upstream too, and open problem #1 in the
+    Outlook.
+  * The modulation of the multiplicity by degree correlations is observed, not
+    calculated.
+
+PREFACE IMPLICATIONS (for the rewrite at the end)
+
+  * The 1st-edition preface says the closing chapters "push that idea furthest". That
+    is now more true and differently true: chapter 7 has a derivation, an exactly
+    solvable limit, and data.
+  * The preface's promise that "the empirical data set the agenda throughout" was not
+    honoured by the 1st edition, which contained no data plots at all. Chapter 7 now
+    honours it. If the other chapters gain data figures, the claim becomes accurate
+    for the book as a whole; if they do not, the sentence should be softened.
+  * Acknowledgement of Claude's help with prose and figures carries over and, on the
+    figure side, now covers more.
+  * Consider naming the diamond lattice in the preface's per-chapter tour: it is the
+    one exactly solvable result in the book.
+
+
+-------------------------------------------------------------------------------
+NOTE FOR THE AUTHOR (not a book change)
+-------------------------------------------------------------------------------
+
+arXiv:2605.25237, Conclusions, contains a typo worth fixing upstream: it says the
+multiplicity is "below the MF approximation" for BOTH assortative and disassortative
+networks, with "In contrast" between the two sentences. The data say the opposite for
+assortative — cond-mat sits above the mean field in 100% of its snapshots, the Internet
+below in 100% of its. The book states it correctly.

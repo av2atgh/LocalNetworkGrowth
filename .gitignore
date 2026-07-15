@@ -1,9 +1,16 @@
 # macOS
 .DS_Store
 
+# Python (figs/mkfigs.py imports figs/multiplicity_diamond.py)
+__pycache__/
+*.pyc
+
 # LaTeX build artifacts
 *.aux
 *.log
+# ...but these two are hand-written working notes, not build output.
+!issues.log
+!new_in_the_second_edition.log
 *.out
 *.toc
 *.bbl
