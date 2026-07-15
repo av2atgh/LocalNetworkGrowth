@@ -117,6 +117,198 @@ PREFACE IMPLICATIONS (for the rewrite at the end)
 
 
 -------------------------------------------------------------------------------
+2026-07-15 — Chapter 6, "Emergence of communities": three exactly solvable cases
+-------------------------------------------------------------------------------
+
+The 1st-edition chapter rested entirely on simulation: every Ramsey community
+number in it (81, 98, 108, 1090, ...) was a numerical estimate, and the chapter
+could say THAT communities appear beyond a certain size but never WHY, nor what
+the size depends on. Three new papers — the "wants to be broken" series — make
+r_kappa exactly solvable, and the chapter now ends on theory rather than numerics.
+Sections 6.1-6.5 are unchanged; six new sections (6.6-6.11) and a rewritten summary
+follow, with all the papers' calculations carried in full rather than summarized.
+The chapter roughly triples in length (346 -> ~1120 lines, pages 49-76).
+
+NEW: THE RING (arXiv:2607.01967)
+
+  A featureless ring of beads — no growth, no randomness, no heterogeneity, every
+  node identical — is nonetheless split into two arcs by a block model, once each
+  bead reaches past its nearest neighbour. The plain cycle (c=1) is never split;
+  the next-nearest-neighbour ring (c=2) breaks at r_kappa ~ 34. This is the
+  cleanest possible statement of the book's thesis: locality alone suffices, with
+  every other ingredient stripped away.
+
+  Framed as SPONTANEOUS SYMMETRY BREAKING, which is both honest and the better
+  physics. The ring is vertex-transitive, so all n rotations of the balanced cut
+  have identical evidence: the block model says the ring must be cut SOMEWHERE
+  while staying silent about where. Like a magnet below T_c choosing a direction,
+  the symmetry survives in the multiplicity of outcomes, not in any one of them.
+  The communities are real (the split describes the network better) but degenerate
+  (no particular split is preferred). The paper does not discuss the degeneracy;
+  the chapter does.
+
+NEW RESULT, NOT IN ANY OF THE PAPERS (flagged as such here)
+
+  The chapter derives, and Fig. 6.4b verifies for c=1..4:
+
+      log R  =  (m_edges - n) ln 2  =  (c-1) n ln 2
+
+  from a competition between a gain of ln 2 per edge (each arc looks twice as
+  dense) and a cost of log C(n, n/2) ~ n ln 2 for saying which nodes go where.
+  The label-prior term is EXACTLY -log C(n,n/2) at alpha=1 (verified to 78 decimal
+  places, and provable in two lines from B(m+1,m+1)/B(1,n+1) = 1/C(n,n/2)).
+
+  Consequences worth having:
+  * It dissolves the paper's headline c=1 vs c=2 contrast. The cycle is not
+    "reluctant" to break, it is EXACTLY MARGINAL: m = n, so the O(n) terms cancel
+    identically and the subleading -(2alpha+3)log n decides. The celebrated sharp
+    threshold is a knife-edge cancellation, not a transition; c=1 sits at the zero
+    of a smooth family and the evidence grows linearly in c-1 thereafter.
+  * It CORRECTS the paper's stated explanation. The manuscript says "a plain cycle
+    offers no density contrast to exploit". That is false: the within-arc/whole-ring
+    density contrast is ~2 for EVERY c including the cycle (verified: 1.998, 1.996,
+    1.994 for c=1,2,3 at n=1024). What differs is how many edges enjoy the contrast,
+    not the contrast. The chapter does not repeat the paper's reason.
+  * Since m-n+1 is the number of independent cycles, communities are preferred
+    exactly when a network carries an extensive number of independent cycles. A
+    tree never splits; a single ring sits exactly on the fence. This ties chapter 6
+    to chapter 7 — the same short loops that multiply shortest paths carve out
+    communities — and to the diamond's "ln K per edge" below. It is the strongest
+    unification the book has.
+
+NEW: THE DIAMOND LATTICE (arXiv:2607.05954)
+
+  Supplies the mechanism the chapter never had. Because the bundles meet only at
+  the poles, the block-model tallies renormalize under an exact linear map with
+  eigenvalues {lambda_vol, lambda_seam} = {bs, b}; their ratio 1/s is the whole
+  story. For s >= 2 the seam is left behind by the bulk and the split improves
+  without limit; for s = 1 the two rates match and the lattice never separates —
+  the diamond's exact counterpart of the plain cycle, which is a pleasing echo of
+  the ring. b sets how many communities; s sets how sharply they separate.
+
+  The mechanism, in one line: the densities flow to a fixed point (u_in, u_cross)
+  -> (K, 0), each edge contributes ln K to the evidence, so log R / m -> ln K —
+  lattice-independent, and the same ln 2 per edge that broke the ring. The evidence
+  is EXTENSIVE while the price of positing a partition grows only LOGARITHMICALLY,
+  so a quantity growing like m ln K must overtake one growing like ln m. Emergence
+  is not delicate; it is arithmetic. r_kappa merely records where the crossing
+  falls, and for the whole (b,s) family it is now a closed form rather than a
+  simulation. Same lattice as chapter 7, so the setup costs nothing.
+
+  The general (b,s) family is carried in full: the bundle lemma, the triangular
+  recursion c_{t+1} = b c_t, i_{t+1} = bs i_t + b(s-1) c_t, its closed solution,
+  the density ratios, the seam deficit delta_t, and the closed form
+
+      r_kappa(b,s;q) = 2 + [b(s-1)/(bs-1)] [(bs)^{t*} - 1],
+      t* = ceil( log_bs( ln[q/(1-q)] / ln b ) ).
+
+  The degrees, the priors and the lattice details all drop out — only b (entropy
+  per edge) and s (volume growth) survive. A quantity that three sections earlier
+  needed thousands of simulated networks is now a formula.
+
+NEW: THE PSEUDOFRACTAL WEB (arXiv:2607.03010)
+
+  Answers the sharpest doubt: is what we call communities just the hubs in
+  disguise? A block model handed a scale-free network can improve its fit merely by
+  absorbing the degree distribution. Correct for the degree sequence — score
+  against a null that already reproduces every degree — and the answer reverses:
+  the plain model prefers the hub-leaf cut (chasing the degree gradient, exactly as
+  feared), while the corrected model demotes it and elevates the recursive branch
+  cut. The communities are real; they survive a null that knows every degree.
+
+  And the verdicts on WHEN disagree twenty-five-fold on the same web, same
+  partition: r_kappa = 1095 plain, 42 degree-corrected. Counterintuitively the
+  degree gradient DELAYS the plain detector rather than driving it.
+
+CORRECTION TO THE 1st EDITION'S FRAMING
+
+  The 1st edition treats the choice of detection method as cosmetic: "the exact
+  figures differ between the two detection methods ... but the split between local
+  rules (finite) and non-local ones (infinite) is the same either way." The 25x
+  plain/corrected gap shows the dependence is not cosmetic. A caution is now lodged
+  in section 6.2 when r_kappa is defined, and collected in 6.9: r_kappa was never a
+  property of the network alone but of the network together with the question asked
+  of it. The thesis survives — under either rule the local construction has a
+  finite r_kappa and a non-local one has none — but a bare Ramsey number quoted
+  without its detection rule says less than it appears to. This is also progress on
+  open problem #2 in the Outlook ("make r_kappa algorithm-independent"): these
+  papers quantify the dependence rather than removing it, and the fixed-point
+  density ln K is the lattice-independent piece that does survive.
+
+HONEST CAVEATS CARRIED IN THE CHAPTER
+
+  * All three solvable networks are deterministic lattices, not grown networks.
+    What they isolate is locality stripped of every other ingredient — stated
+    plainly in 6.6 rather than glossed.
+  * No detection algorithm is run in any of them; the partition is supplied and its
+    evidence evaluated. They answer "when does the known split become the better
+    description?", not "can an algorithm find it?"
+
+TWO FURTHER SECTIONS (6.10, 6.11)
+
+  * "How many communities?" — dropping the two-block convenience. The web's
+    symmetric three-way cut has density ln 3 per edge exactly as the fixed point
+    demands, beating the branch cut by (4/3) ln2 n — the evidence forfeited by
+    lumping two communities together. Refinement keeps paying (+2 ln3 n per level)
+    until the seams bite, and the balance gives q_opt ~ sqrt(gamma n): the number of
+    communities that best describes a network GROWS WITH IT, about sqrt(n)
+    communities of sqrt(n) nodes, the geometric midpoint of its own hierarchy. Same
+    sqrt(n) as chapter 7's path multiplicity on the same lattice — both are the seam
+    scale b^t in disguise.
+
+  * "Communities as a state of matter" — the Reichardt-Bornholdt Hamiltonian, whose
+    ground state is the partition and which at gamma=1 is modularity itself. For two
+    communities it is an Ising ferromagnet plus an infinite-range degree-weighted
+    penalty, solvable exactly on the diamond by decimation: below k_B T_c/J = 1.641
+    the two poles lock into opposite communities for ANY resolution gamma>0, and the
+    order survives as n -> infinity. (A plain ferromagnet on the same lattice has no
+    such phase — its ground state is the trivial single community. It is the penalty
+    that changes the ground state into a partition.) With q = 2^d colours the Potts
+    decimation gives a cascade of first-order transitions at k_B T_c(q)/J ~ 1/(c ln q),
+    c ~ 0.70, so the hierarchy orders level by level, coarsest first, and every stable
+    level persists as n grows. Communities are not merely inferable; they are ordered
+    — a state the network is in.
+
+FIGURES
+
+  Three new: fig-com-ring (the c=1/c=2 contrast, and the new (c-1)n ln2 law),
+  fig-com-rg (the evidence crossing that IS r_kappa, and the flow to the fixed
+  point), fig-com-degree (plain vs degree-corrected on the pseudofractal). Pipeline
+  in figs/mkfigs_com.py, which imports the three papers' own verification scripts
+  as backends rather than reimplementing them. Grayscale and regrouped for the 5x8
+  trim, as in chapter 7.
+
+  Every number quoted was re-derived from those scripts before being written down:
+  the pseudofractal counts to T=7, r_kappa 1095/42 and the exactly-2 slope ratio;
+  the diamond RG eigenvalues {2,4}, density -> ln 2, r_kappa 12/44 vs 684; the
+  ring's Table I/II and the (c-1)ln2 slopes for c=1..5.
+
+PREFACE IMPLICATIONS (for the rewrite at the end)
+
+  * The book now has exact theory where it had simulation. The preface's line about
+    "favoring mean-field arguments that make the mechanisms transparent over
+    exhaustive rigor" undersells chapters 6 and 7, which now contain exactly
+    solvable results (the ring, the diamond, the (m-n)ln2 law).
+  * "Emergence is arithmetic — extensive evidence versus logarithmic cost" is
+    arguably the deepest single sentence in the book and belongs in the preface's
+    statement of the thesis.
+  * Cycles are now the through-line: they multiply shortest paths (ch. 7) AND carve
+    communities (ch. 6). The preface currently sells locality as the unifier; short
+    cycles are the sharper claim.
+  * The chapter now debuts a small new result (the (m-n)ln2 law). If the preface
+    claims the book only synthesizes published work, that needs adjusting — or the
+    result should be published first.
+  * Chapter 6 is now the longest and most technical in the book (~1120 lines, pages
+    49-76, twelve sections, nine calculation boxes). It reaches Ising/Potts
+    thermodynamics and Migdal-Kadanoff decimation. The preface promises "the core
+    ideas are told in plain language, and the more technical calculations are set in
+    boxes that can be skipped" — still true clause by clause, but a reader who skips
+    every box in 6.6-6.11 will get little from them. Consider warning in the preface
+    that the last third of ch. 6 is heavier going, or flagging 6.6-6.11 as optional
+    for the general reader.
+
+
+-------------------------------------------------------------------------------
 NOTE FOR THE AUTHOR (not a book change)
 -------------------------------------------------------------------------------
 
@@ -125,3 +317,33 @@ multiplicity is "below the MF approximation" for BOTH assortative and disassorta
 networks, with "In contrast" between the two sentences. The data say the opposite for
 assortative — cond-mat sits above the mean field in 100% of its snapshots, the Internet
 below in 100% of its. The book states it correctly.
+
+arXiv:2607.01967 (the ring), two items:
+
+ 1. The stated reason for the c=1 result is wrong. The manuscript says "A plain cycle
+    offers no density contrast to exploit." The within-arc/whole-ring density contrast
+    is ~2 for every c, cycle included (1.998, 1.996, 1.994 for c=1,2,3 at n=1024). The
+    contrast is identical; only the number of edges enjoying it changes.
+
+ 2. The general law log R = (m - n) ln 2 = (c-1) n ln 2 answers the paper's own open
+    question ("the scaling of r_kappa with larger c") and is worth adding to the paper.
+    It follows from gain (ln 2 per edge) minus cost (log C(n,n/2) ~ n ln 2 for the
+    labels), the label term being exactly -log C(n,n/2) at alpha=1. Verified for
+    c=1..5. It reframes the paper's headline: c=1 is not a threshold but a knife-edge
+    cancellation at the zero of a smooth family, and it connects the ring to the
+    diamond paper's log R_dc/m -> ln K (the ring's ln 2 IS ln K for K=2).
+
+ Also worth settling in the paper, both cheap: the balanced cut is confirmed optimal
+ over all n_1 (the profile rises monotonically to n/2), and r_kappa saturates at ~20
+ for large c rather than shrinking indefinitely.
+
+Cross-paper housekeeping:
+ * arXiv:2607.05954 refs.bib has the PRE 111, 064314 article entered twice
+   (vazquez2025 and d7kf-s1cf); only the latter is cited. Its `pseudopaper` entry has
+   no arXiv number (now 2607.03010).
+ * The pseudofractal repo's README still carries the working title "The pseudofractal
+   web wants to be broken"; the manuscript's \title is "Community structure of the
+   pseudofractal web".
+ * arXiv:2607.03010 Fig. 1's caption marks r_kappa_dc = 123 (the q=0.99 value) while
+   the abstract headlines 42 (the q=0.5 value). Both are in Table V, but a lone number
+   should say which q. The book says 42 and names the certainty.

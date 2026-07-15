@@ -113,7 +113,12 @@ distribution of degrees enters through the single number $c_2$.
 
 Equation~\eqref{eq:path-mf} is the baseline, and it is worth pausing on how much
 it explains. The multiplicity of a random network is simply its branching factor,
-divided by $e$. Everything then hinges on how $c_2$ behaves as the network grows,
+divided by $e$. The classic Erd\H{o}s--R\'enyi graph, in which every pair is
+linked with a fixed probability, is the special case $c_2=\langle k\rangle$: its
+multiplicity is a constant when the graph is sparse, and grows in proportion to
+$n$ when it is dense, recovering a result of \citet{dong2025}. But real networks
+are sparse and hub-dominated, and there everything hinges on how $c_2$ behaves as
+the network grows,
 and for a scale-free network, $p(k)\sim k^{-\gamma}$, that depends entirely on the
 exponent $\gamma$. Since $c_2$ involves $\langle k^2\rangle$, it is controlled by
 the hubs, and the largest degree in a network of $n$ nodes grows like

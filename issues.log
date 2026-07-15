@@ -6,7 +6,12 @@ even where it carries the same defect.
 STATUS 2026-07-15: chapter 7 (distance.tex) rewritten against the newest version of
 vazquezpaths2026 (github.com/av2atgh/ramsey_netcom/tree/master/local_multi_path_2026).
 Items [3], [14], [18] resolved and items [4], [5] resolved FOR CHAPTER 7 ONLY; see the
-CHAPTER 7 section at the end of this file. All other items still open.
+CHAPTER 7 section at the end of this file.
+
+STATUS 2026-07-15 (later): chapter 6 (communities.tex) extended with three exactly
+solvable cases (arXiv:2607.01967, 2607.03010, 2607.05954). Item [15] resolved for
+ch. 6; item [5] resolved for ch. 6; item [6]'s uncaptioned tables NOT yet fixed. See
+the CHAPTER 6 section below. All other items still open.
 
 
 == VERIFIED DEFECTS ==
@@ -145,6 +150,50 @@ CHAPTER 7 section at the end of this file. All other items still open.
      grepping by title miss the file. Same pattern: walks.tex -> "Search and connect"
      (ch:search), distance.tex -> "Boosting shortest path multiplicity" (ch:distance),
      projects.tex -> "Activity specialization" (ch:projects).
+
+
+== CHAPTER 6 — PARTLY RESOLVED 2026-07-15 (communities.tex extended) ==
+
+Three new exactly solvable sections added from the "wants to be broken" series:
+  arXiv:2607.01967 (ring), 2607.03010 (pseudofractal web), 2607.05954 (diamond RG).
+Sections 6.1-6.5 unchanged; 6.6-6.9 new; summary rewritten. Full detail of what
+changed is in new_in_the_second_edition.log.
+
+Fixed:
+  [5]  for ch. 6: the chapter was entirely model-based with no exact theory; it now
+       carries three solvable cases and a mechanism (log R / m -> ln K).
+  [15] the even-odd alternation in the cycle-length table was "observed but
+       unexplained". The (m-n) ln 2 law now supplies the frame: what matters is the
+       edge-to-node surplus, i.e. the number of independent cycles. (The alternation
+       itself is still not derived — see below.)
+
+Corrected framing:
+  * The 1st edition treats detection-method dependence as cosmetic ("the exact figures
+    differ ... but the split is the same either way"). The pseudofractal shows plain
+    vs degree-corrected differ by 25x on the SAME web and SAME partition (1095 vs 42),
+    and reverse which cut is preferred. A caution is now lodged at the definition of
+    r_kappa in 6.2 and collected in 6.9. This is progress on Outlook open problem #2.
+
+New result introduced in the book (see new_in_the_second_edition.log for the full
+statement and the author-facing note):
+  * log R = (m_edges - n) ln 2 for the circulant ring, verified for c=1..5, with the
+    label term proved exactly. Explains the paper's c=1 case as a knife-edge
+    cancellation and corrects the paper's stated reason. Flagged in the chapter as
+    going beyond the papers.
+
+Still open in chapter 6:
+  * The even-odd alternation in r_kappa vs cycle length is still unexplained.
+  * The three uncaptioned `center` tables (item [6]) are untouched — they now sit
+    alongside three properly captioned figures, which makes the inconsistency worse,
+    not better. Worth fixing before the edition ships.
+  * The numerical r_kappa values (81, 98, 108, 1090) and the exact ones (34, 42, 44,
+    684, 1095) are not commensurable: the former are frequencies over random
+    realizations, the latter Bayesian posterior weights on deterministic lattices.
+    The chapter keeps them in separate sections and never quotes them side by side,
+    but a reader could still conflate them. Consider a sentence saying so outright.
+  * The solvable cases are deterministic lattices with the partition supplied by hand;
+    no detection algorithm is run. Stated in 6.6, but it does mean the exact results
+    bound the numerical ones rather than reproducing them.
 
 
 == CHAPTER 7 — RESOLVED 2026-07-15 (distance.tex rewritten) ==
