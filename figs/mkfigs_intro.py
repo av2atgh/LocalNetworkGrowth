@@ -30,7 +30,7 @@ ORDER = ["Internet (AS)", "Gnutella", "Yeast proteins", "cond-mat co-authorship"
 
 def fig_intro():
     d = pd.read_csv(os.path.join(DATA, "intro_curves.csv"))
-    fig, axes = plt.subplots(3, 1, figsize=(W * 0.74, W * 1.42))
+    fig, axes = plt.subplots(4, 1, figsize=(W * 0.74, W * 1.86))
 
     def series(ax, q):
         for i, lab in enumerate(ORDER):
@@ -55,8 +55,23 @@ def fig_intro():
     ax.set(xscale="log", yscale="log", xlabel=r"$k$", ylabel=r"$\langle c\rangle(k)$")
     panel(ax, "b", x=-0.17)
 
-    # (c) degree correlations -- the two families part company here
+    # (c) the same, corrected for what the neighbours' degrees actually allow.
+    # Shares panel (b)'s y-limits so the flattening is read off directly rather
+    # than hidden by a rescaled axis.
     ax = axes[2]
+    series(ax, "ctilde")
+    ax.plot(kk, 0.9 / kk, "k--", lw=0.8, zorder=1)
+    ax.set(
+        xscale="log",
+        yscale="log",
+        xlabel=r"$k$",
+        ylabel=r"$\langle \tilde{c}\rangle(k)$",
+        ylim=axes[1].get_ylim(),
+    )
+    panel(ax, "c", x=-0.17)
+
+    # (d) degree correlations -- the two families part company here
+    ax = axes[3]
     series(ax, "knn")
     ax.set(
         xscale="log",
@@ -64,9 +79,9 @@ def fig_intro():
         xlabel=r"$k$",
         ylabel=r"$\langle k_{nn}\rangle(k)$",
     )
-    panel(ax, "c", x=-0.17)
+    panel(ax, "d", x=-0.17)
 
-    fig.subplots_adjust(hspace=0.42)
+    fig.subplots_adjust(hspace=0.46)
     save(fig, "fig-intro-data.pdf")
 
 

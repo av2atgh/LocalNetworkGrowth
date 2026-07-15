@@ -57,6 +57,26 @@ Internet (AS),knn,483.237,47.0022
 Internet (AS),knn,689.716,38.1327
 Internet (AS),knn,1249.81,21.2435
 Internet (AS),knn,2020.92,13.3743
+Internet (AS),ctilde,2,0.390504
+Internet (AS),ctilde,3.26148,0.378154
+Internet (AS),ctilde,5.35975,0.375382
+Internet (AS),ctilde,7.82482,0.407173
+Internet (AS),ctilde,11.4918,0.383658
+Internet (AS),ctilde,17.1523,0.397862
+Internet (AS),ctilde,24.1771,0.353082
+Internet (AS),ctilde,33.7858,0.30843
+Internet (AS),ctilde,47.1655,0.353293
+Internet (AS),ctilde,68.9965,0.353988
+Internet (AS),ctilde,93.9388,0.349713
+Internet (AS),ctilde,134.875,0.375391
+Internet (AS),ctilde,193.318,0.365778
+Internet (AS),ctilde,277.64,0.378735
+Internet (AS),ctilde,389.955,0.404028
+Internet (AS),ctilde,525.878,0.448272
+Internet (AS),ctilde,717.174,0.454183
+Internet (AS),ctilde,1210,0.47493
+Internet (AS),ctilde,1270.2,0.396891
+Internet (AS),ctilde,2020.92,0.412013
 Gnutella,pk,1,0.457777
 Gnutella,pk,2,0.148751
 Gnutella,pk,3,0.0631224
@@ -110,6 +130,25 @@ Gnutella,knn,43.8507,10.4193
 Gnutella,knn,52.9623,8.67754
 Gnutella,knn,65.9191,11.0986
 Gnutella,knn,86.0814,10.0341
+Gnutella,ctilde,2,0.0181148
+Gnutella,ctilde,3,0.0144357
+Gnutella,ctilde,4,0.0144724
+Gnutella,ctilde,5,0.0134301
+Gnutella,ctilde,6,0.0117353
+Gnutella,ctilde,7,0.00843659
+Gnutella,ctilde,8.46653,0.00926267
+Gnutella,ctilde,10.7831,0.0094412
+Gnutella,ctilde,12.7035,0.00857338
+Gnutella,ctilde,15.7689,0.0069125
+Gnutella,ctilde,18.8127,0.00556678
+Gnutella,ctilde,22.6417,0.00577027
+Gnutella,ctilde,27.5295,0.00521273
+Gnutella,ctilde,33.3501,0.00710822
+Gnutella,ctilde,40.1629,0.00685953
+Gnutella,ctilde,46.6874,0.0103288
+Gnutella,ctilde,58.3952,0.026861
+Gnutella,ctilde,71.1616,0.0123405
+Gnutella,ctilde,95,0.0213777
 Yeast proteins,pk,1,0.495199
 Yeast proteins,pk,2,0.194102
 Yeast proteins,pk,3,0.107682
@@ -157,6 +196,23 @@ Yeast proteins,knn,22.4402,2.59366
 Yeast proteins,knn,28.729,3.61561
 Yeast proteins,knn,38,4.42105
 Yeast proteins,knn,56,1.39286
+Yeast proteins,ctilde,2,0.228571
+Yeast proteins,ctilde,3,0.242424
+Yeast proteins,ctilde,4,0.197679
+Yeast proteins,ctilde,5,0.154881
+Yeast proteins,ctilde,6,0.237692
+Yeast proteins,ctilde,7,0.217926
+Yeast proteins,ctilde,8,0.124157
+Yeast proteins,ctilde,9.34098,0.194169
+Yeast proteins,ctilde,11.343,0.151356
+Yeast proteins,ctilde,13.2923,0.311098
+Yeast proteins,ctilde,15,0.166667
+Yeast proteins,ctilde,18.652,0.159865
+Yeast proteins,ctilde,21.6466,0.0277778
+Yeast proteins,ctilde,27.4489,0.147978
+Yeast proteins,ctilde,30,0.05
+Yeast proteins,ctilde,38,0.09375
+Yeast proteins,ctilde,56,0
 cond-mat co-authorship,pk,1,0.0724944
 cond-mat co-authorship,pk,2,0.120989
 cond-mat co-authorship,pk,3,0.122717
@@ -213,3 +269,23 @@ cond-mat co-authorship,knn,107.376,44.4901
 cond-mat co-authorship,knn,139.359,37.9159
 cond-mat co-authorship,knn,177.256,45.6018
 cond-mat co-authorship,knn,228.26,43.2867
+cond-mat co-authorship,ctilde,2,0.971772
+cond-mat co-authorship,ctilde,3,0.938748
+cond-mat co-authorship,ctilde,4,0.899352
+cond-mat co-authorship,ctilde,5,0.872489
+cond-mat co-authorship,ctilde,6.43581,0.848614
+cond-mat co-authorship,ctilde,8.42929,0.789753
+cond-mat co-authorship,ctilde,10.8328,0.716543
+cond-mat co-authorship,ctilde,13.8726,0.644021
+cond-mat co-authorship,ctilde,17.728,0.576691
+cond-mat co-authorship,ctilde,22.7673,0.522126
+cond-mat co-authorship,ctilde,28.5113,0.482
+cond-mat co-authorship,ctilde,36.4537,0.448365
+cond-mat co-authorship,ctilde,46.4381,0.413356
+cond-mat co-authorship,ctilde,58.9348,0.37516
+cond-mat co-authorship,ctilde,75.5272,0.363904
+cond-mat co-authorship,ctilde,95.3885,0.345916
+cond-mat co-authorship,ctilde,118.467,0.330933
+cond-mat co-authorship,ctilde,150.284,0.332349
+cond-mat co-authorship,ctilde,194.606,0.326805
+cond-mat co-authorship,ctilde,241.503,0.366656

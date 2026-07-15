@@ -99,6 +99,40 @@ def logbin_pdf(k, nbins=NBINS):
     return np.array(out).T
 
 
+def omega_i(ki, nbr_degs):
+    """Maximum number of edges realizable among the neighbours of a vertex.
+
+    This is omega_i of Soffer and Vazquez, Phys. Rev. E 71, 057101 (2005). The
+    standard clustering coefficient divides the triangles t_i by C(k_i,2), the
+    number of neighbour PAIRS -- but most of those pairs may be impossible: a
+    neighbour j of degree k_j has only k_j - 1 links to spend, so it can reach at
+    most min(k_i, k_j) - 1 of i's other neighbours. Dividing by an unreachable
+    maximum is what makes a hub surrounded by leaves look unclustered no matter
+    how its neighbours are wired.
+
+    Their greedy (Havel-Hakimi): build the list min(k_i,k_j)-1 over neighbours,
+    sort descending; repeatedly take the head, spend its capacity on as many of
+    the largest remaining entries as possible, decrementing each; drop the head
+    and any zeros; re-sort. omega_i is the total number of edges drawn.
+
+    Verified against their Fig. 2: k_i=5, neighbour degrees {8,7,2,2,2} gives
+    omega_i=4, against Omega_i=5 and C(k_i,2)=10.
+    """
+    d = np.sort(np.minimum(ki, np.asarray(nbr_degs, dtype=np.int64)) - 1)[::-1]
+    d = d[d > 0]
+    edges = 0
+    while d.size:
+        h = int(d[0])
+        rest = d[1:].copy()
+        take = min(h, rest.size)
+        if take > 0:
+            rest[:take] -= 1  # rest is sorted descending: spend on the largest
+            edges += take
+        d = rest[rest > 0]
+        d = np.sort(d)[::-1]
+    return edges
+
+
 def mean_distance(g, n_sources=300, seed=7):
     """Average shortest-path distance, sampled over sources (exact per source)."""
     rng = np.random.default_rng(seed)
@@ -123,11 +157,24 @@ def measure(g, label, family):
     # local clustering, per node
     c = gt.local_clustering(g).a.astype(float)
 
-    # average neighbour degree, per node (nodes of degree 0 excluded by the LCC)
+    # triangles per node: t_i = c_i * C(k_i,2), recovered from graph-tool's c_i
+    t = np.rint(c * k * (k - 1) / 2).astype(np.int64)
+
+    # average neighbour degree, and the Soffer-Vazquez corrected clustering
     knn = np.zeros(N)
+    ctilde = np.full(N, np.nan)
     for v in g.iter_vertices():
         nb = g.get_all_neighbors(v)
-        knn[v] = k[nb].mean() if nb.size else np.nan
+        if nb.size == 0:
+            knn[v] = np.nan
+            continue
+        knn[v] = k[nb].mean()
+        if nb.size >= 2:
+            w = omega_i(int(k[v]), k[nb].astype(np.int64))
+            # omega_i = 0 means the neighbours CANNOT be joined at all (e.g. a
+            # hub of leaves): clustering is then undefined, not zero.
+            if w > 0:
+                ctilde[v] = t[v] / w
 
     # Two null expectations for the clustering.
     #
@@ -152,6 +199,7 @@ def measure(g, label, family):
         E=E,
         mean_k=k1,
         mean_c=c.mean(),
+        mean_ctilde=np.nanmean(ctilde),
         c_er=c_er,
         c_rewired=c_rewired,
         c_conf_formula=(k2 - k1) ** 2 / (N * k1**3),
@@ -171,7 +219,11 @@ def measure(g, label, family):
 
     kn, knnb, _ = logbin(k[~np.isnan(knn)], knn[~np.isnan(knn)])
 
-    return summary, (kb, pk), (kc, ck), (kn, knnb)
+    # corrected clustering, over the nodes where it is defined
+    ok = ~np.isnan(ctilde)
+    kt, ctk, _ = logbin(k[ok], ctilde[ok])
+
+    return summary, (kb, pk), (kc, ck), (kn, knnb), (kt, ctk)
 
 
 def main():
@@ -180,21 +232,23 @@ def main():
     for name, label, family in NETWORKS:
         sys.stderr.write(f"fetching {name} ...\n")
         g = prepare(name)
-        s, (kb, pk), (kc, ck), (kn, knn) = measure(g, label, family)
+        s, (kb, pk), (kc, ck), (kn, knn), (kt, ctk) = measure(g, label, family)
         s["netzschleuder"] = name
         rows.append(s)
         sys.stderr.write(
             f"  {label}: n={s['n']} E={s['E']} <k>={s['mean_k']:.2f} "
-            f"<c>={s['mean_c']:.4f} (rewired {s['c_rewired']:.4f}) "
+            f"<c>={s['mean_c']:.4f} (rewired {s['c_rewired']:.4f}, "
+            f"corrected {s['mean_ctilde']:.4f}) "
             f"<d>={s['mean_d']:.2f} r={s['r']:+.3f}\n"
         )
-        for q, (x, y) in [("pk", (kb, pk)), ("ck", (kc, ck)), ("knn", (kn, knn))]:
+        for q, (x, y) in [("pk", (kb, pk)), ("ck", (kc, ck)), ("knn", (kn, knn)),
+                          ("ctilde", (kt, ctk))]:
             for xi, yi in zip(x, y):
                 curves.append((label, q, xi, yi))
 
     with open(os.path.join(DATA, "intro_summary.csv"), "w") as f:
         cols = ["label", "family", "netzschleuder", "n", "E", "mean_k", "mean_c",
-                "c_er", "c_rewired", "c_conf_formula", "mean_d", "r"]
+                "mean_ctilde", "c_er", "c_rewired", "c_conf_formula", "mean_d", "r"]
         f.write(",".join(cols) + "\n")
         for s in rows:
             f.write(",".join(str(s[c]) for c in cols) + "\n")

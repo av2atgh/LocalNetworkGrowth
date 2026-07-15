@@ -431,6 +431,68 @@ PIPELINE
   script's docstring records the brew + venv recipe that makes graph-tool and
   zstandard visible to one interpreter.
 
+NEW (same day, second pass): Eq. (1.5) expanded on Soffer and Vazquez,
+Phys. Rev. E 71, 057101 (2005) — "Clustering coefficient without degree
+correlations biases".
+
+  The 1st edition disposed of this in one sentence ("when one strips out this bias
+  ... it is often roughly constant"). It now gets the several pages it deserves,
+  because the paper's claim is that the clustering hierarchy — one of the four
+  regularities the book sets out to explain — is LARGELY AN ARTEFACT of the measure.
+
+  * The bias, stated plainly. c_i divides the triangles by k_i(k_i-1)/2, the number
+    of neighbour PAIRS, on the grounds that this is how many links the neighbours
+    could have. But a neighbour j has only k_j - 1 links left after reaching i, so
+    it can touch at most min(k_i,k_j) - 1 of i's other neighbours. The denominator
+    counts pairs the degrees forbid.
+  * New Figure 1.6, and new Eq. (1.6). A hub of degree k whose k neighbours all have
+    degree two, each paired with another neighbour, is AS CLUSTERED AS ITS DEGREES
+    ALLOW — no rewiring could add a link among them. Yet c = 1/(k-1) -> 0. The
+    standard measure reports a maximally clustered neighbourhood as unclustered.
+    In a disassortative network that describes every hub, so the measure and the
+    correlations are entangled by construction.
+  * New calculation box: omega_i, the largest number of links the neighbours can
+    afford, with the bound Omega_i = floor( (1/2) sum_j [min(k_i,k_j) - 1] ) <=
+    C(k_i,2) and the Havel-Hakimi greedy that computes omega_i exactly. Then
+    c~_i = e_i / omega_i, with its three properties: undefined when omega_i = 0 (a
+    hub of leaves has no clustering to speak of, which is the honest verdict);
+    c~_i >= c_i always; and c~_i = c_i when every neighbour is at least as well
+    connected as the node, so nothing changes where nothing was wrong.
+  * OUR OWN DATA REPRODUCE THE PAPER. Figure 1.7 gains panel (c), <c~>(k), sharing
+    panel (b)'s vertical scale so the flattening is read off directly. For the
+    Internet the fitted slope moves from -0.76 to +0.02 — the hierarchy vanishes —
+    and <c~>(k) varies by a factor of 1.5 across four decades of degree. The paper
+    reports "no more than a factor of two" for its (2001-vintage) Internet; we get
+    1.5 on a different dataset. Every other slope moves sharply toward zero too.
+    Table 1.1 gains a <c~> column: 0.386 (Internet), 0.012 (Gnutella), 0.215
+    (yeast), 0.800 (cond-mat). Our cond-mat pair (0.657 -> 0.800) lands almost on
+    the paper's co-authorship row (0.65 -> 0.78).
+  * The omega_i implementation was verified against the paper's own Fig. 2 worked
+    example (k_i=5, neighbour degrees {8,7,2,2,2} -> omega_i=4, Omega_i=5,
+    C(k_i,2)=10) before being run on anything.
+
+  WHAT THE TEXT NOW SAYS, AND WHY IT MATTERS TO THE WHOLE BOOK
+
+  Eq. (1.5) is kept, but reframed: it is a robust MEASUREMENT and a weak piece of
+  EVIDENCE. A large part of what it records is the degree correlations reflected
+  back through a biased denominator, so the hierarchy and the correlations are not
+  two independent regularities but two views of one.
+
+  Two facts are stated as surviving the correction, and both matter downstream:
+  (1) corrected clustering is still HIGH (0.39 Internet, 0.80 cond-mat), so real
+  networks are genuinely cliquish — it is the TREND with degree, not the
+  cliquishness, that the bias manufactured; (2) that cliquishness exceeds what the
+  degrees AND their correlations can account for, since a degree-preserving
+  rewiring lowers it. This is the paper's own point ("the Internet is more clustered
+  than expected from the degree distribution and degree correlations alone") and it
+  is what leaves the book's thesis standing.
+
+  A pointed closing paragraph was added: when chapters 2-4 derive <c>(k) ~ 1/k from
+  a local rule, they are reproducing what the standard measure reports of real
+  networks, biases and all — which is the right target — but the deeper quantity
+  being matched is the degree correlations plus genuine cliquishness underneath.
+  Someone should decide whether those chapters want a sentence of their own on this.
+
 PREFACE IMPLICATIONS (for the rewrite at the end)
 
   * "The empirical data set the agenda throughout" is now closer to true: chapters
@@ -440,6 +502,11 @@ PREFACE IMPLICATIONS (for the rewrite at the end)
   * The Introduction now opens the book's empirical case rather than deferring it,
     which strengthens the "held up against real data" promise in the plan-of-the-
     book section.
+  * The Introduction now undercuts one of the four regularities it advertises, on
+    p. 8, using the author's own paper. This is a strength, but the preface's list
+    of "what recurs across systems" should probably name the clustering hierarchy
+    more carefully — or the preface can make a virtue of it: the book takes its own
+    measures apart before explaining them.
 
 -------------------------------------------------------------------------------
 NOTE FOR THE AUTHOR (not a book change)

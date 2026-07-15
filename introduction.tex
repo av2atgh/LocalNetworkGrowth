@@ -371,21 +371,137 @@ Cliquishness therefore falls as degree rises.}
 \label{fig:intro-hierarchy}
 \end{figure}
 
-A word of caution ties the last two measures together, for they are not as
-independent as they look. The clustering hierarchy and the degree correlations
-are, in part, two views of the same thing. To see why, take a hub in a
-disassortative network: its neighbors are mostly low-degree nodes, and a
-low-degree node has too few links to be connected to many of the hub's other
-neighbors. The hub is therefore \emph{forced} to have low clustering, not
-because of any designed hierarchy but simply because of whom it is attached to.
-Some of the observed decay of $\langle c\rangle(k)$ with degree is thus an
-automatic by-product of the degree correlations, not independent evidence of
-modular organization. Indeed, when one strips out this bias and measures the
-clustering that remains, it is often roughly constant, or decays only very
-weakly, with degree \citep{soffer2005}. The lesson is to read these measures
-together rather than in isolation --- a theme that recurs throughout the book,
-where a single local rule will be seen to set the clustering hierarchy and the
-degree correlations \emph{at once}, as facets of one mechanism.
+That reading is appealing, and it is the one the literature has largely adopted.
+It is also, in good part, wrong --- and the reason is worth a few pages, because
+it is the first example in this book of a global pattern dissolving under
+inspection \citep{soffer2005}.
+
+Look again at the denominator of Eq.~\eqref{eq:intro-clustering}. We divided the
+triangles $e_i$ around a node by $k_i(k_i-1)/2$, the number of \emph{pairs} of its
+neighbors, on the grounds that this is how many links those neighbors could
+possibly have among themselves. But could they? A neighbor $j$ has only $k_j$
+links in total, and one of them is already spent reaching $i$. So $j$ can reach at
+most $k_j-1$ of $i$'s other neighbors --- and if $k_j$ is small, that is nearly
+none of them. The denominator counts pairs that the network's own degrees forbid.
+
+The consequence is not subtle. Consider a hub of degree $k$ joined to $k$ nodes of
+degree two, each of which spends its second link on one other neighbor of the hub
+(Figure~\ref{fig:intro-doublestar}). Every neighbor of the hub is now connected to
+another neighbor: they are as interconnected as their degrees permit, and no
+rewiring could make them more so. There are $e_i=k/2$ links among them, so the
+hub's clustering coefficient is
+\begin{equation}
+  c = \frac{2\,(k/2)}{k(k-1)} = \frac{1}{k-1},
+  \label{eq:intro-hubc}
+\end{equation}
+which tends to zero as the hub grows. By the standard
+measure this maximally-clustered neighborhood is reported as having no clustering
+at all. A large-degree node attached to small-degree nodes will always be assigned
+a small $c$, however its neighbors are wired --- and in a disassortative network,
+that describes every hub. The measure and the correlations are entangled.
+
+\begin{figure}[t]
+\centering
+\begin{adjustbox}{max width=\linewidth}\begin{tikzpicture}[
+  nd/.style={circle,draw=black!60,fill=black!5,minimum size=3.6mm,inner sep=0pt},
+  hub/.style={circle,draw=accent!80!black,fill=black!30,minimum size=7mm,inner sep=0pt},
+  lnk/.style={draw=black!40,line width=0.7pt},
+  tri/.style={draw=black!75,line width=1.0pt}]
+  \node[hub] (H) at (0,0) {};
+  \foreach \a/\i in {20/1, 55/2, 125/3, 160/4, 200/5, 235/6, 305/7, 340/8}
+    \node[nd] (n\i) at ({2.35*cos(\a)},{1.45*sin(\a)}) {};
+  \foreach \i in {1,...,8} \draw[lnk] (H)--(n\i);
+  \draw[tri] (n1)--(n2) (n3)--(n4) (n5)--(n6) (n7)--(n8);
+  \node[accent,font=\scriptsize] at (0,-0.62) {hub, $k=8$};
+  \node[font=\scriptsize] at (0,-1.75) {every neighbor has degree $2$, and is paired with another};
+\end{tikzpicture}\end{adjustbox}
+\caption{\textbf{Why the standard clustering coefficient misleads.} The hub's
+neighbors all have degree two, and each spends its spare link on another neighbor
+of the hub. They are therefore \emph{as interconnected as their degrees allow} ---
+no rewiring could add a single link among them. Yet the standard coefficient,
+Eq.~\eqref{eq:intro-clustering}, divides by all $\binom{8}{2}=28$ neighbor pairs
+and reports $c=4/28\approx0.14$, falling to zero as the hub grows. The pairs it
+counts are pairs the degrees forbid.}
+\label{fig:intro-doublestar}
+\end{figure}
+
+The repair is to divide not by the pairs one can \emph{draw} but by the links the
+neighbors can \emph{afford}.
+
+\begin{calculation}{clustering without the degree-correlation bias}
+Let $\omega_i$ be the largest number of links that could exist among the $k_i$
+neighbors of node $i$, given those neighbors' degrees. A first bound follows from
+the argument above: neighbor $j$ can spend at most $\min(k_i,k_j)-1$ links on
+$i$'s other neighbors --- at most $k_j-1$ because that is all it has left, and at
+most $k_i-1$ because that is all the targets there are. Summing over neighbors and
+halving, since each link is counted from both ends,
+\begin{equation}
+  \omega_i \;\le\; \Omega_i = \left\lfloor \frac{1}{2}
+  \sum_{j \in \mathcal{N}(i)} \big[\min(k_i,k_j)-1\big] \right\rfloor
+  \;\le\; \binom{k_i}{2},
+  \label{eq:intro-omega}
+\end{equation}
+where $\mathcal{N}(i)$ denotes the neighbors of $i$. The last inequality is the
+whole point: $\Omega_i$ can be far below $\binom{k_i}{2}$, and it is the standard
+coefficient's insistence on the larger number that manufactures the hierarchy.
+$\Omega_i$ is still only a bound, because it does not check that the links can
+actually be arranged; $\omega_i$ itself is obtained by trying. Take the list
+$\min(k_i,k_j)-1$ over all neighbors, sorted in decreasing order; spend the
+largest entry's budget on as many of the next-largest entries as it can reach,
+decrementing each; discard it and any entry now at zero; re-sort and repeat until
+the list is empty. The number of links drawn is $\omega_i$. The corrected
+clustering coefficient is then simply
+\begin{equation}
+  \tilde{c}_i = \frac{e_i}{\omega_i},
+  \label{eq:intro-ctilde}
+\end{equation}
+the fraction of the links the neighbors could afford that they actually made.
+Three properties follow. It is undefined when $\omega_i=0$ --- a hub of leaves has
+no clustering to speak of, rather than zero clustering, which is the honest
+verdict. It never falls below the old one, $\tilde{c}_i \ge c_i$. And when every
+neighbor is at least as well connected as the node itself, the two coincide,
+$\tilde{c}_i = c_i$, so nothing is changed where nothing was wrong.
+\end{calculation}
+
+Measure $\tilde{c}$ on real networks and the hierarchy largely evaporates
+(Figure~\ref{fig:intro-data}, panels b and c, which share a vertical scale so that
+the change can be read off directly). For the Internet, $\langle c\rangle(k)$ falls
+by more than a decade across four decades of degree; $\langle\tilde
+c\rangle(k)$ is \emph{flat} --- it varies by a factor of $1.5$ over the whole
+range, and its fitted slope is $+0.02$ where the uncorrected slope was $-0.76$.
+The same happens, less completely, for the others: every slope moves sharply
+toward zero. What is left, when the bias is stripped out, is a clustering
+coefficient that is either roughly constant or decays only logarithmically with
+degree \citep{soffer2005} --- and a logarithm, over the two or three decades of
+degree a real network offers, is very nearly a constant.
+
+So Eq.~\eqref{eq:intro-hierarchy} should be read with care. It is a robust
+\emph{measurement}: plot $\langle c\rangle(k)$ for almost any real network and you
+will see it. It is much weaker as \emph{evidence} for a designed hierarchy of
+modules, because a large part of what it records is the degree correlations of the
+network reflected back through a biased denominator. The clustering hierarchy and
+the degree correlations are not two independent regularities; they are, in good
+part, two views of one.
+
+None of which makes the clustering itself an illusion. Two facts survive the
+correction and matter for everything that follows. First, the corrected clustering
+is \emph{high} --- $\tilde c \approx 0.39$ for the Internet, $0.80$ for
+co-authorship --- so real networks really are cliquish; it is the \emph{trend} with
+degree, not the cliquishness, that the bias manufactured. Second, and more
+pointedly, that cliquishness is more than the degrees and their correlations can
+account for: shuffle the links while holding every degree fixed and the clustering
+drops, as Table~\ref{tab:intro-data} will show. The Internet is more clustered than
+its own degree sequence and degree correlations can explain. Something built those
+triangles, and the degrees do not know what.
+
+The lesson is to read these measures together rather than in isolation --- a theme
+that recurs throughout the book, where a single local rule will be seen to set the
+clustering hierarchy and the degree correlations \emph{at once}, as facets of one
+mechanism. When later chapters derive $\langle c\rangle(k)\sim k^{-1}$ from a local
+rule, understand the claim precisely: the rule reproduces what the standard measure
+reports of real networks, biases and all, which is the right target --- but the
+deeper quantity it is matching is the pair of degree correlations and genuine
+cliquishness that lie underneath.
 
 \section{From global to local rules}
 
@@ -476,22 +592,25 @@ not merely a shadow of the degree distribution.
 \footnotesize
 \setlength{\tabcolsep}{3.2pt}
 \caption{\textbf{Four real networks.} Measured on the largest connected component,
-undirected. $\langle c\rangle_{\mathrm{ER}}$ is the clustering of a random network
-with the same $n$ and $\langle k\rangle$; $\langle c\rangle_{\mathrm{rew}}$ that
-of the same network with its links shuffled at random but every degree held fixed.
-$\langle d\rangle$ is the average distance and $r$ the assortativity: negative for
-the first three, positive for the last.}
+undirected. $\langle\tilde{c}\rangle$ is the clustering corrected for what the
+neighbors' degrees allow, Eq.~\eqref{eq:intro-ctilde}; it never falls below
+$\langle c\rangle$. $\langle c\rangle_{\mathrm{ER}}$ is the clustering of a random
+network with the same $n$ and $\langle k\rangle$; $\langle c\rangle_{\mathrm{rew}}$
+that of the same network with its links shuffled at random but every degree held
+fixed. $\langle d\rangle$ is the average distance and $r$ the assortativity:
+negative for the first three, positive for the last.}
 \label{tab:intro-data}
-\begin{tabular}{lrrrrrrr}
+\begin{tabular}{lrrrrrrrr}
 \hline
 Network & $n$ & $\langle k\rangle$ & $\langle c\rangle$ &
+$\langle \tilde{c}\rangle$ &
 $\langle c\rangle_{\mathrm{ER}}$ & $\langle c\rangle_{\mathrm{rew}}$ &
 $\langle d\rangle$ & $r$ \\
 \hline
-Internet (AS)  & $22\,963$ & $4.2$ & $0.230$ & $0.0002$ & $0.125$  & $3.9$ & $-0.052$ \\
-Gnutella       & $62\,561$ & $4.7$ & $0.005$ & $0.0001$ & $0.0002$ & $5.9$ & $-0.036$ \\
-Yeast proteins & $1\,458$  & $2.7$ & $0.071$ & $0.0018$ & $0.0026$ & $6.9$ & $-0.034$ \\
-cond-mat       & $36\,458$ & $9.4$ & $0.657$ & $0.0003$ & $0.0020$ & $5.5$ & $+0.055$ \\
+Internet (AS)  & $22\,963$ & $4.2$ & $0.230$ & $0.386$ & $0.0002$ & $0.123$  & $3.9$ & $-0.052$ \\
+Gnutella       & $62\,561$ & $4.7$ & $0.005$ & $0.012$ & $0.0001$ & $0.0002$ & $5.9$ & $-0.036$ \\
+Yeast proteins & $1\,458$  & $2.7$ & $0.071$ & $0.215$ & $0.0018$ & $0.0050$ & $6.9$ & $-0.034$ \\
+cond-mat       & $36\,458$ & $9.4$ & $0.657$ & $0.800$ & $0.0003$ & $0.0018$ & $5.5$ & $+0.055$ \\
 \hline
 \end{tabular}
 \end{table}
