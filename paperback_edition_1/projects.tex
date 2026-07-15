@@ -1,0 +1,274 @@
+\chapter{Activity specialization}
+\label{ch:projects}
+
+\section{Projects as growing networks}
+
+The duplication rule of the previous chapter was born in biology, but copying is
+not a biological privilege. This chapter applies the same idea to a very
+different system --- the schedule of a large engineering project --- and gets, in
+return, a surprising practical payoff: an explanation of why big projects so
+reliably run late.
+
+A project schedule can be drawn as a network, called an \emph{activity network}.
+Its nodes are the individual activities, or tasks, that make up the project, and
+its links record \emph{precedence}: a link from activity $a$ to activity $b$
+means $b$ cannot begin until $a$ is finished --- you cannot paint a wall before it
+is built. Because work only flows forward in time, the network has no loops; in
+the jargon it is a \emph{directed acyclic graph}, with starting activities (no
+predecessors) and finishing activities (no successors). For such a network there
+is one object that has ruled project management since the 1950s: the
+\emph{critical path}. This is the longest chain of dependent activities running
+from start to finish --- the route through the project with no slack anywhere
+along it, so that delaying \emph{any} activity on it pushes back the whole
+project's end date by the same amount \citep{kelley1959}. The manager's
+time-honored prescription is therefore simple: watch the critical path, and
+guard it at all costs.
+
+And yet projects keep finishing late. A survey of more than ten thousand of them
+found only a few percent delivered on time and on budget, and fifteen years of
+improvements in management practice barely moved that figure
+\citep{flyvbjerg2003}. This stubborn record hints that the critical path --- a
+single one-dimensional thread --- may be the wrong thing to watch in schedules
+that have grown into genuinely complex networks. Following
+\citet{vazquezprojects2023}, this chapter grows such schedules from a local rule,
+shows that the critical path \emph{shrinks toward irrelevance} as projects get
+bigger, and relocates the real source of delay risk in the network as a whole.
+
+\section{The duplication--split rule}
+
+Where does a schedule come from? Not in one piece. A plan is \emph{refined}: a
+coarse activity is broken into finer ones, again and again, until the plan is
+detailed enough to execute. There are two natural ways to break an activity in
+two, and they correspond to two kinds of work. This is our local rule, with a
+single dial, the duplication probability $q$. Beginning from two activities in
+series, repeat: pick an existing activity at random and, with probability $q$,
+\emph{duplicate} it, otherwise \emph{split} it.
+\begin{itemize}
+  \item \emph{Duplication} (probability $q$). A \emph{generic} activity is split
+    into two smaller activities that run \emph{in parallel} --- think of doubling
+    a crew so two teams do the same kind of work at once. Both copies inherit
+    \emph{all} the predecessors and \emph{all} the successors of the parent.
+    Duplication \emph{widens} the schedule, adding parallel strands of work.
+  \item \emph{Split} (probability $1-q$). A \emph{specialized} activity is cut
+    into two activities run \emph{in sequence} --- one specialist does the first
+    part and hands off to another who does the second. The parent keeps its
+    predecessors, the new activity takes over its successors, and a link joins
+    the two. Splitting \emph{lengthens} the schedule, extending a chain.
+\end{itemize}
+\begin{figure}[t]
+\centering
+\begin{adjustbox}{max width=\linewidth}\begin{tikzpicture}[>={Stealth[round,length=2.2mm]},
+  nd/.style={circle,draw=black!65,fill=black!4,minimum size=5.5mm,inner sep=0pt,font=\scriptsize},
+  act/.style={circle,draw=accent,fill=black!30,minimum size=5.5mm,inner sep=0pt,font=\scriptsize},
+  newl/.style={->,draw=accent,line width=1.2pt}]
+  % panel (a) duplication: parallel
+  \begin{scope}
+    \node[nd]  (p)  at (0,0)      {};
+    \node[act] (A1) at (1.4,0.7)  {};
+    \node[act] (A2) at (1.4,-0.7) {};
+    \node[nd]  (s)  at (2.8,0)     {};
+    \draw[newl] (p)--(A1); \draw[newl] (p)--(A2);
+    \draw[newl] (A1)--(s); \draw[newl] (A2)--(s);
+    \node[font=\footnotesize] at (1.4,-1.7) {(a) duplication: in parallel};
+  \end{scope}
+  % panel (b) split: series
+  \begin{scope}[xshift=5.6cm]
+    \node[nd]  (p2) at (0,0)    {};
+    \node[act] (B1) at (1.1,0)  {};
+    \node[act] (B2) at (2.3,0)  {};
+    \node[nd]  (s2) at (3.4,0)   {};
+    \draw[newl] (p2)--(B1); \draw[newl] (B1)--(B2); \draw[newl] (B2)--(s2);
+    \node[font=\footnotesize] at (1.7,-1.7) {(b) split: in sequence};
+  \end{scope}
+\end{tikzpicture}\end{adjustbox}
+\caption{\textbf{Refining an activity.} A generic activity is replaced either by
+(a) two copies that run \emph{in parallel}, both inheriting the predecessor (left,
+gray) and successor (right, gray) of the parent --- duplication, which widens the
+schedule --- or by (b) two specialized activities that run \emph{in sequence} --- a
+split, which lengthens it.}
+\label{fig:proj-dupsplit}
+\end{figure}
+
+So the dial $q$ measures how a project is organized (Figure~\ref{fig:proj-dupsplit}). Small $q$ means almost every
+refinement is a split: work is broken into ever-longer chains of specialists, and
+the schedule is nearly a single long line. Large $q$ means almost every
+refinement is a duplication: generic work is parallelized into many simultaneous
+strands, and the schedule fans out into a broad web. The same copying that
+duplicated a gene in the previous chapter here duplicates an activity; the new
+ingredient is the \emph{split} --- the act of \emph{specialization} that gives the
+chapter its name --- and the forward-flowing, start-to-finish structure of a
+schedule.
+
+\section{Predecessors and successors: identical power laws}
+
+Because the rule copies an activity together with its predecessors and
+successors, it is a duplication rule of the kind that produced power-law degrees
+in the previous chapter --- only now there are two degrees to track, the number of
+predecessors (the in-degree) and the number of successors (the out-degree). The
+box works out the distribution of predecessors by following how many activities
+have each number of them; the same argument applies verbatim to successors. The
+result is in the paragraph after.
+
+\begin{calculation}{the distribution of predecessors}
+Let $n_k(n)$ be the number of activities with $k$ predecessors when the schedule
+has $n$ activities in all. Adding one activity changes this count by
+\begin{equation}
+\adjustbox{max width=\linewidth}{$\displaystyle
+  n_k(n+1) = n_k(n)
+   + q\left[\frac{k-1}{n}\,n_{k-1}(n) - \frac{k}{n}\,n_k(n)
+            + \frac{1}{n}\,n_k(n)\right]
+   + (1-q)\,\delta_{k,1}
+$}
+  \label{eq:proj-rate}
+\end{equation}
+the bracket collecting the duplication events (an activity climbs from $k-1$ to
+$k$ predecessors when one of its predecessors is duplicated, and so on) and the
+last term adding a fresh single-predecessor activity at each split. Looking for a
+stable shape $n_k(n)=n\,p_k$ turns this into a recurrence,
+\begin{equation}
+  p_k = q\big[(k-1)\,p_{k-1} - k\,p_k + p_k\big] + (1-q)\,\delta_{k,1},
+  \label{eq:proj-recurrence}
+\end{equation}
+which solves in closed form (with $\Gamma$ the gamma function) to
+\begin{equation}
+  p_k = \prod_{s=1}^{k-1}\frac{s}{\tfrac{1}{q}+s}\; p_1
+      = \Gamma\!\left(\tfrac{1}{q}+1\right)
+        \frac{\Gamma(k)}{\Gamma\!\left(\tfrac{1}{q}+k\right)}\, p_1,
+  \label{eq:proj-pk}
+\end{equation}
+with the power-law tail
+\begin{equation}
+  p_k \sim k^{-1/q}.
+  \label{eq:proj-asym}
+\end{equation}
+\end{calculation}
+
+The result, Eq.~\eqref{eq:proj-asym}, is a power law with exponent $\gamma=1/q$.
+A wide, duplication-heavy schedule (large $q$) has the heaviest tail of
+highly-connected activities; at $q=1/2$ we recover the familiar value $\gamma=2$.
+The very same reasoning, run on successors instead of predecessors, gives the
+\emph{identical} distribution for the out-degree. That coincidence is the model's
+signature prediction --- the spread of predecessor counts and the spread of
+successor counts should look the same --- and it follows directly from the
+even-handed way duplication treats the two ends of an activity.
+
+\section{The vanishing critical path}
+
+The degrees are a local property; the critical path is a global one. Remarkably,
+the same rule fixes how the critical path grows with the size of the project, and
+the answer overturns the manager's intuition. The box does the short
+calculation; the consequences follow.
+
+\begin{calculation}{how the critical path scales}
+Let $c$ be the number of activities on the critical path of an $n$-activity
+schedule. The path can only lengthen when a \emph{split} lands on it (a split
+inserts an activity in series), and the chance that the activity picked for
+refinement lies on the critical path is $c/n$. Hence
+\begin{equation}
+  \frac{dc}{dn} = (1-q)\,\frac{c}{n},
+  \label{eq:proj-cp}
+\end{equation}
+which integrates to $c\sim n^{1-q}$, so the \emph{fraction} of activities on the
+critical path shrinks as
+\begin{equation}
+  \frac{c}{n} \sim n^{-\alpha(q)}, \qquad \alpha(q) \le q.
+  \label{eq:proj-cpfrac}
+\end{equation}
+Because distances here grow as a power of size, $c\sim n^{1/D}$, the network is a
+\emph{fractal} with dimension
+\begin{equation}
+  D = \frac{1}{1-\alpha(q)}.
+  \label{eq:proj-fractal}
+\end{equation}
+\end{calculation}
+
+The headline is Eq.~\eqref{eq:proj-cpfrac}: for any amount of duplication
+($q>0$), the critical path is a \emph{vanishing fraction} of the project as the
+project grows. The bigger and more parallel the schedule, the smaller the slice
+of the work that the manager's cherished path actually covers --- so watching the
+critical path means watching an ever-shrinking sliver of the whole. (Simulations
+confirm the power-law shrinkage, with the measured exponent $\alpha$ a little
+below the simple bound $q$; for instance $\alpha\approx 0.11,\,0.28,\,0.43$ at
+$q=0.20,\,0.50,\,0.70$.)
+
+The scaling also tells us what \emph{kind} of network a schedule is. In a
+small-world network, distances grow only logarithmically with size --- doubling
+the network barely lengthens the longest path. Here distances grow as a
+\emph{power} of size, the mark of a \emph{fractal} network: one whose ``size''
+and ``length'' are tied together by a fixed dimension $D$, much as a physical
+fractal looks the same at every magnification. Duplication--split schedules are
+thus a class apart --- power-law degrees like a scale-free network, but power-law
+(not logarithmic) distances, unlike a small world. Specialization builds the long
+fractal chains; duplication stacks them up in parallel.
+
+\section{Real project schedules}
+
+This is not just a story about a model. \citet{vazquezprojects2023} examined
+$77$ real construction projects, together worth more than ten billion dollars,
+which yielded $323$ activity networks --- snapshots of projects at different
+stages --- ranging from about a hundred to sixteen thousand activities. Three
+predictions survive the encounter with data. First, the predecessor and successor
+counts are each power-law distributed, and fitting them \emph{separately} yields
+duplication indices $q$ that agree, just as the model demands they should.
+Second, those indices fall between roughly $0.1$ and $0.5$, most above $0.2$:
+real schedules sit on the split-dominated, nearly-linear side --- but with enough
+duplication to matter. Third, the share of activities on the critical path falls
+with project size right across the collection, confirming that the critical path
+really does dwindle as projects grow.
+
+\section{Delay risk as percolation}
+
+If the critical path fades to insignificance and yet projects are still late,
+where does the delay risk live? The answer is that it is spread across the whole
+network, and it is governed by \emph{percolation} --- the same mathematics that
+describes how water seeps through porous rock or how a forest fire spreads from
+tree to tree.
+
+Picture an outside shock --- bad weather, a strike, a pandemic --- that pushes
+some activities past their planned finish. A delay only passes to a downstream
+activity if it is large enough to use up the spare time, the \emph{free float},
+built into that dependency; otherwise the buffer absorbs it and the delay stops
+there. Now treat each dependency as a channel that passes a delay along with some
+probability $p$, and ask what fraction of activities end up delayed beyond their
+own slack --- the \emph{delay incidence}. This is exactly a percolation problem:
+delays spread through the network of dependencies like fire through a forest, and
+percolation theory says such spreading has a sharp \emph{threshold}
+\citep{albert2000,ellinas2019,schwartz2002},
+\begin{equation}
+  p_c = \frac{1}{\langle k\rangle},
+  \label{eq:proj-pc}
+\end{equation}
+where $\langle k\rangle$ is the average number of downstream dependencies per
+activity. The meaning of a threshold is stark: below $p_c$ delays stay local and
+project-wide overruns essentially never happen; above $p_c$ a finite fraction of
+projects suffer a system-wide cascade --- the fire jumps the firebreaks.
+
+The data choose between two stories cleanly. If the critical path governed
+delay, the incidence ought to track $p\,c$ (transmission times critical-path
+size); in the real projects that correlation is negligible. If percolation
+governs delay, the incidence ought to switch on exactly at $p-p_c=0$; and that is
+what the construction projects show --- below threshold, delay incidence stays
+under one percent; above it, the incidence climbs, reaching fifteen percent of
+all activities in the worst cases. The true control knob of project delay is
+$p-p_c$, a property of the \emph{whole} network, not $p\,c$, a property of one
+path through it.
+
+Here is the chapter's practical lesson, and its link to the rest of the book. The
+very same local rule that sets the degree distributions also sets the average
+degree $\langle k\rangle$, and through Eq.~\eqref{eq:proj-pc} the threshold for
+catastrophic delay. A project's tendency to run late is written into the network
+its activities have grown into --- not into any single path through it.
+
+\section{Summary}
+
+Project schedules are forward-flowing networks of activities, grown by a local
+refinement rule: pick an activity and either duplicate it into parallel copies
+(probability $q$) or split it into specialized sequential parts. This
+duplication--split rule predicts identical power-law distributions for the
+numbers of predecessors and successors, $p_k\sim k^{-1/q}$; a critical path that
+grows only as $c\sim n^{1-q}$ and so vanishes as a fraction of large projects;
+and a fractal, rather than small-world, geometry. All three hold in $77$ real
+construction projects. And because the critical path becomes irrelevant at scale,
+delay risk is better read through percolation, with a threshold $p_c=1/\langle
+k\rangle$ fixed by the grown network's average degree --- so that project
+performance, in the end, is a property of the activity network as a whole.

@@ -1,0 +1,225 @@
+\documentclass[10pt]{book}
+
+\usepackage[paperwidth=5in,paperheight=8in,includehead,
+            inner=0.55in,outer=0.4in,top=0.56in,bottom=0.64in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{adjustbox}
+\usepackage[round,authoryear]{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{microtype}
+\usepackage[most]{tcolorbox}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc,bending}
+
+% Compact running heads that fit the narrow 5x8 page.
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\small\thepage}
+\fancyhead[RE]{\small\nouppercase{\leftmark}}
+\fancyhead[LO]{\small\nouppercase{\rightmark}}
+\renewcommand{\headrulewidth}{0.3pt}
+\fancypagestyle{plain}{\fancyhf{}\renewcommand{\headrulewidth}{0pt}\fancyfoot[C]{\small\thepage}}
+
+% Make the blank verso pages inserted before each chapter truly blank (no header).
+\makeatletter
+\def\cleardoublepage{\clearpage\if@twoside\ifodd\c@page\else
+  \hbox{}\thispagestyle{empty}\newpage\if@twocolumn\hbox{}\newpage\fi\fi\fi}
+\makeatother
+% Grayscale palette (the book is printed in black and white).
+\colorlet{accent}{black!80}
+\colorlet{accentB}{black!50}
+
+% Looser float placement so figures do not leave near-empty pages on the small trim.
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.8}
+\renewcommand{\textfraction}{0.07}
+\renewcommand{\floatpagefraction}{0.7}
+\setcounter{topnumber}{2}
+\setcounter{totalnumber}{3}
+
+% Skippable "calculation" box. Usage: \begin{calculation}{what is being computed} ... \end{calculation}
+\newtcolorbox{calculation}[1]{%
+  breakable,
+  enhanced,
+  colback=black!4,
+  colframe=black!45,
+  boxrule=0.5pt,
+  arc=2pt,
+  left=6pt,right=6pt,top=6pt,bottom=6pt,
+  fonttitle=\bfseries\small,
+  fontupper=\small,
+  coltitle=black,
+  title={The mathematics behind it: #1 \hfill\textnormal{\itshape(this box can be skipped)}},
+}
+
+\pagenumbering{gobble}
+
+\begin{document}
+
+\title{Local network growth:\\How simple rules drive network complexity}
+
+\author{Alexei Vazquez}
+\maketitle
+
+\thispagestyle{empty}
+\vspace*{\fill}
+\begin{center}
+{\itshape To the ICTP, where it all started\ldots\\[0.7em]
+and Nodes \& Links, for a renaissance.}
+\end{center}
+\vspace*{\fill}
+\clearpage
+
+\chapter*{Preface}
+
+In the year 2000 I was at the International Centre for Theoretical Physics 
+(ICTP), located in Trieste, Italy. I had left my home country, Cuba, and gone 
+there, with many dreams and much nostalgia. At the ICTP I indulged myself in 
+the library, the scientific meetings, the computer cluster, and new friends. 
+Then, on May 22--25, 2000, I attended the Research Workshop on Graph Theory 
+and Statistical Physics. There was a presentation by an obscure Hungarian 
+physicist by the name of Albert-L\'aszl\'o Barab\'asi: ``Emergence of scaling 
+in complex networks.'' A small conference room and few attendees. Yet, it was 
+eye-opening, a fascinating introduction to the properties of real networks 
+and a hypothesis for their evolution. When I left that room I was charged, 
+full of ideas. Two weeks later I had my first paper on network science: 
+``Knowing a network by walking on it: emergence of scaling'' 
+\citep{vazquez2000walk}. And right there, it all started.
+
+Networks are everywhere, and so are the regularities they share. Whether one
+looks at the Internet, the World Wide Web, a society, a cell, or the scientific
+literature, the same statistical signatures recur: broad, often scale-free
+degree distributions; short distances between nodes; high local clustering that
+thins out in a regular hierarchy as degree grows; and systematic correlations
+between the degrees of neighboring nodes. That these features appear across
+systems with nothing else in common is one of the most striking findings of
+network science. Explaining them has been the field's central occupation for
+more than two decades.
+
+The dominant explanation has rested on the preferential attachment mechanism, 
+proposed by R\'eka Albert and Barab\'asi \citeyearpar{barabasi1999}: new nodes connect to existing ones
+in proportion to their degree, and a power law follows. It is a powerful 
+idea, but taken literally it is a \emph{global} rule, requiring each newcomer 
+to weigh every node in the network against every other. Real web pages, 
+proteins, and people do no such thing. They act on what is near them --- the 
+page a surfer reaches, the friend a friend introduces, the gene that gets 
+copied. Preferential attachment is a macroscopic perception. In the same way, our perception of temperature is a macroscopic consequence of air molecules heating our skin. This book is about the microscopic mechanism behind 
+preferential attachment and beyond: the regularities of real networks 
+\emph{emerge} from local rules. A growth rule that reaches just one step 
+beyond a randomly chosen node, to one of its neighbors, already attaches 
+preferentially by degree --- and the same locality that produces preferential 
+attachment produces the clustering hierarchy, the degree correlations, the 
+community structure, and the multiplicity of shortest paths, all as a 
+package. Coincidentally, I consolidated these ideas while working as a postdoctoral research associate in Barab\'asi's group, then at the University of Notre Dame.
+
+The chapters develop this thesis one mechanism at a time. After an introduction
+that fixes the measures and states the argument, I treat growth by search
+(citation and web graphs), by triadic closure (social networks), and by
+duplication (protein interaction networks) --- the three local rules of my 2003
+paper --- and then carry the same principle into more recent work: the
+duplication--split structure of project schedules, the emergence of communities
+from local rules, and the boosting of shortest path multiplicity. Each chapter
+pairs a concrete local rule with a class of real networks it illuminates, and
+each ends where it began, with the conclusion that locality is the common cause.
+
+The book is intended for anyone curious about how complex systems organize 
+themselves --- the interested general reader as much as the specialist. 
+Readers drawn to the \emph{general} principle will find it running through 
+every chapter. Mathematicians, computer scientists, and physicists, in 
+particular, will recognize a single idea applied again and again: that a 
+handful of simple local rules, with no global coordination, is enough to 
+account for the statistics that recur across otherwise unrelated networks; 
+the closing chapters on the emergence of communities and on the redundancy of 
+shortest paths push that idea furthest. Readers drawn instead to a 
+\emph{particular} system will find it given a chapter of its own. Social 
+scientists will recognize their networks of acquaintance and collaboration in 
+the friends-of-friends mechanism of Chapter~\ref{ch:friends}; biologists will 
+find the evolution of protein interaction networks through gene duplication 
+in Chapter~\ref{ch:duplication}; project managers and engineers will find the 
+anatomy of project schedules --- and the surprising irrelevance of the 
+critical path --- in the activity-specialization model of 
+Chapter~\ref{ch:projects}; and those who study the web, citation, or the 
+spread of information online will find the search-and-connect rule of 
+Chapter~\ref{ch:search}. Graduate students entering the field will find the 
+models developed in full. Whatever the entry point, the core ideas are told 
+in plain language, and the more technical calculations are set in boxes that 
+can be skipped without losing the thread. I have tried to keep the analysis 
+self-contained, favoring mean-field arguments that make the mechanisms 
+transparent over exhaustive rigor, and to let the empirical data set the 
+agenda throughout. Readers will find the degree denoted $k$, the elements of 
+a graph called nodes, and their relations called links, following the 
+now-standard usage of network science.
+
+Much of this material grew out of collaborations and conversations over many 
+years, with special mentions to Alessandro Vespignani, Yamir Moreno, Romualdo 
+Pastor-Satorras, Amos Maritan, Alessandro Flammini, Albert-L\'aszl\'o 
+Barab\'asi, Sara Nadiv Soffer and Christos Ellinas. The original research 
+papers on which the chapters draw are cited at the appropriate points and 
+collected in the bibliography. Parts of the prose, and several of the 
+figures, were prepared and edited with the help of Anthropic's Claude 
+(Opus~4.8). I am grateful to the colleagues who shaped these ideas, and to 
+the reader who, I hope, will come away persuaded that complex networks need 
+not be designed --- that they can grow themselves, one local decision at a 
+time.
+
+\vspace{1em}
+\noindent Alexei Vazquez
+
+\tableofcontents
+
+\include{introduction}
+
+% instructions
+% references
+% - https://www.researchgate.net/publication/395472157_Degree_correlations_and_clustering_hierarchy_in_networks_measures_origin_and_consequences, chapter 2
+% - https://arxiv.org/abs/cond-mat/0211528, section I
+
+
+\include{walks}
+
+% instructions
+% references
+% - https://arxiv.org/abs/cond-mat/0211528, section III
+
+\include{friends}
+
+% instructions
+% references
+% - https://arxiv.org/abs/cond-mat/0211528, section IV
+% 1- https://www.researchgate.net/publication/395472157_Degree_correlations_and_clustering_hierarchy_in_networks_measures_origin_and_consequences
+%    Sub-chapter 4.2
+
+
+\include{proteins}
+
+% instructions
+% references
+% - https://arxiv.org/abs/cond-mat/0211528, section V
+
+\include{projects}
+
+% instructions
+% references
+% - https://www.nature.com/articles/s41598-022-27180-0
+
+\include{communities}
+
+% instructions
+% references
+% - https://arxiv.org/abs/2501.17042
+
+\include{distance}
+
+% instructions
+% references
+% - https://arxiv.org/abs/2605.25237
+
+\include{outlook}
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}

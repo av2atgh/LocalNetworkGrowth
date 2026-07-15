@@ -1,0 +1,110 @@
+\chapter{Outlook}
+\label{ch:outlook}
+
+\section{One principle, many faces}
+
+We have now followed a single idea through six concrete settings, and it is worth
+gathering the threads before asking what lies beyond them. In every case the
+network grew by a \emph{local} rule --- a newcomer acting only on a node it had
+reached and that node's immediate neighbors --- and in every case the same family
+of global regularities emerged unbidden.
+
+Searchable networks, such as the citation graph and the World Wide Web, grow by
+exploration: a newcomer surfs along links and connects to what it finds. Modeling
+the surfer as the very random walk that defines Google's PageRank, we found that a
+page's visiting probability rises in a straight line with its in-degree, so that
+the local act of walking manufactures an effective ``rich get richer.'' From it
+follow a power-law degree distribution whose exponent is fixed purely by how the
+network is explored, a clustering hierarchy in which cliquishness falls with
+degree, and generically disassortative correlations
+(Chapter~\ref{ch:search}).
+
+Social networks grow by introduction: a friend introduces a friend, closing a
+triangle. Formalizing the friend-of-a-friend as a \emph{potential link}, born in
+proportion to degree, we recovered the same rich-get-richer and the same
+clustering hierarchy --- but now with \emph{assortative} correlations, the
+well-connected keeping one another's company (Chapter~\ref{ch:friends}). The
+contrast with the searchable networks is that chapter's quiet lesson: the sign of
+the degree correlations is not a free parameter but a readout of whether the rule
+reaches outward, to the periphery, or inward, within a neighborhood.
+
+Biological networks grow by copying: a gene is duplicated, its protein inheriting
+all of the ancestor's interactions, and the copies then diverge. Because a node
+gains a link whenever one of its neighbors is duplicated, copying too is a
+rich-get-richer engine; self-interactions seed the clustering hierarchy, and
+coupling divergence to duplication adds a density transition and a multifractal
+degree distribution born of inheritance, alongside the disassortative mixing
+measured in real protein networks (Chapter~\ref{ch:duplication}). Here the three
+mechanisms met in one sentence: a rule that attaches to a \emph{neighbor} of a
+randomly chosen node attaches in proportion to degree, because a well-connected
+node simply belongs to more neighborhoods. Preferential attachment, the
+clustering hierarchy, and the degree correlations are all the generic harvest of
+locality.
+
+The same copying, carried into project schedules, refines each activity either by
+duplicating it into parallel copies or by splitting it into specialized
+sequential parts. The rule predicts identical power laws for an activity's
+predecessors and successors, a critical path that vanishes as a fraction of large
+projects, and a fractal rather than small-world geometry --- all borne out in
+seventy-seven real construction projects --- and it relocates the risk of delay
+from the celebrated critical path to a percolation threshold set by the whole
+network's average degree (Chapter~\ref{ch:projects}).
+
+Finally, locality proved to shape structure above the level of the individual
+node. The same rules that set the degrees also segregate the network into
+communities --- even when every node is identical --- a fact we made precise
+through the Ramsey community number, the size beyond which communities are all but
+certain (Chapter~\ref{ch:communities}); and they thread the network with redundant
+shortest paths, multiplying the routes between nodes far faster than chance and in
+lockstep with those very communities (Chapter~\ref{ch:distance}).
+
+And with that, the book comes full circle. We set out asking where the global
+regularities of real networks come from --- their power-law degrees, their
+small-world distances, their clustering hierarchy, their degree correlations ---
+and answered, one mechanism at a time, that none of them need be imposed from
+above: each emerges from a way of growing in which no node ever uses more than
+local knowledge. A node that surfs to a neighbor, befriends a friend, is copied
+from an ancestor, or refines a task asks nothing of the network as a whole --- and
+yet the networks these humble acts build carry, in the aggregate, the full and
+unmistakable signature of real complex systems.
+
+\section{What remains to be done}
+
+If the thesis of this book is right, it opens more questions than it closes.
+
+Several are concrete. The exponential growth of shortest path multiplicity under
+the duplication--split rule --- so much faster than the log-quadratic growth of
+every other rule we studied --- still wants a full explanation; the square-counting
+argument shows why copying outruns triadic closure, but not why it runs away
+exponentially. The Ramsey community number, likewise, remains tied to the
+community-detection method used to measure it, and a notion of emergence that does
+not depend on the algorithm would put the whole idea on firmer ground. Even the
+self-organized critical state of the exhaustive searcher, where a scale-free
+network appears across a whole range of the control parameter rather than at one
+fine-tuned value, deserves to be connected more tightly to the wider physics of
+criticality.
+
+Others are programmatic. Throughout, we read each local rule \emph{forward}, from
+mechanism to statistics; the empirical chapters hint at the reverse problem ---
+reading the rule \emph{backward}, inferring from a single observed network which
+local moves grew it, and with what parameters, as we did when fitting a
+duplication index to project schedules. A general inverse theory, turning measured
+correlations, clustering hierarchies and community structure into an estimate of
+the underlying rule, would make these models genuinely diagnostic. And real
+networks are surely not grown by one rule in isolation: a social graph is part
+introduction and part search, a cellular network part duplication and part fresh
+interaction. How competing local moves combine --- whether their signatures simply
+add, or interfere to produce something neither would alone --- is largely open.
+
+The setting, too, can be widened. The networks of this book are mostly
+unweighted, undirected and static, whereas real ones carry weights, directions,
+timestamps, and several kinds of link at once. Whether the locality principle
+survives into weighted, temporal and multilayer networks --- and what new
+regularities it might generate there --- is a natural frontier. So is the coupling
+of growth to \emph{function}: the percolation of delays through a project schedule
+was a first glimpse of a dynamics running on a network that local rules had built,
+and the interplay between how a network grows and what it then does promises more
+than either studied alone.
+
+None of these questions threatens the central claim; each extends it. Local rules
+are the driving mechanism; everything else follows.

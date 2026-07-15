@@ -1,0 +1,241 @@
+\chapter{Boosting shortest path multiplicity}
+\label{ch:distance}
+
+\section{The redundancy of shortest paths}
+
+The small-world property, met back in the introduction, promises that any two
+nodes of a real network are joined by a \emph{short} path --- only a few hops
+apart. It says nothing, though, about how \emph{many} short paths there are.
+That count turns out to matter a great deal. If the only shortest route between
+two nodes runs through a single chain of intermediaries, the connection is
+fragile: cut one link and the shortest route is gone. If instead there are
+several shortest routes side by side, the connection is robust, and whatever
+flows between the two nodes --- a message, a signal, a delay --- can travel along
+all of them at once. The quantity that captures this is the \emph{shortest path
+multiplicity}: the number of distinct shortest routes between a pair of nodes. A
+simple picture: if two friends can each be reached from you in two handshakes,
+but by two completely different chains of acquaintances, the multiplicity of that
+connection is two. In real networks this multiplicity is conspicuously high.
+
+And it is not an isolated fact. \citet{deng2026} found that, across many real
+networks, the abundance of multiple shortest paths is strongly correlated with
+\emph{community structure} --- the very groupings of the previous chapter --- more
+strongly than with any other standard measure. Two networks of the same size and
+the same degree distribution can differ widely in their path multiplicity, and
+the difference tracks how community-rich they are. A correlation like that begs
+for an explanation. Does community structure somehow \emph{cause} paths to
+multiply, or do both spring from a common deeper source? The previous chapter
+hands us the obvious suspect: local growth rules, which we saw conjure
+communities out of nothing but locality. This closing chapter, following
+\citet{vazquezpaths2026}, completes the case by showing that those same local
+rules also \emph{boost} the multiplicity of shortest paths --- so that the
+striking link between paths and communities is not one causing the other, but the
+shared shadow cast by the rule that grew the network.
+
+The mechanism is easy to picture once named. Local rules build short
+\emph{cycles} --- closed loops --- as a matter of course: a triangle whenever a
+friend introduces a friend, a square whenever a gene is copied. And a cycle is
+exactly a structure that offers more than one way around. In a network with no
+loops at all --- a \emph{tree} --- there is precisely one route between any two
+nodes; the more loops a network carries, the more alternative shortest routes it
+affords. Path multiplicity is simply what local rules leave behind when they
+close loops.
+
+\section{Defining the multiplicity}
+
+We need only one quantity. Write $\mu_{ij}(G)$ for the number of distinct
+shortest paths between nodes $i$ and $j$ in a network $G$ --- counting every route
+that ties for the minimum number of hops. Averaging this over all pairs of nodes,
+and over many networks grown the same way, gives the \emph{average shortest path
+multiplicity} $\langle\mu\rangle$, the single number we will follow as the
+network grows to size $n$. A tree, with its unique routes, has $\langle\mu\rangle
+= 1$ exactly; anything above one measures the redundancy that loops provide. The
+whole chapter is about one question: how fast does $\langle\mu\rangle$ rise as the
+network gets bigger, and does that rate betray whether the network was grown by a
+local rule?
+
+\section{The baseline: random networks}
+
+To judge what counts as ``boosted,'' we first need the expectation in the 
+\emph{absence} of any local structure. The natural reference is a random 
+network. For a dense random network --- the classic Erd\H{o}s--R\'enyi graph, in 
+which every possible link is present with some fixed probability --- the average 
+multiplicity grows in proportion to the size $n$ \citep{dong2025}. But real 
+networks are not dense; they are \emph{sparse}, each node having only a handful 
+of links no matter how large the network. The fair baseline is therefore a 
+\emph{sparse} random network, which we make by taking a network grown by a local 
+rule and then shuffling its links at random while leaving each node's number of 
+links untouched --- the same configuration-model scramble used as a control in 
+the previous chapter. Stripped of their local order this way, these sparse 
+random networks have a multiplicity that creeps up only \emph{logarithmically} 
+with size, as determined by numerical simulations \citep{vazquezpaths2026}:
+
+\begin{equation}
+  \langle\mu\rangle_{S,0} = a + b\log n,
+  \label{eq:path-baseline}
+\end{equation}
+the subscript $S,0$ marking a network that is sparse ($S$) and unstructured
+($0$). Logarithmic growth is about as slow as growth gets --- to add a fixed
+amount of multiplicity you must \emph{multiply} the network's size, not just add
+to it. That sluggish, degrees-only baseline is the bar that local rules must
+clear. Anything that grows faster is the doing of the rule.
+
+Of note, the Barab\'asi--Albert model falls on this same baseline. Although it is
+a \emph{growing} network rather than a randomized one, it has no local structure
+--- newcomers attach across the whole graph, never consulting a neighborhood ---
+and its shortest path multiplicity creeps up only logarithmically, exactly as the
+reshuffled networks do. This echoes the previous chapter, where the very same
+model failed to develop communities: lacking locality, it builds neither the
+modules nor the redundant paths, and on both counts it behaves as though its links
+had been shuffled at random.
+
+\section{Local rules boost the multiplicity}
+
+Now run the very same local models of the previous chapter \emph{without} 
+shuffling --- the local-search rule, the duplication--split rule, the bubble 
+model --- and the multiplicity climbs decisively faster than the logarithmic 
+baseline. It helps to keep a ladder of growth rates in mind: logarithmic 
+(slowest, the baseline), then \emph{log-quadratic} (faster), then 
+\emph{exponential} (explosive, fastest of all). The local rules fall into two of 
+these rungs, as deduced from numerical simulations \citep{vazquezpaths2026}.
+
+Most of them --- local search and the bubble model among them --- show
+\emph{log-quadratic} growth,
+\begin{equation}
+  \langle\mu\rangle_{S,I} = a + b\log n + c(\log n)^2,
+  \label{eq:path-typeI}
+\end{equation}
+the extra squared term lifting the curve clearly above the straight logarithmic
+baseline. Call this type I.
+
+The duplication--split rule is different, and dramatically so: its multiplicity
+grows \emph{exponentially} with size,
+\begin{equation}
+  \langle\mu\rangle_{S,II} = a\, e^{bn}, \qquad a,b>0,
+  \label{eq:path-typeII}
+\end{equation}
+which we call type II. Exponential growth is a different world from logarithmic
+--- the redundancy proliferates beyond anything the other rules manage. Copying,
+it turns out, is the great multiplier of shortest paths, and that is what the
+title of this chapter names.
+
+\section{Cycles and the boost}
+
+Why should duplication outrun the rest? The answer is in the kind of loop each
+rule makes. The triadic-closure rule of the friends chapter closes
+\emph{triangles}, loops of length three --- but in a triangle the two nodes
+flanking a third are themselves directly linked, so there is still only \emph{one}
+shortest route between any pair. A triangle adds cohesion but no extra routes.
+Duplication, by contrast, closes \emph{squares}, loops of length four, and a
+square is the smallest loop that genuinely offers a choice: its two opposite
+corners are two hops apart by \emph{two} different paths, one around each side.
+That single observation is the seed of the boost; the box pushes it a little
+further, and the takeaway follows.
+
+\begin{figure}[t]
+\centering
+\begin{adjustbox}{max width=\linewidth}\begin{tikzpicture}[
+  nd/.style={circle,draw=black!65,fill=black!4,minimum size=6mm,inner sep=0pt},
+  ep/.style={circle,draw=accent!80!black,fill=black!30,minimum size=6mm,inner sep=0pt},
+  lnk/.style={draw=black!45,line width=0.8pt},
+  r1/.style={draw=black!80,line width=1.5pt},
+  r2/.style={draw=black!80,line width=1.5pt,dashed}]
+  % panel (a) triangle
+  \begin{scope}
+    \node[ep] (A) at (0,1.0)    {};
+    \node[nd] (B) at (-0.95,-0.5){};
+    \node[ep] (C) at (0.95,-0.5){};
+    \draw[lnk] (A)--(B);
+    \draw[lnk] (B)--(C);
+    \draw[r1]  (A)--(C);
+    \node[font=\footnotesize] at (0,-1.4) {(a) triangle: one route};
+  \end{scope}
+  % panel (b) square
+  \begin{scope}[xshift=5.4cm]
+    \node[ep] (A2) at (0,1.05)   {};
+    \node[nd] (B2) at (1.15,0)   {};
+    \node[ep] (C2) at (0,-1.05)  {};
+    \node[nd] (D2) at (-1.15,0)  {};
+    \draw[r1] (A2)--(B2); \draw[r1] (B2)--(C2);
+    \draw[r2] (A2)--(D2); \draw[r2] (D2)--(C2);
+    \node[font=\footnotesize] at (0,-1.55) {(b) square: two routes};
+  \end{scope}
+\end{tikzpicture}\end{adjustbox}
+\caption{\textbf{Why squares multiply routes.} The two highlighted corners are the
+endpoints. (a) In a triangle they are joined directly --- a single shortest route.
+(b) In a square they are opposite corners, two steps apart by \emph{two} distinct
+routes (drawn solid and dashed), one around each side. Local rules that close
+four-cycles, such as gene
+duplication, thread the network with these redundant shortest paths.}
+\label{fig:path-square}
+\end{figure}
+
+Figure~\ref{fig:path-square} makes the contrast concrete.
+
+\begin{calculation}{why copying multiplies routes}
+When a node is duplicated, the copy and the original share all their neighbors,
+so any two of those neighbors sit at opposite corners of a four-cycle --- each
+such pair instantly gains a second shortest route. A duplicated node of degree
+$k$ creates $\tbinom{k}{2}=k(k-1)/2$ such squares in a single stroke. Moreover the
+duplication rule carries its own preferential attachment, the chance of copying a
+node being $\pi_k = qk/n$, which (as in Chapter~\ref{ch:duplication}) builds a
+heavy-tailed degree distribution with exponent $\gamma = 1+1/q$. Squares are thus
+laid down in proportion to $k(k-1)$ on top of a distribution with many
+high-degree nodes --- a compounding that is the suspected origin of the
+exponential law, Eq.~\eqref{eq:path-typeII}, though a full account of it remains
+open.
+\end{calculation}
+
+The lesson of the box is that squares, not triangles, are what multiply shortest
+routes: each duplication endows many pairs of nodes with a second equally-short
+path, and because high-degree nodes (which spawn the most squares) are themselves
+abundant, the redundancy compounds. The bubble model, which lets us dial the loop
+length directly --- a chain of $L$ added nodes makes a loop of length $L+2$ ---
+confirms the geometric intuition: even-length loops, whose opposite corners enjoy
+two equal routes, enrich the network more than odd ones. (It is a useful caution,
+though, that the bubble model's multiplicity still grows only log-quadratically,
+type I, whatever the loop length; the square-counting explains why duplication
+\emph{beats} triadic closure, but the full exponential ferocity of
+duplication--split needs the compounding above.)
+
+One more clue shows that randomness itself plays a role. The
+Dorogovtsev--Goltsev--Mendes ``pseudofractal'' network
+\citep{dorogovtsevgoltsev2002} is a \emph{deterministic} relative of the bubble
+model --- grown by a fixed, clockwork rule rather than a random one. Its
+multiplicity does \emph{not} accelerate into the log-quadratic regime; it grows
+only log-linearly, like the shuffled baseline. So the speed-up in
+Eq.~\eqref{eq:path-typeI} is not a property of the loop geometry alone --- it
+requires the \emph{stochastic} character of the growth. It is the interplay of
+randomness and locality together, not either by itself, that boosts the
+multiplicity.
+
+\section{Two sides of one coin}
+
+Because local rules also create communities, and the number of communities grows
+along with the network, we can ask how the multiplicity depends on the number of
+communities directly. The relationship is a clean one --- linear for every local
+model tested, and (once again the exception) exponential for duplication--split.
+This is the empirical correlation of \citet{deng2026} restated from the inside:
+more communities go hand in hand with more shortest paths.
+
+But the point of the chapter is that this partnership is not a case of one
+causing the other. ``Local rules boost shortest path multiplicity'' and
+``communities accompany high shortest path multiplicity'' are two true statements
+about the same networks, and as descriptions they say the same thing. Only one of
+them, however, names a \emph{mechanism}. Communities are something an algorithm
+reads off a finished network after the fact; the local rule is the process that
+actually built that network, node by node, closing the very loops that both carve
+it into communities and thread it with redundant routes. Community structure and
+path multiplicity are two sides of a single coin --- and the coin is locality.
+
+\section{Summary}
+
+The shortest paths of real networks are richly redundant, and that redundancy
+travels with their community structure. Sparse random networks, having no local
+order, accumulate multiplicity only logarithmically as they grow; networks built
+by local rules accumulate it far faster --- log-quadratically for most rules, and
+exponentially for duplication, which closes the four-cycles that give opposite
+corners two shortest routes apiece. Since the same local rules also produce the
+communities, the observed tie between path multiplicity and communities is best
+understood not as cause and effect but as two consequences of one underlying
+local dynamics.
