@@ -522,6 +522,63 @@ PREFACE IMPLICATIONS (for the rewrite at the end)
     measures apart before explaining them.
 
 -------------------------------------------------------------------------------
+2026-07-16 — Chapter 8, "Outlook": section 8.2 updated; proofreading edits
+-------------------------------------------------------------------------------
+
+SECTION 8.2, "What remains to be done", rewritten against what chapters 6 and 7
+now contain. Two of its three concrete open problems had been overtaken by the new
+material and were misleading as written. Structure (concrete / programmatic /
+widening) and the closing line are unchanged.
+
+  * The exponential law is still open, but no longer unbounded: the diamond gives
+    an exact ceiling (stretched exponential in sqrt(n)) that every stochastic rule
+    falls below. The question is now "where between the log-quadratic floor and the
+    deterministic ceiling does a rule land, and why does copying climb so far?"
+  * The Ramsey number's method-dependence said only that it "remains tied" to the
+    detection method. That is far too gentle now: it is a factor of 25 on the same
+    web (1095 plain vs 42 degree-corrected), and the two rules disagree about which
+    cut wins. But the same calculations supply the repair the old text merely wished
+    for — the evidence density -> ln K per link is method- and lattice-independent.
+    The item now names the invariant a better definition could be built on.
+  * NEW: the mean field knows only c_2, yet real networks fall either side of the
+    c_2/e line by the sign of their correlations. The clearest gap between the
+    calculation and the data in chapter 7.
+  * NEW, and spanning both chapters: the ring is split exactly when links outnumber
+    nodes — when independent cycles become extensive — and cycles are also what
+    multiply shortest paths. If that accounting is general rather than an accident
+    of the ring, the last two chapters fold into one statement.
+  * NEW, two clue-like loose ends: sqrt(n) for the number of communities is
+    numerical, not proved; and the even-odd alternation in r_kappa vs cycle length
+    is "too regular to be noise and has no explanation".
+  * NEW programmatic lead: every closed form in the last two chapters lives on a
+    DETERMINISTIC lattice with the partition handed in. That is the price of exact
+    solvability — the results bound the simulated ones without reproducing them.
+    Whether the RG map survives off-lattice is the frontier, and it is hard
+    precisely because detectability there is itself a phase transition.
+
+PROOFREADING EDITS (chapter 6)
+
+  * Dropped "because the paper does not" from the ring symmetry-breaking passage —
+    no need to score a point off the source.
+  * Eq. (6.32), the closed form for r_kappa(b,s;q), stacked vertically with
+    `aligned` instead of running the two formulas side by side. Single equation
+    number retained, so nothing downstream renumbers.
+  * The pseudofractal web is now credited to Dorogovtsev, Goltsev and Mendes (2002)
+    at the point where section 6.9 defines it. The entry was already in
+    references.bib and already cited in chapter 7; only the model's own definition
+    lacked it.
+
+FIGURE FIX (chapter 7)
+
+  Fig. 7.6's caption was being pushed off the bottom of the page. The cause was not
+  the panel spacing: the figure's natural width was 0.78W = 3.13in while the chapter
+  includes it at width=\linewidth = 4.05in, so LaTeX scaled it up 29% and its 5.14in
+  height became 6.64in — essentially the whole 6.8in text block. Rebuilt at full
+  natural width (so width=\linewidth barely scales it) with hspace 0.55 -> 0.45; it
+  now occupies 4.31in and the caption fits with room to spare. A comment in
+  figs/mkfigs.py records the trap, since "make the figure smaller" makes it worse.
+
+-------------------------------------------------------------------------------
 NOTE FOR THE AUTHOR (not a book change)
 -------------------------------------------------------------------------------
 

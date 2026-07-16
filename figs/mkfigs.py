@@ -279,7 +279,11 @@ def fig_bubble():
 # (Paper Fig. 5.)
 # --------------------------------------------------------------------------
 def fig_real():
-    fig, axes = plt.subplots(3, 1, figsize=(W * 0.78, W * 1.5))
+    # Full natural width: the chapter includes this at width=\linewidth, so a
+    # narrower figure would simply be scaled UP, magnifying its height with it.
+    # Three stacked panels plus a long caption must fit one 6.8in text block, so
+    # the aspect ratio is what matters here, not the nominal size.
+    fig, axes = plt.subplots(3, 1, figsize=(W, W * 1.18))
 
     def trend(ax, x, y, kind, ls):
         """Fit the trend the paper reports: power law (log-log) or exponential."""
@@ -318,7 +322,7 @@ def fig_real():
     df = read("condmat_coauthor_metrics.csv")
     one(axes[2], df, "power", "log", "c", "cond-mat co-authorship")
 
-    fig.subplots_adjust(hspace=0.55)
+    fig.subplots_adjust(hspace=0.45)
     save(fig, "fig-mu-real.pdf")
 
 

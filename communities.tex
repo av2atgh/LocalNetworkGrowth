@@ -535,7 +535,7 @@ paths are what carve a network into communities here --- two faces, again, of th
 one local coin.
 
 There remains something troubling about calling the two arcs communities, and it
-should be said plainly, because the paper does not. The ring looks the same from
+should be said plainly. The ring looks the same from
 every node; rotate it by one bead and it is unchanged. So if cutting it at some
 point is favored, then cutting it at any \emph{other} point is favored exactly as
 much: all $n$ rotations of the balanced split have identical evidence. The block
@@ -790,10 +790,11 @@ the seam's --- the price of the $b^t$ crossing links still present:
 \end{equation}
 Setting this equal to the threshold and inverting Eq.~\eqref{eq:com-nbs},
 \begin{equation}
-  r_\kappa(b,s;q) = 2 + \frac{b(s{-}1)}{bs-1}\Big[(bs)^{t_\star}-1\Big],
-  \qquad
-  t_\star = \Big\lceil \log_{bs}\Big(\ln\tfrac{q}{1-q}\Big/\ln b\Big) \Big\rceil .
-  \label{eq:com-rkbs}
+\begin{aligned}
+  r_\kappa(b,s;q) &= 2 + \frac{b(s{-}1)}{bs-1}\Big[(bs)^{t_\star}-1\Big], \\
+  t_\star &= \Big\lceil \log_{bs}\Big(\ln\tfrac{q}{1-q}\Big/\ln b\Big) \Big\rceil .
+\end{aligned}
+\label{eq:com-rkbs}
 \end{equation}
 \end{calculation}
 
@@ -814,10 +815,10 @@ there is any community structure, but because there is a degree distribution to
 absorb. How do we know that what we have been calling communities is not just the
 hubs in disguise?
 
-The pseudofractal web settles it. Its rule is as local as they come: start from a
-triangle, and at every generation let each existing link spawn a new node joined to
-both of its ends, keeping all the old links. What grows is deterministic, and
-elementary bookkeeping gives
+The pseudofractal web of \citet{dorogovtsevgoltsev2002} settles it. Its rule is as
+local as they come: start from a triangle, and at every generation let each
+existing link spawn a new node joined to both of its ends, keeping all the old
+links. What grows is deterministic, and elementary bookkeeping gives
 \begin{equation}
   n_t = \tfrac{3}{2}\big(3^{t}+1\big), \qquad E_t = 3^{\,t+1},
   \label{eq:com-pfNE}

@@ -74,17 +74,82 @@ If the thesis of this book is right, it opens more questions than it closes.
 
 Several are concrete. The exponential growth of shortest path multiplicity under
 the duplication--split rule --- so much faster than the log-quadratic growth of
-every other rule we studied --- still wants a full explanation; the square-counting
-argument shows why copying outruns triadic closure, but not why it runs away
-exponentially. The Ramsey community number, likewise, remains tied to the
-community-detection method used to measure it, and a notion of emergence that does
-not depend on the algorithm would put the whole idea on firmer ground. Even the
-self-organized critical state of the exhaustive searcher, where a scale-free
-network appears across a whole range of the control parameter rather than at one
-fine-tuned value, deserves to be connected more tightly to the wider physics of
-criticality.
+every other rule we studied --- still wants a full explanation; the
+square-counting argument shows why copying outruns triadic closure, but not why it
+runs away exponentially. The question is at least better posed than it was, for we
+now know what the ceiling is: on the diamond lattice, where the branching can be
+solved exactly, the multiplicity grows as a stretched exponential in $\sqrt{n}$,
+and every stochastic rule falls below that bound (Chapter~\ref{ch:distance}). What
+remains is to explain where between the log-quadratic floor and the deterministic
+ceiling a given rule lands, and why copying alone climbs so far.
 
-Others are programmatic. Throughout, we read each local rule \emph{forward}, from
+A second concrete gap sits beside it. The mean-field theory of the multiplicity
+knows the network only through its excess degree $c_2$, and that is demonstrably
+not enough: real networks fall on either side of the $c_2/e$ line according to the
+sign of their degree correlations, the assortative co-authorship graph above it and
+the disassortative Internet below. A theory that carries the correlations as well
+as the degrees would close the gap between the calculation and the data, and it
+would say something the models cannot yet say about which real systems are
+route-rich and which are not.
+
+The Ramsey community number has moved further still, though not in the direction
+one might have hoped. That it depends on the method used to detect the communities
+was always plain. Now that it can be computed exactly, we can say how far that
+dependence goes: on one and the same web, under one and the same partition, a
+plain block model puts $r_\kappa$ at $1095$ and a degree-corrected one at $42$, and
+the two disagree about which cut is best (Chapter~\ref{ch:communities}). The dependence is not a rounding error to be
+argued away; it is a factor of twenty-five, and it means a bare Ramsey number
+quoted without its detection rule is not a property of the network at all. Yet the
+same calculations hand us the beginnings of a repair. Underneath the
+method-dependent threshold there is a method-independent quantity: the evidence
+density flows to $\ln K$ per link, the entropy of resolving which of $K$
+communities a link belongs to, and that value knows nothing of the lattice, the
+degrees, or the priors. A definition of emergence built on the invariant rather
+than on the crossing --- on the rate at which evidence accumulates rather than on
+the size at which it clears an arbitrary bar --- would put the whole idea on firmer
+ground.
+
+One question spans both chapters at once, and it may be the most inviting of all.
+The ring --- the barest case we can solve, a lattice with no growth and no
+randomness in it --- turns out to be split into communities exactly when its links
+outnumber its nodes, which is to say exactly when it carries an extensive number of
+independent cycles. And cycles are also what multiply its shortest paths. Whether
+that accounting is general, or an accident of the ring's simplicity --- whether the
+surplus of links over nodes is the common currency of both communities and
+redundant routes --- would fold the last two chapters into a single statement. The
+book's thesis makes the question natural; it does not answer it.
+
+Two smaller loose ends deserve naming, since both have the flavor of a clue rather
+than a nuisance. The number of communities that best describes a self-similar
+network appears to grow as $\sqrt{n}$, the geometric midpoint of the network's own
+hierarchy --- but that is a numerical observation over the sizes we can reach, not
+a theorem, and a proof would be worth having, not least because the same
+$\sqrt{n}$ governs the shortest paths on the same lattice. And the Ramsey number's
+climb with cycle length carries a persistent even--odd alternation, odd cycles
+bringing communities on sooner than the even cycles around them. It is too regular
+to be noise and has no explanation.
+
+Even the self-organized critical state of the exhaustive searcher, where a
+scale-free network appears across a whole range of the control parameter rather
+than at one fine-tuned value, deserves to be connected more tightly to the wider
+physics of criticality.
+
+Others are programmatic, and the largest of them is the price we paid for solving
+anything exactly at all. Every closed form in the last two chapters --- the ring's
+evidence, the diamond's renormalization group, the pseudofractal's counts --- lives
+on a \emph{deterministic} lattice, a fixed construction rather than a grown
+network, with the candidate partition handed to the calculation rather than found
+by an algorithm. That is what made the algebra possible, and it is also the
+catch: those results bound and illuminate the simulated ones, but they do not
+reproduce them. Whether the renormalization-group map survives off the lattice ---
+exactly, or on average, for networks grown at random by a local rule --- sets how
+far this reading of emergence extends. It is a demanding question, because on
+disordered networks detectability is itself a genuine phase transition, and the
+threshold we have been computing would become the edge of a phase rather than the
+crossing of a bar. The reward would be a theory of emergence for the networks we
+actually care about, rather than for their crystalline cousins.
+
+Throughout, we read each local rule \emph{forward}, from
 mechanism to statistics; the empirical chapters hint at the reverse problem ---
 reading the rule \emph{backward}, inferring from a single observed network which
 local moves grew it, and with what parameters, as we did when fitting a
