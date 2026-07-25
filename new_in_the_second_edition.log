@@ -9,6 +9,17 @@ reader of the 1st edition would find different", not as commit messages.
 Baseline: at the 1st-edition commit the root .tex files were byte-identical to
 paperback_edition_1/, so `diff` against that directory always shows the full delta.
 
+PREFACE NOTE ADDED (2026-07-25, final touch)
+  A set-off paragraph "A note on the second edition." was added at the end of the
+  preface (main.tex), before the sign-off. It tells a reader of the first edition
+  what changed: real networks now run through the book (introduction data + the
+  clustering-hierarchy-as-artifact point); the two closing chapters grew the most
+  (exactly solvable communities + the community-count power law across ~100 real
+  networks; the multiplicity mean-field theory + two exact constructions); and the
+  first data plots plus new schematics. Closes with "the thesis is unchanged; the
+  evidence for it is stronger." This log itself was the source material for it.
+
+
 
 -------------------------------------------------------------------------------
 2026-07-15 — Chapter 7, "Boosting shortest path multiplicity": rewritten
