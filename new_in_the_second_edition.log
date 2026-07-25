@@ -699,8 +699,12 @@ re-simulated)
                         geographic networks as squares.
   fig-com-count-models: the two local-rule models reproducing the super-fractal
                         exponent.
-  Pipeline in figs/mkfigs_com.py (fig_count, fig_countmodels); data copied to
-  figs/data/community_*.csv. All exponents re-fit from the CSVs and matched the
+  fig-com-count-systems: (added on a follow-up) the three growing systems --
+                        internet, interactomes, cond-mat co-authorship -- each a
+                        power law within a single system (0.62/0.55/0.71). Three
+                        panels, same three systems as chapter 7's fig-mu-real.
+  Pipeline in figs/mkfigs_com.py (fig_count, fig_countmodels, fig_countexamples);
+  data copied to figs/data/community_*.csv. All exponents re-fit from the CSVs and matched the
   manuscript (0.61, and 0.62/0.55/0.71 for the growing systems) before being written.
 
 BIB

@@ -1138,12 +1138,26 @@ A cross-section of unrelated networks is one kind of evidence; following a
 \emph{single} system as it grows, so that the same mechanism lays down every
 point, is a sharper one. Do this for the three systems of the previous chapter ---
 the very networks whose shortest paths we counted there --- and each again traces a
-power law: the Internet at the autonomous-system level, $\beta\approx0.62$; the
-protein interactomes across organisms, $\approx0.55$; and the condensed-matter
-co-authorship network, accumulated year by year to nearly four hundred thousand
-authors, $\approx0.71$. Grown by its own rules, each system multiplies its
-communities as a power law of size, with an exponent again between one half and
-two thirds.
+power law (Figure~\ref{fig:com-count-systems}): the Internet at the
+autonomous-system level, $\beta\approx0.62$; the protein interactomes across
+organisms, $\approx0.55$; and the condensed-matter co-authorship network,
+accumulated year by year to nearly four hundred thousand authors, $\approx0.71$.
+Grown by its own rules, each system multiplies its communities as a power law of
+size, with an exponent again between one half and two thirds.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figs/fig-com-count-systems.pdf}
+\caption{\textbf{The power law holds within a single growing system.} Number of
+communities $B$ against size $n$ (log--log) as three systems grow: (a) the Internet
+at the autonomous-system level, from daily snapshots; (b) protein interactomes
+across organisms; (c) the \texttt{cond-mat} co-authorship network, accumulated year
+by year to nearly $400{,}000$ authors. Each is a power law (solid line, fitted
+exponent) above the fractal $\sqrt{n}$ (dashed) --- the same super-fractal range as
+the cross-section of Figure~\ref{fig:com-count}, but now with the same rule laying
+down every point.}
+\label{fig:com-count-systems}
+\end{figure}
 
 And the book's own local rules do the same. Grow the triadic-closure and
 duplication--split models --- the social and biological rules of

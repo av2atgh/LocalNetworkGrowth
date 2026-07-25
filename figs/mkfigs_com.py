@@ -273,6 +273,36 @@ def fig_countmodels():
     save(fig, "fig-com-count-models.pdf")
 
 
+def fig_countexamples():
+    """B vs n within three single systems followed as they grow."""
+    df = pd.read_csv(os.path.join(DATA, "community_examples_communities.csv"))
+    df = df.drop_duplicates(["system", "label"])
+    df = df[df["B_mean"] > 0]
+    systems = [
+        ("as733", "Internet (AS, daily)", "a"),
+        ("biogrid", "protein interactomes", "b"),
+        ("condmat", "cond-mat co-authorship", "c"),
+    ]
+    fig, axes = plt.subplots(3, 1, figsize=(W * 0.66, W * 1.4))
+    for ax, (key, title, letter) in zip(axes, systems):
+        s = df[df["system"] == key].sort_values("n")
+        n = s["n"].to_numpy(float)
+        B = s["B_mean"].to_numpy(float)
+        beta, logc = _fit(n, B)
+        ng = np.logspace(np.log10(n.min()), np.log10(n.max()), 100)
+        sc(ax, n, B, 0, None, ms=2.4)
+        ax.plot(ng, np.exp(logc) * ng**beta, "k-", lw=0.9,
+                label=rf"$n^{{{beta:.2f}}}$")
+        a_half = np.exp(np.mean(np.log(B) - 0.5 * np.log(n)))
+        ax.plot(ng, a_half * ng**0.5, "--", color="0.5", lw=0.8, label=r"$\sqrt{n}$")
+        ax.set(xscale="log", yscale="log", xlabel=r"$n$", ylabel=r"$B$")
+        ax.legend(loc="upper left", frameon=False, fontsize=6)
+        ax.set_title(title, loc="left", fontsize=6.5, pad=3)
+        panel(ax, letter, x=-0.17)
+    fig.subplots_adjust(hspace=0.55)
+    save(fig, "fig-com-count-systems.pdf")
+
+
 if __name__ == "__main__":
     fig_ring()
     fig_degree()
