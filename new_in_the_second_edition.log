@@ -718,6 +718,44 @@ PREFACE IMPLICATION
   systems, so chapters 6 and 7 now both close on data.
 
 -------------------------------------------------------------------------------
+2026-07-25 (later) -- Schematic "delighter" figures added
+-------------------------------------------------------------------------------
+
+Cartoon/schematic figures added to build intuition, all in the book's grayscale
+style. Book 137 -> 141 pages.
+
+  Fig 6.4  Cutting the ring (6.7). TikZ: a 14-node ring split into two arcs, the
+           cut shown movable (rotation arrows), illustrating the symmetry breaking
+           -- the model says "cut it somewhere" without saying where.
+  Fig 6.6  The diamond's two communities (6.8). The b=s=2 diamond at t=2, its two
+           bundles as two shaded halves meeting only at poles A and B. Matplotlib.
+  Fig 6.8  Building the pseudofractal web (6.9). The recursive rule at t=0,1,2:
+           each edge spawns a node joined to both ends, seed triangle becomes the
+           hubs. Matplotlib.
+  Fig 6.10 The caveman graph (6.12). TikZ: a ring of six 4-cliques joined by single
+           bridges -- the modular beta=1 limit, previously text-only.
+  Fig 7.1  Multiplicity on a ring (new section 7.3, "The simplest case: a ring").
+           TikZ: antipodal nodes with their two equal arcs as the two shortest
+           paths.
+
+NEW SECTION 7.3, "The simplest case: a ring" (answers the user's question about
+syncing the two chapters). Works the multiplicity metric on the plainest cyclic
+network -- the same ring chapter 6 broke into communities. Every pair has a unique
+shortest path except the antipodal pairs (two equal arcs, mu=2), so
+<mu> = 1 + 1/(n-1) -> 1. The lesson mirrors chapter 6 exactly: a single cycle sits
+at the margin -- there it was the fence between splitting into communities and not,
+here between redundant routes and none. Real redundancy, like real community
+structure, needs an extensive number of loops. This gives the reader a hand-computed
+feel for mu before the general baseline, and locks the two chapters together on the
+ring.
+
+The two matplotlib schematics use self-contained graph builders (fig_pseudofractal,
+fig_diamondcomm in figs/mkfigs_com.py), node/edge counts verified against the closed
+forms. The diamond is drawn at t=2 (not t=3, which is too busy for the two-community
+point to read). One TikZ gotcha fixed: a style named `in` clashes with a reserved
+TikZ key -> renamed `iedge`.
+
+-------------------------------------------------------------------------------
 NOTE FOR THE AUTHOR (not a book change)
 -------------------------------------------------------------------------------
 

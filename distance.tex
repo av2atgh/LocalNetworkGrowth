@@ -88,6 +88,71 @@ complete graph of $m+1$ nodes, and let every newcomer attach $m$ links to nodes
 chosen from the \emph{whole} network with probability proportional to degree. It
 is our non-local control.
 
+\section{The simplest case: a ring}
+
+Before any of that, it is worth feeling the measure on the plainest network that
+has a loop at all --- the same ring we broke into communities in the previous
+chapter. Place $n$ nodes on a circle, each joined to its two neighbors: the cycle
+$C_n$. Between any two nodes there are two ways round, and the shortest path is
+simply the shorter arc. Almost always one arc is strictly shorter than the other,
+so the shortest path is \emph{unique} and $\mu_{ij}=1$. The single exception is a
+pair of nodes exactly opposite each other on the circle: the two arcs then tie, and
+both are shortest, so $\mu_{ij}=2$ (Figure~\ref{fig:mu-ring}).
+
+\begin{figure}[t]
+\centering
+\begin{adjustbox}{max width=0.7\linewidth}\begin{tikzpicture}[
+  nd/.style={circle,draw=black!65,fill=black!5,minimum size=3.4mm,inner sep=0pt},
+  ep/.style={circle,draw=accent!80!black,fill=black!30,minimum size=4mm,inner sep=0pt},
+  r1/.style={draw=black!80,line width=1.4pt},
+  r2/.style={draw=black!80,line width=1.4pt,dashed},
+  lnk/.style={draw=black!45,line width=0.7pt}]
+  \def\N{10}
+  \foreach \i in {1,...,\N}{
+    \pgfmathsetmacro\ang{90-(\i-1)*360/\N}
+    \coordinate (p\i) at (\ang:1.6);
+  }
+  % the two arcs between antipodal nodes p1 (top) and p6 (bottom)
+  \foreach \i in {1,2,3,4,5}{
+    \pgfmathtruncatemacro\j{\i+1}
+    \draw[r1] (p\i)--(p\j);
+  }
+  \foreach \i in {6,7,8,9}{
+    \pgfmathtruncatemacro\j{\i+1}
+    \draw[r2] (p\i)--(p\j);
+  }
+  \draw[r2] (p10)--(p1);
+  \foreach \i in {2,...,5}{\node[nd] at (p\i){};}
+  \foreach \i in {7,...,10}{\node[nd] at (p\i){};}
+  \node[ep] at (p1){}; \node[ep] at (p6){};
+  \node[font=\scriptsize] at (0,1.95) {$i$};
+  \node[font=\scriptsize] at (0,-1.95) {$j$};
+\end{tikzpicture}\end{adjustbox}
+\caption{\textbf{Multiplicity on a ring.} Between the two highlighted opposite
+nodes the two arcs are equally long, so both are shortest routes (solid and
+dashed): $\mu_{ij}=2$. Every other pair has one arc strictly shorter than the
+other and so a single shortest path. Only the antipodal pairs carry any
+redundancy, and they are a vanishing fraction of all pairs, so the ring's average
+multiplicity creeps down to one.}
+\label{fig:mu-ring}
+\end{figure}
+
+Those antipodal pairs are rare --- there are only about $n/2$ of them among the
+$\binom{n}{2}$ pairs in the ring --- so averaging gives
+\begin{equation}
+  \langle\mu\rangle = 1 + \frac{1}{n-1} \longrightarrow 1 .
+  \label{eq:mu-ring}
+\end{equation}
+A ring, in other words, is barely more redundant than a tree. Its one loop buys a
+second route for exactly one pair of nodes, the two farthest apart, and for nobody
+else. This is the same lesson the ring taught in Chapter~\ref{ch:communities},
+seen through the other measure: a single cycle sits right at the margin. There it
+was the fence between splitting into communities and not; here it is the fence
+between redundant routes and none. Real redundancy, like real community structure,
+needs loops in \emph{extensive} number --- a ring of longer reach, or a growth rule
+that piles cycles up as the network grows --- which is what the rest of this
+chapter is about.
+
 \section{The baseline: random networks}
 
 To judge what counts as ``boosted,'' we first need the expectation in the

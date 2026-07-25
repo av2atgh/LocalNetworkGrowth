@@ -273,6 +273,117 @@ def fig_countmodels():
     save(fig, "fig-com-count-models.pdf")
 
 
+def _dgm_layout(t):
+    """Pseudofractal web through generation t, with node positions and birth gen.
+
+    Seed triangle at the corners; each edge spawns a node joined to both its ends,
+    placed at the edge midpoint pushed outward, offset shrinking each generation.
+    """
+    import math
+
+    pos = {0: (math.cos(math.radians(90)), math.sin(math.radians(90))),
+           1: (math.cos(math.radians(210)), math.sin(math.radians(210))),
+           2: (math.cos(math.radians(330)), math.sin(math.radians(330)))}
+    edges = [(0, 1), (1, 2), (2, 0)]
+    gen = {0: 0, 1: 0, 2: 0}
+    nxt = 3
+    for step in range(t):
+        for (u, v) in list(edges):
+            w = nxt
+            nxt += 1
+            mx = (pos[u][0] + pos[v][0]) / 2
+            my = (pos[u][1] + pos[v][1]) / 2
+            L = math.hypot(mx, my) or 1.0
+            off = 0.42 * (0.55 ** step)
+            pos[w] = (mx + mx / L * off, my + my / L * off)
+            gen[w] = step + 1
+            edges += [(u, w), (w, v)]
+    return pos, edges, gen
+
+
+def fig_pseudofractal():
+    """Cartoon of the pseudofractal construction, generations t = 0, 1, 2."""
+    fig, axes = plt.subplots(1, 3, figsize=(W, W * 0.4))
+    for ax, t in zip(axes, (0, 1, 2)):
+        pos, edges, gen = _dgm_layout(t)
+        for u, v in edges:
+            ax.plot([pos[u][0], pos[v][0]], [pos[u][1], pos[v][1]],
+                    "-", color="0.5", lw=0.6, zorder=1)
+        for v, (x, y) in pos.items():
+            # the three seed nodes (born at t=0) are the hubs: draw them larger.
+            if gen[v] == 0:
+                ax.plot(x, y, "o", ms=5.0, mfc="black", mec="black", zorder=3)
+            else:
+                shade = str(min(0.35 + 0.18 * gen[v], 0.85))
+                ax.plot(x, y, "o", ms=2.8, mfc=shade, mec="black", mew=0.3, zorder=2)
+        ax.set_title(rf"$t={t}$", fontsize=6.5, pad=1)
+        ax.set_aspect("equal")
+        ax.axis("off")
+        m = 1.55
+        ax.set(xlim=(-m, m), ylim=(-m, m))
+    fig.subplots_adjust(wspace=0.05)
+    save(fig, "fig-com-pseudofractal.pdf")
+
+
+def _diamond_layout(t):
+    """Diamond lattice through generation t, edges carrying a bundle label 0/1."""
+    import math
+
+    pos = {0: (0.0, 1.0), 1: (0.0, -1.0)}   # poles A (top), B (bottom)
+    edges = [(0, 1, None)]
+    nxt = 2
+    for step in range(t):
+        new = []
+        for (u, v, b) in edges:
+            xu, yu = pos[u]
+            xv, yv = pos[v]
+            mx, my = (xu + xv) / 2, (yu + yv) / 2
+            dx, dy = xv - xu, yv - yu
+            L = math.hypot(dx, dy)
+            px, py = -dy / L, dx / L
+            off = 0.36 * L
+            w1, w2 = nxt, nxt + 1
+            nxt += 2
+            pos[w1] = (mx + px * off, my + py * off)
+            pos[w2] = (mx - px * off, my - py * off)
+            b1, b2 = (0, 1) if step == 0 else (b, b)
+            new += [(u, w1, b1), (w1, v, b1), (u, w2, b2), (w2, v, b2)]
+        edges = new
+    return pos, edges
+
+
+def fig_diamondcomm():
+    """The diamond's two bundles as two communities, meeting only at the poles.
+
+    Drawn at t=2 (12 nodes): at this generation the two bundles are cleanly the
+    left and right halves, which reads as two communities joined only at A and B.
+    """
+    pos, edges = _diamond_layout(2)
+    bundle = {}
+    for u, v, b in edges:
+        for x in (u, v):
+            if x not in (0, 1):
+                bundle[x] = b
+
+    fig, ax = plt.subplots(figsize=(W * 0.52, W * 0.66))
+    for u, v, b in edges:
+        ax.plot([pos[u][0], pos[v][0]], [pos[u][1], pos[v][1]], "-",
+                color="0.5", lw=0.7, zorder=1)
+    for x, (px, py) in pos.items():
+        if x in (0, 1):
+            ax.plot(px, py, "o", ms=8, mfc="black", mec="black", zorder=4)
+        else:
+            fill = "0.45" if bundle[x] == 0 else "white"
+            ax.plot(px, py, "o", ms=6, mfc=fill, mec="black", mew=0.6, zorder=3)
+    ax.annotate("A", pos[0], textcoords="offset points", xytext=(7, 0), fontsize=8)
+    ax.annotate("B", pos[1], textcoords="offset points", xytext=(7, -8), fontsize=8)
+    m = 1.25
+    ax.set(xlim=(-m, m), ylim=(-1.35, 1.35))
+    ax.set_aspect("equal")
+    ax.axis("off")
+    save(fig, "fig-com-diamond.pdf")
+
+
 def fig_countexamples():
     """B vs n within three single systems followed as they grow."""
     df = pd.read_csv(os.path.join(DATA, "community_examples_communities.csv"))

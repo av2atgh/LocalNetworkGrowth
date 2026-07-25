@@ -414,8 +414,45 @@ has $cn$ links. Nothing grows, nothing is random, and there is no group of nodes
 that belongs together more than any other. If any network has no communities, this
 one does not.
 
-Ask the block model anyway. The candidate split is into two contiguous arcs, and
-the counts it needs are elementary.
+Ask the block model anyway. The candidate split is into two contiguous arcs
+(Figure~\ref{fig:com-cutring}), and the counts it needs are elementary.
+
+\begin{figure}[t]
+\centering
+\begin{adjustbox}{max width=\linewidth}\begin{tikzpicture}[
+  nd/.style={circle,draw=black!65,minimum size=3.6mm,inner sep=0pt},
+  cA/.style={nd,fill=black!55},
+  cB/.style={nd,fill=white},
+  lnk/.style={draw=black!45,line width=0.7pt},
+  cut/.style={draw=accent,line width=1.1pt,dashed}]
+  \def\N{14}
+  \foreach \i in {1,...,\N}{
+    \pgfmathsetmacro\ang{90-(\i-1)*360/\N}
+    \coordinate (p\i) at (\ang:1.6);
+  }
+  % arcs: nodes 1..7 one community, 8..14 the other
+  \foreach \i in {1,...,\N}{
+    \pgfmathtruncatemacro\nextj{mod(\i,\N)+1}
+    \draw[lnk] (p\i)--(p\nextj);
+  }
+  \foreach \i in {1,...,7}{\node[cA] at (p\i){};}
+  \foreach \i in {8,...,\N}{\node[cB] at (p\i){};}
+  % the cut: between 14&1 and between 7&8
+  \draw[cut] ($(p14)!0.5!(p1)$)++(0.35,0.28) -- ($(p7)!0.5!(p8)$)++(-0.35,-0.28);
+  \node[accent,font=\scriptsize] at (2.35,0) {cut};
+  % rotation arrows suggesting the cut could sit anywhere
+  \draw[->,black!55,line width=0.5pt] (150:2.05) arc (150:120:2.05);
+  \draw[->,black!55,line width=0.5pt] (-30:2.05) arc (-30:-60:2.05);
+\end{tikzpicture}\end{adjustbox}
+\caption{\textbf{Cutting the ring.} The block model splits the ring into two
+contiguous arcs (dark and white), preferring this to no split at all once the ring
+is large enough. But every node looks the same, so the cut (dashed) could sit
+between any pair of beads and score exactly the same: the model says the ring
+\emph{must} be cut, without saying where. The two arcs are real communities in the
+way a magnet has a real direction --- fixed in any one outcome, undetermined by the
+symmetry.}
+\label{fig:com-cutring}
+\end{figure}
 
 \begin{calculation}{the ring's edge counts and its evidence ratio}
 Take an arc of $n_i$ consecutive nodes. A link of span $k$ joins nodes $k$ apart,
@@ -567,10 +604,23 @@ and a node born at generation $k$ ends with degree $2\cdot2^{t-k}$, while the tw
 poles are permanent hubs of degree $b^t=2^t$. The lattice is strongly
 degree-heterogeneous, which is what will make the next section's question sharp.
 
-The $b$ bundles hanging between the poles are the obvious candidate communities.
-Take block~1 to be one bundle together with the two poles, block~2 the other
-bundle. Because the bundles meet \emph{only} at the poles, every crossing link
-joins a pole to a bundle-2 node, and the counts close in themselves.
+The $b$ bundles hanging between the poles are the obvious candidate communities
+(Figure~\ref{fig:com-diamond}). Take block~1 to be one bundle together with the two
+poles, block~2 the other bundle. Because the bundles meet \emph{only} at the poles,
+every crossing link joins a pole to a bundle-2 node, and the counts close in
+themselves.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.5\linewidth]{figs/fig-com-diamond.pdf}
+\caption{\textbf{The diamond's two communities.} The $b=s=2$ diamond lattice at
+generation $t=2$. Its two bundles --- the left half (open circles) and the right
+half (gray) --- are the two communities; they touch only at the poles $A$ and $B$
+(black), so the only links crossing between them are the few at top and bottom.
+As the lattice grows, that seam becomes an ever fainter share of each bundle's
+interior, which is why the split sharpens without limit.}
+\label{fig:com-diamond}
+\end{figure}
 
 \begin{calculation}{the counts, and the map that carries them}
 For the bundle cut of the $b=s=2$ diamond,
@@ -818,7 +868,8 @@ hubs in disguise?
 The pseudofractal web of \citet{dorogovtsevgoltsev2002} settles it. Its rule is as
 local as they come: start from a triangle, and at every generation let each
 existing link spawn a new node joined to both of its ends, keeping all the old
-links. What grows is deterministic, and elementary bookkeeping gives
+links (Figure~\ref{fig:com-pseudofractal}). What grows is deterministic, and
+elementary bookkeeping gives
 \begin{equation}
   n_t = \tfrac{3}{2}\big(3^{t}+1\big), \qquad E_t = 3^{\,t+1},
   \label{eq:com-pfNE}
@@ -833,6 +884,18 @@ degree distribution, $p(k)\sim k^{-\gamma}$ with
 squarely in the scale-free range of real networks. Three seed hubs of degree
 $2^{t+1}$ tower over everything. This web has exactly the degree heterogeneity
 that makes the doubt bite.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figs/fig-com-pseudofractal.pdf}
+\caption{\textbf{Building the pseudofractal web.} The deterministic rule, shown for
+the first three generations. Start from a triangle ($t=0$); at each step, every
+existing link gives birth to a new node joined to both its ends, and the old links
+are kept. The three corners of the original triangle (black) never stop gaining
+neighbors and become the towering hubs; each later node is fainter the later it was
+born.}
+\label{fig:com-pseudofractal}
+\end{figure}
 
 It also has two rival splits with completely different characters. The
 \emph{branch} cut follows the recursive construction, separating one branch of the
@@ -1078,18 +1141,52 @@ anything so clean survive contact with the messy networks of the world? Followin
 \citet{vazquezcount2026}, we can now say that it does, and better than the models
 led us to expect.
 
-Two idealized limits fix the range of possibilities. At one end is a network built
-of dense modules, like Watts's \emph{caveman} graph --- a ring of tight cliques,
-each clique so much denser inside than out that it is unmistakably its own
-community \citep{watts1999caveman}. There the number of communities $B$ simply
-counts the cliques, so it grows in direct proportion to size, $B\propto n$: the
-\emph{modular} limit, exponent one. At the other end are the self-similar
-networks of Section~\ref{sec:com-howmany}, whose community count grows only as the
-square root, $B\propto\sqrt{n}$: the \emph{fractal} limit, exponent one half.
-Writing $B\propto n^{\beta}$, every network must fall somewhere in
-$\tfrac12\le\beta\le1$. Where is an empirical question, and until it is measured
-we do not know whether real networks resemble stacks of modules, self-similar
-fractals, or neither.
+Two idealized limits fix the range of possibilities
+(Figure~\ref{fig:com-caveman}). At one end is a network built of dense modules,
+like Watts's \emph{caveman} graph --- a ring of tight cliques, each clique so much
+denser inside than out that it is unmistakably its own community
+\citep{watts1999caveman}. There the number of communities $B$ simply counts the
+cliques, so it grows in direct proportion to size, $B\propto n$: the \emph{modular}
+limit, exponent one. At the other end are the self-similar networks of
+Section~\ref{sec:com-howmany}, whose community count grows only as the square root,
+$B\propto\sqrt{n}$: the \emph{fractal} limit, exponent one half. Writing
+$B\propto n^{\beta}$, every network must fall somewhere in $\tfrac12\le\beta\le1$.
+Where is an empirical question, and until it is measured we do not know whether
+real networks resemble stacks of modules, self-similar fractals, or neither.
+
+\begin{figure}[t]
+\centering
+\begin{adjustbox}{max width=\linewidth}\begin{tikzpicture}[
+  nd/.style={circle,draw=black!70,fill=black!12,minimum size=2.6mm,inner sep=0pt},
+  iedge/.style={draw=black!55,line width=0.5pt},
+  br/.style={draw=black!75,line width=0.9pt,dashed}]
+  \def\L{6}
+  \foreach \c in {1,...,\L}{
+    \pgfmathsetmacro\ca{90-(\c-1)*360/\L}
+    \coordinate (C\c) at (\ca:2.2);
+    % a 4-clique at each cave
+    \foreach \j in {1,...,4}{
+      \pgfmathsetmacro\ja{(\j-1)*90+45}
+      \coordinate (v\c\j) at ($(C\c)+(\ja:0.5)$);
+    }
+    \foreach \a/\b in {1/2,1/3,1/4,2/3,2/4,3/4}{\draw[iedge] (v\c\a)--(v\c\b);}
+    \foreach \j in {1,...,4}{\node[nd] at (v\c\j){};}
+  }
+  % ring of bridges between consecutive caves
+  \foreach \c in {1,...,\L}{
+    \pgfmathtruncatemacro\d{mod(\c,\L)+1}
+    \draw[br] (v\c2)--(v\d4);
+  }
+\end{tikzpicture}\end{adjustbox}
+\caption{\textbf{The modular limit: the caveman graph.} A ring of tight cliques
+(here six cliques of four nodes), each joined to its neighbors by a single bridge
+(dashed). Each clique is so much denser inside than out that it is unmistakably one
+community, so the number of communities simply counts the cliques and grows in
+proportion to size, $B\propto n$ ($\beta=1$). The self-similar networks of
+Section~\ref{sec:com-howmany} sit at the opposite limit, $\beta=\tfrac12$; real
+networks fall between.}
+\label{fig:com-caveman}
+\end{figure}
 
 So measure it. Take close to a hundred undirected networks from the Netzschleuder
 repository \citep{netzschleuder}, chosen only to span the widest possible range of
