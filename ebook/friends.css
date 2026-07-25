@@ -36,6 +36,13 @@ div.math-display, .displaymath, p.indent img { display: block; margin: 0.8em aut
 
 /* inline math images: keep them on the text baseline, not oversized */
 img.math, .math img { vertical-align: middle; }
+
+/* Display equations ship with a baked-in white background (see svg2png.py), so
+   they are legible in dark mode without the auto `filter: invert(1)` rule -- and
+   that filter must be switched OFF for them, or a white card would flip straight
+   back to black-on-black. (Inline math stays transparent and is still inverted.)
+   The light card matches the calculation boxes, which are also light in dark mode. */
+@media (prefers-color-scheme: dark) { img.math-display { filter: none; } }
 /* inline fraction images (tex4ht class="frac"): align replaced the deprecated
    HTML align='middle' attribute that EPUB3 forbids */
 img.frac, .frac { vertical-align: middle; }

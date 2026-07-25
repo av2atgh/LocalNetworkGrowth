@@ -74,10 +74,17 @@ for svg in glob.glob(os.path.join(oebps, "*.svg")):
         eff  = DISPLAY_SCALE                 # uniform: same font size for every equation
         zoom = min(MAX_RASTER, 2.0 * eff)
         dw, dh = round(dw_nat * eff), round(dh_nat * eff)
+        # Bake an opaque white background into display equations. Dark-mode
+        # legibility otherwise relies on a CSS `filter: invert(1)`, which some
+        # e-readers skip on large images -- leaving tall multi-line equations as
+        # black glyphs on a black page. A baked white background is self-contained:
+        # the equation reads as black-on-white in any reader, in any colour scheme.
+        bg = ["-b", "white"]
     else:
         zoom, dw, dh = INLINE_RASTER, dw_nat, dh_nat
+        bg = []                              # inline math stays transparent (small; invert works)
     try:
-        subprocess.run(["rsvg-convert", "-z", str(zoom), svg, "-o", png], check=True)
+        subprocess.run(["rsvg-convert", "-z", str(zoom), *bg, svg, "-o", png], check=True)
     except subprocess.CalledProcessError:
         print("  WARN: rsvg failed on", base, "- using blank placeholder")
         blank_png(png)
