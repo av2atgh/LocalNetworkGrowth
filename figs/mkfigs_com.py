@@ -394,7 +394,10 @@ def fig_countexamples():
         ("biogrid", "protein interactomes", "b"),
         ("condmat", "cond-mat co-authorship", "c"),
     ]
-    fig, axes = plt.subplots(3, 1, figsize=(W * 0.66, W * 1.4))
+    # Full natural width (not W*0.66): the chapter includes this at width=\linewidth,
+    # so a narrower figure is scaled UP, magnifying its height until the caption
+    # spills off the page. Full width keeps it near 1:1 and shorter.
+    fig, axes = plt.subplots(3, 1, figsize=(W, W * 1.25))
     for ax, (key, title, letter) in zip(axes, systems):
         s = df[df["system"] == key].sort_values("n")
         n = s["n"].to_numpy(float)
