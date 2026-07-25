@@ -735,8 +735,9 @@ style. Book 137 -> 141 pages.
   Fig 6.10 The caveman graph (6.12). TikZ: a ring of six 4-cliques joined by single
            bridges -- the modular beta=1 limit, previously text-only.
   Fig 7.1  Multiplicity on a ring (new section 7.3, "The simplest case: a ring").
-           TikZ: antipodal nodes with their two equal arcs as the two shortest
-           paths.
+           Two panels: (a) the plain cycle's antipodal two-arcs; (b) the
+           next-nearest ring C_n(1,2) with two two-hop shortest paths between an
+           odd-separation pair.
 
 NEW SECTION 7.3, "The simplest case: a ring" (answers the user's question about
 syncing the two chapters). Works the multiplicity metric on the plainest cyclic
@@ -748,6 +749,16 @@ here between redundant routes and none. Real redundancy, like real community
 structure, needs an extensive number of loops. This gives the reader a hand-computed
 feel for mu before the general baseline, and locks the two chapters together on the
 ring.
+
+  Extended with the next-nearest-neighbor ring C_n(1,2) as the mu>1 example: for
+  endpoints an odd number j of steps apart, mu = (j+1)/2 (one per position of the
+  lone single-step among the double-steps), so redundancy grows with separation and
+  <mu> climbs with n. The clincher is the (m-n) unification: the plain ring has m=n
+  (one cycle, on the fence) and C_n(1,2) has m=2n, so m-n=n -- an extensive number
+  of independent cycles, EXACTLY the quantity chapter 6 used for the ring's
+  communities (log R = (m-n) ln2). Both community structure and path redundancy
+  switch on at the same threshold, m>n. The (j+1)/2 formula and the linear <mu>
+  growth were verified numerically before writing.
 
 The two matplotlib schematics use self-contained graph builders (fig_pseudofractal,
 fig_diamondcomm in figs/mkfigs_com.py), node/edge counts verified against the closed
