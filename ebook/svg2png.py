@@ -16,21 +16,15 @@ PT2PX   = 96.0 / 72.0    # CSS px per TeX/big point
 
 # Sizing is PER IMAGE. Kindle sizes INLINE images by their intrinsic pixel count
 # (it ignores tiny width/height) but honours width/height for block DISPLAY
-# equations, and it renders narrow images small. So:
+# equations. So:
 #  - inline math/fractions: modest rasterisation zoom, shown at natural px.
-#  - display equations: enlarged by DISPLAY_SCALE; SHORT single-line equations
-#    (small natural height) get a bigger boost via a height floor, so they are
-#    not dwarfed by tall fraction equations. Rasterised at ~2x the effective
-#    scale for crispness.
-DISPLAY_SCALE     = 3.5     # base enlargement for most display equations
-# Kindle renders a SHORT single-line equation image as a small inline-ish thing,
-# but a taller (multi-line / fraction) one as a prominent centred block. So only
-# the genuinely short equations (natural height below SHORT_LINE_PX, i.e. a
-# single line) are boosted -- up to TARGET_SHORT_H tall -- to clear that block
-# threshold. Multi-line / fraction equations keep DISPLAY_SCALE untouched.
-SHORT_LINE_PX     = 26.0    # natural px height below which an eq is "single line"
-TARGET_SHORT_H    = 130.0   # display height to boost single-line eqs to
-MAX_DISPLAY_SCALE = 7.5     # cap on the boost
+#  - display equations: enlarged by the SAME DISPLAY_SCALE for every equation, so
+#    the font (px per line) is identical book-wide. A one-line equation and a
+#    three-line derivation are scaled by the same factor -- the tall one is
+#    simply taller, not larger-typed. Rasterised at ~2x that scale for crispness.
+#    (An earlier version boosted short single-line equations to a fixed target
+#    height; that gave them a visibly bigger font than multi-line equations.)
+DISPLAY_SCALE     = 3.5     # uniform enlargement for ALL display equations
 MAX_RASTER        = 11.0    # cap on rasterisation zoom (bounds PNG/file size)
 INLINE_RASTER     = 2.5     # rasterisation zoom for inline math/fractions
 
@@ -72,10 +66,7 @@ for svg in glob.glob(os.path.join(oebps, "*.svg")):
         blank_png(png); sizes[base] = (1, 1); os.remove(svg); continue
     dw_nat, dh_nat = max(1, round(wpt * PT2PX)), max(1, round(hpt * PT2PX))
     if base in display_svgs:
-        if dh_nat < SHORT_LINE_PX:           # single-line eq -> boost past block threshold
-            eff = max(DISPLAY_SCALE, min(MAX_DISPLAY_SCALE, TARGET_SHORT_H / dh_nat))
-        else:                                # multi-line / fraction eq -> leave as is
-            eff = DISPLAY_SCALE
+        eff  = DISPLAY_SCALE                 # uniform: same font size for every equation
         zoom = min(MAX_RASTER, 2.0 * eff)
         dw, dh = round(dw_nat * eff), round(dh_nat * eff)
     else:
