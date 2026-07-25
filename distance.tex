@@ -58,13 +58,13 @@ Four growth rules will do all the work, and we have met them all before. Their
 definitions matter here more than they have so far, because we are about to
 compute their exponents, so let us state them exactly.
 
-\emph{Local search}, $LS(n,m)$, the search rule of Chapter~\ref{ch:search} in
+\emph{Local search}, $LS(n,\ell)$, the search rule of Chapter~\ref{ch:search} in
 undirected form. Start from two connected nodes. To add a node, pick an existing
-node at random, take an $m$-step random walk from it, and link the newcomer to
+node at random, take an $\ell$-step random walk from it, and link the newcomer to
 every node the walk visited. It carries preferential attachment because the chance
 of being visited, beyond the entry node, is proportional to degree; and it makes at
 least one triangle at every step, between the entry point and the first neighbor
-visited. For $m=1$ it \emph{is} the triadic-closure rule of
+visited. For $\ell=1$ it \emph{is} the triadic-closure rule of
 Chapter~\ref{ch:friends}.
 
 \emph{Duplication--split}, $DS(n,q)$, the undirected cousin of the project rule of
@@ -437,11 +437,11 @@ degree, so $a=0$, $b=1/2$, $c=1$, $d=0$, and
   \gamma_{BA} = 3 .
   \label{eq:path-gammaBA}
 \end{equation}
-For $LS(n,m)$ the walk lands on the entry node uniformly, which is the constant
+For $LS(n,\ell)$ the walk lands on the entry node uniformly, which is the constant
 part $a=1$, and thereafter in proportion to degree, giving
-$b=m/\langle k\rangle=m/[2(m+1)]$ with $c=1$, $d=0$, so that
+$b=\ell/\langle k\rangle=\ell/[2(\ell+1)]$ with $c=1$, $d=0$, so that
 \begin{equation}
-  \gamma_{LS} = \frac{3m+2}{m} .
+  \gamma_{LS} = \frac{3\ell+2}{\ell} .
   \label{eq:path-gammaLS}
 \end{equation}
 For $DS(n,q)$ duplication is the only source of preference, $b=q$, and it is also
@@ -759,14 +759,14 @@ The poles are a special pair, so the average over \emph{all} pairs needs its own
 argument --- and it is here that the diamond's rigidity pays off again.
 
 \begin{calculation}{from the poles to the average}
-The key geometric fact is that every vertex lies on some pole-to-pole geodesic,
+The key geometric fact is that every node lies on some pole-to-pole geodesic,
 \begin{equation}
   d(v,A) + d(v,B) = D_t ,
   \label{eq:diamond-onpath}
 \end{equation}
 proved by induction on $t$: within a replaced link the two poles of the sub-copy
 inherit the property, and any detour around a parallel branch is strictly longer.
-So a vertex is characterized by the single number $d(v,A)$ --- the lattice is, in
+So a node is characterized by the single number $d(v,A)$ --- the lattice is, in
 this sense, one-dimensional. Now split the pairs into those internal to one copy of
 $G_{t-1}$ and those spanning two copies. The total geodesic count
 $S_t=\sum_{u<v}\mu_{uv}$ then satisfies

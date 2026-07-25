@@ -54,9 +54,13 @@ Finally, locality proved to shape structure above the level of the individual
 node. The same rules that set the degrees also segregate the network into
 communities --- even when every node is identical --- a fact we made precise
 through the Ramsey community number, the size beyond which communities are all but
-certain (Chapter~\ref{ch:communities}); and they thread the network with redundant
-shortest paths, multiplying the routes between nodes far faster than chance and in
-lockstep with those very communities (Chapter~\ref{ch:distance}).
+certain (Chapter~\ref{ch:communities}). And not only whether communities appear,
+but how many: across close to a hundred real networks the number of communities
+was found to grow as a power law of size, $B\propto n^{\beta}$ with $\beta$ between
+one half and two thirds --- super-fractal, and reproduced by the same local rules.
+Locality also threads the network with redundant shortest paths, multiplying the
+routes between nodes far faster than chance and in lockstep with those very
+communities (Chapter~\ref{ch:distance}).
 
 And with that, the book comes full circle. We set out asking where the global
 regularities of real networks come from --- their power-law degrees, their
@@ -127,13 +131,17 @@ book's thesis makes the question natural; it does not answer it.
 
 Two smaller loose ends deserve naming, since both have the flavor of a clue rather
 than a nuisance. The number of communities that best describes a self-similar
-network appears to grow as $\sqrt{n}$, the geometric midpoint of the network's own
-hierarchy --- but that is a numerical observation over the sizes we can reach, not
-a theorem, and a proof would be worth having, not least because the same
-$\sqrt{n}$ governs the shortest paths on the same lattice. And the Ramsey number's
-climb with cycle length carries a persistent even--odd alternation, odd cycles
-bringing communities on sooner than the even cycles around them. It is too regular
-to be noise and has no explanation.
+network grows as $\sqrt{n}$ --- proved exactly for the solvable lattices, where the
+optimum sits at the geometric midpoint of the network's own hierarchy, and the
+same $\sqrt{n}$ governs the shortest paths there. Real networks, though, divide
+\emph{more} finely: their community count grows as $n^{\beta}$ with $\beta$
+measured between one half and two thirds, above the self-similar value. What
+carries a real network past the fractal $\sqrt{n}$ --- what extra structure, absent
+from the self-similar models, its growth builds in --- is a concrete open question
+the exponent now makes measurable. And the Ramsey number's climb with cycle length
+carries a persistent even--odd alternation, odd cycles bringing communities on
+sooner than the even cycles around them. It is too regular to be noise and has no
+explanation.
 
 Even the self-organized critical state of the exhaustive searcher, where a
 scale-free network appears across a whole range of the control parameter rather

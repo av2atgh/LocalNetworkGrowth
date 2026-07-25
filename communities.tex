@@ -162,9 +162,9 @@ communities property; the controls --- reshuffling a network's links, and growin
 one with no locality at all --- do not. Holding the four side by side is the whole
 argument of the chapter in miniature.
 
-\paragraph{Local search.} The model $\mathrm{LS}(n,d)$ is the search rule of
+\paragraph{Local search.} The model $LS(n,\ell)$ is the search rule of
 Chapter~\ref{ch:search} in undirected form \citep{vazquez2001}: each new node
-takes a short walk of $d$ steps from a random starting node and links to every
+takes a short walk of $\ell$ steps from a random starting node and links to every
 node it visits. It carries preferential attachment and high clustering, and ---
 though nothing in the rule ever mentions groups --- the block model resolves clear
 communities, with $P_\kappa$ climbing from near zero around $n=10$ to a
@@ -175,13 +175,13 @@ nodes \citep{vazquezcommunities2025}. Figure~\ref{fig:com-ls} shows one such net
 \centering
 \begin{adjustbox}{max width=\linewidth}\input{netfig-ls.tex}\end{adjustbox}
 \caption{\textbf{Communities in a local-search network.} An instance of the
-local-search model $\mathrm{LS}(n{=}50,d{=}1)$. The stochastic block model
+local-search model $LS(n{=}50,\ell{=}1)$. The stochastic block model
 resolves two communities, shown dark gray and white; they emerge even though the
 rule treats every node alike and never mentions groups.}
 \label{fig:com-ls}
 \end{figure}
 
-\paragraph{Duplication--split.} The model $\mathrm{DS}(n,q)$ is the undirected
+\paragraph{Duplication--split.} The model $DS(n,q)$ is the undirected
 cousin of the project-schedule rule of Chapter~\ref{ch:projects}: a new node
 either copies all of a random node's links (probability $q$) or splits one of its
 links in two. This model is the decisive case, because it builds \emph{no
@@ -202,8 +202,8 @@ communities outright --- the randomized versions have no finite Ramsey number at
 all (the two ``randomized'' rows in the table below). Whatever the local rules
 built, the bare list of degrees cannot sustain.
 
-\paragraph{Barab\'asi--Albert.} Finally, $\mathrm{BA}(n,m)$ --- the canonical
-preferential-attachment model --- is our \emph{non-local} control: a growing,
+\paragraph{Barab\'asi--Albert.} Finally, $BA(n,m)$, the canonical
+preferential-attachment model, is our \emph{non-local} control: a growing,
 rich-get-richer network in which each newcomer attaches its $m$ links to nodes
 drawn from the \emph{whole} graph, never once consulting a neighborhood. Despite
 its growth and its rich-get-richer rule it has no emergent communities (the last
@@ -213,7 +213,7 @@ row of the table), and the next section is devoted to teasing apart exactly why.
 \centering
 \begin{adjustbox}{max width=\linewidth}\input{netfig-ds.tex}\end{adjustbox}
 \caption{\textbf{Communities in a duplication--split network.} An instance of the
-duplication--split model $\mathrm{DS}(n{=}50,q{=}0.3)$. Two communities (dark gray
+duplication--split model $DS(n{=}50,q{=}0.3)$. Two communities (dark gray
 and white) again emerge --- even though this rule builds no triangles at all, so the
 network is far less cliquish than the local-search one of
 Figure~\ref{fig:com-ls}.}
@@ -228,11 +228,11 @@ A few representative Ramsey numbers, based on numerical estimates for $\epsilon=
 \hline
 Model & $r_\kappa$ (block model) & $r_\kappa$ (Infomap) \\
 \hline
-$\mathrm{LS}(d=1)$               & $81$   & $222$  \\
-$\mathrm{DS}(q=0.5)$             & $98$   & $622$  \\
-$\mathrm{LS}(d=1)$, randomized   & ---    & ---    \\
-$\mathrm{DS}(q=0.5)$, randomized & ---    & ---    \\
-$\mathrm{BA}(m=2)$               & ---    & ---    \\
+$LS(\ell=1)$               & $81$   & $222$  \\
+$DS(q=0.5)$             & $98$   & $622$  \\
+$LS(\ell=1)$, randomized   & ---    & ---    \\
+$DS(q=0.5)$, randomized & ---    & ---    \\
+$BA(m=2)$               & ---    & ---    \\
 \hline
 \end{tabular}
 \end{center}
@@ -392,7 +392,7 @@ $E_{12}$ the number crossing between. Every integral is of the same standard sha
 \end{equation}
 where $\mathrm{B}$ is the Beta function. So each hypothesis collapses to a product
 of Beta functions, and their ratio $R$ --- the \emph{evidence ratio} --- can be
-evaluated exactly. All we ever need is a handful of edge counts.
+evaluated exactly. All we ever need is a handful of link counts.
 \end{calculation}
 
 Writing $R$ for the ratio of the evidence for the split to that for no split, the
@@ -454,7 +454,7 @@ symmetry.}
 \label{fig:com-cutring}
 \end{figure}
 
-\begin{calculation}{the ring's edge counts and its evidence ratio}
+\begin{calculation}{the ring's link counts and its evidence ratio}
 Take an arc of $n_i$ consecutive nodes. A link of span $k$ joins nodes $k$ apart,
 and $n_i-k$ such links fit inside the arc, so summing over the spans
 $k=1,\dots,c$,
@@ -526,14 +526,14 @@ so the label term contributes
   -\log\binom{n}{n/2} \simeq -\,n\ln 2,
   \label{eq:com-label}
 \end{equation}
-the entropy of labelling $n$ nodes with two labels. Subtracting the price from the
+the entropy of labeling $n$ nodes with two labels. Subtracting the price from the
 gain,
 \begin{equation}
   \log R \;\simeq\; \big(cn - n\big)\ln 2 \;=\; (c-1)\,n\ln 2 .
   \label{eq:com-ringlaw}
 \end{equation}
-Since $cn$ is the number of links $m_{\mathrm{e}}$, this reads
-$\log R\simeq(m_{\mathrm{e}}-n)\ln 2$: the ring is split exactly when its links
+Since $cn$ is the number of links $m$, this reads
+$\log R\simeq(m-n)\ln 2$: the ring is split exactly when its links
 outnumber its nodes.
 \end{calculation}
 
@@ -563,7 +563,7 @@ is balanced, not reluctant.}
 \end{figure}
 
 And now the connection this book has been building toward. The quantity
-$m_{\mathrm{e}}-n$ is, up to one, the number of \emph{independent cycles} a
+$m-n$ is, up to one, the number of \emph{independent cycles} a
 connected network carries. A tree has none, and is never split. A single ring has
 exactly one, and sits exactly on the fence. A network with an extensive number of
 independent cycles is split with an evidence proportional to how many it has. The
@@ -691,7 +691,7 @@ weights are
   \label{eq:com-Omega}
 \end{equation}
 Giving each $\omega_{rs}$ a $\mathrm{Gamma}(\alpha,\alpha)$ prior, of mean one and
-so centred on the configuration model, and integrating it out,
+so centered on the configuration model, and integrating it out,
 \begin{equation}
   Z(e,\Omega) = \frac{\alpha^\alpha}{\Gamma(\alpha)}
   \int_0^\infty \omega^{e+\alpha-1}e^{-(\Omega+\alpha)\omega}\,d\omega
@@ -726,7 +726,7 @@ rational functions of $x=2^t$:
   \label{eq:com-densities}
 \end{equation}
 
-\begin{calculation}{the evidence per edge}
+\begin{calculation}{the evidence per link}
 Under the flow, Eq.~\eqref{eq:com-densities} converges to the \emph{community
 fixed point} (Figure~\ref{fig:com-rg}b),
 \begin{equation}
@@ -1047,7 +1047,7 @@ any fixed number: it \emph{grows with the network}, as its square root. The web
 does the same, with $K_{\mathrm{opt}}=3^{\lfloor t/2\rfloor}\sim\sqrt{n}$. The
 optimum sits at the geometric midpoint of the network's own hierarchy --- about
 $\sqrt{n}$ communities of about $\sqrt{n}$ nodes each --- and the two-block cut we
-laboured over is merely the top of that tree. It is worth noting that $\sqrt{n}$ is
+labored over is merely the top of that tree. It is worth noting that $\sqrt{n}$ is
 the same scale that Chapter~\ref{ch:distance} will find in the exponent of the
 shortest path multiplicity on this very lattice; both are the seam scale $b^t$ in
 disguise.
@@ -1305,7 +1305,7 @@ between nearby nodes, and disappear once links may span the whole network.
 Three networks simple enough to solve exactly turn all of that from a measurement
 into a theory. A featureless ring of beads, with no growth and no randomness
 whatever, is already split in two once each bead reaches beyond its nearest
-neighbor. The evidence for the split is $\log R\simeq(m_{\mathrm{e}}-n)\ln 2$: a
+neighbor. The evidence for the split is $\log R\simeq(m-n)\ln 2$: a
 gain of $\ln 2$ for every link, against a price of $n\ln 2$ for saying which node
 goes where. So a network is broken into communities precisely when it carries more
 links than nodes --- which is to say, when it carries an extensive number of

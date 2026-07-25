@@ -263,3 +263,64 @@ the kappa -> 1.576 prefactor before either was quoted.
   (embedded timestamps/IDs). After a test-only build: git checkout main.pdf
 - At the 1st-edition commit the root .tex files are byte-identical to paperback_edition_1/,
   so any root-vs-paperback_edition_1 diff is exactly the 2nd-edition delta.
+
+
+== CONSISTENCY PASS 2026-07-25 ==
+
+Full-book style/content consistency review (whole book, 9 files). Verified clean:
+citations (all resolve; only jeong2000 defined-but-uncited, long-standing), no
+duplicate bib keys, no undefined/multiply-defined refs, dashes (--- parenthetical,
+-- ranges/compound names), Barabasi--Albert and Erdos--Renyi forms uniform, spelling
+now uniformly American, section titles uniform sentence case, figure captions uniform
+bold lead-in, calculation boxes uniform lowercase titles. Book builds with ZERO
+overfull boxes, 141 pages.
+
+FIXED this pass:
+  * edge -> link (3, communities SBM boxes) and vertex -> node (2, distance diamond),
+    to hold the book's "nodes and links" convention.
+  * British spellings -> American: labelling->labeling, centred->centered,
+    laboured->labored (all communities.tex).
+  * Model names now italic everywhere: communities.tex \mathrm{LS/DS/BA} -> italic,
+    matching distance.tex AND the matplotlib figure labels (which render italic).
+  * LS walk-length parameter unified to \ell in BOTH chapters (was LS(n,d) in ch6,
+    LS(n,m) in ch7). This also frees m for the link count in ch7's (m-n) cycle
+    argument and d for hierarchy depth in ch6 -- both of which m/d had collided with.
+  * Link count unified to bare m (communities ring's m_e -> m), so the mirrored
+    (m-n) passages in ch6 (communities) and ch7 (ring multiplicity) match.
+  * walks.tex:346 "Eq. (\ref{...})" -> "Eq.~\eqref{...}" (lone style outlier).
+  * Outlook: added the community-count power law (beta~0.61) to the ch6 recap, which
+    had omitted it; reframed the stale sqrt(n) "open problem" (it is proved exactly
+    for the solvable lattices, and real networks measure beta~0.61 > 1/2, so the open
+    question is now "why do real networks exceed sqrt(n)").
+
+DEFERRED -- author's call (mostly pre-existing notation in the frozen older chapters;
+rewriting established symbols risks errors and changes the author's voice):
+
+  Symbol overloads across chapters:
+  * alpha carries five meanings: walks (rate ratio nu_s/nu_a), proteins (assortativity
+    slope), projects (critical-path fraction exponent), communities (Beta-prior
+    hyperparameter), distance (multiplicity exponent 3/gamma-1). Consider a one-line
+    nomenclature note, or accept as locally unambiguous.
+  * beta: degree-growth exponent (friends, proteins) vs community-count exponent
+    (communities 6.12). Locally clear but the same letter.
+  * gamma overloaded WITHIN communities.tex: degree exponent (6.9, gamma=1+ln3/ln2)
+    vs Reichardt-Bornholdt resolution parameter (6.11, H = -sum(A_ij - gamma p_ij)...).
+    gamma is standard for the RB resolution, but it is the one same-chapter clash.
+  * proteins.tex uses beta twice: degree-growth exponent (beta=1-mu_1) and, in its
+    summary table, the clustering-hierarchy falloff exponent <c>_k ~ k^-beta.
+  * q_e, q_v mean different things in walks (explore / link-on-visit) vs proteins
+    (retention / self-interaction); mu_1 has opposite roles in friends (speeds growth)
+    vs proteins (link loss, steepens gamma).
+
+  Content tensions to reconcile (also in issues.log's per-chapter notes):
+  * walks.tex q_c: analytic 1/4 (eq:walk-rec-dou) vs "simulations confirm ... ~0.5"
+    (still open from the 1st-edition audit).
+  * friends' own result <c>_k ~ 2 mu_1/k (beta=1) vs proteins' cross-chapter summary
+    table, which lists the friends/triadic mechanism at 0 < beta < 1.
+  * gamma_DS = 1/q (projects, distance) vs gamma = 1+1/(1-mu_1) (proteins duplication):
+    legitimately different models, but a one-line note would prevent a reader
+    expecting 1+1/q for duplication-split.
+
+  Preface: "favoring mean-field arguments ... over exhaustive rigor" (main.tex:149-152)
+  now undersells the exactly-solvable content of the last two chapters. Consider a
+  light softening (author's voice -- left untouched).
