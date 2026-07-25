@@ -1,0 +1,38 @@
+% ebook-preamble.tex — shared preamble for the EPUB builds (single chapter and
+% full book). \input after \documentclass, before \begin{document}.
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[round,authoryear]{natbib}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc,bending}
+
+% Figure palette (normally set in ../main.tex).
+\colorlet{accent}{black!80}
+\colorlet{accentB}{black!50}
+
+% adjustbox is incompatible with tex4ht; it is only used in the print build to
+% keep wide figures/equations inside the narrow 5x8 column. EPUB reflows and CSS
+% (max-width:100%) handles overflow, so the body preprocessor (mkbody.pl) strips
+% the adjustbox wrappers before each chapter is input.
+
+% Skippable "calculation" box.
+%  - Under tex4ht (EPUB): emit a CSS-styled <div class="calcbox">. \leavevmode
+%    forces any pending paragraph to open so \EndP can close it (</p>), leaving
+%    the <div> at valid block level; \IgnorePar then keeps the title text out of
+%    a fresh <p>. Without \leavevmode, a box that directly follows a figure float
+%    yields invalid <p><div>...</p> (tex4ht opens the <p> after \EndP has run).
+%  - Under plain pdflatex (debugging): fall back to a tcolorbox.
+\ifdefined\HCode
+  \newenvironment{calculation}[1]{%
+    \leavevmode\EndP\HCode{<div class="calcbox">}\IgnorePar%
+    {\bfseries The mathematics behind it: #1}\quad
+    {\itshape(this box can be skipped)}\par}%
+    {\EndP\HCode{</div>}}%
+\else
+  \usepackage[most]{tcolorbox}
+  \newtcolorbox{calculation}[1]{breakable,colback=black!4,colframe=black!45,%
+    boxrule=0.5pt,%
+    title={The mathematics behind it: #1 \hfill\textnormal{\itshape(can be skipped)}}}%
+\fi

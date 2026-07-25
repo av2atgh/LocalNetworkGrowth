@@ -1,0 +1,72 @@
+/* friends.css — starter EPUB stylesheet for the Growing Networks Kindle trial.
+   Tweak freely; rebuild with ./build.sh to see changes. Kindle (KFX) honours a
+   conservative subset of CSS, so keep rules simple and avoid fixed positioning. */
+
+/* ---- base text ---------------------------------------------------------- */
+body {
+  font-family: Georgia, "Times New Roman", serif;
+  line-height: 1.5;
+  margin: 0 1em;
+}
+
+p {
+  margin: 0 0 0.7em 0;
+  text-align: justify;
+  text-indent: 1.2em;
+}
+/* no indent on the first paragraph after a heading or box */
+h1 + p, h2 + p, h3 + p, .calcbox > p:first-of-type { text-indent: 0; }
+
+/* ---- headings ----------------------------------------------------------- */
+h1, h2, h3 {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.2;
+  page-break-after: avoid;
+}
+h1 { font-size: 1.6em; margin: 1.2em 0 0.6em; }
+h2 { font-size: 1.3em; margin: 1.4em 0 0.5em; }
+h3 { font-size: 1.1em; margin: 1.2em 0 0.4em; }
+
+/* ---- math & figures (SVG) ----------------------------------------------- */
+/* never let a formula or figure spill past the screen edge */
+img, svg { max-width: 100%; height: auto; }
+
+/* display equations come out as block images; centre them */
+div.math-display, .displaymath, p.indent img { display: block; margin: 0.8em auto; }
+
+/* inline math images: keep them on the text baseline, not oversized */
+img.math, .math img { vertical-align: middle; }
+/* inline fraction images (tex4ht class="frac"): align replaced the deprecated
+   HTML align='middle' attribute that EPUB3 forbids */
+img.frac, .frac { vertical-align: middle; }
+
+/* figures + captions */
+div.figure, figure { text-align: center; margin: 1.2em 0; }
+/* tex4ht left a `figcaption.caption{text-align:center}` rule; match its
+   specificity (element+class) so this left-alignment actually wins. The
+   hanging indent on the "Figure N:" label (text-indent/-margin) is kept. */
+figcaption.caption, div.caption, .caption, figcaption {
+  font-size: 0.85em;
+  color: #444;
+  text-align: left;
+  margin-top: 0.4em;
+}
+
+/* ---- skippable calculation box ------------------------------------------ */
+.calcbox {
+  border: 1px solid #999;
+  background: #f4f4f4;
+  border-radius: 4px;
+  padding: 0.6em 0.9em;
+  margin: 1.1em 0;
+  font-size: 0.95em;
+}
+.calcbox > p:first-child { margin-top: 0; }       /* the bold title line */
+.calcbox > p:last-child  { margin-bottom: 0; }
+
+/* ---- bibliography ------------------------------------------------------- */
+.thebibliography p, .thebibliography div, dl.thebibliography dd {
+  font-size: 0.9em;
+  text-indent: -1em;
+  margin-left: 1.2em;
+}

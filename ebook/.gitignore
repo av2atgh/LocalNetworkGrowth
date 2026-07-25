@@ -1,0 +1,20 @@
+# The EPUB build regenerates everything below from the print sources in ../ .
+# Track only the toolchain sources and the final deliverable; ignore the rest
+# (per-chapter *-body.tex, ~200 math/figure SVGs, XHTML, and tex4ht intermediates).
+*
+
+# Toolchain sources
+!.gitignore
+!README.md
+!build-book.sh
+!mkbody.pl
+!renderfigs.sh
+!svg2png.py
+!fixepub.py
+!ebook-preamble.tex
+!ebook.cfg
+!book-ebook.tex
+!friends.css
+
+# Final deliverable
+!book-ebook.epub
