@@ -24,7 +24,12 @@ PT2PX   = 96.0 / 72.0    # CSS px per TeX/big point
 #    simply taller, not larger-typed. Rasterised at ~2x that scale for crispness.
 #    (An earlier version boosted short single-line equations to a fixed target
 #    height; that gave them a visibly bigger font than multi-line equations.)
-DISPLAY_SCALE     = 3.5     # uniform enlargement for ALL display equations
+DISPLAY_SCALE     = 2.0     # uniform enlargement for ALL display equations
+# Kept modest on purpose: at a large scale a typical equation is wider than a
+# phone/e-reader column, so CSS max-width:100% shrinks it by a width-dependent
+# amount -- a wide equation clamps hard (tiny) while a narrow one escapes and
+# looks oversized. A smaller scale lets most equations fit the column unclamped,
+# so the on-screen font is uniform; only genuinely very wide formulae still clamp.
 MAX_RASTER        = 11.0    # cap on rasterisation zoom (bounds PNG/file size)
 INLINE_RASTER     = 2.5     # rasterisation zoom for inline math/fractions
 
