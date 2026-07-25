@@ -923,6 +923,7 @@ structure has none --- but it does mean that a bare Ramsey number, quoted withou
 its detection rule, says less than it appears to.
 
 \section{How many communities?}
+\label{sec:com-howmany}
 
 We have been asking whether a network splits in two. That was a convenience, and
 it is time to drop it. A self-similar network has structure at every scale, so
@@ -1063,6 +1064,120 @@ not merely detectable, in the sense that a statistician would infer it. It is
 with a critical temperature, an order parameter, and a cascade of transitions
 building the hierarchy from the top down. Communities, born of nothing but local
 wiring, turn out to be a state that a network can be in.
+
+\section{How many communities do real networks have?}
+\label{sec:com-count}
+
+Everything so far has been theory: models grown by hand, and lattices solved with
+pencil and paper. It is time to ask the real world. The
+question of Section~\ref{sec:com-howmany} --- \emph{how many} communities a network
+has, and how that number grows --- was answered there only for self-similar
+constructions, where the best
+description settled on about $\sqrt{n}$ communities of $\sqrt{n}$ nodes each. Does
+anything so clean survive contact with the messy networks of the world? Following
+\citet{vazquezcount2026}, we can now say that it does, and better than the models
+led us to expect.
+
+Two idealized limits fix the range of possibilities. At one end is a network built
+of dense modules, like Watts's \emph{caveman} graph --- a ring of tight cliques,
+each clique so much denser inside than out that it is unmistakably its own
+community \citep{watts1999caveman}. There the number of communities $B$ simply
+counts the cliques, so it grows in direct proportion to size, $B\propto n$: the
+\emph{modular} limit, exponent one. At the other end are the self-similar
+networks of Section~\ref{sec:com-howmany}, whose community count grows only as the
+square root, $B\propto\sqrt{n}$: the \emph{fractal} limit, exponent one half.
+Writing $B\propto n^{\beta}$, every network must fall somewhere in
+$\tfrac12\le\beta\le1$. Where is an empirical question, and until it is measured
+we do not know whether real networks resemble stacks of modules, self-similar
+fractals, or neither.
+
+So measure it. Take close to a hundred undirected networks from the Netzschleuder
+repository \citep{netzschleuder}, chosen only to span the widest possible range of
+sizes --- from Zachary's thirty-four-member karate club to networks of more than
+two million nodes --- and drawn from social, biological, infrastructural and
+collaboration settings with nothing else in common. Count the communities of each
+with the degree-corrected block model, letting the method infer the number of
+groups from the data rather than fixing it in advance \citep{peixoto2013,karrer2011}.
+The result is a clean straight line on logarithmic axes, across more than four
+decades of size (Figure~\ref{fig:com-count}):
+\begin{equation}
+  B \propto n^{\beta}, \qquad \beta \approx 0.61,
+  \label{eq:com-beta}
+\end{equation}
+with a bootstrap $95\%$ confidence interval, $[0.55,0.67]$, that lies wholly above
+one half and excludes it. The karate club resolves into a single group, a football
+schedule into ten, the Internet into several dozen, the largest social and
+collaboration networks into hundreds --- and one exponent threads them all,
+although they share no common origin, rule, or scale. Real networks are
+\emph{super-fractal}: they carry more resolvable community structure than
+self-similar models predict, yet they fall far short of the modular extreme.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figs/fig-com-count.pdf}
+\caption{\textbf{The number of communities grows as a power law of size.} Number
+of communities $B$ against number of nodes $n$ for close to a hundred real
+networks (log--log), each counted with the degree-corrected block model. The solid
+line is the fitted power law $B\propto n^{0.61}$; the dashed line is the fractal
+$\sqrt{n}$. Denser networks (darker fill) sit above the line, sparse ones below;
+geographic, spatially embedded networks (squares) are the sparsest and fall
+furthest below. The exponent lies well above the fractal one half.}
+\label{fig:com-count}
+\end{figure}
+
+The scatter about the line is not noise but signal: it tracks how dense the
+network is. At a fixed number of nodes, a denser web carries more information and
+supports a finer division, so dense networks (the darker points in
+Figure~\ref{fig:com-count}) sit above the line and sparse ones below, a trend that
+is statistically firm across the sample. The extreme cases are the geographic
+networks --- roads, power grids, transport --- which are the sparsest of all and
+lie furthest below; their position is explained by their low density, not by their
+spatial embedding as such.
+
+A cross-section of unrelated networks is one kind of evidence; following a
+\emph{single} system as it grows, so that the same mechanism lays down every
+point, is a sharper one. Do this for the three systems of the previous chapter ---
+the very networks whose shortest paths we counted there --- and each again traces a
+power law: the Internet at the autonomous-system level, $\beta\approx0.62$; the
+protein interactomes across organisms, $\approx0.55$; and the condensed-matter
+co-authorship network, accumulated year by year to nearly four hundred thousand
+authors, $\approx0.71$. Grown by its own rules, each system multiplies its
+communities as a power law of size, with an exponent again between one half and
+two thirds.
+
+And the book's own local rules do the same. Grow the triadic-closure and
+duplication--split models --- the social and biological rules of
+Chapters~\ref{ch:friends} and~\ref{ch:duplication} --- to a hundred thousand nodes
+and count their communities exactly as for the data, and both yield clean power
+laws with super-fractal exponents, $\beta\approx0.56$ and $0.60$, their confidence
+intervals again above one half (Figure~\ref{fig:com-count-models}). The
+super-fractal exponent is thus not a peculiarity of the data but a consequence of
+local growth: the same rules that make communities emerge at all, earlier in this
+chapter, also fix how their number multiplies with size, and fix it in the range
+the real networks occupy.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figs/fig-com-count-models.pdf}
+\caption{\textbf{Local rules reproduce the super-fractal exponent.} Number of
+communities against size for the two local-growth models grown to $10^5$ nodes:
+(a) triadic closure and (b) duplication--split. Each follows a power law (solid
+line) with an exponent above the fractal $\sqrt{n}$ (dashed), in the same
+super-fractal range as the real networks of Figure~\ref{fig:com-count}.}
+\label{fig:com-count-models}
+\end{figure}
+
+The reading of Eq.~\eqref{eq:com-beta} is simple and worth stating plainly. The
+natural number of parts into which a network divides is not fixed but grows with
+the network, as $n^{\beta}$, while the typical community swells as $n^{1-\beta}$.
+With $\tfrac12<\beta<\tfrac23$ both grow without bound, yet the communities remain
+a vanishing fraction of the whole: one can neither summarize an arbitrarily large
+network with a fixed handful of groups, nor shatter it into ever more without
+limit. The exponent sets the balance --- and that it sits reliably above one half,
+across systems that share nothing else, is the finding. The number of communities
+is a stable, measurable property of how a network is organized, and network growth
+by local rules is what herds a system's components into that many clusters.
+
 \section{Summary}
 
 Community structure, long blamed on built-in differences between nodes, is
@@ -1112,15 +1227,23 @@ degree gradient turns out to \emph{delay} a degree-blind detector rather than fo
 it. But $r_\kappa$ belongs to the network and the question together, never to the
 network alone.
 
-Two closing surprises. Asking how many communities, rather than whether there are
-two, gives an answer that grows with the network: about $\sqrt{n}$ communities of
-about $\sqrt{n}$ nodes, the geometric midpoint of the network's own hierarchy, and
-the same $\sqrt{n}$ that governs shortest path multiplicity on the same lattice.
-And the partition is not merely something a statistician infers: written as a
-Hamiltonian it has a critical temperature, an order parameter, and a cascade of
-first-order transitions that build the hierarchy level by level. Communities are a
-state the network is in.
+Two closing surprises from the solvable models. Asking how many communities,
+rather than whether there are two, gives an answer that grows with the network:
+about $\sqrt{n}$ communities of about $\sqrt{n}$ nodes, the geometric midpoint of
+the network's own hierarchy, and the same $\sqrt{n}$ that governs shortest path
+multiplicity on the same lattice. And the partition is not merely something a
+statistician infers: written as a Hamiltonian it has a critical temperature, an
+order parameter, and a cascade of first-order transitions that build the hierarchy
+level by level. Communities are a state the network is in.
+
+Held up to the real world, the count grows faster than the fractal models predict.
+Across close to a hundred real networks, and within single systems followed as
+they grow, the number of communities is a power law of size, $B\propto n^{\beta}$
+with $\beta$ between one half and two thirds --- above the self-similar $\sqrt{n}$,
+below the fully modular $n$. The book's own local rules reproduce that
+super-fractal exponent, so it is one more regularity that locality accounts for.
 
 Having already accounted for degree distributions, the clustering hierarchy, and
-degree correlations, this chapter adds community structure to the list of global
-patterns that locality alone can explain \citep{vazquez2025}.
+degree correlations, this chapter adds community structure --- both its emergence
+and the power law that counts it --- to the list of global patterns that locality
+alone can explain \citep{vazquez2025}.

@@ -659,6 +659,61 @@ Three finer results from the updated source, folded in on a second pass:
   Still not folded in: none -- all the deferred items are now in. 133 pages.
 
 -------------------------------------------------------------------------------
+2026-07-25 (later) -- Chapter 6: new real-data section on the number of communities
+-------------------------------------------------------------------------------
+
+Added section 6.12, "How many communities do real networks have?", after the
+models-and-calculations sections (6.1-6.11) and before the summary, based on the
+manuscript ramsey_netcom/sqrt/manuscript.tex ("The number of communities in real
+networks grows as a power law of their size"). Summary (now 6.13) updated to carry
+the result. The chapter went 137 pages total for the book.
+
+WHAT IT ADDS
+  Section 6.10 had established, for self-similar MODELS, that the best number of
+  communities grows as sqrt(n) (beta = 1/2). 6.12 asks the real world and finds it
+  exceeds that.
+
+  * The two limits: the caveman graph (a ring of cliques) is the fully modular
+    extreme, B propto n (beta = 1); the fractal/self-similar networks are beta = 1/2.
+    Every network sits in 1/2 <= beta <= 1.
+  * The measurement: ~89 real networks from Netzschleuder, karate club (n=34) to
+    2 million nodes, communities counted by the degree-corrected block model. B
+    follows a clean power law over four decades, beta = 0.61, bootstrap 95% CI
+    [0.55, 0.67] excluding 1/2. Real networks are SUPER-FRACTAL -- more finely
+    divided than self-similar models, far short of modular.
+  * Density explains the scatter (denser above the line, sparse/geographic below).
+  * Within single growing systems -- the SAME three as chapter 7 (internet 0.62,
+    interactomes 0.55, cond-mat co-authorship 0.71) -- the power law holds too.
+  * The book's own local rules reproduce it: triadic closure (0.56) and
+    duplication-split (0.60), both super-fractal. So the exponent is a consequence
+    of local growth, not a peculiarity of the data -- closing the loop to the
+    chapter's thesis.
+  * Meaning: B ~ n^beta, community size ~ n^(1-beta); both grow unbounded but
+    communities stay a vanishing fraction. The exponent is a stable, measurable
+    property of network organization.
+
+FIGURES (grayscale, book style; both from the sqrt CSVs, re-plotted not
+re-simulated)
+  fig-com-count       : B vs n across ~89 real networks, beta=0.61 above sqrt(n).
+                        Mean degree by grayscale fill (no colour -- B&W print),
+                        geographic networks as squares.
+  fig-com-count-models: the two local-rule models reproducing the super-fractal
+                        exponent.
+  Pipeline in figs/mkfigs_com.py (fig_count, fig_countmodels); data copied to
+  figs/data/community_*.csv. All exponents re-fit from the CSVs and matched the
+  manuscript (0.61, and 0.62/0.55/0.71 for the growing systems) before being written.
+
+BIB
+  Three entries added: vazquezcount2026 (the source), watts1999caveman (the caveman
+  graph), peixoto2013 (the parsimonious/DC-SBM inference method).
+
+PREFACE IMPLICATION
+  Chapter 6 now ENDS on real data rather than on the thermodynamic models -- the
+  chapter previously closed on its least empirical material (flagged earlier). The
+  empirical count also parallels chapter 7's real-networks section on the same three
+  systems, so chapters 6 and 7 now both close on data.
+
+-------------------------------------------------------------------------------
 NOTE FOR THE AUTHOR (not a book change)
 -------------------------------------------------------------------------------
 

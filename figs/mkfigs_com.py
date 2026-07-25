@@ -24,11 +24,13 @@ import importlib.util
 import os
 
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 
 from mkfigs import W, sc, panel, save  # noqa: F401  (import sets book rcParams)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+DATA = os.path.join(HERE, "data")
 
 
 def _load(name):
@@ -183,6 +185,92 @@ def fig_rg():
 
     fig.subplots_adjust(wspace=0.38)
     save(fig, "fig-com-rg.pdf")
+
+
+# --------------------------------------------------------------------------
+# Figures for the real-network section: how the number of communities B grows
+# with size n. Data from the "sqrt" study (github.com/av2atgh/ramsey_netcom/sqrt);
+# communities counted by the degree-corrected block model (graph-tool's
+# minimize_blockmodel_dl). These scripts only re-plot the committed CSVs.
+# --------------------------------------------------------------------------
+GEO_KEYS = [
+    "road", "street", "power", "euroroad", "contiguous_usa", "london_transport",
+    "airline", "airport", "flight", "faa", "openflights", "fullerene", "us_roads",
+    "roadnet", "transport", "metro", "urban",
+]
+
+
+def _is_geo(name):
+    s = str(name).lower()
+    return any(k in s for k in GEO_KEYS)
+
+
+def _fit(n, B):
+    """Least-squares power-law exponent of B on n (log-log)."""
+    return np.polyfit(np.log(n), np.log(B), 1)
+
+
+def fig_count():
+    """B vs n across ~90 real networks: the power law, above the fractal 1/2."""
+    df = pd.read_csv(os.path.join(DATA, "community_communities_vs_n.csv"))
+    df = df.drop_duplicates("network")
+    df = df[df["B_mean"] > 0].sort_values("n")
+    n = df["n"].to_numpy(float)
+    B = df["B_mean"].to_numpy(float)
+    k = 2 * df["E"].to_numpy(float) / n           # mean degree
+    geo = df["network"].apply(_is_geo).to_numpy(bool)
+
+    beta, logc = _fit(n, B)
+
+    fig, ax = plt.subplots(figsize=(W, W * 0.72))
+
+    # Reference lines: the fitted power law, and the fractal sqrt(n).
+    ng = np.logspace(np.log10(n.min()), np.log10(n.max()), 100)
+    ax.plot(ng, np.exp(logc) * ng**beta, "-", color="black", lw=1.1, zorder=2,
+            label=rf"$B\propto n^{{{beta:.2f}}}$")
+    a_half = np.exp(np.mean(np.log(B) - 0.5 * np.log(n)))
+    ax.plot(ng, a_half * ng**0.5, "--", color="0.45", lw=0.9, zorder=2,
+            label=r"$\sqrt{n}$ (fractal)")
+
+    # Mean degree by grayscale fill (dense = dark), geographic as squares. No
+    # colour: the book prints black and white, so density is a shade, not a hue.
+    from matplotlib.colors import LogNorm
+    norm = LogNorm(vmin=k.min(), vmax=k.max())
+    g = plt.cm.Greys
+    ax.scatter(n[~geo], B[~geo], c=k[~geo], cmap=g, norm=norm, marker="o",
+               s=13, edgecolors="black", linewidths=0.3, zorder=3)
+    ax.scatter(n[geo], B[geo], c=k[geo], cmap=g, norm=norm, marker="s",
+               s=15, edgecolors="black", linewidths=0.3, zorder=4)
+    ax.set(xscale="log", yscale="log",
+           xlabel=r"nodes $n$", ylabel=r"communities $B$")
+    ax.legend(loc="upper left", frameon=False)
+    save(fig, "fig-com-count.pdf")
+
+
+def fig_countmodels():
+    """The two local-rule models reproduce the super-fractal exponent."""
+    df = pd.read_csv(os.path.join(DATA, "community_models_communities.csv"))
+    df = df[df["B"] > 0]
+    fig, axes = plt.subplots(1, 2, figsize=(W, W * 0.5))
+    for ax, (mod, lab, letter) in zip(
+        axes, [("ls", "triadic closure", "a"), ("ds", "duplication--split", "b")]
+    ):
+        s = df[df["model"] == mod]
+        n = s["n"].to_numpy(float)
+        B = s["B"].to_numpy(float)
+        beta, logc = _fit(n, B)
+        ng = np.logspace(np.log10(n.min()), np.log10(n.max()), 100)
+        sc(ax, n, B, 0 if mod == "ls" else 1, None, ms=2.4)
+        ax.plot(ng, np.exp(logc) * ng**beta, "k-", lw=0.9,
+                label=rf"$n^{{{beta:.2f}}}$")
+        a_half = np.exp(np.mean(np.log(B) - 0.5 * np.log(n)))
+        ax.plot(ng, a_half * ng**0.5, "--", color="0.5", lw=0.8, label=r"$\sqrt{n}$")
+        ax.set(xscale="log", yscale="log", xlabel=r"$n$", ylabel=r"$B$")
+        ax.legend(loc="upper left", frameon=False, fontsize=6)
+        ax.set_title(lab, fontsize=6.5, pad=3)
+        panel(ax, letter, x=-0.20)
+    fig.subplots_adjust(wspace=0.38)
+    save(fig, "fig-com-count-models.pdf")
 
 
 if __name__ == "__main__":
