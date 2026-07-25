@@ -312,7 +312,9 @@ def fig_real():
         trend(ax, df.n_nodes, mf, kind, "-.")
         sc(ax, df.n_nodes, mu, 0, "data", ms=2.4)
         sc(ax, df.n_nodes, mf, 1, r"mean field, $c_2/e$", ms=2.4)
-        ax.set(xscale=xscale, yscale="log", xlabel=r"$n$", ylabel=r"$\langle\mu\rangle$")
+        # mu here is multiplicity/connected_pairs = <mu>_c, averaged over the
+        # connected pairs only (Eq. path-muc), since real networks are not connected.
+        ax.set(xscale=xscale, yscale="log", xlabel=r"$n$", ylabel=r"$\langle\mu\rangle_c$")
         ax.legend(loc=loc, frameon=False)
         ax.set_title(title, loc="left", fontsize=6.5, pad=3)
         panel(ax, letter, x=-0.19)

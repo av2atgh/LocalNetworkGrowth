@@ -633,12 +633,30 @@ FIGURE.
   exact exponent (0.100393) and node counts (3,6,15,42,123,366) against the paper's
   Table before refitting.
 
-Not folded in (deliberately, as too fine-grained for a general-audience chapter):
-the exact largest-multiplicity growth (Fibonacci F_{t+2} ~ n^0.438); the explicit
-<mu> vs <kappa> laws for the two constructions (kappa^0.201 for the bubble,
-e^{b' kappa} for the diamond); and the connected-pairs normalization <mu>_c = <mu>/psi
-used for the real-network section. The book's qualitative statements remain correct
-under all three.
+Three finer results from the updated source, folded in on a second pass:
+
+  * Fibonacci largest multiplicity (7.7, in the deterministic-bubble box). The
+    MAXIMUM multiplicity of the deterministic bubble grows faster than the average:
+    max_ij mu_ij = F_{t+2}, i.e. n^{ln phi/ln 3} = n^0.438, phi the golden ratio.
+
+  * The exact <mu> vs <kappa> laws (7.8, new Eq. 7.40). Both solvable constructions
+    have the SAME community growth <kappa> ~ sqrt(n) (Chapter 6), yet eliminating n
+    gives <mu> ~ <kappa>^0.201 for the bubble and <mu> ~ a e^{b' kappa} for the
+    diamond -- a weak power in one case, an exponential in the other. This turns
+    7.8's "not one causing the other" from an argument into a proof: same community
+    growth, opposite mu-kappa laws, so the communities cannot be driving the paths;
+    the shape of the correlation is inherited from the rule.
+
+  * Connected-pairs normalization (7.9, new Eq. 7.41). The real-network multiplicity
+    is <mu>_c = <mu>/psi, averaged over connected pairs only, psi the connected-pair
+    fraction (the Deng et al. convention). Real networks are disconnected and psi
+    varies with time (1 for the AS graphs, 0.64-1 for proteins, 0.007-0.89 for
+    co-authorship), so this isolates route redundancy from giant-component growth.
+    The figure already divided by connected_pairs, so only the axis label, caption,
+    and the "reaches 64" statement needed to become <mu>_c; the plotted values are
+    unchanged. psi ranges verified against the book's own data.
+
+  Still not folded in: none -- all the deferred items are now in. 133 pages.
 
 -------------------------------------------------------------------------------
 NOTE FOR THE AUTHOR (not a book change)

@@ -609,6 +609,13 @@ logarithmic over the reachable sizes (Figure~\ref{fig:mu-bubble}b) is in fact a
 slow power law --- and slower than the $n^{0.161}$ of the network's own
 degree-preserving shuffle, confirming from the exact side that the deterministic
 rule lags its own randomization.
+
+The average is not the whole story. The \emph{largest} multiplicity anywhere in
+the graph grows faster than the mean: it is exactly the Fibonacci number
+$\max_{ij}\mu_{ij}=F_{t+2}$, which in terms of the size is
+$n^{\ln\varphi/\ln 3}=n^{0.438}$, with $\varphi=(1+\sqrt5)/2$ the golden ratio.
+Even in this most sluggish of our constructions, the best-connected pair of nodes
+already accumulates routes at a respectable clip.
 \end{calculation}
 
 Now remove the link instead. Replacing rather than subdividing gives the
@@ -761,6 +768,28 @@ once again the exception --- exponential for duplication--split. This is the
 empirical correlation of \citet{deng2026} restated from the inside: more
 communities go hand in hand with more shortest paths.
 
+The two exactly solvable constructions turn this from a plausible claim into a
+demonstration. Both carry communities, and --- as Chapter~\ref{ch:communities}
+found for each --- both carry the \emph{same} number of them, growing as
+$\langle\kappa\rangle\sim\sqrt{n}$. Their community structure is therefore
+identical in this respect, while their multiplicities could hardly differ more:
+one a slow power law in size, the other a stretched exponential. Eliminating the
+size between multiplicity and community count lays the two laws side by side,
+\begin{equation}
+  \langle\mu\rangle \sim \langle\kappa\rangle^{0.201}
+  \quad\text{(bubble)},
+  \qquad
+  \langle\mu\rangle \sim a\,e^{\,b'\langle\kappa\rangle}
+  \quad\text{(diamond)},
+  \label{eq:path-mukappa}
+\end{equation}
+a weak power of the community count in the one case, an exponential in it in the
+other. Were communities the \emph{cause} of redundant paths, two networks with the
+same community growth would have to show the same $\langle\mu\rangle$ against
+$\langle\kappa\rangle$. They flatly do not. The correlation is genuine in both, but
+its very shape is inherited from the rule that grew the network, not from any
+traffic between the paths and the communities.
+
 But the point of the chapter is that this partnership is not a case of one
 causing the other. ``Local rules boost shortest path multiplicity'' and
 ``communities accompany high shortest path multiplicity'' are two true statements
@@ -786,10 +815,28 @@ $c_2/e$ alongside the measurement --- the random network with the same degrees.
 The data are noisy and the systems are not stationary, so no strong claim is
 available; but the trends are instructive.
 
+One measurement choice needs stating, because these networks --- unlike the models
+--- are not connected, and the connected fraction itself changes as they grow.
+Averaging the multiplicity over \emph{all} pairs would then confound two things:
+the redundancy of routes, which is what we are after, and the swelling of the
+giant component, which is not. So we average only over pairs that are actually
+joined, writing
+\begin{equation}
+  \langle\mu\rangle_c = \frac{\langle\mu\rangle}{\psi},
+  \label{eq:path-muc}
+\end{equation}
+with $\psi$ the fraction of node pairs connected at all --- the convention of
+\citet{deng2026}. The correction is nothing for the Internet, where $\psi=1$
+throughout, but real for the rest: $\psi$ runs from $0.64$ to $1$ across the
+protein networks and from $0.007$ to $0.89$ across the co-authorship snapshots,
+the smallest values belonging to the earliest and sparsest. Reporting
+$\langle\mu\rangle_c$ keeps the trends below about routes between reachable nodes,
+not about how many nodes have become reachable.
+
 In every system the multiplicity rises with size, and in every system it is
-high: the human protein network reaches $\langle\mu\rangle\approx64$, meaning a
-typical pair of proteins is joined by some sixty-four equally short chains of
-interaction. The protein networks are also the ones that climb
+high: the human protein network reaches $\langle\mu\rangle_c\approx64$, meaning a
+typical connected pair of proteins is joined by some sixty-four equally short
+chains of interaction. The protein networks are also the ones that climb
 \emph{exponentially} with size, which is the signature of duplication --- and gene
 duplication is, of course, exactly how they are thought to grow
 (Chapter~\ref{ch:duplication}). The Internet and the co-authorship network both
@@ -816,12 +863,13 @@ invitations this book leaves open.
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figs/fig-mu-real.pdf}
-\caption{\textbf{Real networks.} Average multiplicity against size, with the
-mean-field expectation $c_2/e$ for a random network of the same degrees.
+\caption{\textbf{Real networks.} Average multiplicity over connected pairs,
+$\langle\mu\rangle_c$ (Eq.~\eqref{eq:path-muc}), against size, with the mean-field
+expectation $c_2/e$ for a random network of the same degrees.
 (a) The Internet at the autonomous-system level: a power law, falling below the
 random expectation --- the mark of disassortative, star-like wiring. (b) Protein
 interaction networks of a dozen organisms: exponential growth, the duplication
-signature, reaching $\langle\mu\rangle\approx64$ for the human network. (c)
+signature, reaching $\langle\mu\rangle_c\approx64$ for the human network. (c)
 \texttt{cond-mat} co-authorship: a power law lying \emph{above} the random
 expectation, as assortative mixing among prolific authors provides many equally
 short routes.}
