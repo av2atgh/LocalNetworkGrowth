@@ -579,6 +579,68 @@ FIGURE FIX (chapter 7)
   figs/mkfigs.py records the trap, since "make the figure smaller" makes it worse.
 
 -------------------------------------------------------------------------------
+2026-07-25 -- Chapter 7 resynced to the updated multiplicity paper
+-------------------------------------------------------------------------------
+
+The source (ramsey_netcom/local_multi_path_2026/multiplath.tex) gained an "Exact
+results" section that solves the deterministic bubble model exactly and trims the
+conclusions. Two claims the book had taken from the earlier draft were overturned;
+both are corrected here.
+
+CORRECTION 1 -- the deterministic bubble is a power law, not a logarithm.
+  The book (7.6, and the Fig. 7.4b caption) said the deterministic pseudofractal
+  "grows only logarithmically". The exact solution gives a power law, <mu> ~ n^0.100,
+  with 0.100... = ln(lambda/9)/ln 3 and lambda = 10.0494... the largest root of
+  lambda^3 - 12 lambda^2 + 20 lambda - 4 = 0. It still falls BELOW its own
+  degree-preserving shuffle (n^0.161), so the "randomness accelerates" point stands
+  -- but what looked logarithmic over the reachable sizes was a slow power law.
+  A new calculation box in 7.7 states this exactly.
+
+CORRECTION 2 -- the diamond is NOT the ceiling.
+  7.7 called the diamond "the fastest growth found anywhere in this chapter" and "a
+  hard ceiling ... the stochastic local rules all fall below it". That was wrong,
+  and internally inconsistent: duplication-split is exponential in n (7.5), the
+  diamond only a stretched exponential e^{b sqrt(n)}, and e^{bn} outruns e^{b sqrt n}.
+  The source now says so plainly. Fixed in 7.7 ("no ceiling here; there is a
+  hierarchy, and copying sits at the top"), the Fig. 7.5 caption ("the fastest of
+  the deterministic constructions, though still slower than duplication-split"), the
+  7.10 summary, and the Outlook 8.2 (which had wrongly said "every stochastic rule
+  falls below that bound").
+
+NEW MECHANISM (from the two-construction comparison).
+  The updated paper contrasts the two exactly solvable constructions: both replace
+  every link at every step and differ only in whether the subdivided link is kept
+  (deterministic bubble -> power law, poles stay adjacent) or removed (diamond ->
+  stretched exponential, poles separate as D_t = s^t). 7.7 now carries this: "it is
+  not the closing of a cycle that decides how fast routes multiply, but whether the
+  cycle SEPARATES the two nodes it joins." Sharpens the chapter's own squares-beat-
+  triangles argument.
+
+CORRECTION 3 -- degree correlations do not set the sign of the MF deviation.
+  7.9 read the above/below-c_2/e split off the assortativity (Internet disassortative
+  -> below, cond-mat assortative -> above). The exact constructions disprove this as
+  a law: the deterministic bubble and the diamond are BOTH disassortative, yet one is
+  far below the mean-field line and the other far above. Corrected in 7.9 and in the
+  matching Outlook 8.2 paragraph: the correlations track the deviation for these three
+  real systems but do not cause it; the architecture the rule builds does.
+
+FIGURE.
+  fig-mu-bubble panel (b) refit: both BBD series now drawn as power laws (n^0.10
+  deterministic, n^0.16 randomized) instead of a log-linear line, with clean y-ticks.
+  Also fixed a pre-existing off-by-one in the node-count mapping there -- the code
+  used 3*(3^t+1)/2, plotting every BBD point at 3x its true n; the correct count is
+  (3^t+3)/2 with the first data row being the t=0 seed triangle (n=3). Verified the
+  exact exponent (0.100393) and node counts (3,6,15,42,123,366) against the paper's
+  Table before refitting.
+
+Not folded in (deliberately, as too fine-grained for a general-audience chapter):
+the exact largest-multiplicity growth (Fibonacci F_{t+2} ~ n^0.438); the explicit
+<mu> vs <kappa> laws for the two constructions (kappa^0.201 for the bubble,
+e^{b' kappa} for the diamond); and the connected-pairs normalization <mu>_c = <mu>/psi
+used for the real-network section. The book's qualitative statements remain correct
+under all three.
+
+-------------------------------------------------------------------------------
 NOTE FOR THE AUTHOR (not a book change)
 -------------------------------------------------------------------------------
 

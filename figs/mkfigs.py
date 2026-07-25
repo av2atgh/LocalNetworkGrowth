@@ -253,20 +253,28 @@ def fig_bubble():
     ax.legend(loc="upper left", frameon=False, ncol=2, columnspacing=0.8)
     panel(ax, "a")
 
-    # (b) Deterministic vs randomized bubble: randomness is what accelerates.
+    # (b) Deterministic vs randomized bubble. Both are power laws; the
+    # deterministic one is the shallower, so randomness accelerates. The exact
+    # solution of the deterministic bubble gives alpha = 0.100 (root of a cubic),
+    # against 3/gamma - 1 = 0.161 for its degree-preserving randomization.
     ax = axes[1]
     df = read("model-bbd_nr1_vs_n.csv")
-    n = 3 * (3 ** df.n + 1) // 2  # generation index -> node count
-    x, y = np.log(n), np.log(df.multipath_rnd)
-    alpha = -1.0 + 3.0 / (1.0 + np.log(3) / np.log(2))  # ~ 0.16
-    a = np.mean(y - alpha * x)
-    xx = np.linspace(x.min(), x.max(), 400)
-    ax.plot(np.exp(xx), np.exp(a + alpha * xx), "k--", lw=0.8, label=r"$b\,n^{\alpha}$")
+    # Row df.n=1 is the t=0 seed triangle (n=3); n_t = (3^t + 3)/2 thereafter.
+    n = (3 ** df.n + 3) // 2
+    xx = np.linspace(np.log(n.min()), np.log(n.max()), 400)
+
+    a_rnd = np.mean(np.log(df.multipath_rnd) - 0.161 * np.log(n))
+    ax.plot(np.exp(xx), np.exp(a_rnd + 0.161 * xx), "k--", lw=0.8, label=r"$n^{0.16}$")
     sc(ax, n, df.multipath_rnd, 0, r"$BBD(n,1)^*$", ms=3.0)
-    p = np.poly1d(np.polyfit(np.log(n), df.multipath, 1))
-    ax.plot(np.exp(xx), p(xx), "k-.", lw=0.8, label=r"$a+b\ln n$")
+
+    a_det = np.mean(np.log(df.multipath) - 0.100 * np.log(n))
+    ax.plot(np.exp(xx), np.exp(a_det + 0.100 * xx), "k-.", lw=0.8, label=r"$n^{0.10}$")
     sc(ax, n, df.multipath, 1, r"$BBD(n,1)$", ms=3.0)
-    ax.set(xscale="log", xlabel=r"$n$", ylabel=r"$\mu$")
+    ax.set(xscale="log", yscale="log", xlabel=r"$n$", ylabel=r"$\mu$")
+    # Plain numbers on the narrow log y-axis; the default "1.75 x 10^0" ticks are noise.
+    ax.set_yticks([1, 1.5, 2, 2.5])
+    ax.yaxis.set_major_formatter(matplotlib.ticker.ScalarFormatter())
+    ax.yaxis.set_minor_formatter(matplotlib.ticker.NullFormatter())
     ax.legend(loc="upper left", frameon=False)
     panel(ax, "b")
 

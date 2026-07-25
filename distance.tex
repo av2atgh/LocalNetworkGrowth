@@ -545,12 +545,14 @@ bubble model, grown by a fixed clockwork rule rather than a random one: at every
 step, new nodes are added to \emph{every} link at once. Its degree distribution is
 scale-free with $\gamma = 1+\ln 3/\ln 2\approx 2.6$, so by
 Eq.~\eqref{eq:path-power} its randomized version should show a power law with
-$\alpha\approx0.16$ --- and it does. The deterministic original, however, grows
-only logarithmically: it falls \emph{below} its own shuffled counterpart. So the
-speed-up is not a property of the loop geometry alone; a clockwork rule that
-closes loops everywhere at once does worse than chance. It is the interplay of
-randomness and locality together, not either by itself, that boosts the
-multiplicity.
+$\alpha\approx0.16$ --- and it does. The deterministic original is a power law too,
+but a \emph{slower} one. Being deterministic it can be solved exactly, as the next
+section does, and the exponent comes out at $\alpha=0.100$, comfortably below the
+$0.161$ of its own shuffle. So the deterministic construction falls \emph{below}
+the random network built from its own degrees. The speed-up is not a property of
+the loop geometry alone; a clockwork rule that closes loops everywhere at once does
+worse than chance. It is the interplay of randomness and locality together, not
+either by itself, that boosts the multiplicity.
 
 \begin{figure}[t]
 \centering
@@ -559,26 +561,64 @@ multiplicity.
 which closes loops of length $L+2$. Even $L$ (2 and 4) reaches a higher
 multiplicity than odd $L$ (1 and 3), as the square-counting predicts --- yet every
 $L$ stays log-quadratic, so cycle geometry alone does not buy the exponential.
-(b) The deterministic bubble model $BBD(n,1)$ grows only logarithmically, falling
-\emph{below} its own randomized version $BBD(n,1)^*$, which follows the power law
-of Eq.~\eqref{eq:path-power} with $\alpha\approx0.16$. Locality without randomness
-is not enough.}
+(b) The deterministic bubble model $BBD(n,1)$ follows a power law $n^{0.10}$ ---
+found exactly in Section~\ref{sec:mu-exact} --- falling \emph{below} its own
+randomized version $BBD(n,1)^*$, which grows faster, as $n^{0.16}$
+(Eq.~\eqref{eq:path-power}). Locality without randomness is not enough.}
 \label{fig:mu-bubble}
 \end{figure}
 
 \section{How fast could it possibly grow?}
+\label{sec:mu-exact}
 
 If randomness and locality together drive the multiplicity up, it is fair to ask
-where the ceiling is. There is one construction for which the question can be
-answered exactly, and it is a close relative of the bubble rule: the \emph{diamond
-lattice} \citep{migdal1975,kadanoff1976}. In its general $(b,s)$ form, start with a
-single link joining two poles $A$ and $B$ and, at each generation, replace
-\emph{every} link by $b$ parallel paths of $s$ links each. The standard diamond is
-$b=s=2$: every link becomes two parallel two-link paths
-(Figure~\ref{fig:mu-diamond}a). Where the bubble model drops one bubble on one
-randomly chosen link, the diamond drops a bubble on all links at once, in perfect
-symmetry. It is the same lattice on which Chapter~\ref{ch:communities} watched the
-Ramsey community number become a renormalization-group crossing.
+where the ceiling is. The stochastic rules can only be simulated, but two
+\emph{deterministic} relatives of the bubble model can be solved exactly, and set
+against each other they reveal what actually controls the growth. Both replace
+every link at every step, so both are clockwork versions of the bubble rule; they
+differ in a single detail. In the first, the subdivided link is \emph{kept}; in the
+second, it is \emph{removed}. That one choice, it turns out, is the difference
+between a power law and a stretched exponential.
+
+Keep the link, and you have the deterministic bubble --- the pseudofractal web met
+a moment ago. Start from a triangle and, at each step, add a new node across every
+existing link while leaving the old links in place.
+
+\begin{calculation}{the deterministic bubble grows as a power law}
+The construction renormalizes: generation $G_{t+1}$ is three copies of $G_t$ glued
+in pairs at the three corners of the original triangle. Because the two ends of
+every subdivided link stay adjacent, geodesics inside a copy are undisturbed by the
+rest of the graph, and the total number of geodesics $S_t=\sum_{i<j}\mu_{ij}$ obeys
+a closed linear recursion. Its growth ratio converges to
+\begin{equation}
+  \frac{S_{t+1}}{S_t}\longrightarrow \lambda = 10.0494\ldots,
+  \label{eq:bbd-lambda}
+\end{equation}
+the largest root of $\lambda^3-12\lambda^2+20\lambda-4=0$. Each generation triples
+the node count and so multiplies the number of \emph{pairs} by nine; the average
+multiplicity $\langle\mu\rangle=S_t/\binom{n_t}{2}$ therefore grows by $\lambda/9$
+per generation. Since the size itself grows by a factor of three, this is a power
+law in $n$,
+\begin{equation}
+  \langle\mu\rangle \sim n^{\alpha}, \qquad
+  \alpha = \frac{\ln(\lambda/9)}{\ln 3} = 0.1004\ldots,
+  \label{eq:bbd-alpha}
+\end{equation}
+matched to a relative error of $10^{-6}$ by the twelfth generation. So what looked
+logarithmic over the reachable sizes (Figure~\ref{fig:mu-bubble}b) is in fact a
+slow power law --- and slower than the $n^{0.161}$ of the network's own
+degree-preserving shuffle, confirming from the exact side that the deterministic
+rule lags its own randomization.
+\end{calculation}
+
+Now remove the link instead. Replacing rather than subdividing gives the
+\emph{diamond lattice} \citep{migdal1975,kadanoff1976}. In its general $(b,s)$
+form, start with a single link joining two poles $A$ and $B$ and, at each
+generation, replace \emph{every} link by $b$ parallel paths of $s$ links each. The
+standard diamond is $b=s=2$: every link becomes two parallel two-link paths
+(Figure~\ref{fig:mu-diamond}a). It is the same lattice on which
+Chapter~\ref{ch:communities} watched the Ramsey community number become a
+renormalization-group crossing.
 
 \begin{calculation}{the multiplicity between the poles}
 The construction is exactly renormalizable, because distinct copies of the previous
@@ -675,21 +715,39 @@ values to better than $1\%$ from $t=4$ on.
 The numbers are worth seeing, because they are exact rather than fitted
 (Figure~\ref{fig:mu-diamond}b). By the sixth generation the diamond has only
 $2732$ nodes, yet an average pair is joined by some $7\times10^{15}$ distinct
-shortest paths. This is the fastest growth found anywhere in this chapter, and its
-origin is the same parallel branching that the local rules exploit --- only here
-it is applied everywhere, at every scale, without a single random choice. Perfect,
-maximally symmetric branching therefore sets a hard ceiling on the redundancy a
-growing network can carry, and the stochastic local rules of the previous sections
-all fall below it.
+shortest paths. This is the fastest growth among the constructions we can solve by
+hand --- but it is not, in fact, the fastest in the chapter. Duplication--split
+grows \emph{exponentially} in the size, Eq.~\eqref{eq:path-typeII}, and an
+exponential in $n$ outruns a stretched exponential in $\sqrt{n}$. Perfect,
+maximally symmetric, deterministic branching is a formidable generator of
+redundant routes, yet a stochastic rule that copies whole neighborhoods is more
+formidable still. There is no ceiling here; there is a hierarchy, and copying sits
+at the top of it.
+
+The two exactly solvable constructions, placed side by side, say exactly what the
+gap between them requires. Both are deterministic, both self-similar, both replace
+every link at every step; they differ only in whether the subdivided link
+survives. Keep it, and the two ends of every bubble stay one hop apart, so
+distances grow only logarithmically and the multiplicity crawls up the power law
+of Eq.~\eqref{eq:bbd-alpha}. Remove it, and the poles separate as $D_t=s^t$, so a
+route must make an independent branch choice at every one of a growing number of
+scales, and those choices compound into the stretched exponential of
+Eq.~\eqref{eq:diamond-n}. It is not the closing of a cycle that decides how fast
+routes multiply, but whether the cycle \emph{separates} the two nodes it joins.
+A triangle joins adjacent nodes and adds nothing; a square holds its corners two
+hops apart and doubles their routes; and a rule that drives its endpoints
+geometrically apart, scale after scale, is what makes the count run away.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figs/fig-mu-diamond.pdf}
-\caption{\textbf{The exactly solvable ceiling.} (a) The diamond lattice: every
-link is replaced, at every generation, by two parallel two-link paths. (b) Its
-average multiplicity, computed exactly, follows the stretched exponential of
+\caption{\textbf{The diamond lattice, solved exactly.} (a) The diamond lattice:
+every link is replaced, at every generation, by two parallel two-link paths. (b)
+Its average multiplicity, computed exactly, follows the stretched exponential of
 Eq.~\eqref{eq:diamond-n} across fifteen decades. With $2732$ nodes, a typical pair
-of nodes is already joined by some $7\times10^{15}$ equally short routes.}
+of nodes is already joined by some $7\times10^{15}$ equally short routes --- the
+fastest of the deterministic constructions, though still slower than the
+exponential growth of duplication--split.}
 \label{fig:mu-diamond}
 \end{figure}
 
@@ -738,18 +796,22 @@ duplication is, of course, exactly how they are thought to grow
 climb as power laws, more sedately.
 
 The most interesting feature, though, is which side of the mean-field line each
-system falls on, because the two disagree in a way that lines up with the degree
-correlations of Chapter~\ref{ch:introduction}. The Internet sits \emph{below} its
-random expectation: it is \emph{disassortative}, its hubs presiding over
-peripheries of poorly connected nodes, and such a star-like arrangement gives a
-route no alternatives --- everything must pass through the hub. The co-authorship
-network sits \emph{above} it: it is \emph{assortative}, its well-connected authors
-writing with one another, and a clique of hubs is exactly what furnishes many
-equally short ways across. The same reading applies to the protein networks, which
-are disassortative and duly fall below the line. Degree correlations, in other
-words, modulate the redundancy on top of what the degrees alone would give ---
-a suggestion the mean-field calculation, which knows only $c_2$, cannot yet
-account for. It is one of the clearer invitations this book leaves open.
+system falls on. The Internet sits \emph{below} its random expectation, and it is
+\emph{disassortative}, its hubs presiding over peripheries of poorly connected
+nodes; such a star-like arrangement gives a route no alternatives, since
+everything must pass through the hub. The co-authorship network sits \emph{above}
+it, and it is \emph{assortative}, its well-connected authors writing with one
+another, a clique of hubs being exactly what furnishes many equally short ways
+across. The protein networks are disassortative and duly fall below the line. It
+is tempting to read the deviation straight off the correlations --- disassortative
+below, assortative above --- but that reading is a coincidence of these three
+systems, not a law. The exactly solvable constructions settle it: the deterministic
+bubble and the diamond are \emph{both} disassortative, yet the first falls far
+below the mean-field line and the second towers enormously above it. The sign of
+the correlations does not fix the sign of the deviation. What does is the
+architecture the growth rule builds --- something the mean-field calculation, which
+knows the network only through $c_2$, cannot yet capture. It is one of the clearer
+invitations this book leaves open.
 
 \begin{figure}[t]
 \centering
@@ -777,8 +839,12 @@ rules leave that baseline behind, log-quadratically for most rules and
 exponentially for duplication, which closes the four-cycles that give opposite
 corners two shortest routes apiece. Neither cycle geometry nor locality is
 sufficient by itself: a deterministic rule that closes loops everywhere at once
-does worse than chance, while the perfectly symmetric diamond lattice, where the
-branching can be solved exactly, marks the ceiling at a stretched exponential.
-Since the same local rules also produce the communities, the observed tie between
-path multiplicity and communities is best understood not as cause and effect but
-as two consequences of one underlying local dynamics.
+does worse than chance. Two such rules can be solved exactly, and what separates
+their power law from their stretched exponential is not the closing of a cycle but
+whether the cycle drives its endpoints apart. Fastest of all, though, is none of
+the clockwork constructions but the stochastic duplication--split rule, whose
+exponential growth outruns even the diamond lattice: copying whole neighborhoods
+is the most efficient generator of redundant routes we have found. Since the same
+local rules also produce the communities, the observed tie between path
+multiplicity and communities is best understood not as cause and effect but as two
+consequences of one underlying local dynamics.
