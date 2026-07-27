@@ -70,17 +70,39 @@ passes EPUBCheck 5.3 with 0 errors and 0 warnings.
 
 | Path | Contents |
 |------|----------|
-| `*.tex`, `references.bib` | Book source (second edition) |
+| `*.tex`, `references.bib` | Book source — the live working copy |
 | `figs/` | Matplotlib figure scripts, the CSV data they plot, and the generated PDFs |
 | `netfig-*.tex`, `svg2tikz.py` | Network diagrams, converted from graph-tool SVGs to TikZ |
 | `cover/` | Cover art, back-cover blurbs, author bio and headshot |
 | `ebook/` | EPUB3 build toolchain and the generated `book-ebook.epub` |
-| `paperback_edition_1/` | **Frozen** snapshot of the first edition — read-only, kept matching the printed book |
+| `paperback_edition_1/` | **Frozen** snapshot of the first edition (see [Editions](#editions)) |
+| `paperback_edition_2/` | **Frozen** snapshot of the second edition |
 | `new_in_the_second_edition.log` | Running changelog of the first → second edition delta |
 | `issues.log` | Working notes: verified defects and open questions |
 
 `main.pdf` is tracked, so a rebuild dirties the tree even when nothing changed;
 `git checkout main.pdf` after a test-only build.
+
+## Editions
+
+Each published paperback is frozen in its own directory, so its source keeps
+matching the printed book. Both are **read-only**: corrections belong in the
+root, even when the same defect exists in a snapshot.
+
+| Edition | Snapshot | Committed `main.pdf` |
+|---------|----------|----------------------|
+| First | [`paperback_edition_1/`](paperback_edition_1/) | 78 pages |
+| Second | [`paperback_edition_2/`](paperback_edition_2/) | 141 pages |
+
+Each directory is self-contained: `latexmk -pdf main.tex` inside it typesets
+that edition without reaching outside. The root `.tex` files are the live
+working copy and are currently identical to the second edition, so a
+root-vs-`paperback_edition_1/` diff is exactly the first → second delta.
+
+⚠️ The first edition's committed `main.pdf` was built before BibTeX ran: it has
+no bibliography and 38 unresolved `(?)` citation markers. Rebuilding that
+directory therefore does **not** reproduce it — the rebuild is 84 pages and
+correct. The second edition's `main.pdf` rebuilds exactly as committed.
 
 ## About the author
 
