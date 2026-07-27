@@ -1,0 +1,189 @@
+\chapter{Outlook}
+\label{ch:outlook}
+
+\section{One principle, many faces}
+
+We have now followed a single idea through six concrete settings, and it is worth
+gathering the threads before asking what lies beyond them. In every case the
+network grew by a \emph{local} rule --- a newcomer acting only on a node it had
+reached and that node's immediate neighbors --- and in every case the same family
+of global regularities emerged unbidden.
+
+Searchable networks, such as the citation graph and the World Wide Web, grow by
+exploration: a newcomer surfs along links and connects to what it finds. Modeling
+the surfer as the very random walk that defines Google's PageRank, we found that a
+page's visiting probability rises in a straight line with its in-degree, so that
+the local act of walking manufactures an effective ``rich get richer.'' From it
+follow a power-law degree distribution whose exponent is fixed purely by how the
+network is explored, a clustering hierarchy in which cliquishness falls with
+degree, and generically disassortative correlations
+(Chapter~\ref{ch:search}).
+
+Social networks grow by introduction: a friend introduces a friend, closing a
+triangle. Formalizing the friend-of-a-friend as a \emph{potential link}, born in
+proportion to degree, we recovered the same rich-get-richer and the same
+clustering hierarchy --- but now with \emph{assortative} correlations, the
+well-connected keeping one another's company (Chapter~\ref{ch:friends}). The
+contrast with the searchable networks is that chapter's quiet lesson: the sign of
+the degree correlations is not a free parameter but a readout of whether the rule
+reaches outward, to the periphery, or inward, within a neighborhood.
+
+Biological networks grow by copying: a gene is duplicated, its protein inheriting
+all of the ancestor's interactions, and the copies then diverge. Because a node
+gains a link whenever one of its neighbors is duplicated, copying too is a
+rich-get-richer engine; self-interactions seed the clustering hierarchy, and
+coupling divergence to duplication adds a density transition and a multifractal
+degree distribution born of inheritance, alongside the disassortative mixing
+measured in real protein networks (Chapter~\ref{ch:duplication}). Here the three
+mechanisms met in one sentence: a rule that attaches to a \emph{neighbor} of a
+randomly chosen node attaches in proportion to degree, because a well-connected
+node simply belongs to more neighborhoods. Preferential attachment, the
+clustering hierarchy, and the degree correlations are all the generic harvest of
+locality.
+
+The same copying, carried into project schedules, refines each activity either by
+duplicating it into parallel copies or by splitting it into specialized
+sequential parts. The rule predicts identical power laws for an activity's
+predecessors and successors, a critical path that vanishes as a fraction of large
+projects, and a fractal rather than small-world geometry --- all borne out in
+seventy-seven real construction projects --- and it relocates the risk of delay
+from the celebrated critical path to a percolation threshold set by the whole
+network's average degree (Chapter~\ref{ch:projects}).
+
+Finally, locality proved to shape structure above the level of the individual
+node. The same rules that set the degrees also segregate the network into
+communities --- even when every node is identical --- a fact we made precise
+through the Ramsey community number, the size beyond which communities are all but
+certain (Chapter~\ref{ch:communities}). And not only whether communities appear,
+but how many: across close to a hundred real networks the number of communities
+was found to grow as a power law of size, $B\propto n^{\beta}$ with $\beta$ between
+one half and two thirds --- super-fractal, and reproduced by the same local rules.
+Locality also threads the network with redundant shortest paths, multiplying the
+routes between nodes far faster than chance and in lockstep with those very
+communities (Chapter~\ref{ch:distance}).
+
+And with that, the book comes full circle. We set out asking where the global
+regularities of real networks come from --- their power-law degrees, their
+small-world distances, their clustering hierarchy, their degree correlations ---
+and answered, one mechanism at a time, that none of them need be imposed from
+above: each emerges from a way of growing in which no node ever uses more than
+local knowledge. A node that surfs to a neighbor, befriends a friend, is copied
+from an ancestor, or refines a task asks nothing of the network as a whole --- and
+yet the networks these humble acts build carry, in the aggregate, the full and
+unmistakable signature of real complex systems.
+
+\section{What remains to be done}
+
+If the thesis of this book is right, it opens more questions than it closes.
+
+Several are concrete. The exponential growth of shortest path multiplicity under
+the duplication--split rule --- so much faster than the log-quadratic growth of
+every other rule we studied --- still wants a full explanation; the
+square-counting argument shows why copying outruns triadic closure, but not why it
+runs away exponentially. The exactly solvable constructions have sharpened the
+question rather than closed it. They show that what governs the speed is not the
+closing of a cycle but whether the cycle drives its endpoints apart: retaining the
+subdivided link gives a power law, removing it a stretched exponential
+(Chapter~\ref{ch:distance}). And they show that even the fastest of them, the
+diamond lattice with its stretched exponential in $\sqrt{n}$, is beaten by the
+stochastic copying rule, whose growth is exponential in $n$ outright. So the
+open question is pointed: why does duplicating whole neighborhoods outrun even
+maximally symmetric deterministic branching?
+
+A second concrete gap sits beside it. The mean-field theory of the multiplicity
+knows the network only through its excess degree $c_2$, and that is demonstrably
+not enough: real networks fall on either side of the $c_2/e$ line, the co-authorship
+graph above it and the Internet below. It is tempting to pin the split on the
+degree correlations, but the solvable constructions forbid that shortcut --- the
+deterministic bubble and the diamond are both disassortative, yet one sits far
+below the line and the other far above. What sets the deviation is the architecture
+the rule builds, not the sign of its correlations. A theory that predicts that
+deviation from the rule itself would close the gap between the calculation and the
+data, and would say something the models cannot yet say about which real systems
+are route-rich and which are not.
+
+The Ramsey community number has moved further still, though not in the direction
+one might have hoped. That it depends on the method used to detect the communities
+was always plain. Now that it can be computed exactly, we can say how far that
+dependence goes: on one and the same web, under one and the same partition, a
+plain block model puts $r_\kappa$ at $1095$ and a degree-corrected one at $42$, and
+the two disagree about which cut is best (Chapter~\ref{ch:communities}). The dependence is not a rounding error to be
+argued away; it is a factor of twenty-five, and it means a bare Ramsey number
+quoted without its detection rule is not a property of the network at all. Yet the
+same calculations hand us the beginnings of a repair. Underneath the
+method-dependent threshold there is a method-independent quantity: the evidence
+density flows to $\ln K$ per link, the entropy of resolving which of $K$
+communities a link belongs to, and that value knows nothing of the lattice, the
+degrees, or the priors. A definition of emergence built on the invariant rather
+than on the crossing --- on the rate at which evidence accumulates rather than on
+the size at which it clears an arbitrary bar --- would put the whole idea on firmer
+ground.
+
+One question spans both chapters at once, and it may be the most inviting of all.
+The ring --- the barest case we can solve, a lattice with no growth and no
+randomness in it --- turns out to be split into communities exactly when its links
+outnumber its nodes, which is to say exactly when it carries an extensive number of
+independent cycles. And cycles are also what multiply its shortest paths. Whether
+that accounting is general, or an accident of the ring's simplicity --- whether the
+surplus of links over nodes is the common currency of both communities and
+redundant routes --- would fold the last two chapters into a single statement. The
+book's thesis makes the question natural; it does not answer it.
+
+Two smaller loose ends deserve naming, since both have the flavor of a clue rather
+than a nuisance. The number of communities that best describes a self-similar
+network grows as $\sqrt{n}$ --- proved exactly for the solvable lattices, where the
+optimum sits at the geometric midpoint of the network's own hierarchy, and the
+same $\sqrt{n}$ governs the shortest paths there. Real networks, though, divide
+\emph{more} finely: their community count grows as $n^{\beta}$ with $\beta$
+measured between one half and two thirds, above the self-similar value. What
+carries a real network past the fractal $\sqrt{n}$ --- what extra structure, absent
+from the self-similar models, its growth builds in --- is a concrete open question
+the exponent now makes measurable. And the Ramsey number's climb with cycle length
+carries a persistent even--odd alternation, odd cycles bringing communities on
+sooner than the even cycles around them. It is too regular to be noise and has no
+explanation.
+
+Even the self-organized critical state of the exhaustive searcher, where a
+scale-free network appears across a whole range of the control parameter rather
+than at one fine-tuned value, deserves to be connected more tightly to the wider
+physics of criticality.
+
+Others are programmatic, and the largest of them is the price we paid for solving
+anything exactly at all. Every closed form in the last two chapters --- the ring's
+evidence, the diamond's renormalization group, the pseudofractal's counts --- lives
+on a \emph{deterministic} lattice, a fixed construction rather than a grown
+network, with the candidate partition handed to the calculation rather than found
+by an algorithm. That is what made the algebra possible, and it is also the
+catch: those results bound and illuminate the simulated ones, but they do not
+reproduce them. Whether the renormalization-group map survives off the lattice ---
+exactly, or on average, for networks grown at random by a local rule --- sets how
+far this reading of emergence extends. It is a demanding question, because on
+disordered networks detectability is itself a genuine phase transition, and the
+threshold we have been computing would become the edge of a phase rather than the
+crossing of a bar. The reward would be a theory of emergence for the networks we
+actually care about, rather than for their crystalline cousins.
+
+Throughout, we read each local rule \emph{forward}, from
+mechanism to statistics; the empirical chapters hint at the reverse problem ---
+reading the rule \emph{backward}, inferring from a single observed network which
+local moves grew it, and with what parameters, as we did when fitting a
+duplication index to project schedules. A general inverse theory, turning measured
+correlations, clustering hierarchies and community structure into an estimate of
+the underlying rule, would make these models genuinely diagnostic. And real
+networks are surely not grown by one rule in isolation: a social graph is part
+introduction and part search, a cellular network part duplication and part fresh
+interaction. How competing local moves combine --- whether their signatures simply
+add, or interfere to produce something neither would alone --- is largely open.
+
+The setting, too, can be widened. The networks of this book are mostly
+unweighted, undirected and static, whereas real ones carry weights, directions,
+timestamps, and several kinds of link at once. Whether the locality principle
+survives into weighted, temporal and multilayer networks --- and what new
+regularities it might generate there --- is a natural frontier. So is the coupling
+of growth to \emph{function}: the percolation of delays through a project schedule
+was a first glimpse of a dynamics running on a network that local rules had built,
+and the interplay between how a network grows and what it then does promises more
+than either studied alone.
+
+None of these questions threatens the central claim; each extends it. Local rules
+are the driving mechanism; everything else follows.
