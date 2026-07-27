@@ -91,7 +91,7 @@ root, even when the same defect exists in a snapshot.
 
 | Edition | Snapshot | Committed `main.pdf` |
 |---------|----------|----------------------|
-| First | [`paperback_edition_1/`](paperback_edition_1/) | 78 pages |
+| First | [`paperback_edition_1/`](paperback_edition_1/) | 84 pages |
 | Second | [`paperback_edition_2/`](paperback_edition_2/) | 141 pages |
 
 Each directory is self-contained: `latexmk -pdf main.tex` inside it typesets
@@ -99,10 +99,17 @@ that edition without reaching outside. The root `.tex` files are the live
 working copy and are currently identical to the second edition, so a
 root-vs-`paperback_edition_1/` diff is exactly the first → second delta.
 
-⚠️ The first edition's committed `main.pdf` was built before BibTeX ran: it has
-no bibliography and 38 unresolved `(?)` citation markers. Rebuilding that
-directory therefore does **not** reproduce it — the rebuild is 84 pages and
-correct. The second edition's `main.pdf` rebuilds exactly as committed.
+Both `main.pdf` files now rebuild exactly as committed.
+
+> **Note on the first edition's PDF.** Until 2026-07-27 the committed
+> `paperback_edition_1/main.pdf` (78 pages) had been typeset with bare
+> `pdflatex`, which never runs BibTeX — so it shipped with no bibliography and
+> 38 unresolved `(?)` citation markers, even though its `main.aux` carried a
+> valid `\bibdata{references}` the whole time. It has been rebuilt with
+> `latexmk`, which runs BibTeX automatically: 84 pages, 49 references, no
+> unresolved citations. **The `.tex` sources were not touched** — the fix was
+> purely a matter of running the missing step. Build these snapshots with
+> `latexmk`, never bare `pdflatex`.
 
 ## About the author
 
