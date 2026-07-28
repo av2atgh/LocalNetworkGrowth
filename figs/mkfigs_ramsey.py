@@ -18,7 +18,7 @@ all three methods measured on identical networks.
                 nested and motif models come out near one. The exponent is a
                 property of the instrument at least as much as of the rule.
 
-DS(n,0.5) is on top and LS(n,1) below, so the row that moves is the lower one.
+$DS(n,0.5)$ is on top and $LS(n,1)$ below, so the row that moves is the lower one.
 
 Style follows mkfigs.py (grayscale, 5x8in trim, Computer Modern).
 
@@ -44,7 +44,9 @@ METHODS = (("kappa_flat", "v", "0.62", "flat block model"),
            ("kappa_dcsbm", "s", "0.38", "nested block model"),
            ("kappa", "o", "k", r"nested $+$ motifs"))
 
-ROWS = (("DS(n,0.5)", "(a)", "(b)"), ("LS(n,1)", "(c)", "(d)"))
+# (data key, panel labels, the book's own math styling for the rule)
+ROWS = (("DS(n,0.5)", "(a)", "(b)", r"$DS(n,0.5)$"),
+        ("LS(n,1)", "(c)", "(d)", r"$LS(n,1)$"))
 
 # fitted over every measured size, as the chapter quotes it
 FIT_FROM = 0.0
@@ -75,7 +77,7 @@ def main():
     fig, axes = plt.subplots(2, 2, figsize=(W, W * 0.86))
     p_two = lambda v: sum(1 for x in v if x >= 2) / len(v)
 
-    for row, (model, la, lb) in enumerate(ROWS):
+    for row, (model, la, lb, tag) in enumerate(ROWS):
         # ---- left: the communities likelihood
         ax = axes[row, 0]
         for key, mk, col, lab in METHODS:
@@ -87,8 +89,8 @@ def main():
         ax.set_ylabel(r"$P_\kappa(n)$")
         ax.set_ylim(-0.04, 1.34)
         ax.set_yticks([0, 0.2, 0.4, 0.6, 0.8, 1.0])
-        ax.text(0.97, 0.06, model, transform=ax.transAxes, ha="right",
-                va="bottom", fontsize=6)
+        ax.text(0.97, 0.06, tag, transform=ax.transAxes, ha="right",
+                va="bottom", fontsize=6.5)
         if row == 0:
             ax.legend(frameon=False, loc="upper left", handlelength=1.3,
                       fontsize=4.8, borderaxespad=0.2)
@@ -109,8 +111,8 @@ def main():
         ax.set_yscale("log")
         ax.set_ylabel(r"$\langle\kappa\rangle$")
         ax.set_xlim(75, 2600)
-        ax.text(0.97, 0.06, model, transform=ax.transAxes, ha="right",
-                va="bottom", fontsize=6)
+        ax.text(0.97, 0.06, tag, transform=ax.transAxes, ha="right",
+                va="bottom", fontsize=6.5)
         ax.legend(frameon=False, loc="upper left", handlelength=1.3,
                   fontsize=4.6, borderaxespad=0.2)
         panel(ax, lb)

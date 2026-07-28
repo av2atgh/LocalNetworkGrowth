@@ -1023,7 +1023,7 @@ hundred realisations per size:
 \begin{center}
 \begin{tabular}{lrrrr}
 \hline
- & flat & nested & $+$ motifs & Ch.~\ref{ch:communities} \\
+ & flat & nested & $+$ motifs & published \\
 \hline
 $LS(n,1)$   & $70$ & $80$  & $\mathbf{200}$ & $81$\\
 $DS(n,0.5)$ & $90$ & $100$ & $\mathbf{100}$ & $98$\\
@@ -1031,8 +1031,22 @@ $DS(n,0.5)$ & $90$ & $100$ & $\mathbf{100}$ & $98$\\
 \end{tabular}
 \end{center}
 
-\noindent The block-model columns bracket the published numbers, which is the
-check that this is the same measurement. The motif alphabet then moves one of
+\noindent The two block-model columns bracket the published numbers without
+quite reproducing them, and the gap is worth a word, since the flat column is
+supposed to be Chapter~\ref{ch:communities}'s own method. It is the same method
+in the sense that matters --- a degree-corrected block model, its number of groups
+inferred by description length --- but that names a family of procedures rather
+than one. The published figures come from a separate
+implementation~\citep{vazquezcommunities2025}; the fit is a stochastic search
+whose answer depends on how many restarts it is given and on the version of the
+library doing it; $P_\kappa$ is estimated from a hundred realisations; and
+$r_\kappa$ can only land on one of the sizes actually grown, here $\ldots70$,
+$80$, $90$, $100\ldots$, so both published values fall one step above the flat
+column. Agreement to a grid step is the check that this is the same measurement.
+Equality was never on offer, and the columns to compare against each other are
+the three measured here, which do share an implementation.
+
+The motif alphabet then moves one of
 them and not the other. Local search \emph{is} the triadic-closure rule, so its
 local structure is triangles; an alphabet that contains the triangle books that
 structure as planted motifs instead of reading it as evidence for communities,
@@ -1062,7 +1076,8 @@ The second question is more uncomfortable. Chapter~\ref{ch:communities} measured
 $B\propto n^{\beta}$ with $\beta\approx0.61$ and called real networks
 super-fractal, sitting between the fractal $\tfrac12$ and the modular $1$; and it
 reported $\beta\approx0.56$ and $0.60$ for these two rules. Fitting the same rules
-over $n=400$ to $1600$, with all three methods on identical networks:
+over every size measured, $n=100$ to $1600$, with all three methods on identical
+networks:
 
 \begin{center}
 \begin{tabular}{lrrr}
