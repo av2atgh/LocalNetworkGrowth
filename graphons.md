@@ -10,10 +10,12 @@ Status as of 2026-07-28. Branch **`graphon`** (not merged, not pushed).
 > itself does **not** hold on real networks: the block model's motif error is a
 > large roughly constant factor, not a geometric decay of slope `−ln λ`. Details
 > in §3. A third, unrelated bug in the pseudofractal's block cut surfaced on the
-> way and is in §6. §4 carries the Question 2 thread and ends with the next
-> thing to build: a **motif-alphabet SBM** over `{edge, triangle, square}`,
+> way and is in §6. §4 carries the Question 2 thread and now ends with a working
+> **motif-alphabet SBM** over `{edge, triangle, square}` (`figs/motif_sbm.py`),
 > costing `M·B + B²` parameters where a 4-uniform tensor would cost `B⁴/24` and
-> drop the resolution ceiling from `√N` to `N^{1/4}`.
+> drop the resolution ceiling from `√N` to `N^{1/4}`. It recovers the right motif
+> on every lattice and growth rule with known truth, and correctly recovers
+> *nothing* on the pentagon- and hexagon-built ones.
 >
 > §7.9 now carries two new subsections — "What the crossing point does on real
 > networks" and "An arity that can be measured" — plus Figure 7.3
@@ -118,6 +120,8 @@ trusting a recursion here.
     figs/diamond_quads.py           four-cycles vs both fits, to t=26
     figs/motif_spectrum.py          exact cycle enumeration + transfer matrices
     figs/arity_models.py            DS and BB: the arity dial (§4)
+    figs/motif_sbm.py               MotifSBM: blocks + planted motifs (§4)
+    figs/motif_sbm_validate.py      the validation table for it
     figs/mkfigs_graphon.py          the two chapter figures
 
 ---
@@ -617,21 +621,77 @@ also make the point that the alphabet is a *choice* that has to be justified, no
 a free parameter — which is the honest limit of this whole approach, and the
 reason the alphabet is three symbols and not thirty.
 
-**Order of work.**
+### BUILT — `figs/motif_sbm.py`, and what the validation returned
 
-1. Generative side only: implement plant-and-wire for the three motifs, confirm
-   the cycle spectra come out as the arity dial predicts. Cheap, and everything
-   is checkable against exact counts.
-2. Write down `Σ` for the alphabet model — entropy plus priors on
-   `m`, `d`, `b` — and verify it reduces to the standard DC-SBM description
-   length when `M = {edge}`. That reduction is the correctness test.
-3. Inference: the latent variable is a motif *decomposition* of the observed
-   graph, `O(E)` labels, so MCMC is tractable. Greedy agglomerative for `b` as
-   before.
-4. Run the validation table. Only then the 44 real networks.
+Steps 1–4 above are done. `MotifSBM` in `figs/motif_sbm.py` carries the
+generative sampler, the description length, and the inference;
+`motif_sbm_validate.py` runs the table.
 
-Step 2 is where this either works or does not, and it is the step to do before
-writing any inference code.
+**The description length, as implemented.** Instances are grouped into *pools*:
+one per (motif type, block) for triangles and squares, one per unordered block
+pair for edges. Given pool totals and per-node slot counts, the number of
+wirings of a pool of `m` instances of a `k`-node motif inside one block is
+
+    Ω = (k m)! / ( Π_i d_i! · m! · a^m ),      a = |Aut|: 2, 6, 8
+
+with the bipartite `Ω = e!/(Π_{i∈r} d_i! Π_{j∈s} d_j!)` for edges between two
+blocks. `Σ = Σ_pools log₂Ω` plus the model term: partition, pool totals,
+per-pool slot counts, each under a uniform prior over its compositions.
+
+All four checks in `motif_sbm.py --selftest` pass:
+
+- the closed form against direct enumeration, in **three** separate factors —
+  the split count `(km)!/(m!(k!)^m)`, the `k!/|Aut|` distinct motifs per node
+  set (1 for the edge and triangle, **3 for the square**, since a 4-cycle is not
+  determined by its four nodes), and the `Π d_i!` from the stub-relabelling group
+  acting freely on generic configurations;
+- alphabet `{edge}` reproduces the plain degree-corrected description length
+  exactly, differing only by the two empty-total announcements — the reduction
+  that makes alphabets comparable;
+- planted triangles are selected, and **incidental ones are refused**: 60
+  triangles in 60 nodes are kept, but on a 9-node graph with 26 of 36 possible
+  links none are, because there triangles are unavoidable rather than planted.
+
+**The validation table, all as expected** (`motif_sbm_validate.py`):
+
+| system | n | m | Σ plain → alphabet | ΔΣ | found | verdict |
+|---|---|---|---|---|---|---|
+| planted 2-block | 200 | 342 | — | — | 48 tri in one block, 39 sq in the other | **both, correctly separated** |
+| pseudofractal t=5 | 366 | 729 | 4887 → 4489 | −398 | 138 tri | **triangle** |
+| `BB(n,1)` (DM) | 500 | 997 | 7283 → 7023 | −259 | 157 tri | **triangle** |
+| diamond t=5 | 684 | 1024 | 8844 → 7812 | −1032 | 224 sq | **square** |
+| `DS(n,1/3)` | 500 | 876 | 7129 → 7090 | −39 | 71 sq | **square** |
+| `BB(n,2)` | 500 | 748 | 6665 → 6461 | −204 | 59 sq | **square** |
+| `BB(n,3)` pentagons | 500 | 665 | 6173 → 6194 | **+21** | none | **none** ✓ |
+| `BB(n,4)` hexagons | 502 | 626 | 6050 → 6070 | **+19** | none | **none** ✓ |
+| fullerene C240 | 240 | 360 | 3066 → 3083 | **+17** | none | **none** ✓ |
+
+The negative controls come out right: on pentagon- and hexagon-built networks the
+enlarged alphabet costs `+17` to `+21` bits and buys nothing, which is exactly
+the two empty-total announcements. It does not hallucinate a square.
+
+**Two things learned in the building that the design note did not anticipate.**
+
+- *Promotion is uphill one instance at a time.* The first motif of a type in a
+  block has to pay for a whole new pool — its slot description alone is about
+  `log₂ C(k + n_r − 1, n_r − 1)` bits — against a saving of a few links. Greedy
+  single promotion therefore never starts. A maximal edge-disjoint **batch** is
+  promoted together and kept only if `Σ` falls, then pruned instance by instance.
+- *The within-block restriction is a trap for the search, not only a modelling
+  cost.* On the diamond, chapter 6's branch cut puts **every** four-cycle across
+  the cut, so started from the DC-SBM partition the model finds zero candidates
+  and reports no motif structure at all. From a one-block start it finds all of
+  them and a `Σ` a thousand bits lower. So `fit()` runs several starts and keeps
+  the best. This is worth remembering: a partition that halves every motif hides
+  the motif structure completely, and single-node moves will not merge blocks
+  back to reveal it.
+
+**Still open.** The decomposition is edge-disjoint by construction, so
+overlapping motifs cannot all be represented — the pseudofractal truly has `n−2 =
+364` triangles but at most `729/3 = 243` are edge-disjoint, and 138 were found.
+That is a real ceiling on what the model can report, and it means the *counts*
+are not estimates of the true motif counts, only the *selection* is meaningful.
+The 44 real networks of §3 have not been run.
 
 ### The caveat that limits how much this buys
 
