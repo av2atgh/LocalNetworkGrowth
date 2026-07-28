@@ -17,16 +17,16 @@ Status as of 2026-07-28. Branch **`graphon`** (not merged, not pushed).
 > on every lattice and growth rule with known truth, and correctly recovers
 > *nothing* on the pentagon- and hexagon-built ones.
 >
-> §7.9 now carries three new subsections — "What the crossing point does on real
-> networks", "An arity that can be measured" and "Fitting the order, not
-> assuming it" — plus Figure 7.3 (`fig-gr-crossover.pdf`), Eq. (7.13) the cycle
-> generator of `vazquez2005cycles`, Eq. (7.14) the `N^{1/4}` resolution bound,
-> and Eq. (7.15) the motif wiring count, plus a fourth subsection "What this does
-> to Chapter 6" with Figure 7.4 (`fig-gr-ramsey.pdf`). `communities.tex` is synced
-> in three places for the method-dependence of its exponent and its Ramsey
-> numbers (§5). Figure 7.4 is four panels, a row per rule, with fitted exponents
-> rather than reference slopes; the tensor-versus-alphabet argument and the
-> definition of the three methods are boxed. The book builds clean at **173
+> The chapter now runs to **§7.13**. Four new numbered sections — 7.10 "What the
+> crossing point does on real networks", 7.11 "An arity that can be measured",
+> 7.12 "Fitting the order, not assuming it", 7.13 "What this does to Chapter 6" —
+> plus Figure 7.3 (`fig-gr-crossover.pdf`), Figure 7.4 (`fig-gr-ramsey.pdf`, four
+> panels, a row per rule, fitted exponents in the legends), Eq. (7.13) the cycle
+> generator of `vazquez2005cycles`, Eq. (7.14) the `n^{1/4}` resolution bound,
+> Eq. (7.15) the motif wiring count and Eq. (7.16) the description length. The
+> tensor-versus-alphabet argument and the definition of the three methods are
+> boxed. `communities.tex` is synced in three places for the method-dependence of
+> its exponent and its Ramsey numbers (§5). The book builds clean at **173
 > pages**, no undefined references, no overfull boxes.
 
     b32fa16  Chapter 7: the motif spectrum, and one quantity behind both deficits
