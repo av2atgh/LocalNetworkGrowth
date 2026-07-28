@@ -17,11 +17,12 @@ Status as of 2026-07-28. Branch **`graphon`** (not merged, not pushed).
 > on every lattice and growth rule with known truth, and correctly recovers
 > *nothing* on the pentagon- and hexagon-built ones.
 >
-> §7.9 now carries two new subsections — "What the crossing point does on real
-> networks" and "An arity that can be measured" — plus Figure 7.3
-> (`fig-gr-crossover.pdf`) and Eq. (7.13), the cycle generator of
-> `vazquez2005cycles`. The book builds clean at **167 pages**, no undefined
-> references, no new overfull boxes.
+> §7.9 now carries three new subsections — "What the crossing point does on real
+> networks", "An arity that can be measured" and "Fitting the order, not
+> assuming it" — plus Figure 7.3 (`fig-gr-crossover.pdf`), Eq. (7.13) the cycle
+> generator of `vazquez2005cycles`, Eq. (7.14) the `N^{1/4}` resolution bound,
+> and Eq. (7.15) the motif wiring count. The book builds clean at **169 pages**,
+> no undefined references, no new overfull boxes.
 
     b32fa16  Chapter 7: the motif spectrum, and one quantity behind both deficits
     34eac0c  Add chapter 7, "The limit of a network"

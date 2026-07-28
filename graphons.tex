@@ -859,10 +859,100 @@ $60$ nine-cycles and $3n/2-60$ ten-cycles, with seven and eight empty because no
 two pentagons touch. A molecule and a growth rule, agreeing on a rule about which
 templates may be adjacent.
 
-The conjecture's own test therefore remains open but is now sharply posed. Fit
-objects of rising order and ask whether the deficit closes as the order reaches
-the arity of the rule --- with the added knowledge that on real networks the
-two-variable failure is a large and nearly constant factor rather than a growing
-one, that arity three already accounts for the spectrum wherever triangles exist,
-and that the cases which defeat it are precisely the ones whose rules close
-something longer.
+\subsection*{Fitting the order, not assuming it}
+
+All of that still asks the reader to accept the arity of each rule as given. It
+can instead be \emph{inferred}, by the same criterion that fits a block model in
+the first place: minimum description length. The posterior of
+Section~\ref{sec:gr-blockmodel} is microcanonical, and $\Sigma=-\log_2P(A,e,b)$
+makes no use of the fact that links join two nodes. Nothing stops us handing it a
+model built from something else.
+
+The obvious something else is the wrong choice. A block model over 4-sets
+replaces the $B\times B$ matrix of link counts by a symmetric $B\times B\times
+B\times B$ tensor, and the cost of describing that tensor is what limits the
+resolution. Where the pair model's $B(B+1)/2$ entries cap the number of
+recoverable groups at $B_{\max}\propto\sqrt N$~\citep{peixoto2014hier}, a
+$k$-tensor has about $B^k/k!$ entries and gives
+\begin{equation}
+  B_{\max} \;\approx\; \bigl[E_k\,(k-1)!\,/\ln E_k\bigr]^{1/k},
+  \label{eq:gr-bmax}
+\end{equation}
+which is $\sqrt N$ at $k=2$ and $N^{1/4}$ at $k=4$: eighteen groups against three
+hundred and sixteen at $N=10^5$. A model that can no longer see communities is a
+poor instrument for asking what communities are made of.
+
+The affordable object keeps the ordinary block structure and changes what the
+blocks are built from. Every link is assigned to exactly one \emph{motif
+instance} drawn from a small alphabet --- a link, a triangle, a square --- with
+motifs of arity three and above planted inside a single block, and instances
+wired by stub matching so that each node carries a motif-degree. The number of
+ways to wire $m$ instances of a $k$-node motif inside one block is
+\begin{equation}
+  \Omega \;=\; \frac{(km)!}{\prod_i d_i!\;m!\;a^m},
+  \qquad a=|\mathrm{Aut}|,
+  \label{eq:gr-omega}
+\end{equation}
+$a$ being $2$, $6$ and $8$ for the link, triangle and square, and $\Sigma$ is the
+sum of $\log_2\Omega$ over the blocks together with the cost of the partition and
+of the counts. The parameters number $MB+B^2$ rather than $B^4/24$, so the
+resolution ceiling is the ordinary one. The price is that a triangle straddling
+two blocks is not representable and is described as three links instead.
+
+Two features make this a test rather than a fitting exercise. With the alphabet
+reduced to the link alone, $\Sigma$ is exactly the description length of the
+ordinary degree-corrected model, so enlarging the alphabet is a strictly nested
+comparison and a negative $\Delta\Sigma$ means the motifs paid for themselves. And
+the criterion can tell a planted triangle from three incidental links, because
+$m$ instances of a three-node motif are more constrained --- hence cheaper to
+specify --- than $3m$ independent links, while the extra counts cost only a
+little. Where triangles are unavoidable rather than planted the arithmetic goes
+the other way, and on a nine-node graph carrying $26$ of its $36$ possible links
+the criterion correctly plants none at all.
+
+Run against the networks whose construction is known exactly, it recovers the
+rule:
+
+\begin{center}
+\begin{tabular}{lrrl}
+\hline
+network & $n$ & $\Delta\Sigma$ (bits) & selected\\
+\hline
+pseudofractal, $t=5$      & 366 & $-398$ & triangle\\
+$BB(n,1)$, Dorogovtsev--Mendes & 500 & $-259$ & triangle\\
+diamond, $t=5$            & 684 & $-1032$ & square\\
+$DS(n,1/3)$               & 500 & $-39$  & square\\
+$BB(n,2)$                 & 500 & $-204$ & square\\
+$BB(n,3)$, pentagons      & 500 & $+21$  & none\\
+$BB(n,4)$, hexagons       & 502 & $+19$  & none\\
+fullerene $\mathrm{C}_{240}$ & 240 & $+17$ & none\\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent The last three rows are the ones that matter. Their motifs lie outside
+the alphabet, and there the enlarged model costs bits and buys nothing --- the
+$+17$ is precisely the price of announcing two totals that turn out to be zero.
+It does not offer a square when the network was built from pentagons. A planted
+network with triangles in one community and squares in another is recovered with
+both, each in its own block; and the diamond at $t=4$ is decomposed into exactly
+$64=4^{t-1}$ squares, the number it actually contains.
+
+Two cautions. The decomposition assigns each link to one instance, so motifs that
+overlap cannot all be represented: the pseudofractal holds $n-2$ triangles but at
+most a third of its links' worth are disjoint, and $138$ were found. The
+selection is meaningful; the counts are not estimates. And the search is greedy
+in two coupled directions at once, which can trap it --- on the diamond, the
+branch cut of Chapter~\ref{ch:communities} places \emph{every} four-cycle across
+the cut, so from that partition the model finds no motif at all, and only a
+different starting partition reveals them.
+
+So Question~2 has an answer for grown networks, if not yet for observed ones. A
+three-variable object pays for itself where the rule closes triangles, a
+four-variable one where it closes squares, and neither pays where the rule closes
+something longer --- which is the conjecture's own statement, arrived at by
+measurement rather than by assumption. What remains is to run the same comparison
+on real networks, where the expectation from everything above is modest: the
+two-variable failure there is a large and nearly constant factor rather than a
+growing one, and arity three already accounts for the cycle spectrum wherever
+triangles exist.
