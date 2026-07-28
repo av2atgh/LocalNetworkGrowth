@@ -868,6 +868,7 @@ Section~\ref{sec:gr-blockmodel} is microcanonical, and $\Sigma=-\log_2P(A,e,b)$
 makes no use of the fact that links join two nodes. Nothing stops us handing it a
 model built from something else.
 
+\begin{calculation}{why an alphabet of motifs, and not a tensor}
 The obvious something else is the wrong choice. A block model over 4-sets
 replaces the $B\times B$ matrix of link counts by a symmetric $B\times B\times
 B\times B$ tensor, and the cost of describing that tensor is what limits the
@@ -898,6 +899,7 @@ sum of $\log_2\Omega$ over the blocks together with the cost of the partition an
 of the counts. The parameters number $MB+B^2$ rather than $B^4/24$, so the
 resolution ceiling is the ordinary one. The price is that a triangle straddling
 two blocks is not representable and is described as three links instead.
+\end{calculation}
 
 Two features make this a test rather than a fitting exercise. With the alphabet
 reduced to the link alone, $\Sigma$ is exactly the description length of the
@@ -965,11 +967,44 @@ appear, and how many are there --- and the answers are not the same ones.
 
 Recall that the Ramsey community number is defined relative to a method, and that
 Chapter~\ref{ch:communities} laboured that point without being able to
-demonstrate it. Here it can be demonstrated. Growing local search and
-duplication--split with the same generators, and fitting every realisation three
-ways --- a flat block model, a nested one, and the nested one with triangles and
-squares in its alphabet --- gives, at $\epsilon=0.05$ and a hundred realisations
-per size:
+demonstrate it. Here it can be demonstrated, because the three methods compared
+below differ in exactly one respect and are otherwise the same procedure.
+
+\begin{calculation}{the three methods, and what separates them}
+All three minimize the same description length,
+\begin{equation}
+  \Sigma \;=\; -\log_2 P(A\,|\,\text{model}) \;-\; \log_2 P(\text{model}),
+  \label{eq:gr-sigma}
+\end{equation}
+the bits needed to transmit the network together with the model used to compress
+it, and all three infer the number of communities rather than being told it. They
+differ only in what the model is permitted to say.
+
+\emph{Flat block model.} Blocks, and a $B\times B$ matrix of link counts between
+them under an uninformative prior. Describing that matrix costs about
+$\tfrac12B^2\log_2 E$ bits, which is what caps the recoverable groups at
+$B_{\max}\propto\sqrt N$. This is the method of Chapter~\ref{ch:communities}.
+
+\emph{Nested block model.} The same, except that the matrix of link counts is
+itself described by a block model, and that one by another, in a hierarchy. The
+cost of the top-level description falls away and the ceiling rises to
+$B_{\max}\propto N/\log N$ \citep{peixoto2014hier}.
+
+\emph{Nested $+$ motifs.} The nested model, with every link additionally assigned
+to one motif instance --- a link, a triangle or a square --- as in
+Eq.~\eqref{eq:gr-omega}. With the alphabet reduced to the link alone this is
+exactly the nested model, so the comparison is strictly nested and
+$\Delta\Sigma<0$ means the motifs paid for themselves.
+
+The first two differ in resolving power and nothing else; the second and third
+differ in vocabulary and nothing else. So a change between the first two is about
+how finely a method can see, and a change between the last two is about what it
+is willing to call a community.
+\end{calculation}
+
+\noindent Growing local search and duplication--split with the same generators,
+and fitting every realisation all three ways, gives, at $\epsilon=0.05$ and a
+hundred realisations per size:
 
 \begin{center}
 \begin{tabular}{lrrrr}
@@ -990,20 +1025,22 @@ structure as planted motifs instead of reading it as evidence for communities,
 and the size at which communities become certain is pushed from $80$ to $200$.
 Duplication--split makes no triangles at all, its squares overlap heavily and
 compress little, and its Ramsey number does not move
-(Figure~\ref{fig:gr-ramsey}a).
+(Figure~\ref{fig:gr-ramsey}a,~c).
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{figs/fig-gr-ramsey.pdf}
-  \caption{\textbf{The detection method is part of the answer.} \textbf{(a)} The
-  communities likelihood $P_\kappa(n)$ for two local rules, under a block model
-  (filled) and under the same model with triangles and squares in its alphabet
-  (open). The dotted line is the $95\%$ threshold that defines the Ramsey
-  community number. Local search shifts by a factor of two and a half;
-  duplication--split, which makes no triangles, does not move. \textbf{(b)} The
-  number of communities against size for local search. The flat block model
-  follows its own $\sqrt{n}$ resolution ceiling; the nested model and the motif
-  model both grow almost in proportion to $n$.}
+  \caption{\textbf{The detection method is part of the answer.} Every panel
+  compares three methods on identical networks: a flat block model, a nested one,
+  and the nested one with triangles and squares in its alphabet. Top row
+  duplication--split, bottom row local search. \textbf{(a, c)} The communities
+  likelihood $P_\kappa(n)$, with the dotted line at the $95\%$ threshold whose
+  crossing defines the Ramsey community number. Duplication--split makes no
+  triangles and the three curves lie on top of one another; local search
+  \emph{is} the triadic-closure rule, and naming its triangles moves the crossing
+  from $80$ to $200$. \textbf{(b, d)} The number of communities against size. The
+  flat model follows its own $\sqrt{n}$ resolution ceiling (dashed); the nested
+  and motif models both grow almost in proportion to $n$ (solid).}
   \label{fig:gr-ramsey}
 \end{figure}
 
@@ -1028,7 +1065,7 @@ $DS(n,0.5)$ & $0.60$ & $0.97$ & $0.93$\\
 $0.60$ against the published $0.56$ and $0.60$ --- and it reproduces it while
 sitting on its own ceiling, since a flat fit cannot resolve more than
 $\sqrt{n}$ groups however many are present. Lift that ceiling and the exponent
-goes to nearly one (Figure~\ref{fig:gr-ramsey}b). At $n=1600$ the motif model
+goes to nearly one (Figure~\ref{fig:gr-ramsey}b,~d). At $n=1600$ the motif model
 divides local search into communities of about $34$ nodes and duplication--split
 into communities of about $21$, and those sizes barely change as the networks
 grow: not the fractal limit, and not the super-fractal middle, but the modular

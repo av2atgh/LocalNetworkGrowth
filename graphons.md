@@ -24,8 +24,10 @@ Status as of 2026-07-28. Branch **`graphon`** (not merged, not pushed).
 > and Eq. (7.15) the motif wiring count, plus a fourth subsection "What this does
 > to Chapter 6" with Figure 7.4 (`fig-gr-ramsey.pdf`). `communities.tex` is synced
 > in three places for the method-dependence of its exponent and its Ramsey
-> numbers (§5). The book builds clean at **171 pages**, no undefined references,
-> no overfull boxes.
+> numbers (§5). Figure 7.4 is four panels, a row per rule, with fitted exponents
+> rather than reference slopes; the tensor-versus-alphabet argument and the
+> definition of the three methods are boxed. The book builds clean at **173
+> pages**, no undefined references, no overfull boxes.
 
     b32fa16  Chapter 7: the motif spectrum, and one quantity behind both deficits
     34eac0c  Add chapter 7, "The limit of a network"
