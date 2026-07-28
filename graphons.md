@@ -157,6 +157,10 @@ Settled by `figs/branching_verification.py` on four synthetic ensembles at
 | power law `γ=2.4` | 0.593 | **1.018** |
 | overall | 0.390 | **1.006** |
 
+(One run's figures. graph-tool's graph generation is threaded and not bit-
+reproducible, so these move by about 1% between runs; the separation is four
+orders of magnitude wider than that.)
+
 See the §2 box for what this does and does not change in the chapter. Short
 version: no exponent moves, some finite-size arithmetic does.
 
@@ -243,8 +247,8 @@ rescue form (b) here, because form (a) failed too.
 
 The crossover is only visible if `κ³ < n < κ⁸`. Of **163 Netzschleuder families
 with `n ≥ 200`, only 20 have any subnetwork with `L*` in [3, 8]**; the `L*` of
-the largest subnetwork per family is below 3 for about 79% of them. Most real
-networks are in the overcounting regime at *every* countable length.
+the largest subnetwork per family is below 3 for 138 of the 163, about 85%. Most
+real networks are in the overcounting regime at *every* countable length.
 
 Worse, the window selects against the systems the chapter cares about. Visibility
 needs `κ ≤ n^{1/3}`; for a scale-free network with `κ ~ n^{(3-γ)/(γ-1)}` that is
