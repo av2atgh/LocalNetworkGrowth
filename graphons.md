@@ -23,10 +23,12 @@ Status as of 2026-07-28. Branch **`graphon`** (not merged, not pushed).
 > plus Figure 7.3 (`fig-gr-crossover.pdf`), Figure 7.4 (`fig-gr-ramsey.pdf`, four
 > panels, a row per rule, fitted exponents in the legends), Eq. (7.13) the cycle
 > generator of `vazquez2005cycles`, Eq. (7.14) the `n^{1/4}` resolution bound,
-> Eq. (7.15) the motif wiring count and Eq. (7.16) the description length. The
+> Eq. (7.15) the motif wiring count and Eq. (7.16) the description length, and
+> Figures 7.5 and 7.6, two-community instances of `LS(100,1)` and `DS(100,0.5)`
+> drawn the way chapter 6 draws its networks. The
 > tensor-versus-alphabet argument and the definition of the three methods are
 > boxed. `communities.tex` is synced in three places for the method-dependence of
-> its exponent and its Ramsey numbers (§5). The book builds clean at **173
+> its exponent and its Ramsey numbers (§5). The book builds clean at **175
 > pages**, no undefined references, no overfull boxes.
 
     b32fa16  Chapter 7: the motif spectrum, and one quantity behind both deficits

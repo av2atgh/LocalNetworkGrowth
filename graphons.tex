@@ -1055,6 +1055,14 @@ Duplication--split makes no triangles at all, its squares overlap heavily and
 compress little, and its Ramsey number does not move
 (Figure~\ref{fig:gr-ramsey}a,~c).
 
+Figures~\ref{fig:gr-netls} and~\ref{fig:gr-netds} show one network of each kind,
+each divided in two by the motif model itself. Set beside the pictures of
+Chapter~\ref{ch:communities}, they also show what the alphabet is doing: in the
+local-search network $40$ of the $197$ links are taken up into planted triangles,
+while in the duplication--split network not one motif is planted and all $220$
+links stay loose. That is the same asymmetry the table records, seen on a single
+instance.
+
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{figs/fig-gr-ramsey.pdf}
@@ -1070,6 +1078,30 @@ compress little, and its Ramsey number does not move
   flat model follows its own $\sqrt{n}$ resolution ceiling (dashed); the nested
   and motif models both grow almost in proportion to $n$ (solid).}
   \label{fig:gr-ramsey}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\begin{adjustbox}{max width=\linewidth}\input{netfig-ls100.tex}\end{adjustbox}
+\caption{\textbf{Two communities in a local-search network.} An instance of
+$LS(n{=}100,\ell{=}1)$, coloured by the two communities the motif model resolves,
+$68$ nodes against $32$. Two-way splits are scarce for this rule: two
+realisations in a hundred at this size, none at all by $n=120$. When local search
+splits it splits into several groups at once, which is why its Ramsey number
+sits at $200$ while a picture of a two-way split has to be drawn at $100$.}
+\label{fig:gr-netls}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\begin{adjustbox}{max width=\linewidth}\input{netfig-ds100.tex}\end{adjustbox}
+\caption{\textbf{Two communities in a duplication--split network.} An instance of
+$DS(n{=}100,q{=}0.5)$ at its Ramsey community number, divided $53$ against $47$.
+The rule makes no triangles, and the model plants no motifs here at all --- every
+one of the $220$ links is described on its own --- so for this network the motif
+alphabet buys nothing and the communities are what the ordinary block model would
+have found.}
+\label{fig:gr-netds}
 \end{figure}
 
 The second question is more uncomfortable. Chapter~\ref{ch:communities} measured
