@@ -53,9 +53,15 @@ def quad_counts(t):
                 p[r][s] * p[s][u] * p[u][v] * p[v][r]
                 for r, s, u, v in itertools.product((0, 1), repeat=4)) / 8
 
+    # A cycle leaves a node by a different edge than it entered by, and the
+    # degree-corrected fit holds degrees fixed, so each node offers k(k-1)
+    # ordered pairs of edges and not k^2. The right weight is therefore
+    # Q'_r = sum k(k-1) = Q_r - S_r, and Q'/S = t exactly where Q/S = t+1.
+    # branching_verification.py settles this against exact counts.
+    Qe = [Q[r] - S[r] for r in (0, 1)]
     w = [[F(2 * e00, S[0] * S[0]), F(e01, S[0] * S[1])],
          [F(e01, S[0] * S[1]), F(2 * e11, S[1] * S[1])]]
-    dc = sum(Q[r] * Q[s] * Q[u] * Q[v] *
+    dc = sum(Qe[r] * Qe[s] * Qe[u] * Qe[v] *
              w[r][s] * w[s][u] * w[u][v] * w[v][r]
              for r, s, u, v in itertools.product((0, 1), repeat=4)) / 8
     return n, true, float(plain), float(dc)
@@ -63,15 +69,16 @@ def quad_counts(t):
 
 if __name__ == "__main__":
     hdr = (f"{'t':>3} {'n':>14} {'true':>14} {'plain':>8} {'true/plain':>12} "
-           f"{'dc':>10} {'true/dc':>12} {'dc/(t+1)^4':>11}")
+           f"{'dc':>10} {'true/dc':>12} {'dc/t^4':>11}")
     print(hdr)
     print("-" * len(hdr))
     for t in [2, 3, 4, 5, 6, 8, 10, 14, 18, 22, 26]:
         n, true, plain, dc = quad_counts(t)
         print(f"{t:>3} {n:>14} {true:>14} {plain:>8.2f} {true/plain:>12.1f} "
-              f"{dc:>10.4g} {true/dc:>12.4g} {dc/(t+1)**4:>11.4f}")
+              f"{dc:>10.4g} {true/dc:>12.4g} {dc/t**4:>11.4f}")
 
     print()
-    print("  Q/S = t+1 exactly, so the degree-corrected count grows as (t+1)^4:")
-    print("  polylogarithmic in n, against a truth growing as n/6. The plain")
-    print("  model saturates at a constant, as it did for the pseudofractal.")
+    print("  Q'/S = t exactly (where the sum-of-k^2 ratio Q/S would be t+1), so")
+    print("  the degree-corrected count grows as t^4: polylogarithmic in n,")
+    print("  against a truth growing as n/6. The plain model saturates at a")
+    print("  constant, as it did for the pseudofractal.")

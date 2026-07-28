@@ -100,7 +100,8 @@ def main():
     ax.axhline(0.0, color="k", lw=0.6, ls=":")
     ax.set_xlabel(r"cycle length $L$")
     ax.set_ylabel(r"$\ln(\,\mathrm{true}_L / \mathrm{rewired}_L)$")
-    ax.set_ylim(-6, 11)
+    # headroom above the topmost curve so the legend does not sit on the data
+    ax.set_ylim(-6, 15)
     ax.legend(frameon=False, loc="upper right", handlelength=1.2, fontsize=5.5)
     panel(ax, "(b)")
 

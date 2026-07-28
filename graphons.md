@@ -3,13 +3,18 @@
 Working log for the graphon chapter and the research thread it opened.
 Status as of 2026-07-28. Branch **`graphon`** (not merged, not pushed).
 
-> **The `L*` experiment of §3 has now been run.** Two results change the
-> chapter. (i) The transfer matrix's branching factor is `⟨k²−k⟩/⟨k⟩`, not
-> `⟨k²⟩/⟨k⟩` — `Q_r = Σ k(k−1)`, not `Σ k²`. Every asymptotic result in the
-> chapter survives; finite-size numbers move. (ii) The `L*` law itself does
-> **not** hold on real networks: the block model's motif error is a large
-> roughly constant factor, not a geometric decay of slope `−ln λ`. Details in
-> §3.
+> **The `L*` experiment of §3 has now been run, and `graphons.tex` is updated.**
+> Two results change the chapter. (i) The transfer matrix's branching factor is
+> `⟨k²−k⟩/⟨k⟩`, not `⟨k²⟩/⟨k⟩` — `Q_r = Σ k(k−1)`, not `Σ k²`. Every asymptotic
+> result in the chapter survives; finite-size numbers move. (ii) The `L*` law
+> itself does **not** hold on real networks: the block model's motif error is a
+> large roughly constant factor, not a geometric decay of slope `−ln λ`. Details
+> in §3. A third, unrelated bug in the pseudofractal's block cut surfaced on the
+> way and is in §5.
+>
+> §7.9 now carries a new subsection, "What the crossing point does on real
+> networks", and Figure 7.3 (`fig-gr-crossover.pdf`). The book builds clean at
+> **164 pages**, no undefined references, no new overfull boxes.
 
     b32fa16  Chapter 7: the motif spectrum, and one quantity behind both deficits
     34eac0c  Add chapter 7, "The limit of a network"
@@ -342,14 +347,21 @@ confirm rather than overturn.
 
 ## 5. Open caveats
 
-- **The chapter text has not been changed.** §3 corrects §7.9's branching factor
-  and refutes its `L*` prediction on real networks, but `graphons.tex` still says
-  what it said. Both edits are chapter-level decisions, not note-keeping.
-- **The `λ` correction propagates.** Anything in §2's numbers table computed from
-  `Q = Σ k²` is a finite-size number that moves (the diamond's `(t+1)⁴/4` → `t⁴/4`
-  is the one checked). The exponents do not move. `figs/motif_spectrum.py`,
-  `pseudofractal_triples.py` and `diamond_quads.py` all still use `Σ k²` and
-  would need the same one-line change if their finite-`t` numbers are quoted.
+- **A pre-existing bug turned up while applying the correction.**
+  `motif_spectrum.py` was not using chapter 6's branch cut for the pseudofractal.
+  `communities.tex` (Eq. `com-pfcounts`) says block 1 is *one branch plus the
+  three seed hubs*; that script put the seeds in the other block instead. The
+  hubs have degree `2^{t+1}`, so `Q_r` and everything downstream moved — its
+  triangle count was 849 where `pseudofractal_triples.py`, which had the cut
+  right all along, gave 1454. The two committed scripts had disagreed by 1.7×
+  on the same quantity. Fixed; they now agree on the plain model too (16.77).
+  The diamond was never affected — both scripts already gave 314.2 there.
+  **Consequence:** §7.9's pseudofractal spectrum sentence was quoting numbers
+  from the wrong cut, and separately had an off-by-one (its "factor of 20 at
+  `L=5`" was the `L=4` ratio). Both are now corrected in the chapter.
+- **Anything else quoting `Q = Σ k²` still needs checking.** The three lattice
+  scripts are fixed and `graphons.tex` is updated, but the exponents never moved,
+  so only finite-`t` numbers are at risk. Worth a grep before print.
 - **The block transfer matrix overestimates growth at high block resolution.**
   `ln(null_B / profile)` has median slope −0.286, much worse than the rank-one
   −0.078. With hundreds of small blocks (`physics_collab/arXiv`: `B = 356`,

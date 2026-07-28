@@ -53,10 +53,15 @@ def triangle_counts(t):
                 for r in (0, 1) for s in (0, 1) for u in (0, 1)) / 6
 
     # Degree-corrected: P_ij = k_i k_j omega_{g_i g_j}, so tr(P^3) weights each
-    # block by its squared-degree sum Q_r rather than by its size.
+    # block by a degree sum rather than by its size. The weight is sum k(k-1)
+    # and not sum k^2: a triangle leaves a node by a different edge than it
+    # entered by, and the fit holds degrees fixed, so each node offers k(k-1)
+    # ordered pairs of edges. See branching_verification.py, which settles this
+    # against exact counts on synthetic ensembles.
+    Qe = [Q[r] - S[r] for r in (0, 1)]
     w = [[F(2 * E1, S[0] * S[0]), F(E12, S[0] * S[1])],
          [F(E12, S[0] * S[1]), F(2 * E2, S[1] * S[1])]]
-    dc = sum(Q[r] * Q[s] * Q[u] * w[r][s] * w[s][u] * w[u][r]
+    dc = sum(Qe[r] * Qe[s] * Qe[u] * w[r][s] * w[s][u] * w[u][r]
              for r in (0, 1) for s in (0, 1) for u in (0, 1)) / 6
     return n, true, float(plain), float(dc)
 

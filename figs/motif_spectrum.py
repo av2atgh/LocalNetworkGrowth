@@ -27,8 +27,14 @@ LMAX = 8
 
 
 def pseudofractal(t):
+    # The three seed hubs carry branch label 1, not a label of their own: chapter
+    # 6's branch cut is "one branch plus the three seed hubs" against the other
+    # two (communities.tex, Eq. com-pfcounts), and the hubs have degree 2^(t+1),
+    # so putting them in the wrong block changes Q_r and every count that
+    # follows. pseudofractal_triples.py has always used the chapter's cut; this
+    # file did not, and disagreed with it by a factor of 1.7 on triangles.
     edges = [(0, 1), (0, 2), (1, 2)]
-    n, eb, br = 3, [0, 1, 2], {0: -1, 1: -1, 2: -1}
+    n, eb, br = 3, [0, 1, 2], {0: 1, 1: 1, 2: 1}
     for _ in range(t):
         ne, nb = [], []
         for (u, v), b in zip(edges, eb):
@@ -74,14 +80,23 @@ def true_cycles(n, E, Lmax):
 
 
 def transfer(n, E, br, degree_corrected):
-    """K x K transfer matrix of the fitted two-block model."""
+    """K x K transfer matrix of the fitted two-block model.
+
+    Q_r sums k(k-1), not k^2. A cycle leaves a node by a different edge than it
+    entered by, and the degree-corrected fit holds the degree sequence fixed, so
+    a node offers k(k-1) ordered pairs of edges. The one-block eigenvalue is
+    then <k^2-k>/<k>, the leading eigenvalue of the non-backtracking operator,
+    which is the object that governs cycles. See branching_verification.py: on
+    synthetic ensembles this is right to 2% at every L, where <k^2>/<k> is off
+    by 2x to 10x.
+    """
     A = np.zeros((n, n))
     for u, v in E:
         A[u, v] = A[v, u] = 1.0
     k = A.sum(1)
     g = np.where(br == 1, 1, 0)
     N = [int((g == r).sum()) for r in (0, 1)]
-    Q = [float((k[g == r] ** 2).sum()) for r in (0, 1)]
+    Q = [float((k[g == r] * (k[g == r] - 1)).sum()) for r in (0, 1)]
     S = [float(k[g == r].sum()) for r in (0, 1)]
     T = np.zeros((2, 2))
     for r in (0, 1):
