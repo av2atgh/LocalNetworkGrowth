@@ -13,11 +13,10 @@ all three methods measured on identical networks.
                 leaving duplication-split, which makes none, where it was.
 
   right column  the number of communities against size, with the best power
-                law fitted to each method over n >= 400 -- the range the chapter
-                quotes. The flat model comes out near one half, its own sqrt(n)
-                resolution ceiling; the nested and motif models come out near
-                one. The exponent is a property of the instrument at least as
-                much as of the rule.
+                law fitted to each method over every measured size. The flat
+                model comes out near its own sqrt(n) resolution ceiling; the
+                nested and motif models come out near one. The exponent is a
+                property of the instrument at least as much as of the rule.
 
 DS(n,0.5) is on top and LS(n,1) below, so the row that moves is the lower one.
 
@@ -47,8 +46,8 @@ METHODS = (("kappa_flat", "v", "0.62", "flat block model"),
 
 ROWS = (("DS(n,0.5)", "(a)", "(b)"), ("LS(n,1)", "(c)", "(d)"))
 
-# the chapter quotes the exponent over this range, so the figure fits it there
-FIT_FROM = 400.0
+# fitted over every measured size, as the chapter quotes it
+FIT_FROM = 0.0
 
 
 def load(pattern):
@@ -100,7 +99,7 @@ def main():
         for key, mk, col, lab in METHODS:
             x, y = curve(sca, model, key, np.mean)
             ax.plot(x, y, mk, ms=2.6, color=col, mfc=col, mec=col, ls="none")
-            # fitted over the same range the chapter quotes
+            # fitted over every measured size
             fit = x >= FIT_FROM
             b, a = np.polyfit(np.log(x[fit]), np.log(y[fit]), 1)
             xx = np.array([x[fit].min(), x[fit].max()])
