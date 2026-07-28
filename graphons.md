@@ -10,7 +10,10 @@ Status as of 2026-07-28. Branch **`graphon`** (not merged, not pushed).
 > itself does **not** hold on real networks: the block model's motif error is a
 > large roughly constant factor, not a geometric decay of slope `−ln λ`. Details
 > in §3. A third, unrelated bug in the pseudofractal's block cut surfaced on the
-> way and is in §6.
+> way and is in §6. §4 carries the Question 2 thread and ends with the next
+> thing to build: a **motif-alphabet SBM** over `{edge, triangle, square}`,
+> costing `M·B + B²` parameters where a 4-uniform tensor would cost `B⁴/24` and
+> drop the resolution ceiling from `√N` to `N^{1/4}`.
 >
 > §7.9 now carries two new subsections — "What the crossing point does on real
 > networks" and "An arity that can be measured" — plus Figure 7.3
@@ -322,7 +325,9 @@ constructed web, and it survives everything above unscathed.
 
 Notes from working through whether the cycle structure can be encoded by letting
 a path bias its own closing — an object of type
-`([0,1]²→[0,1])^{L-1} → [0,1]`, and its arity-4 successor.
+`([0,1]²→[0,1])^{L-1} → [0,1]`, and its arity-4 successor. Ends with a design and
+an order of work: **a motif-alphabet SBM over `{edge, triangle, square}`**, which
+is the affordable version of the idea and the thing to build next.
 
 ### The reading that is forbidden, and why it is a theorem
 
@@ -491,6 +496,142 @@ compare against the degree-preserving and block-preserving nulls of
 `crossover_measure.py`. Both models are sparse, so they sit inside the tractable
 window — though DS grows hubs by duplication and reaches `κ ≈ 8` by `n = 2000`,
 which caps the enumeration at `L = 8`.
+
+### Can Peixoto's inference machinery fit a higher-order block model?
+
+Sources: `1705.10225` (Peixoto, *Bayesian stochastic blockmodeling*, the review)
+and `1310.4378` = Phys. Rev. E **89**, 012804, `10.1103/PhysRevE.89.012804` (the
+MCMC + greedy agglomerative engine, `O(N ln²N)` and independent of `B`, which is
+what `minimize_blockmodel_dl` actually runs).
+
+**The criterion transfers verbatim.** Peixoto's description length
+`Σ = −log₂ P(A, e, b)` is microcanonical and makes no use of the arity. Replace
+the `B×B` edge-count matrix `e_rs` by a symmetric `k`-tensor `e_{r₁…r_k}`, keep
+the partition priors untouched, generalise degree correction to hyperdegrees, and
+minimise the same `Σ`. Nothing conceptual breaks.
+
+**But the uninformative version is unusable.** Review Eq. (27):
+
+    Σ ≈ −(E − N) log₂B + [B(B+1)/2] log₂E
+
+The second term is the cost of describing a symmetric `B×B` matrix, and it is
+what caps `B ∝ √N`. For a `k`-tensor the number of independent entries is the
+multiset coefficient `C(B+k−1, k) ≈ B^k/k!`, so
+
+    Σ ≈ −(E_k − N) log₂B + C(B+k−1,k) log₂E_k
+
+Differentiating and setting to zero, `E_k/(B ln2) = (B^{k−1}/(k−1)!)·log₂E_k`,
+hence
+
+    B_max ≈ [ E_k (k−1)! / ln E_k ]^{1/k}
+
+`k=2` recovers `√N` (up to the log Peixoto drops). **`k=4` gives `N^{1/4}`.** At
+`N = 10⁵` that is 18 groups against 316. Concretely, from §3: the nested pair
+model found `B = 356` on `physics_collab/arXiv` (`n = 8798`), where `N^{1/4} ≈ 10`
+and `√N ≈ 94`. So the nested prior is not optional at `k=4`, it is mandatory —
+describe the `k`-tensor with another `k`-uniform SBM, recovering something like
+the `N/log N` the review quotes for `k=2`. Same lesson as §5.
+
+**The harder obstacle: the data is a graph, not a hypergraph.** The model
+generates a `k`-uniform hypergraph; we observe its 2-shadow. The likelihood
+needed is
+
+    P(A | e, b) = Σ_{H : ∂H = A} P(H | e, b)
+
+a sum over exponentially many hyperedge decompositions of the same graph. Three
+ways out, worst compromise last: (i) **observe the hypergraph** — co-authorship
+*is* one if the papers are kept, likewise protein complexes, and then the model
+works as written; (ii) make the **edge type** latent rather than the hyperedge,
+`O(E)` binary labels instead of exponentially many decompositions, which is
+MCMC-able (Peixoto's triadic-closure work does this — *from memory, locate it*);
+(iii) explicit **hypergraph reconstruction** (Young–Petri–Peixoto, also from
+memory).
+
+And underneath the computation, a statistical problem: with `E ~ N` and
+`C(N,4) ~ N⁴` possible 4-sets, the tensor is essentially all zeros, so most of its
+`B⁴` entries have no data at all.
+
+**What §3 says will happen if you just run it.** MDL will decline, correctly.
+Blocks already absorb 79% of the log-excess, leaving 1.4× at `L=3` — nowhere near
+enough to pay a `B⁴` penalty. The place higher order pays is not where the pair
+model is slightly wrong but where it is *infinitely* wrong: the support zeros.
+
+### The course — a motif-alphabet SBM
+
+Do not spend the parameters on a `k`-tensor. Spend them on a **small alphabet of
+motifs, planted inside blocks**. That is what "each block is generated from a
+higher-order object" should mean, and it is what makes the thing affordable.
+
+**Alphabet.** `M = {edge, triangle, square}` — 2, 3 and 4 nodes; 1, 3 and 4 links.
+Chosen because the book's own systems need exactly these: arity 3 for triadic
+closure, arity 4 for duplication, and the edge to recover the standard model.
+
+**Generative model**, microcanonical and in Peixoto's style:
+
+- partition `b` of `N` nodes into `B` blocks, with the **nested** partition prior
+  unchanged;
+- `m_{μ,r}` = number of motifs of type `μ ∈ M` planted wholly inside block `r`;
+- `e_rs` = ordinary edge counts *between* blocks, `r ≠ s`;
+- degree correction: each node carries a **motif-degree vector**
+  `d_i = (d_i^edge, d_i^tri, d_i^sq)`, how many motifs of each type it takes part
+  in, and motifs are wired by stub-matching within the block — which is exactly
+  Karrer–Newman, so their generating-function theory applies to the result.
+
+**Why it is affordable.** The parameter count is `M·B + B²`, not `B⁴/24`. The
+resolution ceiling is therefore the standard `√N`, or `N/log N` nested —
+*unchanged* from the pair model up to a negligible additive `M·B`. That is the
+whole argument for this design over the tensor.
+
+**Why MDL can identify it at all**, given that a triangle is also three edges: the
+entropy term falls when triangles are used (planting `T` triangles is more
+constrained, hence cheaper to specify, than placing `3T` independent edges) while
+the model term rises by the extra counts. Overrepresented triangles pay, incidental
+ones do not. That tradeoff *is* the mechanism, and it is the same one that makes
+the nested SBM work.
+
+**Nested model comparison.** Alphabet `{edge}` is precisely the standard DC-SBM,
+so `Σ` is directly comparable and adding `triangle`, `square` is a strictly
+nested enlargement. `ΔΣ < 0` iff the motif structure pays for itself. No new
+criterion is needed and no new engine — the greedy agglomerative scheme of
+`1310.4378` carries over, with motif counts as additional move types.
+
+**Validation, against exact ground truth before any real network.** Every row is
+already computable in this repo (`arity_models.py`, `motif_spectrum.py`):
+
+| system | truth | alphabet should return |
+|---|---|---|
+| pseudofractal | exactly `n−2` triangles | **triangle** |
+| `BB(n,1)` (Dorogovtsev–Mendes) | triangles | **triangle** |
+| diamond | exactly `4^{t−1}` squares | **square** |
+| `DS(n,q)` | squares, no triangles | **square** |
+| `BB(n,2)` | squares | **square** |
+| `BB(n,3)` | pentagons | **none** — must fall back to `edge` |
+| `BB(n,4)` | hexagons | **none** — must fall back to `edge` |
+| fullerene | pentagons + hexagons | **none** — must fall back to `edge` |
+| the 44 of §3 | mostly triangles | **edge + triangle** |
+
+The last four rows matter as much as the first five. `BB(n,3)`, `BB(n,4)` and the
+fullerenes are **negative controls**: their motifs are outside the alphabet, and a
+method that reports "square" for a pentagon-built network is hallucinating. They
+also make the point that the alphabet is a *choice* that has to be justified, not
+a free parameter — which is the honest limit of this whole approach, and the
+reason the alphabet is three symbols and not thirty.
+
+**Order of work.**
+
+1. Generative side only: implement plant-and-wire for the three motifs, confirm
+   the cycle spectra come out as the arity dial predicts. Cheap, and everything
+   is checkable against exact counts.
+2. Write down `Σ` for the alphabet model — entropy plus priors on
+   `m`, `d`, `b` — and verify it reduces to the standard DC-SBM description
+   length when `M = {edge}`. That reduction is the correctness test.
+3. Inference: the latent variable is a motif *decomposition* of the observed
+   graph, `O(E)` labels, so MCMC is tractable. Greedy agglomerative for `b` as
+   before.
+4. Run the validation table. Only then the 44 real networks.
+
+Step 2 is where this either works or does not, and it is the step to do before
+writing any inference code.
 
 ### The caveat that limits how much this buys
 
