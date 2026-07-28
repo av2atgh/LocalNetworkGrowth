@@ -24,7 +24,7 @@ Status as of 2026-07-28. Branch **`graphon`** (not merged, not pushed).
 > panels, a row per rule, fitted exponents in the legends), Eq. (7.13) the cycle
 > generator of `vazquez2005cycles`, Eq. (7.14) the `n^{1/4}` resolution bound,
 > Eq. (7.15) the motif wiring count and Eq. (7.16) the description length, and
-> Figures 7.5 and 7.6, two-community instances of `LS(100,1)` and `DS(100,0.5)`
+> Figures 7.5 and 7.6, three-community instances of `LS(100,1)` and `DS(100,0.5)`
 > drawn the way chapter 6 draws its networks. The
 > tensor-versus-alphabet argument and the definition of the three methods are
 > boxed. `communities.tex` is synced in three places for the method-dependence of

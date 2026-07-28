@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Extract node positions/communities and edges from a graph-tool block SVG
-and emit a self-contained TikZ picture. Two community colors -> black/white."""
+and emit a self-contained TikZ picture. Communities are taken from the node fill
+colours, most populous first, and rendered as dark / white / mid-grey. Up to
+three groups; a fourth would need another node style."""
 import re, sys, math
 
 def parse(path):
@@ -19,7 +21,9 @@ def parse(path):
     uniq = {}
     for c in colors: uniq[c] = uniq.get(c, 0) + 1
     order = sorted(uniq, key=lambda c: -uniq[c])      # most common first
-    cmap = {order[0]: 0, order[1]: 1} if len(order) > 1 else {order[0]: 0}
+    if len(order) > 3:
+        raise SystemExit('%d node colours; only three styles are defined' % len(order))
+    cmap = {c: i for i, c in enumerate(order)}
     comm = [cmap[c] for c in colors]
 
     # edges: <path fill="none" ... d="M lx ly L lx2 ly2" transform="matrix(s,0,0,s,tx,ty)"/>
@@ -56,13 +60,14 @@ def emit(nodes, comm, edges, width=7.0, r=0.10):
     out.append(r'\begin{tikzpicture}[')
     out.append(r'  netlink/.style={draw=black!38,line width=0.35pt},')
     out.append(r'  nA/.style={circle,draw=black!70,fill=black!70,line width=0.3pt,inner sep=0pt,minimum size=%.2fcm},' % (2*r))
-    out.append(r'  nB/.style={circle,draw=black,fill=white,line width=0.3pt,inner sep=0pt,minimum size=%.2fcm}]' % (2*r))
+    out.append(r'  nB/.style={circle,draw=black,fill=white,line width=0.3pt,inner sep=0pt,minimum size=%.2fcm},' % (2*r))
+    out.append(r'  nC/.style={circle,draw=black!70,fill=black!25,line width=0.3pt,inner sep=0pt,minimum size=%.2fcm}]' % (2*r))
     coords = [XY(p) for p in nodes]
     for (a, b) in edges:
         out.append(r'  \draw[netlink] (%.3f,%.3f) -- (%.3f,%.3f);' %
                    (coords[a][0], coords[a][1], coords[b][0], coords[b][1]))
     for i, (X, Y) in enumerate(coords):
-        st = 'nA' if comm[i] == 0 else 'nB'
+        st = ('nA', 'nB', 'nC')[comm[i]]
         out.append(r'  \node[%s] at (%.3f,%.3f) {};' % (st, X, Y))
     out.append(r'\end{tikzpicture}')
     return '\n'.join(out)
@@ -70,6 +75,7 @@ def emit(nodes, comm, edges, width=7.0, r=0.10):
 if __name__ == '__main__':
     src, dst = sys.argv[1], sys.argv[2]
     nodes, comm, edges = parse(src)
-    sys.stderr.write('%s: %d nodes (%d/%d communities), %d edges\n' %
-                     (src, len(nodes), comm.count(0), comm.count(1), len(edges)))
+    sizes = '/'.join(str(comm.count(i)) for i in range(max(comm) + 1))
+    sys.stderr.write('%s: %d nodes (%s communities), %d edges\n' %
+                     (src, len(nodes), sizes, len(edges)))
     open(dst, 'w').write(emit(nodes, comm, edges) + '\n')

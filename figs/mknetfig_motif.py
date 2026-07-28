@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Draw one instance each of LS(100,1) and DS(100,0.5) resolved into two groups.
+"""Draw one instance each of LS(100,1) and DS(100,0.5) resolved into three groups.
 
 Companion to the network pictures of Chapter 6, drawn the same way: graph-tool
 lays the network out and colours the nodes by community, the SVG goes through
@@ -8,23 +8,23 @@ the partition found by the motif-alphabet model of motif_sbm.py, unconstrained,
 so both pictures show a division the method arrived at on its own rather than one
 imposed on it.
 
-Two things had to be worked around, and both say something about the models.
+Three groups rather than two, because two is a rarity for both rules and three is
+what a reader is likely to meet. Out of a hundred realisations at n = 100 the
+number of communities came out as
 
-Local search does not split in two at its own Ramsey number. Over 300
-realisations of LS(200,1) the number of communities came out as
+    kappa        1   2   3   4   5   6  ...
+    LS(n,1)     48   2  24  16   9   1
+    DS(n,0.5)    3   2   6  23  24  14  ...
 
-    kappa   1   4   5   6   7   8   9  10
-    count   6   5  21  81  96  70  19   2
+so kappa = 2 is 2 in 100 for either rule while kappa = 3 is 24 in 100 for local
+search. Local search is also stubborn about two at larger sizes: over 300
+realisations of LS(200,1) the count came out as 1 six times and then 4 through
+10, never 2 or 3, so when it splits it splits into several groups at once.
 
-with no realisation at two or three at all: when local search splits, it splits
-into several at once. Two-way splits do occur at smaller sizes -- 8 realisations
-in 100 at n = 90, 2 at n = 100, none at 120 or beyond -- so the picture is drawn
-at n = 100, where a genuine two-community instance exists.
-
-And the fit is a stochastic search whose answer varies between runs on the same
-graph, so a seed that gave two communities once may give four the next time.
-The seeds below were chosen by refitting each candidate several times and keeping
-only those that returned two every time.
+The fit is a stochastic search whose answer varies between runs on the same
+graph, so a seed that gave three communities once may give five the next time.
+The seeds below were chosen by refitting each candidate four times and keeping
+only those that returned three every time.
 
 Usage:  python3 mknetfig_motif.py     (writes the SVGs and netfig-*.tex at the
                                        repository root)
@@ -44,11 +44,12 @@ ROOT = os.path.dirname(HERE)
 
 # model, n, seed, stem. Seeds verified to return two communities on every refit;
 # see the note above on why that has to be checked.
-CASES = (("LS(n,1)", 100, 100054, "model-ls_d1_n100_seed100054_blocks"),
-         ("DS(n,0.5)", 100, 100099, "model-ds_q0.5_n100_seed100099_blocks"))
+CASES = (("LS(n,1)", 100, 100005, "model-ls_d1_n100_seed100005_blocks"),
+         ("DS(n,0.5)", 100, 100066, "model-ds_q0.5_n100_seed100066_blocks"))
+GROUPS = 3
 
-DARK = [0.22, 0.22, 0.22, 1.0]
-LIGHT = [1.0, 1.0, 1.0, 1.0]
+# dark / white / mid-grey, matching the three node styles svg2tikz.py emits
+SHADES = ([0.22, 0.22, 0.22, 1.0], [1.0, 1.0, 1.0, 1.0], [0.62, 0.62, 0.62, 1.0])
 
 
 def draw(name, n, seed, stem):
@@ -58,19 +59,19 @@ def draw(name, n, seed, stem):
     model = MotifSBM(n, edges).fit()
     _, b = np.unique(model.blocks, return_inverse=True)
     counts = np.bincount(b)
-    if len(counts) != 2:
+    if len(counts) != GROUPS:
         raise SystemExit(f"{name} seed {seed} returned {len(counts)} communities, "
-                         f"not 2 -- pick another seed")
+                         f"not {GROUPS} -- pick another seed")
     motifs = model.motif_counts()
 
     g = gt.Graph(directed=False)
     g.add_vertex(n)
     g.add_edge_list(edges)
-    # larger group dark, so the pictures read the same way as Chapter 6's
-    big = int(np.argmax(counts))
+    # largest group dark, so the pictures read the same way as Chapter 6's
+    rank = {g_: i for i, g_ in enumerate(np.argsort(-counts))}
     col = g.new_vertex_property("vector<double>")
     for v in g.vertices():
-        col[v] = DARK if b[int(v)] == big else LIGHT
+        col[v] = SHADES[rank[b[int(v)]]]
 
     gt.seed_rng(7)
     np.random.seed(7)
