@@ -105,10 +105,41 @@ def generator_dup_split(n, params, seed):
 # makes those numbers a check on this pipeline rather than a loose comparison.
 # DS(q=0.3) was measured first and is kept because less duplication turns out to
 # move r_kappa a long way.
+def generator_dup_divergence(n, params, seed):
+    """DD(n, q): duplicate a random node, then drop each copied link with
+    probability q. networkx parametrises this by the retention probability, so
+    q here is its 1 - p; q is the probability of *removing* a copied link, to
+    match the gene-duplication chapter's reading of divergence."""
+    import networkx as nx
+    g = nx.duplication_divergence_graph(n, 1.0 - params["q"], seed=seed)
+    g.remove_edges_from(nx.selfloop_edges(g))
+    idx = {v: i for i, v in enumerate(sorted(g))}
+    nb = [[] for _ in range(len(g))]
+    for u, v in g.edges():
+        nb[idx[u]].append(idx[v])
+        nb[idx[v]].append(idx[u])
+    return nb
+
+
+def generator_bubble(n, params, seed):
+    """BB(n, L): add a chain of L nodes across a random link, closing a fresh
+    cycle of length L+2. Same rule as arity_models.bb."""
+    from arity_models import bb
+    adj = bb(n, params["L"], seed)
+    idx = {v: i for i, v in enumerate(sorted(adj))}
+    nb = [[] for _ in range(len(adj))]
+    for u in adj:
+        for w in adj[u]:
+            nb[idx[u]].append(idx[w])
+    return nb
+
+
 MODELS = {
     "LS(n,1)": (generator_local_search, {"d": 1}),
     "DS(n,0.5)": (generator_dup_split, {"q": 0.5}),
     "DS(n,0.3)": (generator_dup_split, {"q": 0.3}),
+    "DD(n,0.5)": (generator_dup_divergence, {"q": 0.5}),
+    "BB(n,2)": (generator_bubble, {"L": 2}),
 }
 DEFAULT = ("LS(n,1)", "DS(n,0.5)")
 
@@ -123,8 +154,13 @@ def to_edges(neighbours):
 
 def one(model, n, seed):
     gen, params = MODELS[model]
-    edges = to_edges(gen(n, params, seed))
-    m = MotifSBM(n, edges)
+    nb = gen(n, params, seed)
+    # some rules overshoot the requested size -- the bubble rule adds L nodes at
+    # a time and stops once it is past n -- so the graph is built on however many
+    # nodes came back, while n stays the label the sizes are grouped by
+    n_actual = len(nb)
+    edges = to_edges(nb)
+    m = MotifSBM(n_actual, edges)
     # Two block-model answers on the same network. The nested one is also one of
     # the motif model's starting partitions, so it costs nothing extra. The flat
     # one is what chapter 6's census used, and its resolution ceiling is sqrt(N)
@@ -138,7 +174,7 @@ def one(model, n, seed):
         k_dc = k_flat = float("nan")
     m.fit()
     c = m.motif_counts()
-    return dict(model=model, n=n, seed=seed, m=len(edges),
+    return dict(model=model, n=n, n_nodes=n_actual, seed=seed, m=len(edges),
                 kappa=len(set(m.blocks)), kappa_dcsbm=k_dc, kappa_flat=k_flat,
                 n_edge=c.get("edge", 0), n_tri=c.get("triangle", 0),
                 n_sq=c.get("square", 0), sigma=round(m.description_length(), 2))

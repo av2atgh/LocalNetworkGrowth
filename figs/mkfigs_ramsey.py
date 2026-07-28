@@ -45,8 +45,14 @@ METHODS = (("kappa_flat", "v", "0.62", "flat block model"),
            ("kappa", "o", "k", r"nested $+$ motifs"))
 
 # (data key, panel labels, the book's own math styling for the rule)
-ROWS = (("DS(n,0.5)", "(a)", "(b)", r"$DS(n,0.5)$"),
-        ("LS(n,1)", "(c)", "(d)", r"$LS(n,1)$"))
+PAIRS = {
+    "fig-gr-ramsey.pdf": (("DS(n,0.5)", "(a)", "(b)", r"$DS(n,0.5)$"),
+                          ("LS(n,1)", "(c)", "(d)", r"$LS(n,1)$")),
+    # the two rules whose motif is the square: one that makes them separably,
+    # one that piles them into bicliques
+    "fig-gr-squares.pdf": (("BB(n,2)", "(a)", "(b)", r"$BB(n,2)$"),
+                           ("DD(n,0.5)", "(c)", "(d)", r"$DD(n,0.5)$")),
+}
 
 # fitted over every measured size, as the chapter quotes it
 FIT_FROM = 0.0
@@ -71,13 +77,13 @@ def curve(rows, model, key, reduce_fn):
     return np.array(ns, float), np.array([reduce_fn(sub[n]) for n in ns])
 
 
-def main():
+def figure(out, rows):
     thr = load("ramsey_motif_threshold*.csv")     # fine grid, 100 realisations
-    sca = load("ramsey_motif_scaling*.csv")       # coarse grid, to n = 1600
+    sca = load("ramsey_motif_scaling*.csv")       # coarse grid, larger n
     fig, axes = plt.subplots(2, 2, figsize=(W, W * 0.86))
     p_two = lambda v: sum(1 for x in v if x >= 2) / len(v)
 
-    for row, (model, la, lb, tag) in enumerate(ROWS):
+    for row, (model, la, lb, tag) in enumerate(rows):
         # ---- left: the communities likelihood
         ax = axes[row, 0]
         for key, mk, col, lab in METHODS:
@@ -89,8 +95,10 @@ def main():
         ax.set_ylabel(r"$P_\kappa(n)$")
         ax.set_ylim(-0.04, 1.34)
         ax.set_yticks([0, 0.2, 0.4, 0.6, 0.8, 1.0])
-        ax.text(0.97, 0.06, tag, transform=ax.transAxes, ha="right",
-                va="bottom", fontsize=6.5)
+        # top right: the curves saturate at 1 and the axis runs to 1.34, so
+        # this corner is clear in both rows where the lower one is not
+        ax.text(0.97, 0.97, tag, transform=ax.transAxes, ha="right",
+                va="top", fontsize=6.5)
         if row == 0:
             ax.legend(frameon=False, loc="upper left", handlelength=1.3,
                       fontsize=4.8, borderaxespad=0.2)
@@ -110,7 +118,7 @@ def main():
         ax.set_xscale("log")
         ax.set_yscale("log")
         ax.set_ylabel(r"$\langle\kappa\rangle$")
-        ax.set_xlim(75, 2600)
+        ax.set_xlim(75, 1.7 * max(x))
         ax.text(0.97, 0.06, tag, transform=ax.transAxes, ha="right",
                 va="bottom", fontsize=6.5)
         ax.legend(frameon=False, loc="upper left", handlelength=1.3,
@@ -123,7 +131,12 @@ def main():
         ax.set_xticklabels([])
 
     fig.tight_layout(pad=0.3, w_pad=1.0, h_pad=0.6)
-    save(fig, "fig-gr-ramsey.pdf")
+    save(fig, out)
+
+
+def main():
+    for out, rows in PAIRS.items():
+        figure(out, rows)
 
 
 if __name__ == "__main__":

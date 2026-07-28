@@ -28,8 +28,15 @@ Status as of 2026-07-28. Branch **`graphon`** (not merged, not pushed).
 > drawn the way chapter 6 draws its networks. The
 > tensor-versus-alphabet argument and the definition of the three methods are
 > boxed. `communities.tex` is synced in three places for the method-dependence of
-> its exponent and its Ramsey numbers (§5). The book builds clean at **175
+> its exponent and its Ramsey numbers (§5). The book builds clean at **177
 > pages**, no undefined references, no overfull boxes.
+>
+> §7.14 "What the square does not buy" adds duplication-divergence `DD(n,q)`,
+> with `q` the *removal* probability to match the gene-duplication chapter. It is
+> bipartite and square-built, yet the alphabet plants nothing in it, because
+> duplication makes overlapping `K_{2,d}` bicliques rather than separable
+> squares. Figure 7.7 (`fig-gr-squares.pdf`) pairs it against `BB(n,2)`, where
+> the squares *are* separable and naming them dissolves the communities.
 
     b32fa16  Chapter 7: the motif spectrum, and one quantity behind both deficits
     34eac0c  Add chapter 7, "The limit of a network"

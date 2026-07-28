@@ -799,6 +799,7 @@ thousandfold, it is infinite in both directions, and no choice of blocks or
 degrees can repair it.
 
 \section{An arity that can be measured}
+\label{sec:gr-arity}
 
 The conjecture sets the order by the arity of the rule, and so far that has been
 an argument from two lattices. It can be made quantitative, because the cycle
@@ -862,6 +863,7 @@ two pentagons touch. A molecule and a growth rule, agreeing on a rule about whic
 templates may be adjacent.
 
 \section{Fitting the order, not assuming it}
+\label{sec:gr-motifsbm}
 
 All of that still asks the reader to accept the arity of each rule as given. It
 can instead be \emph{inferred}, by the same criterion that fits a block model in
@@ -1085,8 +1087,10 @@ instance.
 \centering
 \begin{adjustbox}{max width=\linewidth}\input{netfig-ls100.tex}\end{adjustbox}
 \caption{\textbf{Three communities in a local-search network.} An instance of
-$LS(n{=}100,\ell{=}1)$, coloured by the three communities the motif model
-resolves, of $38$, $35$ and $27$ nodes. Three is the common outcome at this size,
+$LS(n{=}100,\ell{=}1)$, coloured by the three communities of $38$, $35$ and $27$
+nodes found by the nested block model carrying triangles and squares in its
+alphabet (Section~\ref{sec:gr-motifsbm}), with the number of groups inferred
+rather than fixed. Three is the common outcome at this size,
 $24$ realisations in a hundred against only $2$ that divide in two; and by
 $n=120$ no realisation divides in two at all. When local search splits it splits
 into several groups at once, which is why its Ramsey number sits at $200$ even
@@ -1099,7 +1103,9 @@ though the split itself is already visible here.}
 \begin{adjustbox}{max width=\linewidth}\input{netfig-ds100.tex}\end{adjustbox}
 \caption{\textbf{Three communities in a duplication--split network.} An instance
 of $DS(n{=}100,q{=}0.5)$ at its Ramsey community number, divided $48$, $28$ and
-$24$. The rule makes no triangles, and the model plants no motifs here at all ---
+$24$ by the same method as Figure~\ref{fig:gr-netls} --- the nested block model
+with triangles and squares in its alphabet, Section~\ref{sec:gr-motifsbm}. The
+rule makes no triangles, and the model plants no motifs here at all ---
 every one of the $195$ links is described on its own --- so for this network the
 motif alphabet buys nothing and the communities are what the ordinary block model
 would have found.}
@@ -1141,3 +1147,78 @@ $\beta\approx0.61$, and the reading of it as a balance struck between two limits
 is at least in part a statement about the flat block model rather than about the
 networks. Chapter~\ref{ch:communities}'s own caution, that these quantities are
 defined relative to a method, turns out to bind harder than it looked.
+
+\section{What the square does not buy}
+
+Local search and duplication--split differ in whether the alphabet can name their
+motif, but neither is a clean test of the square, and for opposite reasons.
+Duplication--split closes squares and then \emph{subdivides} them: its split step
+replaces a link by a path of two, turning a cycle of length $L$ into one of
+length $L+1$ and destroying the parity, so its cycle counts are non-zero at every
+length from four upward. The bubble rule $BB(n,2)$ closes squares and leaves them
+alone. And there is a third rule, closer to biology than either, that closes
+squares in profusion and yet defeats the alphabet completely.
+
+That rule is duplication with divergence, $DD(n,q)$: copy a random node, then
+delete each copied link independently with probability $q$ --- $q$ being the
+divergence, the chance that a redundant link is \emph{lost}, as in
+Chapter~\ref{ch:duplication}. It never subdivides anything, so unlike
+duplication--split it stays bipartite, a copy sitting on the same side of the
+division as its original. Counted directly at $q=\tfrac12$:
+
+\begin{center}
+\begin{tabular}{lrrrrrr}
+\hline
+ & $L=3$ & $4$ & $5$ & $6$ & $7$ & $8$ \\
+\hline
+$n=100$ & $0$ & $694$ & $0$ & $9\,099$ & $0$ & $123\,001$\\
+$n=200$ & $0$ & $3\,658$ & $0$ & $143\,822$ & $0$ & $7\,002\,135$\\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent Mass at the even lengths and exactly nothing at the odd ones --- the
+same support as the diamond lattice and $BB(n,2)$. By the reading of
+Section~\ref{sec:gr-arity} this is a square-built network if ever there was one.
+
+The motif model declines to plant a single square in it. Fitted at $q$ from
+$0.2$ to $0.6$, the enlarged alphabet costs between $11$ and $107$ bits and buys
+nothing. The reason is that duplication does not make a square. It makes a node
+with $d$ shared neighbours --- a complete bipartite $K_{2,d}$ --- holding
+$\binom{d}{2}$ four-cycles laid over one another. At $n=200$ and $q=\tfrac12$ the
+sharing runs to fourteen common neighbours between one pair of nodes, so that
+pair alone accounts for $91$ four-cycles, and across the network each link sits
+in some twenty-four of them. A decomposition that gives every link to exactly one
+motif can name a handful and must leave the rest unspoken. In $BB(n,2)$, where
+each step closes a fresh square on two new nodes, a link sits in $1.3$ of them
+and the alphabet takes them up readily.
+
+The consequences for community detection run in opposite directions
+(Figure~\ref{fig:gr-squares}). For $BB(n,2)$ the alphabet works, and naming the
+squares dissolves the apparent communities: the block model's $P_\kappa$ climbs
+past $0.8$ by $n=200$ while the motif model's is still at $0.16$, and where the
+block model finds $10.8$ communities at $n=800$ the motif model finds $5.8$. For
+$DD(n,q)$ the alphabet does nothing, the three curves lie on top of one another,
+and the Ramsey community number is $40$ whichever method is used.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{figs/fig-gr-squares.pdf}
+  \caption{\textbf{Two rules built from squares, and only one of them says so.}
+  Panels as in Figure~\ref{fig:gr-ramsey}. \textbf{(a, b)} $BB(n,2)$ closes one
+  square per step on two new nodes, so its squares are nearly disjoint, the
+  alphabet takes them up, and the communities the block model reports are largely
+  dissolved. \textbf{(c, d)} $DD(n,q)$ at $q=\tfrac12$ closes squares in far
+  greater numbers, but as overlapping $K_{2,d}$ bicliques rather than separable
+  motifs; the alphabet plants none of them, and all three methods agree.}
+  \label{fig:gr-squares}
+\end{figure}
+
+So the alphabet needs more than the right arity. It needs the rule's footprint to
+be a fixed object that can be named once and counted. Duplication's footprint is
+a biclique whose size is set by how much of the copied neighbourhood survives,
+and the square is only its smallest case. That is a third way for the scheme to
+fail --- distinct from a motif outside the alphabet, as with the pentagon-built
+rules, and from a motif spoiled by subdivision, as with duplication--split --- and
+it is the one most likely to matter, since duplication with divergence is the
+standard account of how protein interaction networks grow.
