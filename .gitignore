@@ -5,6 +5,12 @@
 __pycache__/
 *.pyc
 
+# Built by "cc -O3 -o figs/cyclecount figs/cyclecount.c"; the source is tracked.
+figs/cyclecount
+# Netzschleuder edge lists cached by figs/crossover_scout.py. Re-downloadable,
+# and large; the measured summaries under figs/data/ are what is tracked.
+figs/_netcache/
+
 # LaTeX build artifacts
 *.aux
 *.log
