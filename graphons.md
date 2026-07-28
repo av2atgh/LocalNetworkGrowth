@@ -91,8 +91,26 @@ trusting a recursion here.
 
 ## 3. PENDING — the experiment this session could not run
 
-**Test `L* = ln n / ln λ` on real networks.** This is the chapter's falsifiable
-prediction and the natural next step.
+**Test the crossover length `L*` on real networks.** This is the chapter's
+falsifiable prediction and the natural next step: fit a block model to a scale-free
+network and find where its motif counts cross over from under- to over-counting.
+
+There are **two forms of the prediction, and they are separately falsifiable.**
+Do not conflate them — the second is the headline claim and the stronger test.
+
+    (a) operational:  L* = ln n / ln λ        with λ measured directly
+    (b) headline:     L* = (γ-1)/(3-γ)        from the degree exponent alone
+
+(b) follows from (a) only through `λ ~ n^{(3-γ)/(γ-1)}`, which is itself an
+assumption — it presumes a clean power law with the natural cutoff and no
+structural cutoff, and it is the step most likely to break on real data. So (b)
+tests the transfer-matrix theory **and** the λ–γ scaling relation at once, and can
+fail while (a) still holds.
+
+Design consequence: **always measure `λ = ⟨k²⟩/⟨k⟩` directly** rather than
+inferring it from a fitted `γ`, and test the λ–γ relation as its own step by
+regressing `ln λ` on `ln n` within families of similar `γ`. Report which of the
+two forms survives; they are different results.
 
 ### Why it stalled here
 
@@ -105,14 +123,23 @@ So it needs an environment with graph-tool *and* the Netzschleuder networks.
 ### Specification
 
 1. Take real networks spanning a range of `γ` (Netzschleuder; the ~100 used for
-   `figs/data/community_communities_vs_n.csv` are the natural set).
+   `figs/data/community_communities_vs_n.csv` are the natural set). Span matters:
+   `L*` moves from ~2 to ∞ as `γ → 3`, so a narrow `γ` range tests nothing.
 2. Fit the degree-corrected SBM — use `minimize_nested_blockmodel_dl`, **not** the
    flat `minimize_blockmodel_dl` (see §4 below).
 3. Compute `λ` = leading eigenvalue of the fitted model's transfer matrix
    `T_rs = ω_rs sqrt(Q_r Q_s)`. For the rank-one baseline `λ = ⟨k²⟩/⟨k⟩` exactly,
    needing no fit at all.
-4. Count true cycles `L = 3…8`.
-5. Compare `true_L` against `λ^L / 2L`.
+4. Fit `γ` separately (MLE on the tail, not a log-log regression) — needed for
+   form (b) and for the λ–γ relation, and kept independent of `λ`.
+5. Count true cycles `L = 3…8`.
+6. Compare `true_L` against `λ^L / 2L`; locate the crossover; compare with both
+   `ln n / ln λ` and `(γ-1)/(3-γ)`.
+
+Practical range check before spending compute: the crossover is only *visible* if
+`λ^3 < n < λ^8`, i.e. `n^{1/8} < λ < n^{1/3}`. Outside that window every countable
+length sits on one side of the crossover and only the slope test (below) has
+content. Compute `λ` and `n` first and bin the networks accordingly.
 
 ### What confirms or refutes
 
@@ -122,6 +149,14 @@ The sharp test does **not** depend on where the crossover happens to fall:
 
 with zero crossing at `L* = ln n / ln λ`. A slope significantly different from
 `-ln λ` refutes the transfer-matrix theory.
+
+Three outcomes, three different papers:
+
+| slope = -ln λ ? | crossover at `(γ-1)/(3-γ)` ? | reading |
+|---|---|---|
+| yes | yes | both claims hold — the headline result |
+| yes | no | transfer-matrix theory holds; the λ–γ scaling fails on real degree sequences (cutoffs). Report `L* = ln n/ln λ` as the correct form |
+| no | — | the theory is wrong; the lattices were special. Report that too |
 
 **Control (important):** rewire preserving every degree (`double_edge_swap`, or
 graph-tool's `random_rewire`). There the rank-one model *is* the truth, so the
