@@ -12,9 +12,11 @@ Status as of 2026-07-28. Branch **`graphon`** (not merged, not pushed).
 > in §3. A third, unrelated bug in the pseudofractal's block cut surfaced on the
 > way and is in §6.
 >
-> §7.9 now carries a new subsection, "What the crossing point does on real
-> networks", and Figure 7.3 (`fig-gr-crossover.pdf`). The book builds clean at
-> **164 pages**, no undefined references, no new overfull boxes.
+> §7.9 now carries two new subsections — "What the crossing point does on real
+> networks" and "An arity that can be measured" — plus Figure 7.3
+> (`fig-gr-crossover.pdf`) and Eq. (7.13), the cycle generator of
+> `vazquez2005cycles`. The book builds clean at **167 pages**, no undefined
+> references, no new overfull boxes.
 
     b32fa16  Chapter 7: the motif spectrum, and one quantity behind both deficits
     34eac0c  Add chapter 7, "The limit of a network"
@@ -112,6 +114,7 @@ trusting a recursion here.
     figs/pseudofractal_triples.py   triangles vs both fits, to t=28
     figs/diamond_quads.py           four-cycles vs both fits, to t=26
     figs/motif_spectrum.py          exact cycle enumeration + transfer matrices
+    figs/arity_models.py            DS and BB: the arity dial (§4)
     figs/mkfigs_graphon.py          the two chapter figures
 
 ---
@@ -389,19 +392,38 @@ specified motifs at nodes and have exact generating-function theory for cycles.
 Read those before constructing the limit from scratch. **Cited from memory — check
 before relying on it**, as with everything else in §6.
 
-### The limitation worth stating in the chapter
+### The mechanism, already published — and a correction to this note
 
-**Arity buys the rule's footprint; it does not buy the rule's iteration.**
+`vazquez2005cycles` (Phys. Rev. E **71**, 025103, `10.1103/PhysRevE.71.025103`)
+gives the generator outright. The `h`-cycle density of a real network follows
+from the degree distribution and the degree-dependent clustering coefficient
+alone:
 
-The diamond's support is `L = 4, 8, 16, 32, …`. The four-cycles are one
-application of the rule; the eight-cycles are a second (each edge of a square
-subdivided into two parallel paths), the sixteens a third. A fixed 4-uniform
-template gives one generation and stops. The tower is a statement about
-*recursion*, not arity — so it needs the object to be a fixed point of a rule
-acting on such objects, which is the inverse-limit/RG reading of §7.8 and a
-different construction from raising `k`.
+    N_h/N = g_h Σ_k P(k) ((h-1)!/2) binom(k, h-1) C(k)^{h-2}
 
-It also follows that "order = arity" must mean *minimal* order: a 4-array's
+Choose `h-1` neighbours of a central node, order them, and close the cycle by
+requiring `h-2` links among consecutive ones, each present with probability
+`C(k)`. Verified there at `h = 3, 4, 5` on co-authorship, the Internet and a
+semantic network, with the full cycle density and the centrally-connected density
+overlapping at `h = 3, 4`.
+
+**This corrects what an earlier draft of this note claimed.** I had written
+"arity buys the rule's footprint; it does not buy the rule's iteration," arguing
+from the diamond's `L = 4, 8, 16` tower that the tower needs a recursion. That is
+wrong. The tower is the *product* `C(k)^{h-2}` — one closing probability applied
+`h-2` times around the loop — so a fixed-arity local generator produces every
+length with no separate mechanism. **Arity three buys not just the triangle but
+the whole spectrum built from triangles**, which is why triangles do the job for
+so many real networks. What arity sets is *which* local closing quantity is
+non-vanishing, not how far the tower reaches.
+
+What does survive of the caveat: `C(k)^{h-2}` is smooth in `h`, so raising the
+arity inside this form still cannot produce exact zeros at particular lengths.
+The zeros need the closing motif to *be* a specific length, which is what the
+template picture supplies and a scalar `C` does not. Support and magnitude remain
+different demands.
+
+It also still follows that "order = arity" must mean *minimal* order: a 4-array's
 representation already contains the triple variables, so arity 4 subsumes arity 3.
 The strictness of that hierarchy is the content of the conjecture, not something
 the construction hands you.
@@ -417,39 +439,58 @@ random neighbour `k` of `j` and split `(j,k)` into `(i,j)` and `(i,k)`.
 **Duplication makes no triangles and splitting destroys any that might form; its
 motif is the square.**
 
-That makes DS the matched partner of the pseudofractal, and the discriminating
-case for arity:
+That makes DS the discriminating case, and the test is not a ratio but a
+zero: **`C(k) ≡ 0` makes the generator above vanish identically at every `h ≥ 3`.**
+Not an underestimate — an empty prediction, against a network full of cycles.
+Measured (`figs/arity_models.py`, seed 7):
 
-- DS is **triangle-free by construction**, so `C₃ = 0` exactly at every `n` and
-  `q` — a support zero, like the diamond's and the fullerene's, that no
-  two-variable fit can produce at any block resolution;
-- its excess should sit at `L=4`, the rule's footprint;
-- and unlike the pseudofractal and diamond it is **stochastic**, so it separates
-  "the lattices were special because they are deterministic" from "the arity of
-  the rule is what matters". That distinction is currently unresolved — §3 showed
-  the `L*` law is a property of the deterministic webs, and DS is the way to ask
-  whether the *support* argument is too.
+| DS(n, q=1/3) | ⟨k⟩ | C | L3 | L4 | L5 | L8 |
+|---|---|---|---|---|---|---|
+| n=500 | 3.50 | 0.0000 | **0** | 1,208 | 794 | 98,984 |
+| n=2000 | 3.77 | 0.0000 | **0** | 10,689 | 7,914 | 12,728,305 |
 
-If order = arity, a 3-uniform object should handle the pseudofractal and fail on
-DS, and a 4-uniform one should handle both.
+So the arity-3 generator predicts zero where the truth is 10⁷. That is the
+sharpest form of "order = arity" available, and it needs no fitting at all.
 
-The **bubble model `BB(n,L)`** turns this into a dial. It adds a chain of `L` new
-nodes across a random link, closing a fresh cycle of length `L+2`, so its motif is
-tunable: `BB(n,1)` makes triangles, `BB(n,2)` squares, `BB(n,3)` pentagons,
-`BB(n,4)` hexagons. The prediction "the order is set by the arity of the growth
-rule" becomes the sharp claim that the required order tracks `L+2` across the
-family — and chapter 8 already uses `BB` at `L=1…4`
-(`figs/data/model-bb_L*_nr100_vs_n_log.csv`, read by `mkfigs.py`). `BB(n,1)` is
-the Dorogovtsev–Mendes rule, so it is the stochastic cousin of the pseudofractal
-and completes the pairing: DM/`BB(n,1)` against the pseudofractal at arity 3,
-`DS`/`BB(n,2)` against the diamond at arity 4.
+Two details worth keeping. DS is triangle-free but **not bipartite** — `L5 ≠ 0`,
+because splitting subdivides a link and flips parity — whereas `BB(n,2)` is. So
+the square generator DS needs must produce odd cycles too, which the naive
+"replace the closing edge by a path of length 2" version will not. And DS is
+**stochastic**, so it separates "the lattices were special because they are
+deterministic" from "the arity of the rule is what matters" — a distinction §3
+left open for the `L*` law and this closes for the support argument.
 
-Practical notes. Neither generator is in this repo — the `model-*` CSVs were
-copied from the upstream repository and are summary statistics only — but both
-rules are a few lines each. The whole §3 apparatus applies unchanged: build the
-graph, count cycles with `cyclecount`, and compare against the degree-preserving
-and block-preserving nulls of `crossover_measure.py`. Both models are sparse with
-small `κ`, so they sit inside the tractable window comfortably.
+### The bubble family is the dial, and it is already measured
+
+`BB(n,L)` closes a fresh cycle of length `L+2` at every step, so the motif is
+tunable. At `n = 4000`, seed 7:
+
+| model | motif | C | lengths present, L=3…10 |
+|---|---|---|---|
+| `BB(n,1)` | triangle | 0.7397 | every length |
+| `BB(n,2)` | square | 0 | 4, 6, 8, 10 |
+| `BB(n,3)` | pentagon | 0 | **5, 8** |
+| `BB(n,4)` | hexagon | 0 | **6, 10** |
+
+Only the first is within reach of the arity-3 generator. The others put mass
+exactly where the motif and its gluings put it, by the same `a+b−2` rule the
+fullerene obeys: pentagons give 5 and 5+5−2 = 8; hexagons 6 and 6+6−2 = 10;
+squares 4, 6, 8, 10; everything else empty. **A growth rule and a molecule
+agreeing on a rule about which templates may be adjacent** — which is what the
+template-shadow construction has to reproduce.
+
+`BB(n,1)` is the Dorogovtsev–Mendes rule, the stochastic cousin of the
+pseudofractal, so the pairing completes: DM/`BB(n,1)` against the pseudofractal at
+arity 3, `DS`/`BB(n,2)` against the diamond at arity 4. Chapter 8 already uses
+`BB` at `L=1…4` (`figs/data/model-bb_L*_nr100_vs_n_log.csv`, read by `mkfigs.py`),
+though those CSVs are summary statistics only — `figs/arity_models.py` now carries
+the generators and the exact counts.
+
+The rest of the §3 apparatus applies unchanged if a stronger version is wanted:
+compare against the degree-preserving and block-preserving nulls of
+`crossover_measure.py`. Both models are sparse, so they sit inside the tractable
+window — though DS grows hubs by duplication and reaches `κ ≈ 8` by `n = 2000`,
+which caps the enumeration at `L = 8`.
 
 ### The caveat that limits how much this buys
 
@@ -461,10 +502,13 @@ after blocks does not (`r = −0.00`). A higher-order object is therefore **not*
 needed to supply the bulk of the clustering — a finer two-variable object gets it.
 It is needed for *support*.
 
-And the clean support case is a molecule. Whether any non-crystalline real network
-has a comparably rigid support is untested, and is the gap to close before the
-conjecture leans on this. DS and BB at least supply *grown* networks with exact
-support zeros, which is the nearest thing to a bridge.
+The support gap is now partly closed: it is no longer only a molecule. DS and the
+bubble family are *grown, stochastic* networks with exact support zeros, so the
+pathology does not depend on determinism or on crystallinity. What is still
+untested is whether any **empirically observed** network other than a molecule
+has a comparably rigid support — the 44 in §3 do not, and the arity-3 generator
+accounts for the ones that have triangles. That is the gap to close before the
+conjecture leans on support alone.
 
 Also worth recording against the alternatives: the Gibbs/ERGM form
 `P(A) ∝ exp(Σ_L θ_L C_L(A))` is literally "a path biases its closing" and is
