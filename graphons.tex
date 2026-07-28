@@ -956,3 +956,88 @@ on real networks, where the expectation from everything above is modest: the
 two-variable failure there is a large and nearly constant factor rather than a
 growing one, and arity three already accounts for the cycle spectrum wherever
 triangles exist.
+
+\subsection*{What this does to Chapter~\ref{ch:communities}}
+
+The model of the last subsection is a community detection method, so it can be
+put to Chapter~\ref{ch:communities}'s two questions --- when do communities
+appear, and how many are there --- and the answers are not the same ones.
+
+Recall that the Ramsey community number is defined relative to a method, and that
+Chapter~\ref{ch:communities} laboured that point without being able to
+demonstrate it. Here it can be demonstrated. Growing local search and
+duplication--split with the same generators, and fitting every realisation three
+ways --- a flat block model, a nested one, and the nested one with triangles and
+squares in its alphabet --- gives, at $\epsilon=0.05$ and a hundred realisations
+per size:
+
+\begin{center}
+\begin{tabular}{lrrrr}
+\hline
+ & flat & nested & $+$ motifs & Ch.~\ref{ch:communities} \\
+\hline
+$LS(n,1)$   & $70$ & $80$  & $\mathbf{200}$ & $81$\\
+$DS(n,0.5)$ & $90$ & $100$ & $\mathbf{100}$ & $98$\\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent The block-model columns bracket the published numbers, which is the
+check that this is the same measurement. The motif alphabet then moves one of
+them and not the other. Local search \emph{is} the triadic-closure rule, so its
+local structure is triangles; an alphabet that contains the triangle books that
+structure as planted motifs instead of reading it as evidence for communities,
+and the size at which communities become certain is pushed from $80$ to $200$.
+Duplication--split makes no triangles at all, its squares overlap heavily and
+compress little, and its Ramsey number does not move
+(Figure~\ref{fig:gr-ramsey}a).
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{figs/fig-gr-ramsey.pdf}
+  \caption{\textbf{The detection method is part of the answer.} \textbf{(a)} The
+  communities likelihood $P_\kappa(n)$ for two local rules, under a block model
+  (filled) and under the same model with triangles and squares in its alphabet
+  (open). The dotted line is the $95\%$ threshold that defines the Ramsey
+  community number. Local search shifts by a factor of two and a half;
+  duplication--split, which makes no triangles, does not move. \textbf{(b)} The
+  number of communities against size for local search. The flat block model
+  follows its own $\sqrt{n}$ resolution ceiling; the nested model and the motif
+  model both grow almost in proportion to $n$.}
+  \label{fig:gr-ramsey}
+\end{figure}
+
+The second question is more uncomfortable. Chapter~\ref{ch:communities} measured
+$B\propto n^{\beta}$ with $\beta\approx0.61$ and called real networks
+super-fractal, sitting between the fractal $\tfrac12$ and the modular $1$; and it
+reported $\beta\approx0.56$ and $0.60$ for these two rules. Fitting the same rules
+over $n=400$ to $1600$, with all three methods on identical networks:
+
+\begin{center}
+\begin{tabular}{lrrr}
+\hline
+ & flat & nested & $+$ motifs \\
+\hline
+$LS(n,1)$   & $0.50$ & $0.94$ & $0.92$\\
+$DS(n,0.5)$ & $0.60$ & $0.97$ & $0.93$\\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent The flat model reproduces Chapter~\ref{ch:communities} --- $0.50$ and
+$0.60$ against the published $0.56$ and $0.60$ --- and it reproduces it while
+sitting on its own ceiling, since a flat fit cannot resolve more than
+$\sqrt{n}$ groups however many are present. Lift that ceiling and the exponent
+goes to nearly one (Figure~\ref{fig:gr-ramsey}b). At $n=1600$ the motif model
+divides local search into communities of about $34$ nodes and duplication--split
+into communities of about $21$, and those sizes barely change as the networks
+grow: not the fractal limit, and not the super-fractal middle, but the modular
+one.
+
+Two things follow, and they pull in opposite directions. The claim that
+$\beta>\tfrac12$ survives and strengthens --- every method puts it at or above one
+half, and lifting the resolution only raises it. But the \emph{value}
+$\beta\approx0.61$, and the reading of it as a balance struck between two limits,
+is at least in part a statement about the flat block model rather than about the
+networks. Chapter~\ref{ch:communities}'s own caution, that these quantities are
+defined relative to a method, turns out to bind harder than it looked.

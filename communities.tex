@@ -236,6 +236,16 @@ $BA(m=2)$               & ---    & ---    \\
 \hline
 \end{tabular}
 \end{center}
+The two columns already show that $r_\kappa$ depends on how one looks: Infomap
+needs two to six times the size the block model does. The dependence goes deeper
+than a choice of algorithm. Chapter~\ref{ch:graphons} fits these same rules with a
+block model that can also describe its links as planted triangles and squares,
+and finds $r_\kappa=200$ for $LS(\ell=1)$ against the $81$ above, while
+$DS(q=0.5)$ does not move at all --- because local search's structure \emph{is}
+triangles, and a method that can name a triangle stops counting it as evidence
+for a community. Read the numbers below as properties of a rule seen through an
+instrument, which is what the definition says they are.
+
 Every genuinely local rule has a finite Ramsey number --- grow it past a few
 hundred nodes and communities are certain. The rules without local structure ---
 the bottom three rows, the two reshuffled networks and the Barab\'asi--Albert
@@ -1267,6 +1277,17 @@ local growth: the same rules that make communities emerge at all, earlier in thi
 chapter, also fix how their number multiplies with size, and fix it in the range
 the real networks occupy.
 
+One qualification has to be entered here, and it is taken up properly in
+Chapter~\ref{ch:graphons}. The counts above come from a flat block model, whose
+own resolution cannot exceed $\sqrt{n}$ groups however many are present. That
+ceiling has the same functional form as the fractal limit the exponent is being
+compared against, so the instrument cannot report a value far above one half even
+in principle. Refitting these two rules with a model whose resolution is not so
+bounded raises $\beta$ from $0.50$ and $0.60$ to about $0.95$ on the very same
+networks. What survives that is the inequality $\beta>\tfrac12$, which only
+strengthens; what does not survive unqualified is the particular value and the
+picture of a balance struck midway between fractal and modular.
+
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figs/fig-com-count-models.pdf}
@@ -1350,9 +1371,12 @@ level by level. Communities are a state the network is in.
 Held up to the real world, the count grows faster than the fractal models predict.
 Across close to a hundred real networks, and within single systems followed as
 they grow, the number of communities is a power law of size, $B\propto n^{\beta}$
-with $\beta$ between one half and two thirds --- above the self-similar $\sqrt{n}$,
-below the fully modular $n$. The book's own local rules reproduce that
-super-fractal exponent, so it is one more regularity that locality accounts for.
+with $\beta$ above the self-similar $\sqrt{n}$ --- measured here as between one
+half and two thirds, though Chapter~\ref{ch:graphons} shows that the upper end of
+that range is set by the resolving power of the method as much as by the
+networks, and that lifting it pushes the exponent towards the modular $n$. The
+book's own local rules reproduce whichever value the method reports, so the
+inequality, at least, is one more regularity that locality accounts for.
 
 Having already accounted for degree distributions, the clustering hierarchy, and
 degree correlations, this chapter adds community structure --- both its emergence

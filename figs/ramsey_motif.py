@@ -100,10 +100,17 @@ def generator_dup_split(n, params, seed):
     return neighbours
 
 
+# LS(l=1) and DS(q=0.5) are the pair chapter 6 tabulates, with published Ramsey
+# numbers of 81 and 98 under a block model; keeping the same parameters is what
+# makes those numbers a check on this pipeline rather than a loose comparison.
+# DS(q=0.3) was measured first and is kept because less duplication turns out to
+# move r_kappa a long way.
 MODELS = {
     "LS(n,1)": (generator_local_search, {"d": 1}),
+    "DS(n,0.5)": (generator_dup_split, {"q": 0.5}),
     "DS(n,0.3)": (generator_dup_split, {"q": 0.3}),
 }
+DEFAULT = ("LS(n,1)", "DS(n,0.5)")
 
 
 def to_edges(neighbours):
@@ -137,7 +144,7 @@ def one(model, n, seed):
                 n_sq=c.get("square", 0), sigma=round(m.description_length(), 2))
 
 
-def sweep(sizes, reps, out, models=tuple(MODELS)):
+def sweep(sizes, reps, out, models=DEFAULT):
     rows = []
     for model in models:
         for n in sizes:
@@ -244,22 +251,23 @@ def main():
         reps = args.reps or 20
         out = args.out or os.path.join(DATA, "ramsey_motif_scaling.csv")
     else:
+        import glob
         rows = []
-        for f in ("ramsey_motif_threshold.csv", "ramsey_motif_scaling.csv"):
-            p = os.path.join(DATA, f)
-            if os.path.exists(p):
+        for p in sorted(glob.glob(os.path.join(DATA, "ramsey_motif_*.csv"))):
+            if True:
                 with open(p) as fh:
                     for r in csv.DictReader(fh):
                         rows.append({k: (int(v) if k in ("n", "seed", "m", "kappa",
-                                                         "kappa_dcsbm", "n_edge",
-                                                         "n_tri", "n_sq")
-                                         else v) for k, v in r.items()})
+                                                         "kappa_dcsbm", "kappa_flat",
+                                                         "n_edge", "n_tri", "n_sq")
+                                         and v not in ("", "nan") else v)
+                                     for k, v in r.items()})
         report(rows)
         return 0
 
     if args.sizes:
         sizes = [int(x) for x in args.sizes.split(",")]
-    models = tuple(args.models.split(";")) if args.models else tuple(MODELS)
+    models = tuple(args.models.split(";")) if args.models else DEFAULT
     print(f"stage={args.stage}  sizes={sizes}  reps={reps}  models={models}")
     rows = sweep(sizes, reps, out, models)
     report(rows)

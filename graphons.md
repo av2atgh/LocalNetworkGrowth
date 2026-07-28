@@ -21,8 +21,11 @@ Status as of 2026-07-28. Branch **`graphon`** (not merged, not pushed).
 > networks", "An arity that can be measured" and "Fitting the order, not
 > assuming it" — plus Figure 7.3 (`fig-gr-crossover.pdf`), Eq. (7.13) the cycle
 > generator of `vazquez2005cycles`, Eq. (7.14) the `N^{1/4}` resolution bound,
-> and Eq. (7.15) the motif wiring count. The book builds clean at **169 pages**,
-> no undefined references, no new overfull boxes.
+> and Eq. (7.15) the motif wiring count, plus a fourth subsection "What this does
+> to Chapter 6" with Figure 7.4 (`fig-gr-ramsey.pdf`). `communities.tex` is synced
+> in three places for the method-dependence of its exponent and its Ramsey
+> numbers (§5). The book builds clean at **171 pages**, no undefined references,
+> no overfull boxes.
 
     b32fa16  Chapter 7: the motif spectrum, and one quantity behind both deficits
     34eac0c  Add chapter 7, "The limit of a network"
@@ -123,6 +126,8 @@ trusting a recursion here.
     figs/arity_models.py            DS and BB: the arity dial (§4)
     figs/motif_sbm.py               MotifSBM: blocks + planted motifs (§4)
     figs/motif_sbm_validate.py      the validation table for it
+    figs/ramsey_motif.py            r_kappa and the exponent, 3 methods (§5)
+    figs/mkfigs_ramsey.py           fig-gr-ramsey.pdf
     figs/mkfigs_graphon.py          the two chapter figures
 
 ---
@@ -749,6 +754,67 @@ quote this as the answer. The subset is selected for small `κ`, so it is skewed
 toward sparse and spatial systems, it spans only `n` = 29 to 335 000, and 34
 points is not 90. The full re-run is still worth doing; it now looks likely to
 confirm rather than overturn.
+
+### ANSWERED on models — the exponent is largely the instrument
+
+The real-network census is still pending, but the same question on the book's own
+rules is now settled, because there `n` can be pushed with controlled growth and
+20–100 realisations per size. `figs/ramsey_motif.py`, using the generators taken
+verbatim from `github.com/av2atgh/ramsey_netcom`, fits every realisation three
+ways. Over `n = 400 … 1600`:
+
+| β | flat | nested | + motifs |
+|---|---|---|---|
+| `LS(n,1)` | **0.50** | 0.94 | 0.92 |
+| `DS(n,0.5)` | **0.60** | 0.97 | 0.93 |
+
+**The flat model reproduces chapter 6 exactly** — 0.50 and 0.60 against the
+published 0.56 and 0.60, and for LS the counts match too (6.5, 13.5, 21.2 at
+n = 200, 800, 1600 against 6.7, 13.8, 20.0). And it reproduces it while sitting
+*on its own ceiling*: a flat fit cannot resolve more than `√n` groups, which is
+the same functional form as the fractal limit the exponent is being compared
+against. Lift the ceiling and β goes to ~0.95 — the modular limit, communities of
+roughly constant size (34 nodes for LS at n=1600, 21 for DS).
+
+So `β > 1/2` survives and strengthens; the *value* 0.61 and the "balance struck
+between fractal and modular" reading do not survive unqualified. This is §7.5's
+flag turned into a measurement.
+
+**Caveat that keeps the real-network re-run necessary.** This is measured on two
+growth rules, not on the census. The §3 partial refit on 34 real networks gave
+flat 0.418 → nested 0.610, so the *direction* agrees but the magnitude is nothing
+like 0.50 → 0.95. Real networks may well sit where chapter 6 puts them; the models
+do not.
+
+### Ramsey numbers, and a demonstration chapter 6 could not make
+
+Same runs, `P_κ(n) = Prob{κ ≥ 2}`, ε = 0.05, 100 realisations per size:
+
+| r_κ | flat | nested | + motifs | ch. 6 published |
+|---|---|---|---|---|
+| `LS(n,1)` | 70 | 80 | **200** | 81 |
+| `DS(n,0.5)` | 90 | 100 | **100** | 98 |
+
+The block-model columns bracket both published values, which is the check that
+this is the same measurement. The motif alphabet then moves LS by 2.5× and leaves
+DS untouched — because LS *is* the triadic-closure rule, so a method that can name
+a triangle stops counting it as evidence for a community, while DS makes no
+triangles at all. Chapter 6 insists `r_κ` is a property of the rule *and* the
+method but could only show it by swapping algorithm (block model vs Infomap);
+this shows it with the same criterion and a changed alphabet.
+
+`DS(n,0.3)` was measured first and is kept: `r_κ` = 250 there against 100 at
+q = 0.5, so the duplication rate matters enormously and the two are not
+interchangeable.
+
+### Both are now in the book
+
+`graphons.tex` §7.9 carries a new subsection, "What this does to Chapter 6", with
+both tables and Figure 7.4 (`fig-gr-ramsey.pdf`, from `mkfigs_ramsey.py`).
+`communities.tex` is synced in three places: a paragraph before the Ramsey table
+noting the method-dependence, a qualification after the model-exponent claim, and
+the chapter's closing summary, which no longer asserts β lies between one half and
+two thirds without saying whose measurement that is.
 
 ---
 
