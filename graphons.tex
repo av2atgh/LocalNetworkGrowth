@@ -311,6 +311,18 @@ same statement:
   groups no matter how many are present \citep{peixoto2014hier}.
 \end{itemize}
 
+\noindent The last of these has an older and better-known cousin. Long before
+anyone examined the block model's ceiling, \citet{fortunato2007} showed that
+modularity --- then the standard objective for community detection --- cannot
+resolve communities smaller than about $\sqrt{m}$ links in a network of $m$
+links, and so merges small ones no matter how clearly separated they are. The
+mechanism is different: modularity's limit comes from comparing against a global
+null model, the block model's from the cost of transmitting a matrix. But the
+lesson is the same, and it is one this chapter will keep returning to. A number
+of communities reported by a method is a statement about the method as much as
+about the network, and the only way to tell the two apart is to change the
+method and watch what moves.
+
 The third of these is the one just met, and it is worth making explicit, because it
 shows how little the number has to assume. Build a network from a singular measure
 in the manner of \citet{palla2010}: divide the square into $m^2$ cells, give each a
@@ -518,7 +530,10 @@ that a block model is being fitted at all, \emph{which} block model, and does th
 choice change the answer?
 
 The choice at issue is between the flat model of Chapter~\ref{ch:communities} and
-the nested one, and it is worth being precise about the difference, because it is
+the nested one --- both in the microcanonical, degree-corrected form developed by
+\citet{peixoto2014mcmc,peixoto2019bayesian} on the degree-corrected model of
+\citet{karrer2011}, and both fitted here with the same software --- and it is
+worth being precise about the difference, because it is
 not a difference in what the two can \emph{express}. Both describe a network as
 $B$ groups together with the matrix $e_{rs}$ of link counts running between them,
 both infer $B$ from the data rather than being told it, and any partition one can

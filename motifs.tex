@@ -38,6 +38,23 @@ whether giving a community model a vocabulary of motifs changes what it reports
 --- and the answer, worked out over the sections that follow, is that it changes
 one thing and leaves another alone.
 
+The concern is not new, and neither is the vocabulary. Recurring small subgraphs
+were named \emph{network motifs} by \citet{milo2002}, who found them at
+frequencies no random graph with the same degrees would produce; random graph
+ensembles built to contain prescribed subgraphs rather than prescribed links were
+constructed by \citet{karrer2010subgraphs}, and the model of
+Section~\ref{sec:gr-motifsbm} is a block-structured version of theirs. Closest of
+all, \citet{peixoto2022triadic} put exactly the suspicion above to work: a block
+model in which each link is generated either by community membership or by
+triadic closure over an existing path, with the assignment inferred alongside the
+partition. On real networks it removes a good deal of what a plain block model
+had been calling community structure. What follows differs in two ways. The
+alphabet is not fixed to the triangle --- squares and bicliques are in it too,
+because Chapter~\ref{ch:duplication}'s rules do not close triangles --- and the
+target is not any one network but the \emph{scaling}, how the number of
+communities grows with size and whether that exponent is a property of the
+network or of the vocabulary used to describe it.
+
 \section{A conjecture, and two questions}
 \label{sec:gr-conjecture}
 
@@ -142,7 +159,13 @@ the pair-level randomness does not wash out, and the natural object keeps
 arguments indexed by \emph{pairs} rather than by nodes: not $W(x_i,x_j,x_k)$ but
 something closer to $W(x_{ij},x_{ik},x_{jk})$, which is the shape the limit theory
 of hypergraphs already takes --- a hypergraph being a network whose links may
-join three or more nodes at once rather than exactly two. That is a refinement of the conjecture rather than a
+join three or more nodes at once rather than exactly two. The inferential side of
+that idea has been built: \citet{young2021hypergraph} ask, of an ordinary
+pairwise network, which of its cliques are better explained as single higher-order
+interactions than as the links they appear to be, and answer by description
+length, promoting a group to a hyperlink only when the evidence pays for the
+promotion. It is the same accounting used here, with hyperlinks in place of
+motifs. That is a refinement of the conjecture rather than a
 refutation of it, and it says where to look: triadic closure makes the presence of
 one link depend on two others sharing a node, and a pair-indexed kernel is the
 smallest object that can express such a dependence.
@@ -441,7 +464,9 @@ instance} drawn from a small alphabet --- a link, a triangle, a square --- with
 motifs of arity three and above planted inside a single block, and instances
 wired by \emph{stub matching}: each node is given a number of loose link-ends,
 or stubs, and the ends are then paired off at random, so that a node's share of
-the motifs is fixed by how many stubs it was given. Planting $c$
+the motifs is fixed by how many stubs it was given. That generative recipe is
+\citeauthor{karrer2010subgraphs}'s subgraph configuration model
+\citeyearpar{karrer2010subgraphs}, run inside blocks. Planting $c$
 copies of a motif that spans $s$ nodes inside one block can be done in
 \begin{equation}
   \Omega \;=\; \frac{(sc)!}{\prod_i d_i!\;c!\;a^{c}}
