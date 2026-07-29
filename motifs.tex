@@ -645,6 +645,7 @@ Figure~\ref{fig:gr-scaling} carries only the two block models, and the
 comparison is made numerically in Section~\ref{sec:gr-doubledissoc} instead.
 
 \section{When a motif dissolves a community}
+\label{sec:gr-square}
 
 So far the alphabet has delayed a Ramsey number and never abolished one. This
 section finds the case where it does abolish one, and then asks what that case
@@ -775,10 +776,11 @@ with, its block-model Ramsey number of $400$ standing at four times $BB(n,1)$'s.
 A near-tie in description length is only reachable when the partition's own
 contribution is thin, and eleven bits in fifty-one thousand is what a thin one
 looks like. So the finding of this section is narrower than it first appeared, and
-more useful for being narrower: an alphabet abolishes communities only in rules
-that were marginal at forming them, and merely delays them everywhere else. That
-is a statement about the balance between two descriptions, not about which motif
-is in the alphabet.
+more useful for being narrower: what the alphabet does to a rule depends on the
+balance between two descriptions rather than on which motif is in it. On the
+evidence so far that looks like a clean split --- abolished where the rule was
+marginal, delayed where it was not --- and the next two pages show it is not, by
+finding a case in between.
 
 One explanation for that thinness suggests itself, and testing it takes a pair of
 lattices. Chapter~\ref{ch:communities} found that locality has a \emph{range}: a
@@ -843,6 +845,85 @@ every generation piles onto the same hubs, so a decomposition giving each link t
 one motif must leave most of them unspoken, and the partition keeps its work. What
 makes a motif dangerous to a community is not its shape but whether the rule lays
 it down in a pattern the decomposition can take up whole.
+
+Before any of this can be believed, one thing has to be checked. A description
+that loses the density is only interesting if it is the description the criterion
+\emph{prefers}; a worse code can say anything. Reducing the alphabet to the link
+alone recovers the ordinary degree-corrected model exactly
+(Section~\ref{sec:gr-motifsbm}), so the two are directly comparable:
+
+\begin{center}
+\begin{tabular}{rrrrr}
+\hline
+$n$ & $\Sigma$ link only & $\Sigma+$ motifs & $\Delta\Sigma$ & $\kappa$\\
+\hline
+$684$   & $8\,908$  & $7\,812$  & $-1\,096$ & $5\to3$\\
+$2\,732$ & $41\,929$ & $37\,213$ & $-4\,716$ & $25\to5$\\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent The motif description wins, and wins by a margin that widens as the
+lattice grows. So this is not a case of a poor code being allowed to speak. On
+the diamond, the best available description of the network is one in which the
+communities have no density.
+
+Three behaviours have now appeared, and they are worth separating, because the
+middle one is easy to mistake for either of the others.
+
+\begin{center}
+\small
+\begin{tabular}{lcc}
+\hline
+ & communities & density\\
+ & emerge? & survives?\\
+\hline
+$LS(n,1)$, $BB(n,1)$, pseudofractal & yes & yes\\
+diamond                             & yes & \textbf{no}\\
+$BB(n,2)$                           & \textbf{no} & ---\\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent Only $BB(n,2)$ has its communities abolished. The diamond keeps
+them --- three groups at $n=684$ and seven at $n=10\,924$, a genuine emergence at a
+genuine threshold --- and loses only the law by which their number grows. The two
+questions Chapter~\ref{ch:communities} asked, whether a network has communities
+at all and how many it has, come apart here in a way they have not come apart
+before: an alphabet can leave the first alone while destroying the second.
+
+What decides which of the three a rule falls into is visible in one number, and it
+is not the motif's shape. Count how many of a network's links an edge-disjoint
+decomposition can actually take up. On the diamond the squares cover the whole
+lattice at the smaller generations and around ninety per cent thereafter; on the
+pseudofractal the triangles reach only fifty-five per cent, because every
+generation piles them onto the same hub links and a decomposition that gives each
+link to one motif must leave the rest unspoken. Where the motif can tile the
+network, the partition has nothing left to describe and the density dies. Where
+the motifs overlap, they cannot absorb what the partition was explaining, and the
+density survives. The same overlap that made duplication's bicliques unnameable a
+few pages ago is here doing something useful.
+
+The random rules say as much from the other side. $BB(n,1)$, whose triangles
+overlap as the pseudofractal's do, grows its communities as $n^{0.892}$ with the
+alphabet and $n^{0.886}$ without it, over $n=400$ to $3200$ ---
+indistinguishable. Naming a motif that cannot tile the network costs its density
+nothing.
+
+\begin{quote}
+\emph{To follow up.} Chapter~\ref{ch:graphons} measured the community density of
+three real growing networks with a vocabulary that could not name a triangle, and
+the diamond shows that such a vocabulary can flatter a network into a density it
+does not have. Whether the Internet and the yeast interactome keep $\beta=1$ under
+the full alphabet is being measured and is not settled here; the collaboration
+graph, at sixty thousand nodes, is beyond what the motif fit can reach at present.
+The interesting outcome would be the middle one. A real network landing at
+$\tfrac12<\beta<1$ and staying there under motif correction would be the first
+genuinely fractal community structure in this book --- Chapter~\ref{ch:communities}'s
+$0.61$ having turned out to be the flat model's ceiling, and
+Chapter~\ref{ch:graphons}'s $0.80$ a sample that mixed grown networks with
+catalogued ones.
+\end{quote}
 
 The caution generalises past this one rule. Wherever an alphabet can absorb the
 same links that a partition would have explained, the two descriptions trade off
@@ -1008,6 +1089,12 @@ time, and moves the onset by at most a seventh. Changing the vocabulary moves th
 exponent by a hundredth --- excepting local search, where the alphabet does match
 the rule --- and moves the onset by a factor of two and a half where the alphabet
 contains the rule's own motif, and not at all where it does not.
+The dissociation is not a law, and Section~\ref{sec:gr-square} says where it
+fails: on the diamond lattice the vocabulary moves the exponent from $1.05$ to
+$0.31$, because there the motif tiles the network exactly and the partition is
+left with nothing to describe. What holds for the growth rules of this table is
+that a vocabulary which \emph{cannot} take up the whole network leaves the
+exponent alone.
 ($BB(n,2)$ is left out of the table because its motif-model $\kappa$ is bimodal
 and its mean is not an exponent; on the other measure it is the extreme case, its
 onset going from $400$ to never.)
