@@ -51,10 +51,18 @@ YEAST_YEARS = tuple(range(1994, 2023, 2))
 
 
 def reps_for(n):
-    """More restarts where they are cheap. The minimiser scatters B by a factor
-    of two on a single run, which would swamp a slope; taking the best fit by
-    description length removes most of it."""
-    return 5 if n < 20000 else (3 if n < 80000 else 1)
+    """Always the same number of restarts, however slow.
+
+    An earlier version tapered this to 1 above n = 80000, to save time, and that
+    quietly wrecked the measurement. A single run of the minimiser lands in a
+    worse optimum than the best of five, and it does so *more* often on larger
+    networks -- so tapering the restarts underfits the big end of a series and
+    biases the slope downward. The tell was unmistakable once looked for: the
+    2005 co-authorship snapshot came back with fewer communities than the 1995
+    one, which strictly contains it. A cumulative series cannot lose groups as it
+    grows. Any schedule that varies with n puts a trend into the fit that the
+    network does not have."""
+    return 5
 
 
 def fit(g):
