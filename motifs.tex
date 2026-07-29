@@ -732,6 +732,48 @@ for that reason and no other --- as does its likelihood in
 Figure~\ref{fig:gr-squares}a, which is the same mixture seen from the other
 side.
 
+There is a control for all this, and the rule that provides it differs from
+$BB(n,2)$ in one place only. The bubble rule lays a chain of $L$ new nodes across
+a random link and so closes a cycle of length $L+2$: squares at $L=2$, and
+\emph{triangles} at $L=1$. If what dissolved the communities was the square, or
+the fact that a motif in the alphabet matches the rule, then $BB(n,1)$ should
+dissolve the same way. It does not.
+
+\begin{center}
+\begin{tabular}{llrrr}
+\hline
+rule & motif & flat & nested & $+$ motifs\\
+\hline
+$LS(n,1)$ & triangle & $70$  & $80$  & $200$\\
+$BB(n,1)$ & triangle & $90$  & $100$ & $200$--$400$\\
+$BB(n,2)$ & square   & $400$ & $400$ & never\\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent $BB(n,1)$ behaves like local search, not like its own sibling. Naming
+its triangles postpones the onset by a factor of two to four and does nothing
+else; past the threshold the motif model's community count converges on the
+nested model's rather than collapsing away from it --- $5.6$ against $5.8$ at
+$n=200$, $11.1$ against $11.9$ at $n=400$, where $P_\kappa$ has already reached
+one.
+
+Nor is the difference that triangles are harder to name than squares. Counting
+what the fits actually plant at $n=200$: $BB(n,1)$ plants $62$ triangles covering
+forty-seven per cent of its links, $BB(n,2)$ plants $40$ squares covering
+fifty-three per cent. Comparable effort, opposite outcome.
+
+What separates them is on the other side of the ledger --- how much community
+structure there was to destroy. $BB(n,2)$ is a marginal community-former to begin
+with, its block-model Ramsey number of $400$ standing at four times $BB(n,1)$'s.
+A near-tie in description length is only reachable when the partition's own
+contribution is thin, and eleven bits in fifty-one thousand is what a thin one
+looks like. So the finding of this section is narrower than it first appeared, and
+more useful for being narrower: an alphabet abolishes communities only in rules
+that were marginal at forming them, and merely delays them everywhere else. That
+is a statement about the balance between two descriptions, not about which motif
+is in the alphabet.
+
 The caution generalises past this one rule. Wherever an alphabet can absorb the
 same links that a partition would have explained, the two descriptions trade off
 against each other, and minimum description length has no reason to prefer either

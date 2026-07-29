@@ -139,6 +139,7 @@ MODELS = {
     "DS(n,0.5)": (generator_dup_split, {"q": 0.5}),
     "DS(n,0.3)": (generator_dup_split, {"q": 0.3}),
     "DD(n,0.5)": (generator_dup_divergence, {"q": 0.5}),
+    "BB(n,1)": (generator_bubble, {"L": 1}),   # closes triangles, not squares
     "BB(n,2)": (generator_bubble, {"L": 2}),
 }
 DEFAULT = ("LS(n,1)", "DS(n,0.5)")
