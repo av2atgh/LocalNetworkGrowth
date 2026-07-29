@@ -849,5 +849,82 @@ number. Fitted both ways, local search crosses the ninety-five per cent threshol
 at $70$ against $80$, duplication--split at $90$ against $100$,
 duplication--divergence at $40$ either way. Resolution decides how finely a
 network can be cut; it says almost nothing about whether there is anything to cut
-at all. That second question turns out to depend on something else entirely,
-which is the subject of the next chapter.
+at all. That second question depends on something else entirely, and is taken up
+in the next chapter.
+
+\section{The limit, and what it turned out to be}
+\label{sec:gr-conclusion}
+
+This chapter set out to ask what the limit theories can say about networks grown
+by local rules, and the answer arrived from an unexpected direction.
+
+The expected answer was a shape. That is what a limit theory offers: let the
+network grow, let the pixels shrink, and read off the function on the unit square
+that survives. The chapter's first half is a catalogue of why that does not
+happen here. Real networks and the book's models sit in the third regime, of fixed
+mean degree, where the rescaling that saves the sparse case has nothing to
+rescale by. Their adjacency pictures are rough rather than smooth, H\"older with
+an exponent near two thirds, so the histogram theorems that promise $\sqrt n$
+cells are promising more than can be delivered. And their clustering does not
+vanish, which any bounded graphon says it must.
+
+There was a natural guess about what to reach for instead, and it is worth
+stating because the rest of the book tests it. A local rule does not act on pairs.
+Triadic closure acts on \emph{triples} --- a node, its neighbour, and that
+neighbour's neighbour --- and duplication acts on a node, its copy, and their
+shared neighbours, a configuration of four. If the statistics a rule generates are
+to be carried by a limiting object at all, the object may need arguments enough to
+hold the rule's own footprint: a kernel $[0,1]^3\to[0,1]$ where the rule closes
+triangles, $[0,1]^4\to[0,1]$ where it duplicates.
+
+\begin{quote}
+\emph{Conjecture.} For large $n$ the limit of a locally grown network is almost
+equivalent to an exchangeable object --- but one of higher order than a graphon.
+The order is set by the arity of the growth rule: three for triadic closure, four
+for duplication, with the fitted block model as the two-variable shadow of it.
+\end{quote}
+
+\noindent The word \emph{almost} is carrying weight, and making it precise is part
+of the problem. Chapter~\ref{ch:motifs} takes the conjecture apart into two
+questions that can be answered by measurement --- what a two-variable fit
+preserves, and whether raising the order recovers what it loses --- and the
+answers are not the ones the conjecture expects.
+
+Meanwhile this chapter found something the conjecture does not mention, by asking
+a much narrower question and following it further than intended. Fit the nested
+model instead of the flat one and the number of communities grows in proportion to
+the size. The ratio $B/n$ stops depending on $n$; it becomes a number a network
+has, the way it has a clustering coefficient. The growth rules hold it flat over
+one to two decades and disagree about its value by a factor of three, twenty-one
+nodes per community under duplication--split against sixty-six under the bubble
+rule. On the real systems where the question can be asked properly --- those
+recorded repeatedly while they grew --- it is flat too, and the collaboration graph
+settles at twenty-three nodes per community, next to duplication--split's
+twenty-one.
+
+That is the limit, and it is not a shape. A graphon is the picture in which group
+structure coarsens: as $n$ grows the groups stay fixed in number and swell in
+proportion, until the labels shrink onto a kernel one could draw. Constant density
+is that picture refused, and refused twice over. The communities never swell, so
+there is nothing to shrink onto; and the resolution needed to see the structure
+keeps pace with the network forever, so no finite description ever suffices. This
+is an obstruction distinct from sparsity --- a sparse network could perfectly well
+have a fixed community structure, and these do not.
+
+So the limit of a locally grown network, as far as this chapter can see it, is not
+a function on the unit square, of two arguments or of four. It is an
+\emph{intensive quantity}: a density of communities, constant in size,
+characteristic of the rule, and invisible to any object that requires the groups
+to coarsen. Whether some higher-order exchangeable representation could hold that
+density as well is exactly the conjecture's open question, and nothing here
+settles it. What is settled is that the two-variable picture cannot, and that
+looking for the answer as a picture at all may have been the wrong instinct.
+
+Two things are worth carrying forward. The first is a warning about instruments,
+learned twice in this chapter and at some cost. The exponent $\beta$ moved from
+$0.63$ to $0.80$ when the prior changed, and from $0.80$ to $1$ when the sample
+stopped mixing kinds of network; neither move had anything to do with the
+networks. A number measured through a method is a statement about the pair, and
+the only way to tell which half is speaking is to change the method and watch.
+The second is the density itself, which the next chapter will try to move by
+changing the vocabulary rather than the resolution --- and will fail to.

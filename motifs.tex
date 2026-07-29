@@ -55,38 +55,26 @@ target is not any one network but the \emph{scaling}, how the number of
 communities grows with size and whether that exponent is a property of the
 network or of the vocabulary used to describe it.
 
-\section{A conjecture, and two questions}
+\section{Two questions the conjecture raises}
 \label{sec:gr-conjecture}
 
-Chapter~\ref{ch:graphons} was an audit: what the limit theories can and cannot
-say about networks grown by local rules. It pointed somewhere specific, and this
-is the programme it points at.
+Chapter~\ref{ch:graphons} ended with a conjecture: that the limit of a locally
+grown network is an exchangeable object of higher order than a graphon, its order
+set by the arity of the growth rule --- three where the rule closes triangles,
+four where it duplicates --- with the fitted block model as the two-variable
+shadow of it. It also ended by finding something else, a density of communities
+that no such object obviously holds. Both are left open there. This chapter is
+where the conjecture is taken apart into pieces that measurement can reach.
 
 Start from what Chapter~\ref{ch:communities} actually did. It took networks grown
 by local rules and \emph{fitted} them --- to a stochastic block model, by Bayesian
 inference. A block model is a two-variable object, a kernel
 $[0,1]^2\to[0,1]$ read through group labels, and the fit was good enough to
 count communities across four decades of size. So a two-variable description
-already captures something real. The question is what it misses, and whether the
-miss has a shape.
+already captures something real. The question is what it misses, whether the miss
+has a shape, and whether an object with more arguments recovers it.
 
-There is a natural guess about that shape. A local rule does not act on pairs. Triadic
-closure acts on \emph{triples} --- a node, its neighbour, and that neighbour's
-neighbour --- and duplication acts on a node, its copy, and their shared
-neighbours, a configuration of four. If the statistics a rule generates are to be
-carried by a limiting object at all, the object may need arguments enough to hold
-the rule's own footprint: a kernel $[0,1]^3\to[0,1]$ where the rule closes
-triangles, $[0,1]^4\to[0,1]$ where it duplicates. This suggests a conjecture.
-
-\begin{quote}
-\emph{Conjecture.} For large $n$ the limit of a locally grown network is almost
-equivalent to an exchangeable object --- but one of higher order than a graphon.
-The order is set by the arity of the growth rule: three for triadic closure, four
-for duplication, with the fitted block model as the two-variable shadow of it.
-\end{quote}
-
-\noindent The word \emph{almost} is carrying weight, and making it precise is part
-of the problem. Two questions follow, and the first is answerable now.
+Two questions follow, and the first is answerable now.
 
 \subsection*{Question 1: what does the fitted block model preserve?}
 

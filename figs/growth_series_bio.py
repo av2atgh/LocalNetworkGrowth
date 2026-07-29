@@ -121,13 +121,13 @@ def yeast_snapshots(bgzip):
 
 
 def main():
+    global OUT
     ap = argparse.ArgumentParser()
     ap.add_argument("--bgzip", default=None)
     ap.add_argument("--only", default=None, choices=("coauthor", "yeast"))
     ap.add_argument("--out", default=OUT)
     a = ap.parse_args()
 
-    global OUT
     OUT = a.out
     done = pd.read_csv(OUT) if os.path.exists(OUT) else pd.DataFrame(columns=["name"])
     rows, have = done.to_dict("records"), set(done.name)
