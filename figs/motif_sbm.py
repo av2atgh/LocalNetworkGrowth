@@ -98,6 +98,28 @@ MOTIFS = {
     "square":   dict(k=4, links=4, aut=8),
 }
 
+# The biclique family. K_{2,d} is two hubs joined to the same d leaves: d+2
+# nodes, 2d links, and |Aut| = 2*d! since the hubs may swap and the leaves
+# permute freely. It is what a duplication rule actually builds -- a copy and its
+# original sharing d neighbours -- and it contains C(d,2) four-cycles, which is
+# why an alphabet of squares sees a pile of overlapping motifs where there is
+# really one object. d = 2 is the square itself, so the family starts at 3.
+#
+# Each d is its own symbol rather than one variable-size symbol, so the pool
+# accounting of _pools and _pool_bits carries over untouched, and a fit that
+# reaches for many different d pays to announce each of them.
+BICLIQUE_MIN_D = 3
+
+
+def spec(name):
+    """Nodes, links and |Aut| for a motif name, including the K2_d family."""
+    if name in MOTIFS:
+        return MOTIFS[name]
+    if name.startswith("K2_"):
+        d = int(name[3:])
+        return dict(k=d + 2, links=2 * d, aut=2 * math.factorial(d))
+    raise KeyError(name)
+
 LOG2 = math.log(2.0)
 
 
@@ -138,10 +160,14 @@ class MotifSBM:
 
     def __init__(self, n, edges, alphabet=("edge", "triangle", "square")):
         assert "edge" in alphabet, "the alphabet must contain 'edge'"
-        assert all(m in MOTIFS for m in alphabet), f"unknown motif in {alphabet}"
+        assert all(m in MOTIFS or m == "biclique" for m in alphabet), \
+            f"unknown motif in {alphabet}"
         self.n = n
         self.alphabet = tuple(alphabet)
-        self.higher = tuple(m for m in alphabet if m != "edge")
+        # "biclique" is a family, expanded to K2_d as instances are planted
+        self.bicliques = "biclique" in alphabet
+        self.higher = tuple(m for m in alphabet
+                            if m not in ("edge", "biclique"))
         self.edges = sorted({(min(u, v), max(u, v)) for u, v in edges})
         assert all(u != v for u, v in self.edges), "self-loops are not allowed"
         self.adj = defaultdict(set)
@@ -182,8 +208,8 @@ class MotifSBM:
     @staticmethod
     def _pool_bits(key, name, count, slots, block_size):
         """S + L for one pool: the wiring entropy plus the slot description."""
-        spec = MOTIFS[name]
-        k, aut = spec["k"], spec["aut"]
+        sp = spec(name)
+        k, aut = sp["k"], sp["aut"]
         if name == "edge" and key[1] != key[2]:
             # bipartite pool: e! / (prod_{i in r} d_i! * prod_{j in s} d_j!)
             e = count
@@ -220,7 +246,8 @@ class MotifSBM:
         n_edge = sum(c for (nm, c, _) in pools.values() if nm == "edge")
         n_pairs = B * (B + 1) // 2
         bits += math.log2(len(self.edges) + 1) + _lmultiset(n_edge, n_pairs)
-        for name in self.higher:
+        used = {nm for (nm, _, _) in pools.values() if nm != "edge"}
+        for name in sorted(set(self.higher) | used):
             tot = sum(c for (nm, c, _) in pools.values() if nm == name)
             bits += math.log2(len(self.edges) + 1) + _lmultiset(tot, B)
 
@@ -280,6 +307,66 @@ class MotifSBM:
                     seen.add((key, cyc))
                     if len(set(quad)) == 4 and all(l in free for l in cyc):
                         yield quad, list(cyc)
+
+    def _candidate_bicliques(self, free):
+        """Maximal K_{2,d} whose 2d links are all still loose, inside a block.
+
+        Two hubs u, v need not be adjacent -- a duplicated pair is joined only if
+        the rule allows self-interaction -- so the pair is found by common
+        neighbours, and every leaf whose two links are still free is taken. Only
+        d >= BICLIQUE_MIN_D is offered, since d = 2 is the square.
+        """
+        b = self.blocks
+        seen = set()
+        for u in range(self.n):
+            second = set()
+            for w in self.adj[u]:
+                second |= self.adj[w]
+            for v in second:
+                if v <= u or b[v] != b[u]:
+                    continue
+                leaves = [w for w in (self.adj[u] & self.adj[v])
+                          if b[w] == b[u]
+                          and tuple(sorted((u, w))) in free
+                          and tuple(sorted((v, w))) in free]
+                if len(leaves) < BICLIQUE_MIN_D:
+                    continue
+                key = (u, v, tuple(sorted(leaves)))
+                if key in seen:
+                    continue
+                seen.add(key)
+                nodes = (u, v) + tuple(sorted(leaves))
+                links = [tuple(sorted((h, w))) for w in leaves for h in (u, v)]
+                yield f"K2_{len(leaves)}", nodes, links
+
+    def _promote_bicliques(self, verbose=False):
+        """Plant bicliques largest-first, keeping Sigma falling."""
+        improved = False
+        while True:
+            base = self.description_length()
+            free = self._singleton_edges()
+            cands = sorted(self._candidate_bicliques(free),
+                           key=lambda c: -len(c[2]))
+            used, batch = set(), []
+            for name, nodes, links in cands:
+                if any(l in used for l in links):
+                    continue
+                used.update(links)
+                batch.append((name, nodes))
+            if not batch:
+                return improved
+            trial = [i for i in self.instances
+                     if not (i[0] == "edge" and i[1] in used)] + batch
+            if self.description_length(instances=trial) >= base:
+                return improved
+            self.instances = trial
+            improved = True
+            if verbose:
+                print(f"    + {len(batch)} bicliques, Sigma {base:.1f} -> "
+                      f"{self.description_length():.1f}")
+            for name in sorted({nm for nm, _ in batch}):
+                self._prune_pass(name, verbose)
+            return improved
 
     def _promote_pass(self, verbose=False):
         """Replace groups of singleton links by higher motifs, in bulk.
@@ -345,6 +432,10 @@ class MotifSBM:
             return [nodes]
         if name == "triangle":
             return [tuple(sorted(p)) for p in itertools.combinations(nodes, 2)]
+        if name.startswith("K2_"):
+            # nodes = (hub, hub, leaf, leaf, ...)
+            u, v = nodes[0], nodes[1]
+            return [tuple(sorted((h, w))) for w in nodes[2:] for h in (u, v)]
         return [tuple(sorted((nodes[i], nodes[(i + 1) % 4]))) for i in range(4)]
 
     # ------------------------------------------------------ partition moves
@@ -425,7 +516,11 @@ class MotifSBM:
             if verbose:
                 print(f"    sweep {it}: Sigma = {self.description_length():.1f}")
             moved = self._move_pass(verbose)
-            promoted = self._promote_pass(verbose)
+            # largest structures first: a biclique planted whole is cheaper than
+            # the disjoint squares carved out of it, but the squares would eat
+            # the links first if promotion ran in the other order
+            promoted = self._promote_bicliques(verbose) if self.bicliques else False
+            promoted = self._promote_pass(verbose) or promoted
             if not (moved or promoted):
                 break
         return self.description_length()

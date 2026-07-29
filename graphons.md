@@ -28,7 +28,7 @@ Status as of 2026-07-28. Branch **`graphon`** (not merged, not pushed).
 > drawn the way chapter 6 draws its networks. The
 > tensor-versus-alphabet argument and the definition of the three methods are
 > boxed. `communities.tex` is synced in three places for the method-dependence of
-> its exponent and its Ramsey numbers (§5). The book builds clean at **179
+> its exponent and its Ramsey numbers (§5). The book builds clean at **181
 > pages**, no undefined references, no overfull boxes.
 >
 > §7.14 "What the square does not buy" adds duplication-divergence `DD(n,q)`,
@@ -45,6 +45,13 @@ Status as of 2026-07-28. Branch **`graphon`** (not merged, not pushed).
 > reaches the 95% threshold at all out to n=3200.
 > Self-interaction (`p=0.1, q=0.45`) adds triangles and C≈0.18 but changes
 > nothing: they stack on the duplicated pair's link, up to 11 on one link.
+>
+> §7.15 "The vocabulary was not the problem" supplies the missing symbol,
+> `K_{2,d}`, as a fourth alphabet. On planted bicliques it recovers them exactly
+> (1028 bits against 1415 for squares). On DD in one block it finds **760**
+> candidates and plants 24 up to `K_{2,14}`, saving 252 bits. Under the fitted
+> partition it finds **zero** — every biclique straddles a block boundary. The
+> limitation is the within-block restriction, not the vocabulary.
 
     b32fa16  Chapter 7: the motif spectrum, and one quantity behind both deficits
     34eac0c  Add chapter 7, "The limit of a network"

@@ -1184,8 +1184,9 @@ same support as the diamond lattice and $BB(n,2)$. By the reading of
 Section~\ref{sec:gr-arity} this is a square-built network if ever there was one.
 
 The motif model declines to plant a single square in it. Fitted at $q$ from
-$0.2$ to $0.6$, the enlarged alphabet costs between $11$ and $107$ bits and buys
-nothing. The reason is that duplication does not make a square. It makes a node
+$0.2$ to $0.6$ the enlarged alphabet buys nothing: it costs a few tens of bits on
+average, and the scatter between repeated fits of the same network is larger than
+the cost, so the only thing the number says is that nothing was gained. The reason is that duplication does not make a square. It makes a node
 with $d$ shared neighbours --- a complete bipartite $K_{2,d}$ --- holding
 $\binom{d}{2}$ four-cycles laid over one another. At $n=200$ and $q=\tfrac12$ the
 sharing runs to fourteen common neighbours between one pair of nodes, so that
@@ -1263,7 +1264,7 @@ closes triangles. At $p=0.1$ and $q=0.45$ the network is no longer bipartite, th
 odd cycle lengths fill in, and the clustering coefficient rises from zero to about
 $0.18$ and stays there as the network grows --- the interactome-like behaviour that
 motivated the rule. The alphabet still plants nothing: at $n=100$, $200$ and $400$
-the enlarged model costs $35$, $18$ and $80$ bits and buys none. The triangles
+the enlarged model costs bits rather than saving them. The triangles
 stack exactly as the squares did, all of those at a duplicated pair sharing the
 one link between the pair, so that a single link can carry eleven of them and an
 edge-disjoint decomposition can name at most one per pair. Duplication defeats the
@@ -1277,4 +1278,76 @@ and the square is only its smallest case. That is a third way for the scheme to
 fail --- distinct from a motif outside the alphabet, as with the pentagon-built
 rules, and from a motif spoiled by subdivision, as with duplication--split --- and
 it is the one most likely to matter, since duplication with divergence is the
-standard account of how protein interaction networks grow.
+standard account of how protein interaction networks grow. It is also, as the
+next section shows, not quite the right diagnosis.
+
+\section{The vocabulary was not the problem}
+
+The previous section blamed the alphabet for lacking a symbol. That is a
+testable complaint, and the test is to supply the symbol.
+
+Add the biclique $K_{2,d}$: two hubs joined to the same $d$ leaves, $d+2$ nodes
+and $2d$ links, with $|\mathrm{Aut}|=2\,d!$ since the hubs may swap and the
+leaves permute freely. It is exactly what duplication builds, and $d=2$ is the
+square, so the family starts at $d=3$. Each $d$ is its own symbol rather than one
+symbol of variable size, which leaves the pool arithmetic of
+Eq.~\eqref{eq:gr-omega} untouched and makes a fit that reaches for many different
+$d$ pay to announce each of them.
+
+On a network of planted bicliques it does what it should. Twenty disjoint
+$K_{2,6}$, which is $240$ links:
+
+\begin{center}
+\begin{tabular}{lrl}
+\hline
+alphabet & $\Sigma$ (bits) & planted\\
+\hline
+link only            & $1820$ & ---\\
+$+$ triangle, square & $1415$ & $60$ squares\\
+$+$ biclique         & $\mathbf{1028}$ & $20$ $K_{2,6}$\\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent The square alphabet carves each biclique into three disjoint squares
+and pays $387$ bits more than naming it once. (Bicliques have to be offered
+before squares, or the squares consume the links first and the larger object can
+never be seen --- a reminder that a greedy search over a nested vocabulary must
+work from the largest symbol down.)
+
+Now duplication--divergence, with everything in one block. The model finds $760$
+biclique candidates in $DD(n{=}200,q{=}\tfrac12)$ and plants twenty-four of them,
+two as large as $K_{2,14}$, taking $\Sigma$ from $3711$ to $3458$: a saving of
+$252$ bits where the square alphabet saved nothing at all. The vocabulary was not
+the problem. Given the symbol, the model names the structure and profits by it.
+
+What defeats it is the partition. Refit the same network with the block model's
+own division into eleven groups, and the number of biclique candidates is
+\emph{zero}. Not few --- none. Every duplicated pair has been separated from its
+shared neighbours by a block boundary, and a motif that straddles a boundary is
+not representable at all.
+
+That is a more damaging limitation than the one the last section named, and it is
+self-inflicted. The restriction of motifs to the inside of a single block is what
+kept the parameter count at $3B+B^2$ rather than the $B^4/24$ of a tensor, and so
+kept the resolution at $\sqrt{n}$ instead of $n^{1/4}$
+(Section~\ref{sec:gr-motifsbm}). The saving is real. It also happens to break the
+scheme on the one rule that most needs it, because duplication puts a copy and its
+original in different groups --- they have the same neighbours but need not be
+joined to each other, which is exactly the configuration a block model splits.
+
+Worse, the two descriptions cannot be combined. One block with the bicliques
+named costs $3458$ bits; eleven groups with nothing named costs $3163$; and there
+is no fit that has both, because choosing the groups destroys the motifs. The
+block structure wins by some three hundred bits, so the model reports communities
+and no motifs, which is what Figure~\ref{fig:gr-squares} shows --- but it reports
+them by default rather than by preference, having been given no option that keeps
+the duplication visible.
+
+A last caution, which applies to every $\Delta\Sigma$ quoted in these sections.
+The fit is a stochastic search, and repeated fits of the \emph{same} network
+return description lengths that differ. For $DD(n,q)$ at $n=400$ the spread over
+five fits is around $150$ bits, larger than most of the differences being
+compared. Where a sign is reported here it is the sign of an average, and the
+small numbers should be read as saying that nothing was gained rather than as
+measurements of how much was lost.
