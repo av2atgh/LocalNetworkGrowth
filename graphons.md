@@ -52,6 +52,12 @@ Status as of 2026-07-28. Branch **`graphon`** (not merged, not pushed).
 > candidates and plants 24 up to `K_{2,14}`, saving 252 bits. Under the fitted
 > partition it finds **zero** — every biclique straddles a block boundary. The
 > limitation is the within-block restriction, not the vocabulary.
+>
+> §7.16 "Which change moves which number" separates the two knobs. Resolution
+> (flat→nested) moves β by +0.22…+0.40 and r_κ by ≤14%. Vocabulary
+> (nested→motifs) moves β by ∓0.01 and r_κ by 2.5× or to infinity — but only
+> where the alphabet holds the rule's own motif. **The β result therefore rests
+> on the nested block model alone, not on the motif model.**
 
     b32fa16  Chapter 7: the motif spectrum, and one quantity behind both deficits
     34eac0c  Add chapter 7, "The limit of a network"

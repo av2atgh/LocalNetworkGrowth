@@ -969,6 +969,7 @@ growing one, and arity three already accounts for the cycle spectrum wherever
 triangles exist.
 
 \section{What this does to Chapter~\ref{ch:communities}}
+\label{sec:gr-chapter6}
 
 The model of the last section is a community detection method, so it can be
 put to Chapter~\ref{ch:communities}'s two questions --- when do communities
@@ -1351,3 +1352,59 @@ five fits is around $150$ bits, larger than most of the differences being
 compared. Where a sign is reported here it is the sign of an average, and the
 small numbers should be read as saying that nothing was gained rather than as
 measurements of how much was lost.
+
+\section{Which change moves which number}
+
+Three methods have been compared through these sections, and they differ in two
+ways rather than one. Flat against nested is a difference of resolving power and
+nothing else; nested against nested-with-motifs is a difference of vocabulary and
+nothing else (Section~\ref{sec:gr-motifsbm}). Setting the results side by side,
+the two differences turn out to move two different quantities, and each leaves
+the other alone.
+
+\begin{center}
+\small\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrrrrr}
+\hline
+ & \multicolumn{3}{c}{$\beta$, growth of $\kappa$} & \multicolumn{2}{c}{change}\\
+ & flat & nested & $+$motifs & \small nested$-$flat & \small motifs$-$nested\\
+\hline
+$LS(n,1)$   & $0.54$ & $0.94$ & $1.04$ & $+0.40$ & $+0.11$\\
+$DS(n,0.5)$ & $0.76$ & $1.02$ & $1.01$ & $+0.26$ & $-0.01$\\
+$DD(n,0.5)$ & $0.78$ & $1.12$ & $1.11$ & $+0.34$ & $-0.01$\\
+\hline
+ & \multicolumn{3}{c}{$r_\kappa$, onset of communities} & \multicolumn{2}{c}{ratio}\\
+\hline
+$LS(n,1)$   & $70$ & $80$  & $200$ & $1.14$ & $2.50$\\
+$DS(n,0.5)$ & $90$ & $100$ & $100$ & $1.11$ & $1.00$\\
+$DD(n,0.5)$ & $40$ & $40$  & $40$  & $1.00$ & $1.00$\\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent Lifting the resolution moves the exponent by two to four tenths every
+time, and moves the onset by at most a seventh. Changing the vocabulary moves the
+exponent by a hundredth --- excepting local search, where the alphabet does match
+the rule --- and moves the onset by a factor of two and a half where the alphabet
+contains the rule's own motif, and not at all where it does not.
+($BB(n,2)$ is left out of the table because its motif-model $\kappa$ is bimodal
+and its mean is not an exponent; on the other measure it is the extreme case, its
+onset going from $400$ to never.)
+
+The reason is not mysterious once separated. The exponent is a statement about
+how finely a network can be cut, and nothing about the vocabulary for describing
+links changes how many groups a method is able to resolve --- that is fixed by
+what the description length charges for the block structure, $\sqrt n$ for the
+flat model against $n/\log n$ for the nested one. The Ramsey number is a
+statement about whether there is evidence to cut at all, and that does depend on
+the vocabulary, because a method that can name a triangle has an innocent
+explanation available for clustering that a method without one does not. Two
+knobs, two numbers, and each knob turns its own.
+
+This tidies up the uncomfortable conclusion of Section~\ref{sec:gr-chapter6}. The
+claim there was that Chapter~\ref{ch:communities}'s exponent is in part a
+statement about the flat block model rather than about the networks, and it can
+now be said without reference to motifs at all. The motif alphabet is irrelevant
+to $\beta$; the whole of the shift is the nested model, which is a standard tool
+and not one invented here. Whatever else is uncertain about the machinery of the
+last four sections, that conclusion does not rest on it.
