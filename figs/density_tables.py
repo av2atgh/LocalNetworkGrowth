@@ -114,8 +114,7 @@ def main():
     m = models()
     print(m.to_string(index=False), "\n")
     body = ["\\begin{center}", "\\small", "\\begin{tabular}{lrrrr}", "\\hline",
-            "rule & $n$ & $\\beta$ & $B/n$ & nodes per\\\\",
-            " & & & & community\\\\", "\\hline"]
+            "rule & $n$ & $\\beta$ & $b$ & $\\langle n_B\\rangle$\\\\", "\\hline"]
     for r in m.itertuples():
         body.append(f"{r.label} & ${r.lo}$--${r.hi}$ & ${r.beta:.2f}$ & "
                     f"${r.dens:.3f}\\pm{r.spread:.3f}$ & ${r.size:.0f}$\\\\")
@@ -125,8 +124,7 @@ def main():
     r = real()
     print(r.to_string(index=False))
     body = ["\\begin{center}", "\\small", "\\begin{tabular}{lrrrrr}", "\\hline",
-            "networks & no. & $n$ & $\\beta$ & nodes per & $B/n$\\\\",
-            " & & & & community & slope\\\\", "\\hline"]
+            "networks & no. & $n$ & $\\beta$ & $\\langle n_B\\rangle$ & $b$ slope\\\\", "\\hline"]
     for x in r.itertuples():
         if x.label.startswith(r"\emph"):
             body.append("\\hline")
@@ -181,8 +179,7 @@ def main_within():
     print(w.to_string(index=False))
     body = ["\\begin{center}", "\\footnotesize\\setlength{\\tabcolsep}{3pt}",
             "\\begin{tabular}{llrrr}", "\\hline",
-            "system & $n$ & pts & $\\beta$ & nodes per\\\\",
-            " & & & & community\\\\", "\\hline"]
+            "system & $n$ & pts & $\\beta$ & $\\langle n_B\\rangle$\\\\", "\\hline"]
     for r in w.itertuples():
         body.append(f"{r.label} & ${r.lo}$--${r.hi}$ & ${r.pts}$ & "
                     f"${r.beta:.2f}\\,[{r.blo:.2f},{r.bhi:.2f}]$ & ${r.size:.0f}$\\\\")

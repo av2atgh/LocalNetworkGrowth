@@ -233,7 +233,7 @@ And here the chapter's opening question returns, transformed. The $\sqrt{n}$ tha
 the last chapter used as its fractal yardstick --- the self-similar prediction of
 $\sqrt{n}$ communities of $\sqrt{n}$ nodes --- turns out to be the same $\sqrt{n}$
 that statistics arrives at from an entirely different direction, as the resolution
-at which a smooth shape is best described. The book's models and the statisticians'
+at which a smooth shape is best described. The local rule models and the statisticians'
 histograms agree on a number for reasons that have nothing to do with each other.
 
 \section{Rough, not smooth}
@@ -687,7 +687,7 @@ does not need, and the data says so, in bits. Its $\sqrt n$ ceiling is a propert
 of that code and not of networks --- which matters, because $\sqrt n$ is exactly
 the fractal limit the last chapter's exponent was being compared against.
 
-\section{How many communities, and whose answer}
+\section{How many communities?}
 \label{sec:gr-howmanyagain}
 
 Chapter~\ref{ch:communities} measured $B\propto n^{\beta}$ with
@@ -768,12 +768,17 @@ before the measurement question can be asked, so it is settled here first.
 \label{sec:gr-density}
 
 An exponent of one is a special number, and it is worth pausing on what it would
-mean if it were exact. If $B$ grows in proportion to $n$, then the ratio $B/n$
-stops depending on size. It is then no longer a rate of growth but a
-\emph{quantity}: a network of any size has so many communities per node, or
-equivalently so many nodes per community, and one may tabulate the number the way
-one tabulates a clustering coefficient or a degree exponent. On the growth rules
-this is very nearly what happens.
+mean if it were exact. If $B$ grows in proportion to $n$, then the ratio
+\begin{equation}
+  b \;=\; B/n, \qquad \langle n_B\rangle \;=\; 1/b \;=\; n/B,
+  \label{eq:gr-density}
+\end{equation}
+stops depending on size. Call $b$ the \emph{density of communities} --- how many
+of them there are per node --- and $\langle n_B\rangle$ its reciprocal, the mean
+number of nodes per community. Neither is then a rate of growth any longer; each
+is a \emph{quantity}, a number a network of any size simply has, and one may
+tabulate it the way one tabulates a clustering coefficient or a degree exponent.
+On the growth rules this is very nearly what happens.
 
 \input{tab-density-models}
 
@@ -807,14 +812,14 @@ On real networks the picture looked, at first, close but not the same.
 \noindent The community sizes are of the same order the rules produce --- around
 thirty nodes, with the infrastructure networks the exception at a hundred and
 sixty. But the exponent came out below one almost everywhere, and the last column
-says what that costs: $B/n$ falling as roughly $n^{-0.2}$, community size growing
+says what that costs: $b$ falling as roughly $n^{-0.2}$, $\langle n_B\rangle$ growing
 about fourfold across the four decades the census spans. Taken at face value, that
 is a shortfall the growth rules would have to explain.
 
 It is not to be taken at face value, and seeing why is worth more than the number
 was.
 
-\section{What a census exponent is an exponent of}
+\section{What a census exponent measures}
 \label{sec:gr-within}
 
 The two exponents being compared are not measurements of the same thing. The
@@ -916,7 +921,7 @@ network can be cut; it says almost nothing about whether there is anything to cu
 at all. That second question depends on something else entirely, and is taken up
 in the next chapter.
 
-\section{The limit, and what it turned out to be}
+\section{The limit we found}
 \label{sec:gr-conclusion}
 
 This chapter set out to ask what the limit theories can say about networks grown
@@ -925,7 +930,7 @@ by local rules, and the answer arrived from an unexpected direction.
 The expected answer was a shape. That is what a limit theory offers: let the
 network grow, let the pixels shrink, and read off the function on the unit square
 that survives. The chapter's first half is a catalogue of why that does not
-happen here. Real networks and the book's models sit in the third regime, of fixed
+happen here. Real networks and the local rule models sit in the third regime, of fixed
 mean degree, where the rescaling that saves the sparse case has nothing to
 rescale by. Their adjacency pictures are rough rather than smooth, H\"older with
 an exponent near two thirds, so the histogram theorems that promise $\sqrt n$
@@ -948,8 +953,8 @@ the natural object turns out to be indexed by pairs instead.
 Meanwhile this chapter found something the guess does not mention, by asking a
 narrower question and following it further than intended. Fit the nested model
 instead of the flat one and the number of communities grows in proportion to the
-size. The ratio $B/n$ stops depending on $n$; it becomes a number a network has,
-the way it has a clustering coefficient. The growth rules hold it flat over one to
+size. The density $b=B/n$ of Eq.~\eqref{eq:gr-density} stops depending on $n$; it
+becomes a number a network has, the way it has a clustering coefficient. The growth rules hold it flat over one to
 two decades and disagree about its value by a factor of three, twenty-one nodes
 per community under duplication--split against sixty-six under the bubble rule. On
 the real systems where the question can be asked properly --- those recorded
@@ -980,8 +985,9 @@ What survives is one number, and that is the finding.
 kernel on the unit square --- not of two arguments, and not of any fixed number.
 It converges \emph{locally}: the neighbourhood of a typical node settles down, and
 with it a community of bounded size. What the limit is characterised by is
-intensive: chief among these quantities the density of communities $B/n$,
-equivalently a mean community size, constant in $n$ and set by the growth rule.
+intensive: chief among these quantities the density of communities $b=B/n$,
+equivalently the mean community size $\langle n_B\rangle$, constant in $n$ and set
+by the growth rule.
 \end{quote}
 
 \noindent The word \emph{locally} is doing the work the word \emph{almost} used

@@ -55,16 +55,19 @@ target is not any one network but the \emph{scaling}, how the number of
 communities grows with size and whether that exponent is a property of the
 network or of the vocabulary used to describe it.
 
-\section{Two questions the conjecture raises}
+\section{Two questions about arity}
 \label{sec:gr-conjecture}
 
-Chapter~\ref{ch:graphons} ended with a conjecture: that the limit of a locally
-grown network is an exchangeable object of higher order than a graphon, its order
-set by the arity of the growth rule --- three where the rule closes triangles,
-four where it duplicates --- with the fitted block model as the two-variable
-shadow of it. It also ended by finding something else, a density of communities
-that no such object obviously holds. Both are left open there. This chapter is
-where the conjecture is taken apart into pieces that measurement can reach.
+Chapter~\ref{ch:graphons} ended by conjecturing that a locally grown network
+converges to no kernel on the unit square at all, of two arguments or of any
+number, and that what characterises its limit is instead intensive: a density of
+communities, constant in size and set by the rule. It reached that conclusion by
+abandoning an earlier guess --- that the limit is a kernel of \emph{higher arity},
+three arguments where the rule closes triangles and four where it duplicates, with
+the fitted block model as the two-variable shadow of it. That guess was abandoned
+rather than tested there. It is tested here, and this chapter is where both halves
+of the question --- what a two-variable fit loses, and whether more arguments
+recover it --- are taken apart into pieces measurement can reach.
 
 Start from what Chapter~\ref{ch:communities} actually did. It took networks grown
 by local rules and \emph{fitted} them --- to a stochastic block model, by Bayesian
@@ -76,7 +79,7 @@ has a shape, and whether an object with more arguments recovers it.
 
 Two questions follow, and the first is answerable now.
 
-\subsection*{Question 1: what does the fitted block model preserve?}
+\subsection*{Q1: what does the fitted block model preserve?}
 
 Given a network grown by a local rule and the block model that Bayesian inference
 fits to it, which statistics agree and which do not? The honest answer has a clean
@@ -84,7 +87,8 @@ first instalment, and the pseudofractal web supplies it, because there every
 quantity is exact.
 
 \begin{calculation}{the triangles a two-variable model can hold}
-The web has $n=(3^{t+1}+3)/2$ nodes and $3^{t+1}$ links, and every node added
+The pseudofractal web of \citet{dorogovtsevgoltsev2002} has
+$n=(3^{t+1}+3)/2$ nodes and $3^{t+1}$ links, and every node added
 closes exactly one triangle, so it holds exactly $n-2$ of them. Fit chapter~6's
 branch cut and ask each fitted model how many it expects, via
 $\mathrm{tr}(P^3)/6$ for its expected adjacency matrix $P$.
@@ -127,18 +131,18 @@ visible early, and it changes sign. At $n\simeq3000$ the degree-corrected model
 to undercounting. A study stopping at ten thousand nodes would conclude the
 opposite of the truth.
 
-\subsection*{Question 2: does higher order close the gap?}
+\subsection*{Q2: does higher order close the gap?}
 
-If two variables are not enough, are three? Here the conjecture meets a genuine
+If two variables are not enough, are three? Here the arity guess meets a genuine
 obstacle, and the obstacle locates exactly where its content lies.
 
 For \emph{dense} graphs the question is already settled, and settled against the
-conjecture. An exchangeable array admits the representation
+guess. An exchangeable array admits the representation
 $f(\xi_\emptyset,\xi_i,\xi_j,\xi_{ij})$, and for a simple dense graph the
 pair-level variable $\xi_{ij}$ can always be absorbed into a threshold, leaving a
 two-variable kernel. Exchangeability \emph{forces} the graphon form; no
-higher-order object can add anything. Whatever the conjecture is claiming, it
-cannot be claiming that.
+higher-order object can add anything. Whatever raising the arity buys, it cannot
+be that.
 
 Its content therefore lies entirely in the sparse regime --- which is the regime
 this whole chapter has been about, and the reason the clustering of
@@ -153,7 +157,7 @@ pairwise network, which of its cliques are better explained as single higher-ord
 interactions than as the links they appear to be, and answer by description
 length, promoting a group to a hyperlink only when the evidence pays for the
 promotion. It is the same accounting used here, with hyperlinks in place of
-motifs. That is a refinement of the conjecture rather than a
+motifs. That is a refinement of the guess rather than a
 refutation of it, and it says where to look: triadic closure makes the presence of
 one link depend on two others sharing a node, and a pair-indexed kernel is the
 smallest object that can express such a dependence.
@@ -258,7 +262,7 @@ So the failure is not that the numbers are too small. It is that a two-variable
 model places mass at every length while a locally grown lattice places it at a
 few, and no adjustment of blocks or degrees can move a smooth profile onto a
 sparse set of lengths. This is a stronger statement than the triangle deficit, and
-it is the one that argues for the conjecture: what a higher-order object buys is
+it is the one that argues for the guess: what a higher-order object buys is
 not a bigger number but the ability to have a shape.
 
 The pseudofractal makes the same point from the other side. Its degree-corrected
@@ -357,8 +361,8 @@ degrees can repair it.
 \section{An arity that can be measured}
 \label{sec:gr-arity}
 
-The conjecture sets the order by the arity of the rule, and so far that has been
-an argument from two lattices. It can be made quantitative, because the cycle
+The guess that a higher-arity kernel is what is needed sets the order by the
+arity of the rule, and so far that has been an argument from two lattices. It can be made quantitative, because the cycle
 spectrum of a real network is already known to be generated by a local quantity
 of arity three. Write $p_k$ for the degree distribution --- the fraction of
 nodes having degree $k$ --- and $c_k$ for the clustering coefficient of a node of
@@ -516,14 +520,14 @@ different starting partition reveals them.
 So Question~2 has an answer for grown networks, if not yet for observed ones. A
 three-variable object pays for itself where the rule closes triangles, a
 four-variable one where it closes squares, and neither pays where the rule closes
-something longer --- which is the conjecture's own statement, arrived at by
+something longer --- which is the arity guess's own statement, arrived at by
 measurement rather than by assumption. What remains is to run the same comparison
 on real networks, where the expectation from everything above is modest: the
 two-variable failure there is a large and nearly constant factor rather than a
 growing one, and arity three already accounts for the cycle spectrum wherever
 triangles exist.
 
-\section{What naming a motif does to a community}
+\section{What naming a motif does}
 \label{sec:gr-chapter6}
 
 The model of the last section is a community detection method, so it can be
@@ -660,7 +664,8 @@ division as its original. Counted directly at $q=\tfrac12$:
 \begin{center}
 \begin{tabular}{lrrrrrr}
 \hline
- & $L=3$ & $4$ & $5$ & $6$ & $7$ & $8$ \\
+ & \multicolumn{6}{c}{number of cycles of length $L$}\\
+$DD(n,\tfrac12)$ & $L=3$ & $4$ & $5$ & $6$ & $7$ & $8$ \\
 \hline
 $n=100$ & $0$ & $694$ & $0$ & $9\,099$ & $0$ & $123\,001$\\
 $n=200$ & $0$ & $3\,658$ & $0$ & $143\,822$ & $0$ & $7\,002\,135$\\
@@ -777,8 +782,12 @@ The previous section blamed the alphabet for lacking a symbol. That is a
 testable complaint, and the test is to supply the symbol.
 
 Add the biclique $K_{2,d}$: two hubs joined to the same $d$ leaves, $d+2$ nodes
-and $2d$ links, with $|\mathrm{Aut}|=2\,d!$ since the hubs may swap and the
-leaves permute freely. It is exactly what duplication builds, and $d=2$ is the
+and $2d$ links. Its automorphism group has size $|\mathrm{Aut}|=2\,d!$ --- the
+count of relabellings of the motif's own nodes that leave it looking identical,
+which is what Eq.~\eqref{eq:gr-omega} divides by so that one planted copy is
+charged once rather than once per way of writing it down. Here the two hubs may
+swap, giving the factor of two, and the $d$ leaves permute freely among
+themselves, giving the $d!$. It is exactly what duplication builds, and $d=2$ is the
 square, so the family starts at $d=3$. Each $d$ is its own symbol rather than one
 symbol of variable size, which leaves the pool arithmetic of
 Eq.~\eqref{eq:gr-omega} untouched and makes a fit that reaches for many different
@@ -911,7 +920,8 @@ last four sections, that conclusion does not rest on it.
 
 It also settles the question the last chapter left at its door. What
 Chapter~\ref{ch:graphons} found was a density: with the resolution lifted, the
-number of communities grows in proportion to the size, so $B/n$ becomes a number
+number of communities grows in proportion to the size, so the density $b=B/n$
+becomes a number
 a network has rather than a rate at which something grows. The obvious worry
 about such a quantity is that it might be an artefact of a poor vocabulary --- that
 a model forced to describe every triangle as three separate links would invent
