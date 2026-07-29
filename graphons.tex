@@ -624,7 +624,7 @@ should be re-examined with the other prior, and it does not survive intact.
 
 Take the book's own growth rules first, where the networks can be made to order
 and grown as far as patience allows. Fitting both models to the same realisations
-over $n=100$ to $1600$:
+over $n=100$ to $1600$ (Figure~\ref{fig:gr-scaling}):
 
 \begin{center}
 \begin{tabular}{lrrr}
@@ -638,6 +638,22 @@ $BB(n,2)$   & $0.72$ & $0.94$ & $+0.22$\\
 \hline
 \end{tabular}
 \end{center}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{figs/fig-gr-scaling.pdf}
+  \caption{\textbf{How many communities, under each prior.} The mean number of
+  communities against size for four growth rules, averaged over twenty networks
+  at each size, with the best power law fitted to each method and its exponent
+  in the legend. The flat model comes out near its own $\sqrt n$ ceiling
+  throughout; the nested model grows almost in proportion to $n$. The third
+  series, a nested model that may also name motifs, is the subject of
+  Chapter~\ref{ch:motifs}; it is shown here only to make the point that it
+  tracks the nested model rather than departing from it, so that the whole of
+  the difference in this figure is resolution. In \textbf{(c)} it is left
+  unfitted because its answer there is bimodal rather than merely small.}
+  \label{fig:gr-scaling}
+\end{figure}
 
 \noindent The flat model reproduces Chapter~\ref{ch:communities} --- it was that
 chapter's method --- and it reproduces it while sitting at its own ceiling. Lift

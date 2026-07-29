@@ -605,25 +605,23 @@ structure as planted motifs instead of reading it as evidence for communities,
 and the size at which communities become certain is pushed from $80$ to $200$.
 Duplication--split makes no triangles at all, its squares overlap heavily and
 compress little, and its Ramsey number does not move
-(Figure~\ref{fig:gr-ramsey}a,~c).
+(Figure~\ref{fig:gr-ramsey}).
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{figs/fig-gr-ramsey.pdf}
   \caption{\textbf{The detection method is part of the answer.} Every panel
   compares three methods on identical networks: a flat block model, a nested one,
-  and the nested one with triangles and squares in its alphabet. Top row
-  duplication--split, bottom row local search. \textbf{(a, c)} The communities
+  and the nested one with triangles and squares in its alphabet.
+  \textbf{(a)}~duplication--split, \textbf{(b)}~local search. The communities
   likelihood $P_\kappa(n)$, from a hundred networks at each size up to $n=200$
   and twenty above it, with the dotted line at the $95\%$ threshold whose
   crossing defines the Ramsey community number. Duplication--split makes no
   triangles and the three curves lie on top of one another; local search
   \emph{is} the triadic-closure rule, and naming its triangles moves the crossing
-  from $80$ to $200$. \textbf{(b, d)} The number of communities against size,
-  with the best power law fitted to each method and its exponent given in the
-  legend. The flat model comes out at its own $\sqrt{n}$ resolution ceiling; the
-  nested and motif models both grow almost in proportion to $n$ --- a difference
-  of resolution, not of vocabulary, as Chapter~\ref{ch:graphons} shows.}
+  from $80$ to $200$. How many communities each method finds, rather than whether
+  it finds any, is a matter of resolution rather than vocabulary and is shown in
+  Figure~\ref{fig:gr-scaling}.}
   \label{fig:gr-ramsey}
 \end{figure}
 
@@ -713,11 +711,11 @@ indifferent between them to a part in five thousand. Which one comes back is
 settled by where the search happens to start. So the squares and the communities
 are not competing hypotheses that the description length adjudicates --- they are
 two ways of spending the same bits on the same links, and for this rule they cost
-the same. That is why no exponent is quoted for the motif model in
-Figure~\ref{fig:gr-squares}b: its mean is the mixing ratio of two outcomes rather
-than a law, and it turns over at $n=3200$ for that reason and no other --- as does
-its likelihood in Figure~\ref{fig:gr-squares}a, which is the same mixture seen
-from the other side.
+the same. That is why no exponent is quoted for the motif model on
+$BB(n,2)$ in Figure~\ref{fig:gr-scaling}c: its mean is the mixing ratio of two
+outcomes rather than a law, and it turns over at $n=3200$ for that reason and no
+other --- as does its likelihood in Figure~\ref{fig:gr-squares}a, which is the
+same mixture seen from the other side.
 
 The caution generalises past this one rule. Wherever an alphabet can absorb the
 same links that a partition would have explained, the two descriptions trade off
@@ -730,11 +728,10 @@ defect of this implementation.
   \includegraphics[width=\linewidth]{figs/fig-gr-squares.pdf}
   \caption{\textbf{Two rules built from squares, and only one of them says so.}
   Panels as in Figure~\ref{fig:gr-ramsey}: $P_\kappa$ from a hundred networks at
-  each size up to $n=200$ and twenty above it, $\langle\kappa\rangle$ from
-  twenty. \textbf{(a, b)} $BB(n,2)$ closes one
+  each size up to $n=200$ and twenty above it. \textbf{(a)} $BB(n,2)$ closes one
   square per step on two new nodes, so its squares are nearly disjoint, the
   alphabet takes them up, and the communities the block model reports are largely
-  dissolved. \textbf{(c, d)} $DD(n,q)$ at $q=\tfrac12$ closes squares in far
+  dissolved. \textbf{(b)} $DD(n,q)$ at $q=\tfrac12$ closes squares in far
   greater numbers, but as overlapping $K_{2,d}$ bicliques rather than separable
   motifs; the alphabet plants none of them, and all three methods agree.}
   \label{fig:gr-squares}
