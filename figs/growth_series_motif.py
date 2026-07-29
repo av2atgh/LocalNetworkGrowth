@@ -56,19 +56,48 @@ def fit_both(n, edges, restarts):
     length of the ordinary degree-corrected model, so this is the strictly
     nested comparison of Section 8.4 and a negative dSigma means the motifs paid
     for themselves.
+
+    Nested in the model, that is; the greedy search does not respect it on its
+    own, and on these networks that mattered. The link-only model is the full
+    model with the two higher symbols left unused, so a full-alphabet fit that
+    plants nothing describes the identical object and can only honestly cost the
+    log2(m+1) bits of naming each unused symbol -- about 22 in total at
+    n=1031. Fit from scratch it came out 281 bits worse than link-only there,
+    with 28 blocks against 24, because the enlarged alphabet promotes motifs in
+    early sweeps, moves nodes to accommodate them, prunes them again, and cannot
+    walk back the moves. Both the dSigma and the inflated block count are the
+    optimiser, not the model, and the block count is what beta is fit to.
+
+    So the link-only partition is handed to the full-alphabet fit as one more
+    starting point. It is a legal start for the larger model, it guarantees
+    dSigma never exceeds the unused-symbol cost, and when nothing is planted it
+    returns kappa_motif = kappa_link exactly, which is the right answer.
     """
     out = {}
-    for alpha, tag in ((("edge",), "link"), (FULL, "motif")):
-        best = None
-        for s in range(restarts):
-            m = MotifSBM(n, edges, alphabet=alpha)
-            m.fit()
-            sigma = m.description_length()
-            if best is None or sigma < best[0]:
-                c = m.motif_counts()
-                best = (sigma, len(set(m.blocks)), c.get("triangle", 0),
-                        c.get("square", 0))
-        out[tag] = best
+
+    def take(m):
+        c = m.motif_counts()
+        return (m.description_length(), len(set(m.blocks)),
+                c.get("triangle", 0), c.get("square", 0), list(m.blocks))
+
+    best = None
+    for s in range(restarts):
+        m = MotifSBM(n, edges, alphabet=("edge",))
+        m.fit()
+        r = take(m)
+        if best is None or r[0] < best[0]:
+            best = r
+    out["link"], link_blocks = best[:4], best[4]
+
+    best = None
+    for s in range(restarts + 1):
+        m = MotifSBM(n, edges, alphabet=FULL)
+        # the last start is the link-only partition; the others are fit()'s own
+        m.fit(init_blocks=link_blocks if s == restarts else "dcsbm")
+        r = take(m)
+        if best is None or r[0] < best[0]:
+            best = r
+    out["motif"] = best[:4]
     return out
 
 
