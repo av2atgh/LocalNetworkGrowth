@@ -41,6 +41,8 @@ Status as of 2026-07-28. Branch **`graphon`** (not merged, not pushed).
 > give κ=1 and 4 give ~40 — because "many squares, one community" and "fewer
 > squares, many communities" differ by **11 bits in 51,000**. Squares and
 > communities are two ways of spending the same bits, and MDL cannot adjudicate.
+> Both block models put BB's Ramsey number at **400**; the motif model never
+> reaches the 95% threshold at all out to n=3200.
 > Self-interaction (`p=0.1, q=0.45`) adds triangles and C≈0.18 but changes
 > nothing: they stack on the duplicated pair's link, up to 11 on one link.
 

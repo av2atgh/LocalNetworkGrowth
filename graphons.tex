@@ -1072,9 +1072,9 @@ instance.
   compares three methods on identical networks: a flat block model, a nested one,
   and the nested one with triangles and squares in its alphabet. Top row
   duplication--split, bottom row local search. \textbf{(a, c)} The communities
-  likelihood $P_\kappa(n)$, each point an average over a hundred networks, with
-  the dotted line at the $95\%$ threshold whose crossing defines the Ramsey
-  community number. Duplication--split makes no
+  likelihood $P_\kappa(n)$, from a hundred networks at each size up to $n=200$
+  and twenty above it, with the dotted line at the $95\%$ threshold whose
+  crossing defines the Ramsey community number. Duplication--split makes no
   triangles and the three curves lie on top of one another; local search
   \emph{is} the triadic-closure rule, and naming its triangles moves the crossing
   from $80$ to $200$. \textbf{(b, d)} The number of communities against size,
@@ -1199,8 +1199,10 @@ The consequences for community detection run in opposite directions
 (Figure~\ref{fig:gr-squares}). For $DD(n,q)$ the alphabet does nothing, the three
 curves lie on top of one another, and the Ramsey community number is $40$
 whichever method is used. For $BB(n,2)$ the alphabet works, and naming the
-squares dissolves the apparent communities: the block model's $P_\kappa$ climbs
-past $0.8$ by $n=200$ while the motif model's is still at $0.16$.
+squares dissolves the apparent communities altogether. Both block models put its
+Ramsey community number at $400$; the motif model never reaches the $95\%$
+threshold at all, out to $n=3200$, its likelihood peaking near $0.65$ and then
+falling away again.
 
 Pushed to larger sizes, though, that second statement turns into something more
 awkward than a suppression. The motif model's answer for $BB(n,2)$ is not small,
@@ -1229,7 +1231,9 @@ are not competing hypotheses that the description length adjudicates --- they ar
 two ways of spending the same bits on the same links, and for this rule they cost
 the same. That is why no exponent is quoted for the motif model in
 Figure~\ref{fig:gr-squares}b: its mean is the mixing ratio of two outcomes rather
-than a law, and it turns over at $n=3200$ for that reason and no other.
+than a law, and it turns over at $n=3200$ for that reason and no other --- as does
+its likelihood in Figure~\ref{fig:gr-squares}a, which is the same mixture seen
+from the other side.
 
 The caution generalises past this one rule. Wherever an alphabet can absorb the
 same links that a partition would have explained, the two descriptions trade off
@@ -1242,7 +1246,8 @@ defect of this implementation.
   \includegraphics[width=\linewidth]{figs/fig-gr-squares.pdf}
   \caption{\textbf{Two rules built from squares, and only one of them says so.}
   Panels as in Figure~\ref{fig:gr-ramsey}: $P_\kappa$ from a hundred networks at
-  each size, $\langle\kappa\rangle$ from twenty. \textbf{(a, b)} $BB(n,2)$ closes one
+  each size up to $n=200$ and twenty above it, $\langle\kappa\rangle$ from
+  twenty. \textbf{(a, b)} $BB(n,2)$ closes one
   square per step on two new nodes, so its squares are nearly disjoint, the
   alphabet takes them up, and the communities the block model reports are largely
   dissolved. \textbf{(c, d)} $DD(n,q)$ at $q=\tfrac12$ closes squares in far

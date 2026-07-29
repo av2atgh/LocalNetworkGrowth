@@ -93,11 +93,19 @@ def figure(out, rows):
     fig, axes = plt.subplots(2, 2, figsize=(W, W * 0.86))
     p_two = lambda v: sum(1 for x in v if x >= 2) / len(v)
 
+    # P_kappa is taken from the threshold runs, a hundred networks a size, and
+    # extended above their grid by the scaling runs, twenty a size. Sizes the
+    # threshold grid already covers are NOT pooled with the coarser ones: mixing
+    # twenty noisier realisations into a hundred moves the 95% crossing that
+    # defines the Ramsey number, and the tables quote the threshold runs.
+    have = {(r["model"], r["n"]) for r in thr}
+    both = thr + [r for r in sca if (r["model"], r["n"]) not in have]
+
     for row, (model, la, lb, tag) in enumerate(rows):
         # ---- left: the communities likelihood
         ax = axes[row, 0]
         for key, mk, col, lab in METHODS:
-            x, y = curve(thr, model, key, p_two)
+            x, y = curve(both, model, key, p_two)
             ax.plot(x, y, mk + "-", ms=2.2, lw=0.7, color=col, mfc=col,
                     mec=col, label=lab)
         ax.axhline(0.95, color="k", lw=0.5, ls=":")
@@ -151,7 +159,7 @@ def figure(out, rows):
     fig.tight_layout(pad=0.3, w_pad=1.0, h_pad=0.6)
     save(fig, out)
     for model, *_ in rows:
-        rt, nt = reps(thr, model)
+        rt, nt = reps(both, model)
         rs, ns = reps(sca, model)
         print(f"    {model}: P_kappa from {rt} realisations per size, "
               f"n = {min(nt)}..{max(nt)}; <kappa> from {rs} per size, "
