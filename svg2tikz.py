@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 """Extract node positions/communities and edges from a graph-tool block SVG
 and emit a self-contained TikZ picture. Communities are taken from the node fill
-colours, most populous first, and rendered as dark / white / mid-grey. Up to
-three groups; a fourth would need another node style."""
+colours, most populous first, and rendered as a ramp of greys from black to
+white. Up to len(SHADES) groups."""
 import re, sys, math
+
+# grey ramp, most populous community first
+SHADES = ['black!72', 'white', 'black!30', 'black!52', 'black!12', 'black!88', 'black!40']
 
 def parse(path):
     txt = open(path).read()
@@ -21,8 +24,9 @@ def parse(path):
     uniq = {}
     for c in colors: uniq[c] = uniq.get(c, 0) + 1
     order = sorted(uniq, key=lambda c: -uniq[c])      # most common first
-    if len(order) > 3:
-        raise SystemExit('%d node colours; only three styles are defined' % len(order))
+    if len(order) > len(SHADES):
+        raise SystemExit('%d node colours; only %d styles are defined'
+                         % (len(order), len(SHADES)))
     cmap = {c: i for i, c in enumerate(order)}
     comm = [cmap[c] for c in colors]
 
@@ -59,15 +63,16 @@ def emit(nodes, comm, edges, width=7.0, r=0.10):
     out = []
     out.append(r'\begin{tikzpicture}[')
     out.append(r'  netlink/.style={draw=black!38,line width=0.35pt},')
-    out.append(r'  nA/.style={circle,draw=black!70,fill=black!70,line width=0.3pt,inner sep=0pt,minimum size=%.2fcm},' % (2*r))
-    out.append(r'  nB/.style={circle,draw=black,fill=white,line width=0.3pt,inner sep=0pt,minimum size=%.2fcm},' % (2*r))
-    out.append(r'  nC/.style={circle,draw=black!70,fill=black!25,line width=0.3pt,inner sep=0pt,minimum size=%.2fcm}]' % (2*r))
+    for i, fill in enumerate(SHADES):
+        end = ',' if i < len(SHADES) - 1 else ']'
+        out.append(r'  n%s/.style={circle,draw=black!75,fill=%s,line width=0.3pt,inner sep=0pt,minimum size=%.2fcm}%s'
+                   % (chr(65 + i), fill, 2 * r, end))
     coords = [XY(p) for p in nodes]
     for (a, b) in edges:
         out.append(r'  \draw[netlink] (%.3f,%.3f) -- (%.3f,%.3f);' %
                    (coords[a][0], coords[a][1], coords[b][0], coords[b][1]))
     for i, (X, Y) in enumerate(coords):
-        st = ('nA', 'nB', 'nC')[comm[i]]
+        st = 'n' + chr(65 + comm[i])
         out.append(r'  \node[%s] at (%.3f,%.3f) {};' % (st, X, Y))
     out.append(r'\end{tikzpicture}')
     return '\n'.join(out)

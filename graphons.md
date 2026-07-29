@@ -3,6 +3,18 @@
 Working log for the graphon chapter and the research thread it opened.
 Status as of 2026-07-28. Branch **`graphon`** (not merged, not pushed).
 
+> **Chapter 7 has been split.** `graphons.tex` is now **ch. 7 "Nested
+> communities"** — the graph-limit audit (7.1–7.8) followed by flat vs nested
+> only (7.9 two priors, 7.10 which prior the data prefers, 7.11 the `B ~ n^β`
+> scaling), with Figure 7.3 showing one `LS(200,1)` network divided by each.
+> `motifs.tex` is **ch. 8 "Communities with network motifs"**, nested vs
+> nested+motifs, opening on how cycle counts compound with length. The book runs
+> to 10 chapters / **185 pages**, clean build.
+>
+> The census answer is now *in the book*: β_flat 0.633 → **β_nested 0.804**, CI
+> [0.72, 0.88], over 81 census networks, n = 29…317,080. `communities.tex` §6
+> cites it directly.
+>
 > **The `L*` experiment of §3 has now been run, and `graphons.tex` is updated.**
 > Two results change the chapter. (i) The transfer matrix's branching factor is
 > `⟨k²−k⟩/⟨k⟩`, not `⟨k²⟩/⟨k⟩` — `Q_r = Σ k(k−1)`, not `Σ k²`. Every asymptotic
