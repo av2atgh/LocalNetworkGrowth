@@ -2,6 +2,7 @@
 \label{ch:graphons}
 
 \section{A photograph of the whole}
+\label{sec:gr-regimes}
 
 The last chapter counted communities. It found that the number grows as a power
 of the size, $B\propto n^{\beta}$ with $\beta\approx0.61$, and compared that
@@ -701,6 +702,82 @@ of a balance struck midway between two limits. On the growth rules the answer is
 the modular limit outright. On the real networks it is $0.80$ rather than $0.61$,
 still short of $1$ but no longer comfortably inside the range the last chapter
 named. The exponent was, in part, a property of the instrument.
+
+\section{The density of communities}
+\label{sec:gr-density}
+
+An exponent of one is a special number, and it is worth pausing on what it would
+mean if it were exact. If $B$ grows in proportion to $n$, then the ratio $B/n$
+stops depending on size. It is then no longer a rate of growth but a
+\emph{quantity}: a network of any size has so many communities per node, or
+equivalently so many nodes per community, and one may tabulate the number the way
+one tabulates a clustering coefficient or a degree exponent. On the growth rules
+this is very nearly what happens.
+
+\input{tab-density-models}
+
+\noindent The exponents straddle one, and the density is flat --- to within a few
+per cent for local search and duplication--split across sixteen-fold in size, for
+the bubble rule across sixty-four-fold. The rules are not saying the same thing:
+their densities differ by a factor of three, and the typical community runs from
+twenty-one nodes under duplication--split to sixty-six under the bubble rule.
+Those numbers are as much a signature of the rule as its degree exponent is.
+Nothing in the rules sets a community size directly --- there is no parameter with
+units of nodes anywhere in them --- and yet each settles on one and holds it while
+the network grows by orders of magnitude around it.
+
+That is a genuine finding, and it changes the reading of the whole exercise. It is
+tempting to describe it as the limit these networks converge to, and it is nearly
+the opposite. A graphon is a picture in which the group structure coarsens: as
+$n$ grows the number of groups stays put and each group swells in proportion, so
+that the labels shrink onto a fixed kernel on the unit square. Constant density is
+that picture refused. Communities of twenty or sixty nodes never swell, and no
+matter how far the network is grown, the resolution needed to see its structure
+keeps pace with the network itself. This is a second obstruction, distinct from
+the sparsity of Section~\ref{sec:gr-regimes}: a sparse network could still have a
+fixed community structure, and these do not. What the growth rules converge to
+under a nested description is not a shape one could draw on the square. It is a
+density.
+
+On real networks the picture is close, and not the same.
+
+\input{tab-density-real}
+
+\noindent The community sizes are of the same order the rules produce --- around
+thirty nodes, with the infrastructure networks the exception at a hundred and
+sixty --- and they are of that order at every size. But the exponent is below one
+almost everywhere, and the last column says what that costs: $B/n$ falls as
+roughly $n^{-0.2}$, so community size grows slowly rather than not at all,
+about fourfold over the four decades the census spans. The one group that comes
+close to constancy is the smallest, the nine information networks.
+
+The obvious suspicion is that this is an artefact of composition, that the large
+networks in the census happen to be of a kind with large communities. It is not:
+the last column is computed inside each domain separately, and the drift is
+present in three of the four, at much the same rate. Whatever slows the growth of
+communities in real networks does so within social networks, within biological
+ones, and within infrastructure alike.
+
+So the density of communities is a well-defined quantity for the growth rules and
+an approximate one for the networks they model, and the gap between $1$ and $0.80$
+is now the cleanest statement of what the rules do not yet capture. It is also
+smaller than it looks in one respect and larger in another. Smaller, because the
+rules are compared to real networks over ranges of $n$ that barely overlap ---
+almost nothing here is fitted above $n=6400$, and the real networks' drift is
+mostly established above it. Larger, because the shortfall is systematic rather
+than scattered, and a mechanism that produced communities at constant density
+would have to acquire something else to make them thin out.
+
+One caution belongs with any use of these numbers. A density of communities is
+not a property of a network alone; it is a property of a network together with the
+code used to describe it, and this chapter has just spent its length showing how
+much that matters. Under the flat prior the same census gives $\beta=0.63$ and
+community sizes that grow twice as fast. The tables above mean what they say only
+because the model is fixed --- nested, degree-corrected, minimum description
+length --- and a density quoted without naming the model is not a measurement.
+That is a familiar situation rather than a disqualifying one. The clustering
+coefficient has two standard definitions that disagree, and the introduction had
+to say which one it meant before it could say anything about hierarchy.
 
 One thing the change of prior does \emph{not} touch is the Ramsey community
 number. Fitted both ways, local search crosses the ninety-five per cent threshold
