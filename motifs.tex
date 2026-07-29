@@ -430,21 +430,14 @@ constraints and the description length counts the networks satisfying them --- a
 $\Sigma=-\log_2P(A,e,b)$ makes no use of the fact that links join two nodes. Nothing stops us handing it a
 model built from something else.
 
-\begin{calculation}{why an alphabet of motifs, and not a tensor}
-The obvious something else is the wrong choice. A block model over 4-sets
-replaces the $B\times B$ matrix of link counts by a symmetric $B\times B\times
-B\times B$ tensor, and the cost of describing that tensor is what limits the
-resolution. Where the pair model's $B(B+1)/2$ entries cap the number of
-recoverable groups at $B_{\max}\propto\sqrt n$~\citep{peixoto2014hier}, a
-$j$-index tensor has about $B^{j}/j!$ entries and gives
-\begin{equation}
-  B_{\max} \;\approx\; \bigl[m\,(j-1)!\,/\ln m\bigr]^{1/j},
-  \label{eq:gr-bmax}
-\end{equation}
-for a network of $m$ links, which is $\sqrt n$ at $j=2$ and $n^{1/4}$ at $j=4$
-once $m$ is of order $n$: eighteen groups against three hundred and sixteen at
-$n=10^5$. A model that can no longer see communities is a poor instrument for
-asking what communities are made of.
+\begin{calculation}{an alphabet of motifs, priced}
+The obvious something else --- a block model over $4$-sets, its count matrix
+replaced by a four-index tensor --- is the wrong choice, and
+Section~\ref{sec:gr-twopriors} has already priced it: a $j$-index tensor drops the
+resolution to $B_{\max}\approx[m(j-1)!/\ln m]^{1/j}$, which at $j=4$ is $n^{1/4}$,
+eighteen groups where the pair model recovers three hundred and sixteen. A model
+that can no longer see communities is a poor instrument for asking what
+communities are made of.
 
 The affordable object keeps the ordinary block structure and changes what the
 blocks are built from. Every link is assigned to exactly one \emph{motif
@@ -467,8 +460,8 @@ a square. Dividing by $a^{c}$ is what stops the same motif being counted once fo
 each way of writing it down. $\Sigma$ is then the sum of $\log_2\Omega$ over the
 blocks together with the cost of the partition and of the counts. The parameters
 number one count per motif type per block plus the block matrix, $3B+B^2$ for the
-alphabet used here, rather than $B^4/24$, so the
-resolution ceiling is the ordinary one. The price is that a triangle straddling
+alphabet used here, rather than the $B^4/24$ of the tensor, so the
+resolution ceiling stays at Eq.~\eqref{eq:gr-flatceiling}'s. The price is that a triangle straddling
 two blocks is not representable and is described as three links instead.
 \end{calculation}
 
@@ -860,12 +853,14 @@ the two differences turn out to move two different quantities, and each leaves
 the other alone.
 
 Where the first difference comes from was the subject of
-Chapter~\ref{ch:graphons}: the two models express the same partitions and differ
-only in the price of naming one, the flat model paying a charge that grows with
-the square of the number of groups and so meeting a ceiling at $\sqrt n$ groups,
-the nested model compressing the group-level structure instead and reaching
-$n/\log n$. Nothing in that has anything to do with what the links are made of,
-which is the first half of why the vocabulary leaves the exponent alone.
+Chapter~\ref{ch:graphons}, and was priced there exactly: the two models express
+the same partitions and differ only in what naming one costs, the flat model
+paying a charge quadratic in the number of groups and so meeting
+Eq.~\eqref{eq:gr-flatceiling}'s ceiling of $\sqrt n$, the nested model compressing
+the group-level structure instead and reaching
+Eq.~\eqref{eq:gr-nestedceiling}'s $n/\log n$. Nothing in that arithmetic mentions
+what the links are made of, which is the first half of why the vocabulary leaves
+the exponent alone.
 
 \begin{center}
 \small\setlength{\tabcolsep}{4pt}

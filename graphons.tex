@@ -292,6 +292,7 @@ refining faster than any such function allows. The rest of this chapter is about
 far that answer can be trusted.
 
 \section{Five meanings of one number}
+\label{sec:gr-five}
 
 A caution belongs here, and it is a sharp one. Five different arguments in this
 book and its neighbouring literature all deliver $\sqrt{n}$, and they are not the
@@ -309,7 +310,9 @@ same statement:
   resolution obtainable for a smooth shape, a statement about descriptions;
 \item the \emph{algorithmic} $\sqrt{n}$ --- the resolution limit of the
   non-nested block model, which cannot report more than of order $\sqrt{n}$
-  groups no matter how many are present \citep{peixoto2014hier}.
+  groups no matter how many are present \citep{peixoto2014hier}, and which is
+  derived, along with the ceiling that replaces it, in
+  Section~\ref{sec:gr-twopriors}.
 \end{itemize}
 
 \noindent The last of these has an older and better-known cousin. Long before
@@ -519,7 +522,9 @@ last chapter proved is not a corollary of it; the flow had to be computed. But t
 agreement of the two routes is worth more than either alone, and it marks out what
 a limit theory for locally grown networks would have to look like. There is also,
 on the other side of Eq.~\eqref{eq:gr-alpha}, a number measured across a hundred
-real networks, still waiting to be explained.
+real networks, still waiting to be explained. The rest of this chapter explains
+it, and the explanation turns out to be less about the networks than about the
+two instruments used to count them.
 
 \section{Two priors for the same partition}
 \label{sec:gr-twopriors}
@@ -555,6 +560,58 @@ which is described by another, and so on up. A group-level structure that is
 sparse or modular, as it usually is, then costs a fraction of what spelling out
 the matrix would; the quadratic charge disappears, and the ceiling rises to around
 $n/\log n$: some $8700$ groups at $n=10^5$ against $316$.
+
+\begin{calculation}{the price of a block structure, and the ceiling it sets}
+Both models describe a network by a partition $b$ and the matrix $e_{rs}$ of link
+counts, and score it by the description length
+$\Sigma=-\log_2P(A\mid e,b)-\log_2P(e,b)$. The first term is the likelihood, which
+they share. The second is the price of the description, which they do not.
+
+The flat model takes $e_{rs}$ to be an arbitrary symmetric matrix, so it must
+transmit $B(B+1)/2$ independent entries, each of size up to $m$. That costs about
+$\tfrac12B^{2}\log_2 m$ bits. Splitting one group into two saves at most of order
+$m/B$ bits of likelihood, so the two terms balance at
+\begin{equation}
+  B_{\max} \;\propto\; \sqrt{m} \;\propto\; \sqrt{n}
+  \label{eq:gr-flatceiling}
+\end{equation}
+for a network of fixed mean degree \citep{peixoto2014hier} --- the
+\emph{algorithmic} $\sqrt n$ of Section~\ref{sec:gr-five}, and the only one of the
+five that is a fact about a method rather than about a network. Past that point every
+further split costs more to announce than it saves, whatever the network looks
+like. The ceiling is a property of the code, not of the data.
+
+The nested model refuses the premise that $e_{rs}$ is arbitrary. The counts are
+themselves a network --- one node per group, one weighted link per pair --- so
+describe them with a block model, whose own count matrix is described by another,
+and so on until one group remains. Each level costs a fraction of what spelling
+out its matrix would, provided the group-level structure is itself sparse or
+modular, which it generally is. The quadratic charge never appears, and the
+ceiling rises to
+\begin{equation}
+  B_{\max} \;\propto\; n/\log n,
+  \label{eq:gr-nestedceiling}
+\end{equation}
+some $8700$ groups at $n=10^{5}$ against $316$. Setting the hierarchy to a single
+level recovers the flat model exactly, so the comparison between them is strictly
+nested and an extra level can only pay for itself or not.
+
+The same arithmetic answers a question the next chapter has to face, so it is
+worth doing here. Suppose one wanted a block model over $j$-sets of nodes rather
+than pairs --- a natural thought if the object generating the network acts on
+triples or quadruples. Its count tensor has about $B^{j}/j!$ entries, and
+repeating the balance above gives
+\begin{equation}
+  B_{\max} \;\approx\; \bigl[m\,(j-1)!\,/\ln m\bigr]^{1/j},
+  \label{eq:gr-bmax}
+\end{equation}
+which is $\sqrt n$ at $j=2$ and $n^{1/4}$ at $j=4$ once $m$ is of order $n$:
+eighteen groups against three hundred and sixteen at $n=10^{5}$. Raising the arity
+costs resolution, and costs it fast. A model that can no longer see communities is
+a poor instrument for asking what communities are made of, which is why
+Chapter~\ref{ch:motifs} reaches for a richer \emph{vocabulary} inside the ordinary
+pair model rather than for a tensor over $j$-sets.
+\end{calculation}
 
 So the two differ in a prior and not in a likelihood. Given the same partition and
 the same counts they assign the network the same probability; they disagree only
