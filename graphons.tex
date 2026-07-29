@@ -868,57 +868,79 @@ an exponent near two thirds, so the histogram theorems that promise $\sqrt n$
 cells are promising more than can be delivered. And their clustering does not
 vanish, which any bounded graphon says it must.
 
-There was a natural guess about what to reach for instead, and it is worth
-stating because the rest of the book tests it. A local rule does not act on pairs.
-Triadic closure acts on \emph{triples} --- a node, its neighbour, and that
-neighbour's neighbour --- and duplication acts on a node, its copy, and their
-shared neighbours, a configuration of four. If the statistics a rule generates are
-to be carried by a limiting object at all, the object may need arguments enough to
-hold the rule's own footprint: a kernel $[0,1]^3\to[0,1]$ where the rule closes
-triangles, $[0,1]^4\to[0,1]$ where it duplicates.
+There was a natural guess about what to reach for instead, and the shape of the
+guess was: more arguments. A local rule does not act on pairs. Triadic closure
+acts on \emph{triples} --- a node, its neighbour, and that neighbour's neighbour
+--- and duplication acts on a node, its copy, and their shared neighbours, a
+configuration of four. If the statistics a rule generates are to be carried by a
+limiting object at all, the object may need arguments enough to hold the rule's
+own footprint: a kernel $[0,1]^3\to[0,1]$ where the rule closes triangles,
+$[0,1]^4\to[0,1]$ where it duplicates, with the fitted block model as the
+two-variable shadow of it. Chapter~\ref{ch:motifs} takes that guess apart, and
+finds it half right: a two-variable object provably loses the triangles, but a
+higher-arity kernel indexed by \emph{nodes} does not obviously get them back, and
+the natural object turns out to be indexed by pairs instead.
+
+Meanwhile this chapter found something the guess does not mention, by asking a
+narrower question and following it further than intended. Fit the nested model
+instead of the flat one and the number of communities grows in proportion to the
+size. The ratio $B/n$ stops depending on $n$; it becomes a number a network has,
+the way it has a clustering coefficient. The growth rules hold it flat over one to
+two decades and disagree about its value by a factor of three, twenty-one nodes
+per community under duplication--split against sixty-six under the bubble rule. On
+the real systems where the question can be asked properly --- those recorded
+repeatedly while they grew --- it is flat too, and the collaboration graph settles
+at twenty-three nodes per community, next to duplication--split's twenty-one.
+
+It is tempting to go one step further and say that the limit is a \emph{nested}
+structure: communities of communities, all the way up, with the same constant
+governing every level. The fitted hierarchies appear to say so. Read off the level
+sizes of a nested fit and the branching ratio is large at the bottom --- that is
+the community size --- and then settles at two to four for every level above it,
+on every rule, which looks like self-similarity.
+
+It is not, and the check that shows it is the one this chapter has been preaching.
+Fit the same model to a network built with no hierarchy above its bottom level: a
+planted partition of sixty-four equal groups and nothing else. The model recovers
+the sixty-four exactly, and then builds a four-four-four tree on top of them. The
+upper branching is the prior's own scaffolding. (On a network with no communities
+at all the model correctly returns a single level, so it is not inventing
+structure from nothing --- it is organising real groups into a tree that the data
+never asked for.) The bottom level is a measurement. The levels above it are a
+description device, and no claim about a self-similar hierarchy survives them.
+
+What survives is one number, and that is the finding.
 
 \begin{quote}
-\emph{Conjecture.} For large $n$ the limit of a locally grown network is almost
-equivalent to an exchangeable object --- but one of higher order than a graphon.
-The order is set by the arity of the growth rule: three for triadic closure, four
-for duplication, with the fitted block model as the two-variable shadow of it.
+\emph{Conjecture.} For large $n$ a locally grown network does not converge to a
+kernel on the unit square --- not of two arguments, and not of any fixed number.
+It converges \emph{locally}: the neighbourhood of a typical node settles down, and
+with it a community of bounded size. What the limit is characterised by is
+intensive: chief among these quantities the density of communities $B/n$,
+equivalently a mean community size, constant in $n$ and set by the growth rule.
 \end{quote}
 
-\noindent The word \emph{almost} is carrying weight, and making it precise is part
-of the problem. Chapter~\ref{ch:motifs} takes the conjecture apart into two
-questions that can be answered by measurement --- what a two-variable fit
-preserves, and whether raising the order recovers what it loses --- and the
-answers are not the ones the conjecture expects.
+\noindent The word \emph{locally} is doing the work the word \emph{almost} used
+to do, and it points at a theory that already exists: local weak convergence
+\citep{benjamini2001}, in which one keeps a bounded neighbourhood around a
+randomly chosen root and asks what it looks like, rather than coarsening the
+whole picture onto a fixed shape.
+That is the natural home for a network whose communities never grow.
 
-Meanwhile this chapter found something the conjecture does not mention, by asking
-a much narrower question and following it further than intended. Fit the nested
-model instead of the flat one and the number of communities grows in proportion to
-the size. The ratio $B/n$ stops depending on $n$; it becomes a number a network
-has, the way it has a clustering coefficient. The growth rules hold it flat over
-one to two decades and disagree about its value by a factor of three, twenty-one
-nodes per community under duplication--split against sixty-six under the bubble
-rule. On the real systems where the question can be asked properly --- those
-recorded repeatedly while they grew --- it is flat too, and the collaboration graph
-settles at twenty-three nodes per community, next to duplication--split's
-twenty-one.
-
-That is the limit, and it is not a shape. A graphon is the picture in which group
-structure coarsens: as $n$ grows the groups stay fixed in number and swell in
+And it explains why a graphon was never going to work, in a way that is worth
+stating in one sentence. A graphon is the picture in which group structure
+\emph{coarsens}: as $n$ grows the groups stay fixed in number and swell in
 proportion, until the labels shrink onto a kernel one could draw. Constant density
-is that picture refused, and refused twice over. The communities never swell, so
-there is nothing to shrink onto; and the resolution needed to see the structure
-keeps pace with the network forever, so no finite description ever suffices. This
-is an obstruction distinct from sparsity --- a sparse network could perfectly well
-have a fixed community structure, and these do not.
+refuses that twice over. The communities never swell, so there is nothing to shrink
+onto; and the resolution needed to see the structure keeps pace with the network
+forever, so no finite description ever suffices. This is an obstruction distinct
+from sparsity --- a sparse network could perfectly well have a fixed community
+structure, and these do not.
 
-So the limit of a locally grown network, as far as this chapter can see it, is not
-a function on the unit square, of two arguments or of four. It is an
-\emph{intensive quantity}: a density of communities, constant in size,
-characteristic of the rule, and invisible to any object that requires the groups
-to coarsen. Whether some higher-order exchangeable representation could hold that
-density as well is exactly the conjecture's open question, and nothing here
-settles it. What is settled is that the two-variable picture cannot, and that
-looking for the answer as a picture at all may have been the wrong instinct.
+Whether some higher-order exchangeable object could hold a bounded community
+around a typical node is exactly what remains open, and nothing here settles it.
+What is settled is that the two-variable picture cannot, and that looking for the
+answer as a picture at all may have been the wrong instinct.
 
 Two things are worth carrying forward. The first is a warning about instruments,
 learned twice in this chapter and at some cost. The exponent $\beta$ moved from

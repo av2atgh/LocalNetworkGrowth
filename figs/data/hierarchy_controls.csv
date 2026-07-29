@@ -1,0 +1,7 @@
+source,n,seed,depth,levels
+control:ER,1569,0,1,"[1569, 1]"
+control:ER,1561,1,1,"[1561, 1]"
+control:ER,1570,2,1,"[1570, 1]"
+control:planted-64,1597,0,4,"[1597, 64, 16, 4, 1]"
+control:planted-64,1595,1,4,"[1595, 64, 15, 4, 1]"
+control:planted-64,1592,2,5,"[1592, 64, 19, 8, 2, 1]"
