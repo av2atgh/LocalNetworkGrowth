@@ -14,9 +14,14 @@ all three methods measured on identical networks.
 
   right column  the number of communities against size, with the best power
                 law fitted to each method over every measured size. The flat
-                model comes out near its own sqrt(n) resolution ceiling; the
-                nested and motif models come out near one. The exponent is a
-                property of the instrument at least as much as of the rule.
+                model comes out near its own sqrt(n) resolution ceiling and the
+                nested model near one. The exponent is a property of the
+                instrument at least as much as of the rule.
+
+The scaling figure carries only the two block models. The motif alphabet tracks
+the nested model there rather than departing from it, so plotting the third
+series only crowds a panel whose whole point is flat against nested; chapter 8
+makes the point in a sentence instead.
 
 $DS(n,0.5)$ is on top and $LS(n,1)$ below, so the row that moves is the lower one.
 
@@ -44,6 +49,7 @@ INT = ("n", "seed", "m", "kappa", "kappa_dcsbm", "kappa_flat",
 METHODS = (("kappa_flat", "v", "0.62", "flat block model"),
            ("kappa_dcsbm", "s", "0.38", "nested block model"),
            ("kappa", "o", "k", r"nested $+$ motifs"))
+SCALING_METHODS = METHODS[:2]   # flat and nested only -- see the module docstring
 
 # (data key, panel labels, the book's own math styling for the rule)
 # The communities likelihood belongs with the motif chapter, which is about when
@@ -132,7 +138,7 @@ def scaling_figure(out="fig-gr-scaling.pdf"):
     sca = load("ramsey_motif_scaling*.csv")
     fig, axes = plt.subplots(2, 2, figsize=(W, W * 0.86))
     for ax, (model, lab, tag) in zip(axes.ravel(), SCALING):
-        for key, mk, col, name in METHODS:
+        for key, mk, col, name in SCALING_METHODS:
             x, y = curve(sca, model, key, np.mean)
             ax.plot(x, y, mk, ms=2.4, color=col, mfc=col, mec=col, ls="none")
             # a power law is only fitted where the mean actually rises with size
@@ -147,7 +153,7 @@ def scaling_figure(out="fig-gr-scaling.pdf"):
         ax.set_yscale("log")
         # decade ticks only: DD spans less than a decade and matplotlib would
         # otherwise label the minor ticks, which then run into one another
-        ax.set_xlim(75, 1.35 * max(curve(sca, model, "kappa", np.mean)[0]))
+        ax.set_xlim(75, 1.35 * max(curve(sca, model, "kappa_flat", np.mean)[0]))
         ax.xaxis.set_major_locator(LogLocator(base=10.0))
         ax.xaxis.set_minor_formatter(NullFormatter())
         ax.set_ylabel(r"$\langle\kappa\rangle$")

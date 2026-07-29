@@ -651,9 +651,12 @@ compress little, and its Ramsey number does not move
 \end{figure}
 
 What the same comparison does to the \emph{number} of communities is a question
-about resolution rather than vocabulary, and it was settled in
-Chapter~\ref{ch:graphons}: the motif alphabet leaves the exponent where the
-nested model puts it.
+about resolution rather than vocabulary, and the answer is that the alphabet
+barely touches it. Fitted with motifs, the number of communities grows with the
+same exponent the nested model gives on its own, close enough that plotting the
+two series together would show one curve; that is why
+Figure~\ref{fig:gr-scaling} carries only the two block models, and the
+comparison is made numerically in Section~\ref{sec:gr-doubledissoc} instead.
 
 \section{What the square does not buy}
 
@@ -736,11 +739,12 @@ indifferent between them to a part in five thousand. Which one comes back is
 settled by where the search happens to start. So the squares and the communities
 are not competing hypotheses that the description length adjudicates --- they are
 two ways of spending the same bits on the same links, and for this rule they cost
-the same. That is why no exponent is quoted for the motif model on
-$BB(n,2)$ in Figure~\ref{fig:gr-scaling}c: its mean is the mixing ratio of two
-outcomes rather than a law, and it turns over at $n=3200$ for that reason and no
-other --- as does its likelihood in Figure~\ref{fig:gr-squares}a, which is the
-same mixture seen from the other side.
+the same. That is also why $BB(n,2)$ carries no motif-model
+exponent in the table of Section~\ref{sec:gr-doubledissoc}: its mean is the
+mixing ratio of two outcomes rather than a law, and it turns over at $n=3200$
+for that reason and no other --- as does its likelihood in
+Figure~\ref{fig:gr-squares}a, which is the same mixture seen from the other
+side.
 
 The caution generalises past this one rule. Wherever an alphabet can absorb the
 same links that a partition would have explained, the two descriptions trade off
@@ -858,6 +862,7 @@ small numbers should be read as saying that nothing was gained rather than as
 measurements of how much was lost.
 
 \section{Which change moves which number}
+\label{sec:gr-doubledissoc}
 
 Three methods have been compared through these sections, and they differ in two
 ways rather than one. Flat against nested is a difference of resolving power and
