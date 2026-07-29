@@ -77,6 +77,16 @@ def curve(rows, model, key, reduce_fn):
     return np.array(ns, float), np.array([reduce_fn(sub[n]) for n in ns])
 
 
+def reps(rows, model):
+    """How many realisations went into each point, for the caption."""
+    sub = {}
+    for r in rows:
+        if r["model"] == model:
+            sub[r["n"]] = sub.get(r["n"], 0) + 1
+    counts = sorted(set(sub.values()))
+    return counts, sorted(sub)
+
+
 def figure(out, rows):
     thr = load("ramsey_motif_threshold*.csv")     # fine grid, 100 realisations
     sca = load("ramsey_motif_scaling*.csv")       # coarse grid, larger n
@@ -109,12 +119,20 @@ def figure(out, rows):
         for key, mk, col, lab in METHODS:
             x, y = curve(sca, model, key, np.mean)
             ax.plot(x, y, mk, ms=2.6, color=col, mfc=col, mec=col, ls="none")
-            # fitted over every measured size
+            # A power law is only fitted where the mean actually rises with size.
+            # For BB(n,2) under the motif alphabet it does not: the answer is
+            # bimodal, either one community or as many as the block model finds,
+            # and the mean of the two turns over. Quoting an exponent for that
+            # would be quoting the mixing ratio, not a law.
             fit = x >= FIT_FROM
-            b, a = np.polyfit(np.log(x[fit]), np.log(y[fit]), 1)
-            xx = np.array([x[fit].min(), x[fit].max()])
-            ax.plot(xx, np.exp(a) * xx ** b, "-", lw=0.7, color=col,
-                    label=rf"{lab}, $n^{{{b:.2f}}}$")
+            if np.all(np.diff(y[fit]) > 0):
+                b, a = np.polyfit(np.log(x[fit]), np.log(y[fit]), 1)
+                xx = np.array([x[fit].min(), x[fit].max()])
+                ax.plot(xx, np.exp(a) * xx ** b, "-", lw=0.7, color=col,
+                        label=rf"{lab}, $n^{{{b:.2f}}}$")
+            else:
+                ax.plot([], [], mk, ms=2.6, color=col, mfc=col, mec=col,
+                        ls="none", label=rf"{lab}, bimodal")
         ax.set_xscale("log")
         ax.set_yscale("log")
         ax.set_ylabel(r"$\langle\kappa\rangle$")
@@ -132,6 +150,12 @@ def figure(out, rows):
 
     fig.tight_layout(pad=0.3, w_pad=1.0, h_pad=0.6)
     save(fig, out)
+    for model, *_ in rows:
+        rt, nt = reps(thr, model)
+        rs, ns = reps(sca, model)
+        print(f"    {model}: P_kappa from {rt} realisations per size, "
+              f"n = {min(nt)}..{max(nt)}; <kappa> from {rs} per size, "
+              f"n = {min(ns)}..{max(ns)}")
 
 
 def main():

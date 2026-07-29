@@ -28,7 +28,7 @@ Status as of 2026-07-28. Branch **`graphon`** (not merged, not pushed).
 > drawn the way chapter 6 draws its networks. The
 > tensor-versus-alphabet argument and the definition of the three methods are
 > boxed. `communities.tex` is synced in three places for the method-dependence of
-> its exponent and its Ramsey numbers (§5). The book builds clean at **177
+> its exponent and its Ramsey numbers (§5). The book builds clean at **179
 > pages**, no undefined references, no overfull boxes.
 >
 > §7.14 "What the square does not buy" adds duplication-divergence `DD(n,q)`,
@@ -36,7 +36,13 @@ Status as of 2026-07-28. Branch **`graphon`** (not merged, not pushed).
 > bipartite and square-built, yet the alphabet plants nothing in it, because
 > duplication makes overlapping `K_{2,d}` bicliques rather than separable
 > squares. Figure 7.7 (`fig-gr-squares.pdf`) pairs it against `BB(n,2)`, where
-> the squares *are* separable and naming them dissolves the communities.
+> the squares *are* separable and naming them dissolves the communities. Pushed
+> to n=3200, though, BB's answer turns out **bimodal** — 16 of 20 realisations
+> give κ=1 and 4 give ~40 — because "many squares, one community" and "fewer
+> squares, many communities" differ by **11 bits in 51,000**. Squares and
+> communities are two ways of spending the same bits, and MDL cannot adjudicate.
+> Self-interaction (`p=0.1, q=0.45`) adds triangles and C≈0.18 but changes
+> nothing: they stack on the duplicated pair's link, up to 11 on one link.
 
     b32fa16  Chapter 7: the motif spectrum, and one quantity behind both deficits
     34eac0c  Add chapter 7, "The limit of a network"

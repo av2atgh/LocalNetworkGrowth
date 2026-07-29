@@ -1072,14 +1072,16 @@ instance.
   compares three methods on identical networks: a flat block model, a nested one,
   and the nested one with triangles and squares in its alphabet. Top row
   duplication--split, bottom row local search. \textbf{(a, c)} The communities
-  likelihood $P_\kappa(n)$, with the dotted line at the $95\%$ threshold whose
-  crossing defines the Ramsey community number. Duplication--split makes no
+  likelihood $P_\kappa(n)$, each point an average over a hundred networks, with
+  the dotted line at the $95\%$ threshold whose crossing defines the Ramsey
+  community number. Duplication--split makes no
   triangles and the three curves lie on top of one another; local search
   \emph{is} the triadic-closure rule, and naming its triangles moves the crossing
   from $80$ to $200$. \textbf{(b, d)} The number of communities against size,
-  with the best power law fitted to each method and its exponent given in the
-  legend. The flat model comes out at its own $\sqrt{n}$ resolution ceiling; the
-  nested and motif models both grow almost in proportion to $n$.}
+  averaged over twenty networks per size, with the best power law fitted to each
+  method and its exponent given in the legend. The flat model comes out at its
+  own $\sqrt{n}$ resolution ceiling; the nested and motif models both grow almost
+  in proportion to $n$.}
   \label{fig:gr-ramsey}
 \end{figure}
 
@@ -1194,18 +1196,53 @@ each step closes a fresh square on two new nodes, a link sits in $1.3$ of them
 and the alphabet takes them up readily.
 
 The consequences for community detection run in opposite directions
-(Figure~\ref{fig:gr-squares}). For $BB(n,2)$ the alphabet works, and naming the
+(Figure~\ref{fig:gr-squares}). For $DD(n,q)$ the alphabet does nothing, the three
+curves lie on top of one another, and the Ramsey community number is $40$
+whichever method is used. For $BB(n,2)$ the alphabet works, and naming the
 squares dissolves the apparent communities: the block model's $P_\kappa$ climbs
-past $0.8$ by $n=200$ while the motif model's is still at $0.16$, and where the
-block model finds $10.8$ communities at $n=800$ the motif model finds $5.8$. For
-$DD(n,q)$ the alphabet does nothing, the three curves lie on top of one another,
-and the Ramsey community number is $40$ whichever method is used.
+past $0.8$ by $n=200$ while the motif model's is still at $0.16$.
+
+Pushed to larger sizes, though, that second statement turns into something more
+awkward than a suppression. The motif model's answer for $BB(n,2)$ is not small,
+it is \emph{bimodal}. At $n=3200$, sixteen realisations in twenty return a single
+community and the other four return between thirty-five and forty-one, which is
+what the block model returns throughout. The two outcomes are not a good answer
+and a bad one. Averaged over the twenty realisations they differ in description
+length by eleven bits in fifty-one thousand:
+
+\begin{center}
+\begin{tabular}{lrr}
+\hline
+$BB(n{=}3200,2)$ & squares planted & $\Sigma$ (bits)\\
+\hline
+one community    & $686$ of $1200$ & $51\,663$\\
+many communities & $414$ of $1200$ & $51\,652$\\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent One description plants many squares and needs no communities at all;
+the other finds the communities and plants fewer squares; and the criterion is
+indifferent between them to a part in five thousand. Which one comes back is
+settled by where the search happens to start. So the squares and the communities
+are not competing hypotheses that the description length adjudicates --- they are
+two ways of spending the same bits on the same links, and for this rule they cost
+the same. That is why no exponent is quoted for the motif model in
+Figure~\ref{fig:gr-squares}b: its mean is the mixing ratio of two outcomes rather
+than a law, and it turns over at $n=3200$ for that reason and no other.
+
+The caution generalises past this one rule. Wherever an alphabet can absorb the
+same links that a partition would have explained, the two descriptions trade off
+against each other, and minimum description length has no reason to prefer either
+--- which is a limit on what any such method can be asked to settle, and not a
+defect of this implementation.
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{figs/fig-gr-squares.pdf}
   \caption{\textbf{Two rules built from squares, and only one of them says so.}
-  Panels as in Figure~\ref{fig:gr-ramsey}. \textbf{(a, b)} $BB(n,2)$ closes one
+  Panels as in Figure~\ref{fig:gr-ramsey}: $P_\kappa$ from a hundred networks at
+  each size, $\langle\kappa\rangle$ from twenty. \textbf{(a, b)} $BB(n,2)$ closes one
   square per step on two new nodes, so its squares are nearly disjoint, the
   alphabet takes them up, and the communities the block model reports are largely
   dissolved. \textbf{(c, d)} $DD(n,q)$ at $q=\tfrac12$ closes squares in far
@@ -1213,6 +1250,20 @@ and the Ramsey community number is $40$ whichever method is used.
   motifs; the alphabet plants none of them, and all three methods agree.}
   \label{fig:gr-squares}
 \end{figure}
+
+Adding self-interaction does not rescue it. The duplication rule of
+Chapter~\ref{ch:duplication} allows the copy to bind its own original with some
+probability $p$, and since the pair already shares neighbours, every such link
+closes triangles. At $p=0.1$ and $q=0.45$ the network is no longer bipartite, the
+odd cycle lengths fill in, and the clustering coefficient rises from zero to about
+$0.18$ and stays there as the network grows --- the interactome-like behaviour that
+motivated the rule. The alphabet still plants nothing: at $n=100$, $200$ and $400$
+the enlarged model costs $35$, $18$ and $80$ bits and buys none. The triangles
+stack exactly as the squares did, all of those at a duplicated pair sharing the
+one link between the pair, so that a single link can carry eleven of them and an
+edge-disjoint decomposition can name at most one per pair. Duplication defeats the
+alphabet whether or not it makes triangles, because everything it builds is piled
+onto the same shared neighbourhood.
 
 So the alphabet needs more than the right arity. It needs the rule's footprint to
 be a fixed object that can be named once and counted. Duplication's footprint is
