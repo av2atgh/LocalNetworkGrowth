@@ -138,3 +138,60 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# --- appended: the within-series table of Section 7.13 -----------------------
+# The census fits B ~ n^beta across eighty-one different networks. That slope
+# estimates how B varies *between* systems; the growth rules' slope estimates how
+# it varies *within* one as it grows. These are different quantities, and this
+# table is the attempt to measure the second one on real data: three systems that
+# were recorded repeatedly while they grew, each fitted along its own history.
+
+SERIES = (("route_views", "Internet, autonomous sys.", "growth"),
+          ("coauthor", "co-authorship, hist. of sci.", "growth"),
+          ("yeast", "yeast interactome, BioGRID", "discovery"))
+
+
+def within():
+    import glob as _glob
+    fs = _glob.glob(os.path.join(HERE, "data", "growth_series*.csv"))
+    d = pd.concat([pd.read_csv(f) for f in fs], ignore_index=True)
+    d = d.drop_duplicates("name")
+    # Three route_views days when the collector was partly down; they are not
+    # snapshots of a smaller Internet, they are snapshots of less of it.
+    d = d[~((d.series == "route_views") & (d.n < 2000))]
+    rows = []
+    for key, label, kind in SERIES:
+        x = d[d.series == key].sort_values("n")
+        if len(x) < 4:
+            continue
+        b = np.polyfit(np.log(x.n), np.log(x.B_nested), 1)[0]
+        rng = np.random.default_rng(0)
+        bs = [np.polyfit(np.log(x.n.iloc[i]), np.log(x.B_nested.iloc[i]), 1)[0]
+              for i in rng.integers(0, len(x), (3000, len(x)))]
+        rows.append(dict(label=label, kind=kind, pts=len(x), lo=x.n.min(),
+                         hi=x.n.max(), beta=b, blo=np.percentile(bs, 2.5),
+                         bhi=np.percentile(bs, 97.5),
+                         size=(x.n / x.B_nested).mean()))
+    return pd.DataFrame(rows)
+
+
+def main_within():
+    w = within()
+    print(w.to_string(index=False))
+    body = ["\\begin{center}", "\\footnotesize\\setlength{\\tabcolsep}{3pt}",
+            "\\begin{tabular}{llrrr}", "\\hline",
+            "system & $n$ & pts & $\\beta$ & nodes per\\\\",
+            " & & & & community\\\\", "\\hline"]
+    for r in w.itertuples():
+        body.append(f"{r.label} & ${r.lo}$--${r.hi}$ & ${r.pts}$ & "
+                    f"${r.beta:.2f}\\,[{r.blo:.2f},{r.bhi:.2f}]$ & ${r.size:.0f}$\\\\")
+    body += ["\\hline",
+             "\\emph{census}, all kinds & $29$--$317\\,080$ & $81$ & "
+             "$0.80\\,[0.72,0.88]$ & $31$\\\\", "\\hline",
+             "\\end{tabular}", "\\end{center}"]
+    write("tab-density-within.tex", "\n".join(body) + "\n")
+
+
+if __name__ == "__main__":
+    main_within()

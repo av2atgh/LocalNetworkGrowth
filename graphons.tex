@@ -699,9 +699,13 @@ method puts $\beta$ above one half, and lifting the resolution only raises it
 further, so real networks are certainly not self-similar in their community
 structure. What does not survive is the particular value, and with it the picture
 of a balance struck midway between two limits. On the growth rules the answer is
-the modular limit outright. On the real networks it is $0.80$ rather than $0.61$,
-still short of $1$ but no longer comfortably inside the range the last chapter
-named. The exponent was, in part, a property of the instrument.
+the modular limit outright. On the real networks the census gives $0.80$ rather
+than $0.61$ --- still short of $1$, but no longer comfortably inside the range the
+last chapter named. The exponent was, in part, a property of the instrument.
+
+That $0.80$ will not survive Section~\ref{sec:gr-within} either, and for a reason
+that has nothing to do with priors. But the resolution question has to be settled
+before the measurement question can be asked, so it is settled here first.
 
 \section{The density of communities}
 \label{sec:gr-density}
@@ -739,45 +743,106 @@ fixed community structure, and these do not. What the growth rules converge to
 under a nested description is not a shape one could draw on the square. It is a
 density.
 
-On real networks the picture is close, and not the same.
+On real networks the picture looked, at first, close but not the same.
 
 \input{tab-density-real}
 
 \noindent The community sizes are of the same order the rules produce --- around
 thirty nodes, with the infrastructure networks the exception at a hundred and
-sixty --- and they are of that order at every size. But the exponent is below one
-almost everywhere, and the last column says what that costs: $B/n$ falls as
-roughly $n^{-0.2}$, so community size grows slowly rather than not at all,
-about fourfold over the four decades the census spans. The one group that comes
-close to constancy is the smallest, the nine information networks.
+sixty. But the exponent came out below one almost everywhere, and the last column
+says what that costs: $B/n$ falling as roughly $n^{-0.2}$, community size growing
+about fourfold across the four decades the census spans. Taken at face value, that
+is a shortfall the growth rules would have to explain.
 
-The obvious suspicion is that this is an artefact of composition, that the large
-networks in the census happen to be of a kind with large communities. It is not:
-the last column is computed inside each domain separately, and the drift is
-present in three of the four, at much the same rate. Whatever slows the growth of
-communities in real networks does so within social networks, within biological
-ones, and within infrastructure alike.
+It is not to be taken at face value, and seeing why is worth more than the number
+was.
 
-So the density of communities is a well-defined quantity for the growth rules and
-an approximate one for the networks they model, and the gap between $1$ and $0.80$
-is now the cleanest statement of what the rules do not yet capture. It is also
-smaller than it looks in one respect and larger in another. Smaller, because the
-rules are compared to real networks over ranges of $n$ that barely overlap ---
-almost nothing here is fitted above $n=6400$, and the real networks' drift is
-mostly established above it. Larger, because the shortfall is systematic rather
-than scattered, and a mechanism that produced communities at constant density
-would have to acquire something else to make them thin out.
+\section{What a census exponent is an exponent of}
+\label{sec:gr-within}
+
+The two exponents being compared are not measurements of the same thing. The
+rules' $\beta$ comes from a \emph{growth series}: one mechanism, one object,
+followed through a sequence of sizes. The census $\beta$ comes from a
+\emph{cross-section}: eighty-one different networks, built by different processes,
+recorded by different projects, with size as the only thing ordering them. The
+first says how the number of communities changes as a network grows. The second
+says how it varies between systems that happen to differ in size. Nothing
+guarantees these are the same number, and a census that mixes kinds of network
+will report the second while looking like the first.
+
+The census behaves the way a cross-section behaves. Restrict it to the sizes the
+rules were actually run at, $n$ between $100$ and $1600$, and it returns
+$\beta=0.58$; take all of it and it returns $0.80$. A genuine scaling law does not
+move by two tenths depending on which of its instances one includes. Two further
+symptoms point the same way. Networks sitting above the fitted line are markedly
+denser than those below --- median mean degree $13.4$ against $5.8$, with the
+residual correlating with mean degree at Spearman $\rho=+0.43$ --- and the
+spatially embedded networks sit systematically below it. Neither of those moves
+the exponent much when removed, which is the point: the scatter the line is drawn
+through is not error but structure, so the interval quoted around $0.80$ is
+narrower than the honest uncertainty.
+
+The way to settle it is to measure the thing the rules measure. A few real systems
+were recorded repeatedly \emph{while they grew}, and can be fitted along their own
+histories rather than against each other: the Internet at the autonomous-system
+level, from daily route-collector snapshots; the co-authorship network of the
+history of science, whose links carry the year they were made and can be
+accumulated; and the physical interactome of yeast, accumulated by the year each
+interaction was published.
+
+\input{tab-density-within}
+
+\noindent Every one of them exceeds the census figure, and the two that are
+genuinely growing networks --- the Internet and the collaboration graph --- come
+out at one, with the co-authorship interval excluding $0.80$ outright. Their
+community sizes are the ones the rules produce: twenty-three nodes for
+co-authorship, against twenty-one for duplication--split.
+
+So the shortfall was never a property of real networks. It was a property of
+averaging over kinds of them. The density of communities is constant, in the
+systems where the question has been asked properly, and the growth rules were
+right about it.
+
+The third row is the exception that shows the mechanism. Yeast's interactome is
+not a growing network at all --- the cell's protein interactions are not being
+created as we watch, they are being \emph{found} --- so its series measures how
+communities scale as a fixed object is discovered. It is the lowest of the three
+and the only one whose central value falls short of one. That is the same confound
+this chapter already flagged for the tree-of-life series, where the trend runs
+across organisms and a better-studied organism has both more proteins catalogued
+and more interactions recorded per protein. Here it runs across time instead, and
+it can be quantified: incomplete observation of a network does depress the
+apparent number of communities, and a census that mixes catalogued networks with
+grown ones will inherit some of that depression.
+
+Three cautions, so the table is not asked to carry more than it can. The size
+ranges within a series are narrower than the models' --- threefold for the
+Internet, ninefold for co-authorship --- so the intervals are wide, and the
+Internet's especially. Three route-collector days were dropped because the
+collector was partly down; they are snapshots of less of the Internet, not of a
+smaller one, and keeping them lowers the exponent to $0.96$, which changes nothing
+about the conclusion. And three systems are three, not a survey: what has been
+shown is that the census exponent is not the growth exponent, and that where the
+growth exponent can be measured it is one, not that every network in the world
+obeys it.
+
+The general lesson outlasts the number. An exponent fitted across a heterogeneous
+collection of networks is a statement about the collection. It answers a question
+about how systems differ, and it will be read --- it was read, in
+Chapter~\ref{ch:communities} and in the first half of this section --- as a
+statement about how a network grows. The two coincide only if the collection is
+homogeneous in everything except size, which no census of real networks is.
 
 One caution belongs with any use of these numbers. A density of communities is
 not a property of a network alone; it is a property of a network together with the
-code used to describe it, and this chapter has just spent its length showing how
-much that matters. Under the flat prior the same census gives $\beta=0.63$ and
-community sizes that grow twice as fast. The tables above mean what they say only
-because the model is fixed --- nested, degree-corrected, minimum description
-length --- and a density quoted without naming the model is not a measurement.
-That is a familiar situation rather than a disqualifying one. The clustering
-coefficient has two standard definitions that disagree, and the introduction had
-to say which one it meant before it could say anything about hierarchy.
+code used to describe it, and this chapter has spent its length showing how much
+that matters. Under the flat prior the same census gives $\beta=0.63$. The tables
+above mean what they say only because the model is fixed --- nested,
+degree-corrected, minimum description length --- and a density quoted without
+naming the model is not a measurement. That is a familiar situation rather than a
+disqualifying one. The clustering coefficient has two standard definitions that
+disagree, and the introduction had to say which one it meant before it could say
+anything about hierarchy.
 
 One thing the change of prior does \emph{not} touch is the Ramsey community
 number. Fitted both ways, local search crosses the ninety-five per cent threshold
