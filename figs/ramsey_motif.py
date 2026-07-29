@@ -134,11 +134,46 @@ def generator_bubble(n, params, seed):
     return nb
 
 
+def generator_diamond(n, params, seed):
+    """DM(n): the randomised diamond rule -- one random link becomes two parallel
+    paths of two links each, and the original link is removed.
+
+    KEPT AS A NEGATIVE RESULT, not used for the diamond measurement. The rule was
+    written to give the diamond lattice the same random-link sampling BB(n,2)
+    has, so the two could be compared as ensembles. It does not do what it looks
+    like it does. Subdividing a link that already lies in a square stretches that
+    square into a five-cycle, so the squares this rule makes are destroyed by the
+    next step that lands on one of their links: at n=300 it holds 65 four-cycles
+    and 65 five-cycles, where BB(n,2) holds 149 and none. The parity that makes
+    the diamond a clean square-builder survives only when every edge is replaced
+    at once, which is what the deterministic lattice does and this does not.
+
+    The measurement in Section 8.6 therefore uses diamond_rg.diamond(t, b=2, s=2),
+    one network per size, fitted several times over. See diamond_motif.py.
+    """
+    np.random.seed(seed=seed)
+    nb = [[3, 1], [0, 2], [1, 3], [2, 0]]           # the 4-cycle seed of DS
+    edges = [(0, 1), (1, 2), (2, 3), (3, 0)]
+    while len(nb) + 2 <= n:
+        u, v = edges.pop(np.random.randint(len(edges)))
+        nb[u].remove(v)
+        nb[v].remove(u)
+        for _ in range(2):                          # two parallel paths
+            w = len(nb)
+            nb.append([u, v])
+            nb[u].append(w)
+            nb[v].append(w)
+            edges.append((u, w))
+            edges.append((w, v))
+    return nb
+
+
 MODELS = {
     "LS(n,1)": (generator_local_search, {"d": 1}),
     "DS(n,0.5)": (generator_dup_split, {"q": 0.5}),
     "DS(n,0.3)": (generator_dup_split, {"q": 0.3}),
     "DD(n,0.5)": (generator_dup_divergence, {"q": 0.5}),
+    "DM(n)": (generator_diamond, {}),                       # squares, 2-step reach
     "BB(n,1)": (generator_bubble, {"L": 1}),   # closes triangles, not squares
     "BB(n,2)": (generator_bubble, {"L": 2}),
 }
