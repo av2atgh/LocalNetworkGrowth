@@ -1362,6 +1362,33 @@ nothing else (Section~\ref{sec:gr-motifsbm}). Setting the results side by side,
 the two differences turn out to move two different quantities, and each leaves
 the other alone.
 
+The first difference is worth being precise about, because it is not a difference
+in what the two models can \emph{express}. Both describe a network as $B$ groups
+together with the matrix $e_{rs}$ of link counts running between them, both infer
+$B$ from the data, and any partition one can write down the other can write down
+too. What differs is the price of naming it. The flat model transmits the matrix
+under a uniform prior, as though its $B(B+1)/2$ entries were arbitrary numbers
+with no relation to one another, which costs about $\tfrac12 B^2\log_2 m$ bits for
+a network of $m$ links. That charge grows with the square of the number of groups
+while the saving from splitting a group grows more slowly, and where the two meet
+is the ceiling: no flat fit recovers more than about $\sqrt n$ groups, however
+many are present.
+
+The nested model spends less on the very same object, by declining to treat it as
+arbitrary. The counts $e_{rs}$ are themselves a network --- one node per group,
+one weighted link per pair --- and it is described by a block model of its own,
+which is described by another, and so on up. A group-level structure that is
+sparse or modular, as it usually is, then costs a fraction of what spelling out
+the matrix would, the quadratic charge disappears, and the ceiling rises to
+around $n/\log n$: some $8700$ groups at $n=10^5$ against $316$
+\citep{peixoto2014hier}.
+
+The two therefore differ in a prior and not in a likelihood. Given the same
+partition and the same counts they assign the network the same probability; they
+disagree only about how surprising the counts were. Nothing in that has anything
+to do with what the links are made of, which is the first half of why the
+vocabulary leaves the exponent alone.
+
 \begin{center}
 \small\setlength{\tabcolsep}{4pt}
 \begin{tabular}{lrrrrr}
