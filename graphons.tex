@@ -47,10 +47,14 @@ The obvious repair is to turn up the contrast: divide the whole picture by its
 own average darkness before taking the limit, so that what survives is the
 \emph{pattern} of the greys rather than their absolute level. This works, and it
 is the substance of a theory of sparse graph limits developed by
-\citet{borgs2019}. Rescaling costs something --- the rescaled function is no
-longer a probability bounded by one, so the limit object is no longer a bounded
-function but an $L^p$ one, and the theory must be rebuilt around that --- but the
-gain is real. It is the first limit theory that copes with hubs, and with the
+\citet{borgs2019}. Rescaling costs something. Dividing by a shrinking average
+makes the values grow without bound, so the limit is no longer a probability
+between zero and one; it is what analysts call an \emph{$L^p$ function}, meaning
+one that may spike as high as it likes provided the average of its $p$-th power
+stays finite. A spike can be tall or it can be broad, but not both. That is
+exactly the licence a hub needs --- a few nodes joined to a large fraction of the
+rest --- and it is why the theory has to be rebuilt around a class of functions
+wider than the bounded ones. The gain is real. It is the first limit theory that copes with hubs, and with the
 power-law degree distributions that come with them.
 
 There are then three regimes, not two, and it is worth knowing which one a
@@ -80,9 +84,11 @@ recorded per protein. The trend there measures the attention of biologists at
 least as much as the architecture of cells.
 
 Even the middle regime is tighter than it looks, in a way the book's own models
-can measure. Membership in $L^p$ is a condition on how extreme the hubs are: for a
-degree distribution $p(k)\sim k^{-\gamma}$ it holds when $p<\gamma-1$, and the
-theory needs $p>1$, so there is a usable window only for $\gamma>2$. The
+can measure. Since the exponent $p$ says how tall a spike the class will
+tolerate, membership in $L^p$ is a condition on how extreme the hubs are allowed
+to be: for a degree distribution $p_k\sim k^{-\gamma}$ it holds when
+$p<\gamma-1$, while the theory itself needs $p>1$, so there is a usable window
+only for $\gamma>2$. The
 pseudofractal web of the last chapter has $\gamma\simeq2.585$, leaving the window
 $1<p<1.585$; real networks, whose exponents cluster between two and three, are all
 squeezed into the same narrow slot, and it closes entirely as $\gamma\to2$. The
@@ -96,7 +102,7 @@ the sparse world that ratio is the whole story. It is why the last chapter had t
 compute at finite $n$ and could not simply take a limit. The finite-size
 calculation was not a convenience. It was the only instrument that sees anything.
 
-\section{The block model was a graphon all along}
+\section{The block model is a graphon}
 \label{sec:gr-blockmodel}
 
 Set the difficulty aside for a moment, because the language is useful even where
@@ -167,8 +173,10 @@ with the amount of data. This is the classical bias--variance trade-off, and for
 networks it has been worked out precisely.
 
 \begin{calculation}{the cost of a $k$-block description}
-Three terms compete. Smoothness here means the H\"older exponent: a graphon has
-smoothness $\alpha$ if, for some constant $M$,
+Three terms compete. Smoothness here is measured by the \emph{H\"older
+exponent}, which grades how violently a surface is allowed to change when one
+moves a short distance across it: a graphon has smoothness $\alpha$ if, for some
+constant $M$,
 \begin{equation}
   |W(x,y)-W(x',y')| \;\le\; M\big(|x-x'|^{\alpha}+|y-y'|^{\alpha}\big),
   \label{eq:gr-holder}
@@ -448,9 +456,11 @@ There is a reason all of this bears on the book's thesis rather than merely
 decorating it, and it is worth ending on.
 
 A graphon is not only a limit; it is a complete description of a certain
-\emph{kind} of random network --- those whose nodes are exchangeable, meaning the
-labels carry no information and any two nodes are, before we look, the same
-\citep{aldous1981,diaconis2008}. Every graphon model is exchangeable and every
+\emph{kind} of random network --- those whose nodes are \emph{exchangeable},
+meaning the labels carry no information and any two nodes are, before we look,
+the same. Shuffle the names of the nodes and the probability of getting that
+network back is unchanged; nothing about a node except its hidden coordinate
+$x$ can matter \citep{aldous1981,diaconis2008}. Every graphon model is exchangeable and every
 exchangeable model is a graphon. Exchangeability is a strong assumption, and what
 it excludes is precisely geometry: a node's position, its neighbourhood, its
 history. It excludes locality.

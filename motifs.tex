@@ -107,7 +107,10 @@ each, hence $n^{\beta}$ in all, still short of $\Theta(n)$ by $n^{1-\beta}$.
 \end{calculation}
 
 So the answer to the first question, for this network, is sharp. A two-variable
-description preserves what the cut metric sees --- block densities, degrees, the
+description preserves what the \emph{cut metric} sees --- the yardstick the limit
+theory uses, which judges two networks close when no way of splitting the nodes
+into two sets reveals a difference in the density of links across the split, and
+so registers block densities, degrees, the
 evidence for a partition, everything the last chapter computed --- and loses the
 3-point structure entirely, by a margin that widens without bound. Even a
 hierarchy of blocks, refining as fast as real networks demand, recovers only
@@ -138,7 +141,8 @@ Section~\ref{sec:gr-clustering} does not vanish when a graphon says it must. The
 the pair-level randomness does not wash out, and the natural object keeps
 arguments indexed by \emph{pairs} rather than by nodes: not $W(x_i,x_j,x_k)$ but
 something closer to $W(x_{ij},x_{ik},x_{jk})$, which is the shape the limit theory
-of hypergraphs already takes. That is a refinement of the conjecture rather than a
+of hypergraphs already takes --- a hypergraph being a network whose links may
+join three or more nodes at once rather than exactly two. That is a refinement of the conjecture rather than a
 refutation of it, and it says where to look: triadic closure makes the presence of
 one link depend on two others sharing a node, and a pair-indexed kernel is the
 smallest object that can express such a dependence.
@@ -224,8 +228,9 @@ The weight is $k(k-1)$ rather than $k^2$ because a cycle leaves a node by a
 different link than the one it arrived on, and the degree-corrected fit holds the
 degree sequence fixed: a node offers $k(k-1)$ ordered pairs of links, not $k^2$.
 The one-block case is then $\langle k^2-k\rangle/\langle k\rangle$, which is the
-leading eigenvalue of the non-backtracking operator --- the natural object for
-cycles. The distinction is invisible in the limits taken below, where the ratio
+leading eigenvalue of the \emph{non-backtracking} operator, which counts walks
+forbidden to turn round and retrace the link they arrived on --- the natural
+object for cycles, since a cycle never does. The distinction is invisible in the limits taken below, where the ratio
 diverges and the $-1$ is lost, but it is worth a factor of $25$ at $L=8$ on a
 real network, where the ratio is nearer $3$.
 \end{calculation}
@@ -408,8 +413,10 @@ templates may be adjacent.
 All of that still asks the reader to accept the arity of each rule as given. It
 can instead be \emph{inferred}, by the same criterion that fits a block model in
 the first place: minimum description length. The posterior of
-Section~\ref{sec:gr-blockmodel} is microcanonical, and $\Sigma=-\log_2P(A,e,b)$
-makes no use of the fact that links join two nodes. Nothing stops us handing it a
+Section~\ref{sec:gr-blockmodel} is \emph{microcanonical} --- it fixes the link
+counts exactly rather than only on average, so that a model is a set of
+constraints and the description length counts the networks satisfying them --- and
+$\Sigma=-\log_2P(A,e,b)$ makes no use of the fact that links join two nodes. Nothing stops us handing it a
 model built from something else.
 
 \begin{calculation}{why an alphabet of motifs, and not a tensor}
@@ -432,7 +439,9 @@ The affordable object keeps the ordinary block structure and changes what the
 blocks are built from. Every link is assigned to exactly one \emph{motif
 instance} drawn from a small alphabet --- a link, a triangle, a square --- with
 motifs of arity three and above planted inside a single block, and instances
-wired by stub matching so that each node carries a motif-degree. Planting $c$
+wired by \emph{stub matching}: each node is given a number of loose link-ends,
+or stubs, and the ends are then paired off at random, so that a node's share of
+the motifs is fixed by how many stubs it was given. Planting $c$
 copies of a motif that spans $s$ nodes inside one block can be done in
 \begin{equation}
   \Omega \;=\; \frac{(sc)!}{\prod_i d_i!\;c!\;a^{c}}
@@ -675,8 +684,9 @@ curves lie on top of one another, and the Ramsey community number is $40$
 whichever method is used. For $BB(n,2)$ the alphabet works, and naming the
 squares dissolves the apparent communities altogether. Both block models put its
 Ramsey community number at $400$; the motif model never reaches the $95\%$
-threshold at all, out to $n=3200$, its likelihood peaking near $0.65$ and then
-falling away again.
+threshold at all. Its likelihood peaks near $0.65$ around $n=1600$ and then falls
+away --- $0.20$ at $3200$, and at $6400$ every one of ten realisations returns a
+single community while the block model returns a hundred and two.
 
 Pushed to larger sizes, though, that second statement turns into something more
 awkward than a suppression. The motif model's answer for $BB(n,2)$ is not small,
