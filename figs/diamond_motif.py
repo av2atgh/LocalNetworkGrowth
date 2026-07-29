@@ -40,18 +40,34 @@ import os
 import pandas as pd
 
 from diamond_rg import diamond
+from motif_spectrum import pseudofractal
 from motif_sbm import MotifSBM
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(HERE, "data", "diamond_motif.csv")
+
+# The two deterministic lattices are the matched pair the section needs: both
+# replace every link at once, so both keep the parity a randomised rule destroys,
+# and both reach exactly two steps -- but one closes triangles and the other
+# closes squares. Chapter 6 puts a triangle rule at r_kappa = 108 and a square
+# rule at 326, so if cycle length is what decides whether the alphabet can
+# dissolve a community, these two should part company.
+LATTICES = {"diamond": (diamond, "square"),
+            "pseudofractal": (pseudofractal, "triangle")}
 
 
-def fit(t, restarts):
+def build(lattice, t):
+    """Both lattices, reduced to (n, edge list)."""
+    if lattice == "pseudofractal":
+        n, E, _ = pseudofractal(t)
+        return n, sorted(E)
     r = diamond(t)
     g = r[0] if isinstance(r, tuple) else r
     idx = {v: i for i, v in enumerate(g.nodes())}
-    edges = [(idx[u], idx[v]) for u, v in g.edges()]
-    n = g.number_of_nodes()
+    return g.number_of_nodes(), [(idx[u], idx[v]) for u, v in g.edges()]
+
+
+def fit(t, restarts, lattice="diamond"):
+    n, edges = build(lattice, t)
     best = None
     for s in range(restarts):
         m = MotifSBM(n, edges)
@@ -61,7 +77,8 @@ def fit(t, restarts):
         sigma = m.description_length()
         if best is None or sigma < best["sigma"]:
             c = m.motif_counts()
-            best = dict(t=t, n=n, m=len(edges), kappa_flat=kf, kappa_dcsbm=kd,
+            best = dict(lattice=lattice, t=t, n=n, m=len(edges),
+                        kappa_flat=kf, kappa_dcsbm=kd,
                         kappa=len(set(m.blocks)), n_sq=c.get("square", 0),
                         n_tri=c.get("triangle", 0), n_edge=c.get("edge", 0),
                         sigma=round(sigma, 2))
@@ -71,20 +88,23 @@ def fit(t, restarts):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--tmax", type=int, default=6)
+    ap.add_argument("--tmin", type=int, default=3)
     ap.add_argument("--restarts", type=int, default=3)
+    ap.add_argument("--lattice", default="diamond", choices=tuple(LATTICES))
     a = ap.parse_args()
+    out = os.path.join(HERE, "data", f"{a.lattice}_motif.csv")
 
     rows = []
     print(f"{'t':>2}{'n':>7}{'m':>7} | {'flat':>5}{'nested':>7}{'motif':>7} |"
-          f" {'squares':>8}{'links':>7}")
-    for t in range(3, a.tmax + 1):
-        r = fit(t, a.restarts)
+          f" {'tri':>7}{'squares':>8}{'links':>7}")
+    for t in range(a.tmin, a.tmax + 1):
+        r = fit(t, a.restarts, a.lattice)
         rows.append(r)
-        pd.DataFrame(rows).to_csv(OUT, index=False)
+        pd.DataFrame(rows).to_csv(out, index=False)
         print(f"{t:>2}{r['n']:>7}{r['m']:>7} | {r['kappa_flat']:>5}"
-              f"{r['kappa_dcsbm']:>7}{r['kappa']:>7} | {r['n_sq']:>8}"
-              f"{r['n_edge']:>7}", flush=True)
-    print(f"\nwrote {OUT}")
+              f"{r['kappa_dcsbm']:>7}{r['kappa']:>7} | {r['n_tri']:>7}"
+              f"{r['n_sq']:>8}{r['n_edge']:>7}", flush=True)
+    print(f"\nwrote {out}")
 
 
 if __name__ == "__main__":

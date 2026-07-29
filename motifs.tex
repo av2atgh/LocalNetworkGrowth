@@ -780,53 +780,69 @@ that were marginal at forming them, and merely delays them everywhere else. That
 is a statement about the balance between two descriptions, not about which motif
 is in the alphabet.
 
-One explanation for that thinness suggests itself, and it is wrong, which is
-worth showing because the reasoning is otherwise sound. Chapter~\ref{ch:communities}
-found that locality has a \emph{range}: a rule whose chain is one node long
-reaches two steps and gives $r_\kappa=108$, while one whose chain is two nodes
-long reaches three and gives $326$. $BB(n,2)$ is a three-step rule by that
-measure, and $BB(n,1)$ a two-step one. Perhaps reach is what decides whether a
-community is robust enough to survive being renamed.
+One explanation for that thinness suggests itself, and testing it takes a pair of
+lattices. Chapter~\ref{ch:communities} found that locality has a \emph{range}: a
+rule whose chain is one node long reaches two steps and gives $r_\kappa=108$,
+while one whose chain is two nodes long reaches three and gives $326$. $BB(n,2)$
+is a three-step rule by that measure and $BB(n,1)$ a two-step one, so perhaps
+reach is what decides whether a community survives being renamed. The trouble is
+that in $BB(n,L)$ the two candidate causes move together: lengthening the chain is
+the only way to lengthen the cycle, so nothing in that family can separate a
+rule's reach from the cycle it closes.
 
-The diamond lattice settles it, because it builds the same square by the other
-route. Each of its links is replaced by \emph{two} parallel paths of one node
-each, so every new node is adjacent to both endpoints and nothing reaches past
-two steps --- and the two paths together still close a four-cycle. Same motif as
-$BB(n,2)$, same mean degree to two decimals, opposite reach. Fitted at four
-generations, with each network fitted several times over because the diamond is
-known to trap the search:
+Two lattices can. The pseudofractal web hangs a new node on both ends of every
+link, closing a triangle; the diamond replaces every link by two parallel paths of
+one node each, closing a square. Both reach exactly two steps --- every new node is
+adjacent to nodes that were already adjacent --- and both rebuild the whole lattice
+at once, which is what keeps their cycles clean, since a rule that subdivides one
+link at a time stretches the cycles it has already made. They differ in the cycle
+they close and in nothing else that matters here.
+
+The quantity to watch is not how many communities each method finds but how that
+number \emph{scales}, which is Chapter~\ref{ch:graphons}'s $\beta$. Both lattices
+put the block model at the modular limit, $\beta\simeq1$, so both have a constant
+density of communities in the sense of Section~\ref{sec:gr-density}. The question
+is whether naming the motif leaves that density intact.
 
 \begin{center}
-\begin{tabular}{rrrrrr}
+\begin{tabular}{llrr}
 \hline
- & & \multicolumn{3}{c}{communities $\kappa$} & \\
-$t$ & $n$ & flat & nested & $+$ motifs & squares planted\\
+ & & \multicolumn{2}{c}{$\beta$, growth of $\kappa$}\\
+lattice & motif & nested & $+$ motifs\\
 \hline
-$3$ & $44$  & $3$ & $2$ & $1$ & $16$ of $16$\\
-$4$ & $172$ & $2$ & $2$ & $1$ & $64$ of $64$\\
-$5$ & $684$ & $4$ & $7$ & $3$ & $224$ of $256$\\
-$6$ & $2732$ & $14$ & $14$ & $5$ & $896$ of $1024$\\
+pseudofractal & triangle & $1.07$ & $\mathbf{0.99}$\\
+diamond       & square   & $1.05$ & $\mathbf{0.31}$\\
 \hline
 \end{tabular}
 \end{center}
 
-\noindent The alphabet suppresses the diamond just as it suppresses $BB(n,2)$,
-and at the smaller sizes it does so completely: every square planted,
-not one link left over, a perfect tiling of the lattice by its own motif, and one
-community reported where the block models report two. The suppression persists as
-the lattice grows --- five communities against fourteen at $n=2732$ --- so it is
-not a small-size accident. Being local did not protect it.
+\noindent The pseudofractal keeps its law and the diamond loses it. This is worth
+stating carefully, because the diamond's communities do not disappear: its motif
+fit returns $3$, $5$ and $7$ groups at $n=684$, $2732$ and $10\,924$, a count that
+climbs steadily. But it climbs by a fixed amount while the lattice quadruples, so
+$\kappa$ grows like the logarithm of $n$ where the block model has it growing like
+$n$ itself, and the density $b=\kappa/n$ falls away to nothing. Under the motif
+alphabet the diamond is not a network with fewer communities. It is a network with
+no community \emph{density} --- exactly the intensive quantity
+Chapter~\ref{ch:graphons} identified as what a locally grown network converges to.
+The pseudofractal, fitted the same way, still has one.
 
-What the diamond shares with $BB(n,2)$ is not its reach but its
-\emph{cycle}. Both close squares, and by the table of
-Chapter~\ref{ch:communities} a rule that closes squares is already a poor
-community-former --- $r_\kappa=326$ against $108$ for triangles --- however short
-the chains it uses to close them. Reach was a correlate of cycle length in
-$BB(n,L)$, where lengthening the chain is the only way to lengthen the cycle, and
-the diamond breaks the correlation by lengthening one without the other. So the
-line does not run between local rules and distant ones. It runs between rules
-whose cycles are short enough to make communities the cheaper description and
-rules whose cycles are not.
+So reach is not the discriminator. Two rules that reach exactly as far as each
+other end up on opposite sides of $\beta=1$, and what separates them is the length
+of the cycle they close --- which is what Chapter~\ref{ch:communities}'s table said,
+ranking a triangle rule at $r_\kappa=108$ against a square rule at $326$ before
+any of this was fitted. The reach of $BB(n,2)$ was a correlate of its square, not
+the cause.
+
+There is a mechanism visible in the counts. On the diamond at the smaller
+generations the alphabet plants \emph{every} square and leaves not one link over
+--- sixteen of sixteen, then sixty-four of sixty-four --- a perfect tiling of the
+lattice by its own motif, after which a partition has nothing left to explain. The
+pseudofractal's triangles never tile it that way: they overlap on the links that
+every generation piles onto the same hubs, so a decomposition giving each link to
+one motif must leave most of them unspoken, and the partition keeps its work. What
+makes a motif dangerous to a community is not its shape but whether the rule lays
+it down in a pattern the decomposition can take up whole.
 
 The caution generalises past this one rule. Wherever an alphabet can absorb the
 same links that a partition would have explained, the two descriptions trade off
