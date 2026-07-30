@@ -106,6 +106,15 @@ MOTIFS = {
     "pentagon": dict(k=5, links=5, aut=10),
     "hexagon":  dict(k=6, links=6, aut=12),
     "heptagon": dict(k=7, links=7, aut=14),
+    # K_4 minus an edge: a square with one diagonal, equivalently two triangles
+    # sharing a link. Four nodes, five links, and |Aut| = 4 -- the two degree-2
+    # nodes may swap and the two degree-3 nodes may swap -- so that
+    # k!/|Aut| = 6 = C(4,2), one for each choice of the missing edge. It is the
+    # footprint of a bubble rule whose new chain is closed by a chord, and it is
+    # in the alphabet because without it such a rule would be fitted as a
+    # triangle and two loose links, which is a description of the pieces rather
+    # than of the thing the rule lays down.
+    "chorded_square": dict(k=4, links=5, aut=4),
 }
 
 # The biclique family. K_{2,d} is two hubs joined to the same d leaves: d+2
@@ -348,6 +357,32 @@ class MotifSBM:
                         continue
                     stack.append((w, path + (w,), used | {w}))
 
+    def _candidate_chorded_squares(self, free):
+        """K_4 minus an edge, inside a block, with all five links still loose.
+
+        Stored as (a, v, u, b): the chord is (a, v) and carries the two degree-3
+        nodes, while u and b are the degree-2 pair and are not joined to each
+        other -- that missing link is what makes it K_4 minus an edge rather
+        than K_4. _links_of relies on this order.
+        """
+        b_ = self.blocks
+        seen = set()
+        for (a, v) in free:
+            if b_[a] != b_[v]:
+                continue
+            shared = sorted(x for x in self.adj[a] & self.adj[v]
+                            if b_[x] == b_[a])
+            for u, w in itertools.combinations(shared, 2):
+                if w in self.adj[u]:            # that would be a whole K_4
+                    continue
+                links = [tuple(sorted(p)) for p in
+                         ((a, v), (a, u), (a, w), (v, u), (v, w))]
+                key = (tuple(sorted((a, v))), tuple(sorted((u, w))))
+                if key in seen or not all(l in free for l in links):
+                    continue
+                seen.add(key)
+                yield (a, v, u, w), links
+
     def _candidate_bicliques(self, free):
         """Maximal K_{2,d} whose 2d links are all still loose, inside a block.
 
@@ -424,11 +459,13 @@ class MotifSBM:
         # this one: a smaller symbol offered first consumes the links and the
         # larger object can never be seen
         for name in sorted(self.higher,
-                           key=lambda x: -spec(x)["k"]):
+                           key=lambda x: (-spec(x)["links"], -spec(x)["k"])):
             if name == "triangle":
                 gen = self._candidate_triangles
             elif name == "square":
                 gen = self._candidate_squares
+            elif name == "chorded_square":
+                gen = self._candidate_chorded_squares
             else:
                 gen = functools.partial(self._candidate_cycles,
                                         L=spec(name)["k"])
@@ -485,6 +522,10 @@ class MotifSBM:
             # nodes = (hub, hub, leaf, leaf, ...)
             u, v = nodes[0], nodes[1]
             return [tuple(sorted((h, w))) for w in nodes[2:] for h in (u, v)]
+        if name == "chorded_square":
+            a, v, u, w = nodes            # chord (a, v); u, w the degree-2 pair
+            return [tuple(sorted(p)) for p in
+                    ((a, v), (a, u), (a, w), (v, u), (v, w))]
         # every remaining symbol is a cycle, stored in cyclic order
         L = len(nodes)
         return [tuple(sorted((nodes[i], nodes[(i + 1) % L]))) for i in range(L)]
