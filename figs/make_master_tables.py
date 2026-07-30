@@ -35,9 +35,13 @@ LABEL = {"LS(n,1)": r"$LS(n,1)$", "BB(n,1)": r"$BB(n,1)$",
          "DD(n,0.5)": r"$DD(n,0.5)$", "BB(n,2)": r"$BB(n,2)$",
          "pseudofractal": "pseudofractal", "diamond": "diamond"}
 
-MOTIF = {"LS(n,1)": "triangle", "BB(n,1)": "triangle", "DS(n,0.3)": "square",
-         "DS(n,0.5)": "square", "DD(n,0.5)": "biclique", "BB(n,2)": "square",
-         "pseudofractal": "triangle", "diamond": "square"}
+# the motif column is drawn rather than named: the page is five inches wide and
+# the words do not fit.  $K_{2,d}$ is the notation the text already uses for the
+# biclique, and has no symbol.
+TRI, SQ, BIC = r"$\triangle$", r"$\square$", r"$K_{2,d}$"
+MOTIF = {"LS(n,1)": TRI, "BB(n,1)": TRI, "DS(n,0.3)": SQ,
+         "DS(n,0.5)": SQ, "DD(n,0.5)": BIC, "BB(n,2)": SQ,
+         "pseudofractal": TRI, "diamond": SQ}
 
 
 def betafit(g, col):
@@ -116,10 +120,10 @@ def main():
     def rk(v):
         return "never" if v is None else f"${v}$"
 
-    L = [r"\begin{center}", r"\small\setlength{\tabcolsep}{4pt}",
+    L = [r"\begin{center}", r"\footnotesize\setlength{\tabcolsep}{3pt}",
          r"\begin{tabular}{llrrrrrrr}", r"\hline",
-         r" & & \multicolumn{3}{c}{$r_\kappa$, onset of communities} & "
-         r"\multicolumn{3}{c}{$\beta$, growth of $\kappa$} & links\\",
+         r" & & \multicolumn{3}{c}{$r_\kappa$} & \multicolumn{3}{c}{$\beta$}"
+         r" & links\\",
          r"rule & motif & flat & nested & $+$mot. & flat & nested & $+$mot. & named\\",
          r"\hline"]
     for cls, keys in CLASSES:
