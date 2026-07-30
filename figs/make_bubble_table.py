@@ -128,16 +128,16 @@ def main():
     order = [0, 1, 2, 3, 4, 5, 6]
     L = [r"\begin{center}", r"\footnotesize\setlength{\tabcolsep}{3pt}",
          r"\begin{tabular}{lccrrrrr}", r"\hline",
-         r"rule & footprint & bip. & $\langle k\rangle$ & $r_\kappa$ "
+         r"rule & motif & bip. & $\langle k\rangle$ & $r_\kappa$ "
          r"& $\beta$ nested & $\beta+$mot. & named\\", r"\hline"]
     for i in order:
         x = r[i]
         bm = "---" if x["bimodal"] else f"${x['b_mot']:.2f}$"
         rk = "---" if x["rk"] is None else f"${x['rk']}$"
-        # the footprint column is drawn rather than counted: a pentagon is
-        # quicker to recognise than the numeral 5, and parity is what the column
-        # is for. Rules whose footprint is a cycle get the polygon; the two that
-        # lay down something else carry their own glyph.
+        # the motif column is drawn rather than counted: a pentagon is quicker
+        # to recognise than the numeral 5, and parity is what the column is for.
+        # Rules whose motif is a cycle get the polygon; the two that lay down
+        # something else carry their own glyph.
         glyph = x["cyc"] if isinstance(x["cyc"], str) else f"\\ngon{{{x['cyc']}}}"
         L.append(f"{x['rule']} & {glyph} & "
                  f"{'yes' if x['bip'] else 'no'} & "
