@@ -72,10 +72,13 @@ def rows():
 
     # --- BB(n,1) and BB(n,2): the runs that predate the cycle family
     import glob
+    # the suffix has to match exactly: "bb3" as a substring would also drop
+    # ramsey_motif_scaling_bb3200.csv, which is BB(n,2) at n = 3200
+    skip = ("bb3.csv", "bb4.csv", "bb5.csv")
     old = pd.concat([pd.read_csv(f) for f in
                      glob.glob(f"{DATA}/ramsey_motif_scaling*.csv") +
                      glob.glob(f"{DATA}/ramsey_motif_threshold*.csv")
-                     if "bb3" not in f and "bb4" not in f and "bb5" not in f],
+                     if not f.endswith(skip)],
                     ignore_index=True)
     for L in (1, 2):
         g = old[old.model == f"BB(n,{L})"]
@@ -102,8 +105,9 @@ def rows():
 
     # --- the two variants of L = 2
     ch = pd.read_csv(f"{DATA}/bb2_chord.csv")
-    for tag, label, bip in (("bb2par", r"\quad $+$ a link, bipartite", True),
-                            ("bb2chord", r"\quad $+$ a diagonal", False)):
+    for tag, label, bip in (
+            ("bb2par", r"$BB(n,2)+$ a link", True),
+            ("bb2chord", r"$BB(n,2)+$ a diagonal", False)):
         g = ch[ch.rule == tag]
         top = g[g.n == g.n.max()]
         out.append(dict(
@@ -116,7 +120,9 @@ def rows():
 
 def main():
     r = rows()
-    order = [0, 1, 5, 6, 2, 3, 4]           # L=1, L=2 and its two variants, then 3,4,5
+    # the sweep first, in order of L, then the two variants of L = 2 that add a
+    # link -- they are interventions on the family rather than members of it
+    order = [0, 1, 2, 3, 4, 5, 6]
     L = [r"\begin{center}", r"\footnotesize\setlength{\tabcolsep}{3pt}",
          r"\begin{tabular}{lccrrrrr}", r"\hline",
          r"rule & cycle & bip. & $\langle k\rangle$ & $r_\kappa$ "
@@ -128,7 +134,7 @@ def main():
         L.append(f"{x['rule']} & ${x['cyc']}$ & {'yes' if x['bip'] else 'no'} & "
                  f"${x['k']:.2f}$ & {rk} & ${x['b_nest']:.2f}$ & {bm} & "
                  f"${100*x['named']:.0f}\\%$" r"\\")
-        if i == 6:
+        if i == 4:                      # rule off the sweep from the variants
             L.append(r"\hline")
     L += [r"\hline", r"\end{tabular}", r"\end{center}"]
     open(os.path.join(ROOT, "tab-bubble.tex"), "w").write("\n".join(L) + "\n")

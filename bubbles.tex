@@ -1,4 +1,4 @@
-\chapter{A family with a dial}
+\chapter{Communities in the bubble family}
 \label{ch:bubbles}
 
 The last chapter left one thing conspicuously unfinished. An alphabet of motifs
@@ -48,7 +48,7 @@ $800$, and the $L=5$ figure agrees with the published $752$ to within the grid.
 That the odd rules form communities sooner is not an artefact of one
 implementation.
 
-\section{The question the alphabet could not ask}
+\section{Extending the alphabet}
 \label{sec:bb-alphabet}
 
 Chapter~\ref{ch:motifs} fitted these networks with an alphabet of the link, the
@@ -121,10 +121,32 @@ them: the answer is bimodal, most realisations returning a single community and 
 minority returning what the block model returns, so the mean is a mixing ratio
 rather than a law.
 
-The pattern is not subtle. Naming a rule's own motif abolishes its communities
-when $L$ is even and leaves them exactly where they were when $L$ is odd.
+The pattern is not subtle, and Figure~\ref{fig:bb-alternation}a is the whole of
+it. Naming a rule's own motif abolishes its communities when $L$ is even and
+leaves them exactly where they were when $L$ is odd.
 
-\section{What does not decide it}
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{figs/fig-bb-alternation.pdf}
+  \caption{\textbf{The alternation, and the diagonal that breaks it.} Both panels
+  plot the number of communities the motif alphabet reports, divided by the
+  number the same nested block model reports on the same networks. A rule whose
+  communities survive sits on one; a rule whose communities are carried off falls
+  away from it. The ratio is plotted rather than the two counts because these
+  rules differ several-fold in how many communities they have to begin with, and
+  that difference is precisely what does \emph{not} decide the outcome.
+  \textbf{(a)} $L=1$ to $5$, with odd $L$ filled and even $L$ open. The odd rules
+  lie on one at every size; the even rules peel away and keep going. Their
+  motifs cover between fifty-four and fifty-seven per cent of the links either
+  way. \textbf{(b)} $BB(n,2)$ against two variants that each add one link per
+  step. The bipartite one leaves the alphabet nothing separable to name and so
+  tests nothing; the diagonal destroys bipartiteness, and the communities return
+  while the alphabet takes up a larger share of that network --- sixty-four per
+  cent --- than of any other in this book.}
+  \label{fig:bb-alternation}
+\end{figure}
+
+\section{What does not decide}
 \label{sec:bb-negative}
 
 Two explanations were available before this sweep, and the table kills both.
@@ -262,7 +284,7 @@ alternates against that ordering rather than following it: $L=1$ survives at the
 highest density in the family and $L=5$ survives at the lowest, with the two
 casualties in between. Nothing monotone in $\langle k\rangle$ can produce that.
 
-\section{What is settled, and what is not}
+\section{Settled, and not settled}
 \label{sec:bb-conclusion}
 
 Settled: within this family, whether naming a rule's own motif dissolves its
