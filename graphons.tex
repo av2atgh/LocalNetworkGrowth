@@ -697,20 +697,18 @@ should be re-examined with the other prior, and it does not survive intact.
 
 Take the book's own growth rules first, where the networks can be made to order
 and grown as far as patience allows. Fitting both models to the same realisations
-over $n=100$ to $1600$ (Figure~\ref{fig:gr-scaling}):
+gives the table this chapter and the next both work from
+(Figure~\ref{fig:gr-scaling}):
 
-\begin{center}
-\begin{tabular}{lrrr}
-\hline
-rule & flat & nested & difference\\
-\hline
-$LS(n,1)$   & $0.54$ & $0.94$ & $+0.40$\\
-$DS(n,0.5)$ & $0.76$ & $1.02$ & $+0.26$\\
-$DD(n,0.5)$ & $0.78$ & $1.12$ & $+0.34$\\
-$BB(n,2)$   & $0.72$ & $0.94$ & $+0.22$\\
-\hline
-\end{tabular}
-\end{center}
+\input{tab-master-models}
+
+\noindent The first six rows are the random rules of
+Chapters~\ref{ch:friends}--\ref{ch:duplication}, the last two the deterministic
+lattices, whose smallest generations are dropped because a lattice the fit puts
+in one or two groups is below the resolution of either method and would
+contribute a slope fitted to nothing. The last two columns are read off the
+nested fit and are the subject of Section~\ref{sec:gr-density}; the exponents
+come first.
 
 \begin{figure}[t]
   \centering
@@ -724,12 +722,18 @@ $BB(n,2)$   & $0.72$ & $0.94$ & $+0.22$\\
 \end{figure}
 
 \noindent The flat model reproduces Chapter~\ref{ch:communities} --- it was that
-chapter's method --- and it reproduces it while sitting at its own ceiling. Lift
-the ceiling and every rule moves to the modular limit: the number of communities
-grows in proportion to the size, and their typical size stops growing. At
-$n=1600$ local search divides into groups of about thirty-four nodes and
-duplication--split into groups of about twenty-one, and those figures barely
-change as the networks are grown further.
+chapter's method --- and it reproduces it while sitting at its own ceiling. Its
+column is remarkably uniform in doing so: eight rules of quite different
+character, deterministic lattices among them, and every one of them reads between
+$0.48$ and $0.78$. A ceiling produces exactly that kind of agreement, and a
+network property has no reason to.
+
+Lift the ceiling and every rule moves to the modular limit: the exponents cluster
+on one, from $0.89$ to $1.12$, the number of communities grows in proportion to
+the size, and their typical size stops growing. At $n=1600$ local search divides
+into groups of about thirty-four nodes and duplication--split into groups of
+about twenty-one, and those figures barely change as the networks are grown
+further.
 
 The same question on the real networks gives a smaller shift in the same
 direction. Refitting close to ninety of them, from twenty-nine nodes to three
@@ -778,16 +782,17 @@ of them there are per node --- and $\langle n_B\rangle$ its reciprocal, the mean
 number of nodes per community. Neither is then a rate of growth any longer; each
 is a \emph{quantity}, a number a network of any size simply has, and one may
 tabulate it the way one tabulates a clustering coefficient or a degree exponent.
-On the growth rules this is very nearly what happens.
+On the growth rules this is very nearly what happens, and it is the last two
+columns of the table above.
 
-\input{tab-density-models}
-
-\noindent The exponents straddle one, and the density is flat --- to within a few
-per cent for local search and duplication--split across sixteen-fold in size, for
-the bubble rule across sixty-four-fold. The rules are not saying the same thing:
-their densities differ by a factor of three, and the typical community runs from
-twenty-one nodes under duplication--split to sixty-six under the bubble rule.
-Those numbers are as much a signature of the rule as its degree exponent is.
+The exponents straddle one, and the density is flat --- to within a few per cent
+for local search and duplication--split across sixteen-fold in size, for the
+bubble rule across sixty-four-fold, and for the two lattices across a range of
+sixteen and twenty-seven. The rules are not saying the same thing: their
+densities differ by a factor of five, and the typical community runs from
+twenty-one nodes under duplication--split to a hundred and thirteen on the
+diamond lattice. Those numbers are as much a signature of the rule as its degree
+exponent is.
 Nothing in the rules sets a community size directly --- there is no parameter with
 units of nodes anywhere in them --- and yet each settles on one and holds it while
 the network grows by orders of magnitude around it.
@@ -797,7 +802,7 @@ tempting to describe it as the limit these networks converge to, and it is nearl
 the opposite. A graphon is a picture in which the group structure coarsens: as
 $n$ grows the number of groups stays put and each group swells in proportion, so
 that the labels shrink onto a fixed kernel on the unit square. Constant density is
-that picture refused. Communities of twenty or sixty nodes never swell, and no
+that picture refused. Communities of twenty or a hundred nodes never swell, and no
 matter how far the network is grown, the resolution needed to see its structure
 keeps pace with the network itself. This is a second obstruction, distinct from
 the sparsity of Section~\ref{sec:gr-regimes}: a sparse network could still have a
@@ -955,8 +960,9 @@ narrower question and following it further than intended. Fit the nested model
 instead of the flat one and the number of communities grows in proportion to the
 size. The density $b=B/n$ of Eq.~\eqref{eq:gr-density} stops depending on $n$; it
 becomes a number a network has, the way it has a clustering coefficient. The growth rules hold it flat over one to
-two decades and disagree about its value by a factor of three, twenty-one nodes
-per community under duplication--split against sixty-six under the bubble rule. On
+two decades and disagree about its value by a factor of five, twenty-one nodes
+per community under duplication--split against a hundred and thirteen on the
+diamond lattice. On
 the real systems where the question can be asked properly --- those recorded
 repeatedly while they grew --- it is flat too, and the collaboration graph settles
 at twenty-three nodes per community, next to duplication--split's twenty-one.
@@ -978,14 +984,15 @@ structure from nothing --- it is organising real groups into a tree that the dat
 never asked for.) The bottom level is a measurement. The levels above it are a
 description device, and no claim about a self-similar hierarchy survives them.
 
-What survives is one number, and that is the finding.
+What survives is not one number but a small set of possibilities, and that is the
+finding.
 
 \begin{quote}
 \emph{Conjecture.} For large $n$ a locally grown network does not converge to a
 kernel on the unit square --- not of two arguments, and not of any fixed number.
-It converges \emph{locally}: the neighbourhood of a typical node settles down, and
-with it a community of bounded size. What the limit is characterised by is
-intensive: chief among these quantities the density of communities $b=B/n$,
+It converges \emph{locally}: the neighbourhood of a typical node settles down,
+and with it a community of bounded size. What the limit is characterised by is
+intensive, chief among these quantities the density of communities $b=B/n$,
 equivalently the mean community size $\langle n_B\rangle$, constant in $n$ and set
 by the growth rule.
 \end{quote}
@@ -1012,15 +1019,34 @@ around a typical node is exactly what remains open, and nothing here settles it.
 What is settled is that the two-variable picture cannot, and that looking for the
 answer as a picture at all may have been the wrong instinct.
 
-One qualification belongs with the conjecture rather than after it, because the
-next chapter finds a counterexample and it is better met head-on. Every density
-quoted above was measured with a block model, whose vocabulary cannot name a
-triangle. Chapter~\ref{ch:motifs} fits the same networks with one that can, and on
-the diamond lattice --- a rule as local as any in this book --- the density
-evaporates: the number of communities falls from growing like $n$ to growing like
-$\log n$, and the description that says so is the one minimum description length
-prefers, by a margin that widens with size. So a network can have a density under
-one description and none under a better one.
+A constant density is not, however, the only thing a locally grown network can
+have, and the conjecture is better read as naming one of three outcomes than as
+naming the only one. There are three, and the next chapter measures which rule
+falls into which:
+
+\begin{itemize}
+\item \emph{No communities.} The fit returns a single group at any size, and
+  $r_\kappa$ is infinite. Chapter~\ref{ch:communities}'s non-local control
+  $BA(n,2)$ is the standing example, and locality is what the other rules have
+  that it does not.
+\item \emph{Constant density.} $\beta=1$, and $b=B/n$ is a number the rule has.
+  This is where every rule in the table above sits, and it is what the conjecture
+  describes.
+\item \emph{Fractal.} Communities emerge and their number grows, but more slowly
+  than the network: $0<\beta<1$, so the density falls away to nothing. No rule in
+  the table above is here, and one of them arrives here in
+  Chapter~\ref{ch:motifs}.
+\end{itemize}
+
+\noindent That last clause is a qualification that belongs with the conjecture
+rather than after it, because the next chapter finds the counterexample and it is
+better met head-on. Every density quoted above was measured with a block model,
+whose vocabulary cannot name a triangle. Chapter~\ref{ch:motifs} fits the same
+networks with one that can, and on the diamond lattice --- a rule as local as any
+in this book --- the density evaporates: the number of communities falls from
+growing like $n$ to growing like $\log n$, and the description that says so is the
+one minimum description length prefers, at every size measured. So a network can
+have a density under one description and none under a better one.
 
 That is not a defeat for the conjecture so much as a statement of what it is
 conjecturing about. A limit class, like an exponent, is a property of a network
@@ -1029,8 +1055,8 @@ already, once for the prior and once for the sample. What the diamond adds is th
 improving the code can move a network between classes and not merely shift its
 exponent. The conjecture should therefore be read as a claim about the best
 available description, and it stands or falls on whether the networks that matter
-keep their density when the description improves --- which is measured, for what it
-can reach, in Section~\ref{sec:gr-square}.
+keep their density when the description improves --- which is measured, for what
+it can reach, in Section~\ref{sec:gr-decides}.
 
 Two things are worth carrying forward. The first is a warning about instruments,
 learned twice in this chapter and at some cost. The exponent $\beta$ moved from
@@ -1039,4 +1065,6 @@ stopped mixing kinds of network; neither move had anything to do with the
 networks. A number measured through a method is a statement about the pair, and
 the only way to tell which half is speaking is to change the method and watch.
 The second is the density itself, which the next chapter will try to move by
-changing the vocabulary rather than the resolution --- and will fail to.
+changing the vocabulary rather than the resolution. On six rules out of eight it
+will fail. On the other two it will succeed, and those two are the reason the
+classes have to be named at all.

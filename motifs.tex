@@ -17,7 +17,7 @@ That is the fact this chapter is built on, and it is worth stating at the outset
 The number of $h$-cycles through a node of degree $k$ is fixed by the degree
 distribution together with one three-point quantity, the clustering coefficient,
 and the length enters only as an exponent: the same closing probability applied
-$h-2$ times around the loop (Section~\ref{sec:gr-arity}). Long cycles are not an
+$h-2$ times around the loop (Section~\ref{sec:gr-conjecture}). Long cycles are not an
 independent feature of a network. They are what short cycles compound into. A
 description that has the triangles right has the whole spectrum right, wherever
 triangles exist at all.
@@ -34,9 +34,11 @@ community. But if the network was grown by a rule that closes triangles
 everywhere, the knots are not communities at all, and a method that could
 \emph{name} a triangle would have an innocent explanation available where a
 method without one has only the partition. So the question of this chapter is
-whether giving a community model a vocabulary of motifs changes what it reports
---- and the answer, worked out over the sections that follow, is that it changes
-one thing and leaves another alone.
+whether giving a community model a vocabulary of motifs changes what it reports.
+The answer, worked out over the sections that follow, is that it usually changes
+when communities appear and not how many there are --- but that on two rules out
+of eight it does something larger, and moves the network into a different limit
+class altogether.
 
 The concern is not new, and neither is the vocabulary. Recurring small subgraphs
 were named \emph{network motifs} by \citet{milo2002}, who found them at
@@ -55,173 +57,112 @@ target is not any one network but the \emph{scaling}, how the number of
 communities grows with size and whether that exponent is a property of the
 network or of the vocabulary used to describe it.
 
-\section{Two questions about arity}
+\section{Why a small alphabet might be enough}
 \label{sec:gr-conjecture}
 
 Chapter~\ref{ch:graphons} ended by conjecturing that a locally grown network
 converges to no kernel on the unit square at all, of two arguments or of any
 number, and that what characterises its limit is instead intensive: a density of
 communities, constant in size and set by the rule. It reached that conclusion by
-abandoning an earlier guess --- that the limit is a kernel of \emph{higher arity},
-three arguments where the rule closes triangles and four where it duplicates, with
-the fitted block model as the two-variable shadow of it. That guess was abandoned
-rather than tested there. It is tested here, and this chapter is where both halves
-of the question --- what a two-variable fit loses, and whether more arguments
-recover it --- are taken apart into pieces measurement can reach.
+abandoning an earlier guess --- that the limit is a kernel of \emph{higher
+arity}, three arguments where the rule closes triangles and four where it
+duplicates, with the fitted block model as the two-variable shadow of it.
 
-Start from what Chapter~\ref{ch:communities} actually did. It took networks grown
-by local rules and \emph{fitted} them --- to a stochastic block model, by Bayesian
-inference. A block model is a two-variable object, a kernel
-$[0,1]^2\to[0,1]$ read through group labels, and the fit was good enough to
-count communities across four decades of size. So a two-variable description
-already captures something real. The question is what it misses, whether the miss
-has a shape, and whether an object with more arguments recovers it.
+This section takes the abandoned guess seriously for as long as it is useful,
+which is not all the way. Its purpose is not to settle what the limit object is;
+that question is left where Chapter~\ref{ch:graphons} left it. Its purpose is to
+license an instrument. If a two-variable description can be shown to lose
+something with a definite shape, and the shape can be shown to be fixed by the
+shortest cycle the rule closes, then the way to build a better community model is
+not to raise the arity of everything --- which is unaffordable, as we shall see
+--- but to hand the ordinary pair model a small vocabulary of short motifs. That
+is the conjecture this section exists to state. Everything after it is a test of
+the instrument, not of the conjecture.
 
-Two questions follow, and the first is answerable now.
+\subsection*{What a two-variable fit loses}
 
-\subsection*{Q1: what does the fitted block model preserve?}
+Take the two lattices whose construction is known exactly, so that every quantity
+can be computed rather than estimated.
 
-Given a network grown by a local rule and the block model that Bayesian inference
-fits to it, which statistics agree and which do not? The honest answer has a clean
-first instalment, and the pseudofractal web supplies it, because there every
-quantity is exact.
-
-\begin{calculation}{the triangles a two-variable model can hold}
-The pseudofractal web of \citet{dorogovtsevgoltsev2002} has
-$n=(3^{t+1}+3)/2$ nodes and $3^{t+1}$ links, and every node added
-closes exactly one triangle, so it holds exactly $n-2$ of them. Fit chapter~6's
-branch cut and ask each fitted model how many it expects, via
-$\mathrm{tr}(P^3)/6$ for its expected adjacency matrix $P$.
+\begin{calculation}{the higher-order structure a two-variable model can hold}
+The pseudofractal web of \citet{dorogovtsevgoltsev2002} has $n=(3^{t+1}+3)/2$
+nodes and $3^{t+1}$ links, and every node added closes exactly one triangle, so
+it holds exactly $n-2$ of them. Fit Chapter~\ref{ch:communities}'s branch cut and
+ask each fitted model how many it expects, via $\mathrm{tr}(P^3)/6$ for its
+expected adjacency matrix $P$.
 
 The plain block model assigns one density per block pair. In a sparse network
 those densities fall like $1/n$, and a triple of blocks contributes
 $n^3\times n^{-3}$: the expected count is $O(1)$, and numerically it
-\emph{saturates} at $21.3$ triangles however large the web grows. Against a true
-count rising like $n$, the deficit grows like $n$ itself.
+\emph{saturates} at $21.3$ triangles however large the web grows.
 
 The degree-corrected model does better, and still fails. Its expected count
 weights each block by the degree sum $Q_r=\sum_{i\in r}k_i(k_i-1)$ rather than by
 its size --- $k(k-1)$ and not $k^2$, because a triangle leaves a node by a
 different link than it entered by, and the fit holds the degrees fixed --- and
-for this web $Q\sim4^{t}$ while the degree sum is $S\sim3^{t}$,
-so the count grows as $(Q/S)^3\sim(64/27)^t$ against a truth growing as $3^t$. The
-deficit again diverges, now as
-\begin{equation}
-  (81/64)^{t} \;=\; n^{\,0.214}.
-  \label{eq:gr-tridef}
-\end{equation}
-Allowing the number of blocks to grow as the data demand, $B\propto n^{\beta}$,
-helps but does not close it: $B$ blocks of $n/B$ nodes contribute $O(1)$ triangles
-each, hence $n^{\beta}$ in all, still short of $\Theta(n)$ by $n^{1-\beta}$.
-\end{calculation}
+for this web $Q\sim4^{t}$ while the degree sum is $S\sim3^{t}$, so the count
+grows as $(Q/S)^3\sim(64/27)^t$ against a truth growing as $3^t$. The deficit
+diverges, as $(81/64)^{t}=n^{0.214}$. Allowing the number of blocks to grow as
+the data demand, $B\propto n^{\beta}$, helps but does not close it: $B$ blocks of
+$n/B$ nodes contribute $O(1)$ triangles each, hence $n^{\beta}$ in all, still
+short of $\Theta(n)$ by $n^{1-\beta}$.
 
-So the answer to the first question, for this network, is sharp. A two-variable
-description preserves what the \emph{cut metric} sees --- the yardstick the limit
-theory uses, which judges two networks close when no way of splitting the nodes
-into two sets reveals a difference in the density of links across the split, and
-so registers block densities, degrees, the
-evidence for a partition, everything the last chapter computed --- and loses the
-3-point structure entirely, by a margin that widens without bound. Even a
-hierarchy of blocks, refining as fast as real networks demand, recovers only
-$n^{\beta}$ of the $n$ triangles.
-
-One warning for anyone testing this at accessible sizes: the failure is not
-visible early, and it changes sign. At $n\simeq3000$ the degree-corrected model
-\emph{over}counts triangles fivefold, and only past $n\sim10^8$ does it cross over
-to undercounting. A study stopping at ten thousand nodes would conclude the
-opposite of the truth.
-
-\subsection*{Q2: does higher order close the gap?}
-
-If two variables are not enough, are three? Here the arity guess meets a genuine
-obstacle, and the obstacle locates exactly where its content lies.
-
-For \emph{dense} graphs the question is already settled, and settled against the
-guess. An exchangeable array admits the representation
-$f(\xi_\emptyset,\xi_i,\xi_j,\xi_{ij})$, and for a simple dense graph the
-pair-level variable $\xi_{ij}$ can always be absorbed into a threshold, leaving a
-two-variable kernel. Exchangeability \emph{forces} the graphon form; no
-higher-order object can add anything. Whatever raising the arity buys, it cannot
-be that.
-
-Its content therefore lies entirely in the sparse regime --- which is the regime
-this whole chapter has been about, and the reason the clustering of
-Section~\ref{sec:gr-clustering} does not vanish when a graphon says it must. There,
-the pair-level randomness does not wash out, and the natural object keeps
-arguments indexed by \emph{pairs} rather than by nodes: not $W(x_i,x_j,x_k)$ but
-something closer to $W(x_{ij},x_{ik},x_{jk})$, which is the shape the limit theory
-of hypergraphs already takes --- a hypergraph being a network whose links may
-join three or more nodes at once rather than exactly two. The inferential side of
-that idea has been built: \citet{young2021hypergraph} ask, of an ordinary
-pairwise network, which of its cliques are better explained as single higher-order
-interactions than as the links they appear to be, and answer by description
-length, promoting a group to a hyperlink only when the evidence pays for the
-promotion. It is the same accounting used here, with hyperlinks in place of
-motifs. That is a refinement of the guess rather than a
-refutation of it, and it says where to look: triadic closure makes the presence of
-one link depend on two others sharing a node, and a pair-indexed kernel is the
-smallest object that can express such a dependence.
-
-\subsection*{The same failure, with the arity changed}
-
-The diamond lattice tests whether any of this was about triangles. It cannot be:
-the lattice is bipartite and contains no triangle at all. Its rule replaces each
-link with two parallel paths, so the motif it manufactures is the \emph{four}-cycle,
-and the same question can be put again with the arity moved by one.
-
-\begin{calculation}{the four-cycles a two-variable model can hold}
-After $t$ generations the lattice has $m=4^t$ links and $n=(2\cdot4^t+4)/3$ nodes.
-Only the diamonds closed at the \emph{last} generation are still four-cycles ---
-earlier ones have had their links subdivided into longer loops --- so the count is
-exactly $4^{t-1}$, again proportional to $n$. Fitting chapter~6's cut into two
-branches and evaluating $\mathrm{tr}(P^4)/8$:
-
-The plain block model saturates, as before, and here the constant can be named. In
-the limit the two blocks are near-independent, each of $n_r\simeq4^t/3$ nodes at
-density $p\simeq9/4^{t}$, contributing $n_r^4p^4/8=81/8$ four-cycles apiece:
-\begin{equation}
-  \text{plain model} \;\longrightarrow\; \tfrac{81}{4} = 20.25
-  \label{eq:gr-quadsat}
-\end{equation}
-four-cycles, for a lattice of any size.
-
-The degree-corrected model is where the two lattices part company. Its count is
-governed by the ratio of the excess-degree sum to the degree sum, and for this
-lattice that ratio is not a power of $n$ at all but
+The diamond lattice moves the arity by one and makes the failure worse. It is
+bipartite and holds no triangle at all; its rule replaces each link with two
+parallel paths, so its motif is the four-cycle, and after $t$ generations it has
+$m=4^t$ links, $n=(2\cdot4^t+4)/3$ nodes and exactly $4^{t-1}$ four-cycles ---
+only those closed at the \emph{last} generation are still four-cycles, earlier
+ones having had their links subdivided into longer loops. Evaluating
+$\mathrm{tr}(P^4)/8$ on the same cut, the plain model again saturates, at
+$81/4=20.25$ four-cycles for a lattice of any size. The degree-corrected model is
+where the two lattices part company: its count is governed by the ratio of the
+excess-degree sum to the degree sum, and for this lattice that ratio is not a
+power of $n$ at all but
 \begin{equation}
   Q/S \;=\; \sum_i k_i(k_i-1) \Big/ \sum_i k_i \;=\; t
   \label{eq:gr-QS}
 \end{equation}
-exactly, so the expected four-cycle count converges to $t^4/4$: \emph{poly\-log\-arithmic}
-in $n$, against a truth growing as $n/6$. At $t=26$ the lattice holds
-$1.1\times10^{15}$ four-cycles and the fitted degree-corrected model expects
-$1.2\times10^{5}$ of them.
+exactly, so the expected four-cycle count converges to $t^4/4$:
+\emph{poly\-log\-arithmic} in $n$, against a truth growing as $n/6$. At $t=26$ the
+lattice holds $1.1\times10^{15}$ four-cycles and the fitted degree-corrected
+model expects $1.2\times10^{5}$ of them.
 \end{calculation}
 
-That gap --- a factor of $n/(\ln n)^4$ --- is far worse than the pseudofractal's
-$n^{0.214}$, and the reason is the one thing the two lattices genuinely differ in.
-The pseudofractal's degrees are wild, $\gamma\simeq2.585$, and a rank-one model
-with hubs that extreme manufactures a great many triangles by accident: three
-links that all happen to touch the same few enormous nodes close a triangle
-whether or not any rule intended it. The diamond's degrees are milder,
-$\gamma=3$ exactly, which is the marginal case where $\sum k_i^2$ outgrows
-$\sum k_i$ only logarithmically --- and a rank-one model then has nothing to fake
-with.
+So a two-variable description preserves what the \emph{cut metric} sees --- the
+yardstick the limit theory uses, which judges two networks close when no way of
+splitting the nodes into two sets reveals a difference in the density of links
+across the split, and so registers block densities, degrees, the evidence for a
+partition, everything Chapter~\ref{ch:graphons} computed --- and loses the
+higher-order structure entirely, by a margin that widens without bound.
 
-So the two-variable model's apparent grasp of higher-order structure is not a grasp
-at all. It is borrowed entirely from degree heterogeneity, and it fails as the
-degrees become tame. That is a mechanism for something already measured in
-Section~\ref{sec:gr-clustering}: there the degree-preserving null came within a
+The gap between the two lattices --- $n^{0.214}$ against $n/(\ln n)^4$ --- is the
+one thing they genuinely differ in, and it is worth naming because it recurs. The
+pseudofractal's degrees are wild, $\gamma\simeq2.585$, and a rank-one model with
+hubs that extreme manufactures a great many triangles by accident: three links
+that all happen to touch the same few enormous nodes close a triangle whether or
+not any rule intended it. The diamond's degrees are milder, $\gamma=3$ exactly,
+which is the marginal case where $\sum k_i^2$ outgrows $\sum k_i$ only
+logarithmically --- and a rank-one model then has nothing to fake with. The
+two-variable model's apparent grasp of higher-order structure is not a grasp at
+all; it is borrowed from degree heterogeneity, and it fails as the degrees become
+tame. That is the mechanism behind something already measured in
+Section~\ref{sec:gr-clustering}, where the degree-preserving null came within a
 factor of $1.9$ of the Internet's clustering, whose degrees are extreme, and fell
-$356$ times short for co-authorship, whose degrees are not. The deterministic
-lattices say why, and warn against the natural misreading --- that degree-corrected
-models capture clustering. They capture it exactly where the degrees are heavy
-enough to counterfeit it.
+$356$ times short for co-authorship, whose degrees are not. Degree-corrected
+models do not capture clustering. They capture it exactly where the degrees are
+heavy enough to counterfeit it.
 
-\subsection*{The whole spectrum at once}
+One warning for anyone testing this at accessible sizes: the failure is not
+visible early, and it changes sign. At $n\simeq3000$ the degree-corrected model
+\emph{over}counts triangles fivefold, and only past $n\sim10^8$ does it cross
+over to undercounting. A study stopping at ten thousand nodes would conclude the
+opposite of the truth.
+
+\subsection*{What is lost has a shape}
 
 Triangles and four-cycles are two points. Asking the question at every cycle
-length turns the finding from a shortfall into something more damaging.
+length turns the finding from a shortfall into something with more content ---
+and it is the content that motivates the alphabet.
 
 \begin{calculation}{why a two-variable model has a one-parameter spectrum}
 For a model with independent links and expected adjacency $P$, the expected number
@@ -245,9 +186,9 @@ degree sequence fixed: a node offers $k(k-1)$ ordered pairs of links, not $k^2$.
 The one-block case is then $\langle k^2-k\rangle/\langle k\rangle$, which is the
 leading eigenvalue of the \emph{non-backtracking} operator, which counts walks
 forbidden to turn round and retrace the link they arrived on --- the natural
-object for cycles, since a cycle never does. The distinction is invisible in the limits taken below, where the ratio
-diverges and the $-1$ is lost, but it is worth a factor of $25$ at $L=8$ on a
-real network, where the ratio is nearer $3$.
+object for cycles, since a cycle never does. The distinction is invisible in the
+limits taken above, where the ratio diverges and the $-1$ is lost, but it is
+worth a factor of $25$ at $L=8$ on a real network, where the ratio is nearer $3$.
 \end{calculation}
 
 The lattices do nothing but put features at particular lengths. The diamond is
@@ -261,60 +202,42 @@ degree-corrected one, at lengths where the lattice contains nothing whatever.
 So the failure is not that the numbers are too small. It is that a two-variable
 model places mass at every length while a locally grown lattice places it at a
 few, and no adjustment of blocks or degrees can move a smooth profile onto a
-sparse set of lengths. This is a stronger statement than the triangle deficit, and
-it is the one that argues for the guess: what a higher-order object buys is
-not a bigger number but the ability to have a shape.
+sparse set of lengths. What a richer description buys is not a bigger number but
+the ability to have a shape --- and a \emph{shape} supported on a few short
+lengths is exactly what a small alphabet of motifs is.
 
-The pseudofractal makes the same point from the other side. Its degree-corrected
-fit does not merely undercount; it \emph{changes sign} --- overshooting at every
-length at accessible sizes, by a factor of $3.5$ at $L=3$ and $2\times10^4$ at
-$L=8$ for $t=5$, and only crossing over to undercounting at $L=3$ past
-$n\sim10^8$. The reason is now visible in
-Eq.~\eqref{eq:gr-transfer}: the leading eigenvalue of a degree-corrected fit is
-essentially $\langle k^2-k\rangle/\langle k\rangle$, so its spectrum grows like
-that ratio raised to the length, and for a degree distribution $p(k)\sim
-k^{-\gamma}$,
+That the shape is generated by one eigenvalue also fixes how the two lattices
+differ. For a degree distribution $p(k)\sim k^{-\gamma}$,
 \begin{equation}
   \lambda \;\sim\; n^{(3-\gamma)/(\gamma-1)} \quad (\gamma<3), \qquad
-  \lambda \sim \ln n \quad (\gamma=3).
+  \lambda \sim \ln n \quad (\gamma=3),
   \label{eq:gr-lambda}
 \end{equation}
-For the pseudofractal, $\gamma\simeq2.585$ gives the exponent $0.2619$, which is
-exactly the growth its transfer matrix shows; for the diamond, $\gamma=3$ gives
-the logarithm and $Q/S=t$. One quantity therefore governs both earlier results:
-the deficit at length $L$ is of order $n/\lambda^{L}$, undercounting while
-$\lambda^L<n$ and overcounting after. The rank-one part does not describe
-higher-order structure at any length. It manufactures a geometric series and
-happens to cross the truth once.
+which gives the pseudofractal's exponent $0.2619$ and the diamond's $Q/S=t$. One
+quantity governs both earlier results: the deficit at length $L$ is of order
+$n/\lambda^{L}$, undercounting while $\lambda^L<n$ and overcounting after. The
+rank-one part does not describe higher-order structure at any length. It
+manufactures a geometric series and happens to cross the truth once.
 
-\section{What the crossing point does on real networks}
-
-The crossing is a prediction, and a falsifiable one.
-Eq.~\eqref{eq:gr-lambda} places it at $L^\ast=(\gamma-1)/(3-\gamma)$, near $4$ for
-the pseudofractal and receding to infinity as $\gamma\to3$; equivalently, and
-without assuming the degree exponent, at $L^\ast=\ln n/\ln\lambda$. Either way the
-deficit should be $n/\lambda^L$, so that $\ln(\text{true}_L/\text{predicted}_L)$
-falls linearly in $L$ with slope exactly $-\ln\lambda$. That was tested on
-$44$~real networks, with cycles counted exactly at $L=3\ldots8$ and each fitted
-model represented by a sample from it --- a rewiring that preserves the degrees,
-and one that preserves the degrees and the fitted block matrix both --- rather
-than by the formula, which counts closed walks and agrees with the cycle count
-only asymptotically.
-
-Half of the prediction came back confirmed, and it is the half that matters most
-for the argument. A fitted model's own motif spectrum really is generated by its
-transfer matrix: on the larger networks the sampled counts sit on
-$\lambda^L/2L$ to within one per cent at every length
+That crossing is a falsifiable prediction, and it was tested on $44$ real
+networks, with cycles counted exactly at $L=3\ldots8$ and each fitted model
+represented by a sample from it rather than by the formula. Half of it came back
+confirmed, and it is the half the argument stands on: a fitted model's own motif
+spectrum really is generated by its transfer matrix, the sampled counts sitting
+on $\lambda^L/2L$ to within one per cent at every length
 (Figure~\ref{fig:gr-crossover}a). Eq.~\eqref{eq:gr-transfer} is not an
-approximation that degrades, and the argument of this section stands on it.
-
-The crossing itself does not survive. Real networks carry many more cycles than
-their rewirings at \emph{every} length alike --- five times more at the median, and
-four thousand times more for a large co-purchase network --- and the excess barely
-decays: the measured slope is about a tenth of $-\ln\lambda$, thirty-nine of the
-forty-two networks depart from the predicted slope by more than two standard
-errors, and five have the excess growing with $L$ rather than shrinking
-(Figure~\ref{fig:gr-crossover}b). The deficit is a level, not a slope.
+approximation that degrades. The crossing itself does not survive: real networks
+carry many more cycles than their rewirings at \emph{every} length alike --- five
+times more at the median, four thousand times for a large co-purchase network ---
+and the excess barely decays, the measured slope being about a tenth of
+$-\ln\lambda$, with thirty-nine of forty-two networks departing from the
+predicted slope by more than two standard errors
+(Figure~\ref{fig:gr-crossover}b). The deficit is a level, not a slope. The
+lattices' motif counts are extensive and flat in $L$, so dividing by a geometric
+profile leaves a geometric deficit and a crossing; real networks' cycle counts
+grow with $L$ at very nearly the rate their rewirings do. The crossing is a
+property of the deterministic webs, and the $L^\ast$ formula should be read as a
+statement about them.
 
 \begin{figure}[t]
   \centering
@@ -331,74 +254,54 @@ errors, and five have the excess growing with $L$ rather than shrinking
   \label{fig:gr-crossover}
 \end{figure}
 
-The reason is visible once stated. The lattices' motif counts are extensive and
-\emph{flat} in $L$ --- exactly $n-2$ triangles, exactly $4^{t-1}$ four-cycles ---
-so dividing by a geometric profile leaves a geometric deficit and a crossing.
-Real networks' cycle counts grow with $L$ at very nearly the rate their rewirings
-do. The crossing is a property of the deterministic webs, not of networks, and
-the $L^\ast$ formula should be read as a statement about them.
-
-Two further cautions came out of the same measurement. The crossing is barely
-observable in principle: it needs $\lambda^3<n<\lambda^8$, which for a scale-free
-degree distribution forces $\gamma\gtrsim2.5$, and of $163$ network families only
-$20$ have any member inside the window at all --- for most real networks the model
-overcounts at every length one can count. And the scaling
-Eq.~\eqref{eq:gr-lambda} that converts $\ln n/\ln\lambda$ into
-$(\gamma-1)/(3-\gamma)$ is not supported: regressing $\ln\lambda$ on $\ln n$
-within bands of similar $\gamma$ recovers the predicted exponent in one band of
-three and misses in the other two, in opposite directions.
-
-None of this touches the support argument, which the same measurement instead
-strengthened by finding a real network with the diamond's pathology. Fullerenes
-are molecules, and their cycle spectra are exactly $12$ five-cycles and
-$n/2-10$ six-cycles and \emph{nothing at any other length} --- twelve pentagons at
-every size, which is Euler's theorem. Both fitted models put positive mass
-everywhere: for $\mathrm{C}_{6000}$, five triangles, forty-three four-cycles,
-twenty-seven seven-cycles. There the deficit is not fivefold or four
+None of that touches the support argument, which the same measurement instead
+strengthened by turning up a real network with the diamond's pathology.
+Fullerenes are molecules, and their cycle spectra are exactly $12$ five-cycles
+and $n/2-10$ six-cycles and \emph{nothing at any other length} --- twelve
+pentagons at every size, which is Euler's theorem. Both fitted models put
+positive mass everywhere: for $\mathrm{C}_{6000}$, five triangles, forty-three
+four-cycles, twenty-seven seven-cycles. There the deficit is not fivefold or four
 thousandfold, it is infinite in both directions, and no choice of blocks or
 degrees can repair it.
 
-\section{An arity that can be measured}
-\label{sec:gr-arity}
+\subsection*{How short a vocabulary has to be}
 
-The guess that a higher-arity kernel is what is needed sets the order by the
-arity of the rule, and so far that has been an argument from two lattices. It can be made quantitative, because the cycle
-spectrum of a real network is already known to be generated by a local quantity
-of arity three. Write $p_k$ for the degree distribution --- the fraction of
-nodes having degree $k$ --- and $c_k$ for the clustering coefficient of a node of
-degree $k$, the fraction of its neighbour pairs that are themselves linked. Then
-the number of $h$-cycles through a node of that degree
+The shape is supported on a few lengths. How few, and which, is not something to
+be postulated, because the cycle spectrum of a real network is already known to
+be generated by a local quantity of arity three. Write $p_k$ for the degree
+distribution and $c_k$ for the clustering coefficient of a node of degree $k$.
+Then the number of $h$-cycles through a node of that degree
 is~\citep{vazquez2005cycles}
 \begin{equation}
   \frac{N_h}{n} \;=\; g_h\sum_{k}p_k\,\frac{(h-1)!}{2}\binom{k}{h-1}\,c_k^{\,h-2},
   \label{eq:gr-cycgen}
 \end{equation}
-with $N_h$ the number of $h$-cycles and $g_h$ a correction for multiple counting:
-choose $h-1$ neighbours of a central node, order them, and close the cycle by
-requiring $h-2$ links among consecutive ones, each present with probability
-$c_k$. The degree distribution and one three-point quantity fix the count at
-\emph{every} length, and the measurement holds at $h=3,4,5$ across
-co-authorship, the Internet and a semantic network~\citep{vazquez2005cycles}.
+with $g_h$ a correction for multiple counting: choose $h-1$ neighbours of a
+central node, order them, and close the cycle by requiring $h-2$ links among
+consecutive ones, each present with probability $c_k$. The degree distribution
+and one three-point quantity fix the count at \emph{every} length, and the
+measurement holds at $h=3,4,5$ across co-authorship, the Internet and a semantic
+network~\citep{vazquez2005cycles}.
 
-This settles a question the transfer matrix leaves open. The tower of longer
-cycles needs no mechanism of its own: it is the product $c_k^{\,h-2}$, the same
-closing probability applied $h-2$ times around the loop. Arity three buys not
-just the triangle but the whole spectrum built from triangles. For a great many
-real networks, triangles do the job.
+This is the licence the alphabet needs. The tower of longer cycles requires no
+mechanism of its own: it is the product $c_k^{\,h-2}$, the same closing
+probability applied $h-2$ times around the loop. Arity three buys not just the
+triangle but the whole spectrum built from triangles, and for a great many real
+networks triangles do the job.
 
-They cannot do it for a network that has no triangles. There $c_k=0$ identically,
+They cannot do it for a network with no triangles. There $c_k=0$ identically,
 Eq.~\eqref{eq:gr-cycgen} vanishes at every $h\ge3$, and the failure is not an
-underestimate but an empty prediction --- against a network that is full of
-cycles. The book's own duplication--split rule is exactly that case, built so
-that duplication makes no triangles and splitting destroys any that might form,
-with the square as its motif. Counting $DS(n,1/3)$ directly at $n=2000$: no
-triangles at all, and then $1.1\times10^4$ squares, $7.9\times10^3$ five-cycles
-and $1.3\times10^7$ eight-cycles. Nothing about the network is short of cycles;
-the arity-three generator simply cannot see any of them.
+underestimate but an empty prediction --- against a network full of cycles. The
+book's own duplication--split rule is exactly that case, built so that
+duplication makes no triangles and splitting destroys any that might form.
+Counting $DS(n,1/3)$ directly at $n=2000$: no triangles at all, then
+$1.1\times10^4$ squares, $7.9\times10^3$ five-cycles and $1.3\times10^7$
+eight-cycles. Nothing about the network is short of cycles; the arity-three
+generator simply cannot see any of them.
 
 So the order required is set by the shortest cycle the rule closes, and it is
-measurable rather than postulated. The bubble family makes the point a dial,
-since $BB(n,L)$ closes a fresh cycle of length $L+2$ at every step:
+measurable rather than postulated. The bubble family makes it a dial, since
+$BB(n,L)$ closes a fresh cycle of length $L+2$ at every step:
 
 \begin{center}
 \begin{tabular}{llll}
@@ -421,6 +324,51 @@ the fullerenes obey --- twelve pentagons and $n/2-10$ hexagons at any size, then
 $60$ nine-cycles and $3n/2-60$ ten-cycles, with seven and eight empty because no
 two pentagons touch. A molecule and a growth rule, agreeing on a rule about which
 templates may be adjacent.
+
+\subsection*{The conjecture, and why not a tensor}
+
+Three things have now been established, and together they say what to build. A
+two-variable fit loses the higher-order structure by a diverging margin. What it
+loses is not a number but a shape, supported on a few short lengths. And which
+lengths are populated is fixed by the shortest cycle the rule closes, everything
+longer following from it by compounding. Hence:
+
+\begin{quote}
+\emph{Conjecture.} A small alphabet --- the link, the triangle, the square, and
+whatever else a rule's own footprint requires --- is sufficient vocabulary for
+describing a locally grown network. Naming the shortest cycle a rule closes
+accounts for the higher-order structure a two-variable model loses, and no
+higher-arity object is needed to hold it.
+\end{quote}
+
+\noindent The alternative is to raise the arity of the model itself, and it is
+worth saying why that is not done here. In the dense case the question is already
+settled against it: an exchangeable array admits the representation
+$f(\xi_\emptyset,\xi_i,\xi_j,\xi_{ij})$, and for a simple dense graph the
+pair-level variable $\xi_{ij}$ can always be absorbed into a threshold, leaving a
+two-variable kernel. Exchangeability \emph{forces} the graphon form; no
+higher-order object can add anything. Whatever raising the arity buys, it cannot
+be that, and its content lies entirely in the sparse regime --- which is the
+regime this whole book is about, and the reason the clustering of
+Section~\ref{sec:gr-clustering} does not vanish when a graphon says it must.
+There the pair-level randomness does not wash out, and the natural object keeps
+arguments indexed by \emph{pairs} rather than by nodes: not $W(x_i,x_j,x_k)$ but
+something closer to $W(x_{ij},x_{ik},x_{jk})$, which is the shape the limit
+theory of hypergraphs already takes. The inferential side of that idea has been
+built: \citet{young2021hypergraph} ask, of an ordinary pairwise network, which of
+its cliques are better explained as single higher-order interactions than as the
+links they appear to be, and answer by description length. It is the same
+accounting used below, with hyperlinks in place of motifs.
+
+In practice, though, the tensor is unaffordable, and Chapter~\ref{ch:graphons}
+priced it exactly: a block model over $j$-sets has a count tensor with about
+$B^j/j!$ entries, and balancing that against what a split saves gives
+$B_{\max}\approx[m(j-1)!/\ln m]^{1/j}$, which is $\sqrt n$ at $j=2$ and $n^{1/4}$
+at $j=4$ --- eighteen groups where the pair model recovers three hundred and
+sixteen (Eq.~\eqref{eq:gr-bmax}). A model that can no longer see communities is a
+poor instrument for asking what communities are made of. The conjecture's virtue
+is that it buys the shape without paying that price, and the next section builds
+the instrument that follows from it.
 
 \section{Fitting the order, not assuming it}
 \label{sec:gr-motifsbm}
@@ -517,27 +465,24 @@ branch cut of Chapter~\ref{ch:communities} places \emph{every} four-cycle across
 the cut, so from that partition the model finds no motif at all, and only a
 different starting partition reveals them.
 
-So Question~2 has an answer for grown networks, if not yet for observed ones. A
-three-variable object pays for itself where the rule closes triangles, a
-four-variable one where it closes squares, and neither pays where the rule closes
-something longer --- which is the arity guess's own statement, arrived at by
-measurement rather than by assumption. What remains is to run the same comparison
-on real networks, where the expectation from everything above is modest: the
-two-variable failure there is a large and nearly constant factor rather than a
-growing one, and arity three already accounts for the cycle spectrum wherever
-triangles exist.
+So the conjecture of Section~\ref{sec:gr-conjecture} holds up as far as the
+instrument can be checked against networks whose construction is known. A symbol
+of arity three pays for itself where the rule closes triangles, one of arity four
+where it closes squares, and neither pays where the rule closes something longer
+--- which is the conjecture's own statement, arrived at by measurement rather
+than by assumption, and the alphabet is doing its job when it declines as well as
+when it accepts. That is as much as the vocabulary question needs; what the
+vocabulary then \emph{does} to a community count is a separate matter, and the
+rest of the chapter is about that.
 
-\section{What naming a motif does}
-\label{sec:gr-chapter6}
+\section{Three limit classes}
+\label{sec:gr-classes}
 
-The model of the last section is a community detection method, so it can be
-put to Chapter~\ref{ch:communities}'s two questions --- when do communities
-appear, and how many are there --- and the answers are not the same ones.
-
-Recall that the Ramsey community number is defined relative to a method, and that
-Chapter~\ref{ch:communities} laboured that point without being able to
-demonstrate it. Here it can be demonstrated, because the three methods compared
-below differ in exactly one respect and are otherwise the same procedure.
+The instrument is built. It can be run on every rule in this book, and against
+the two block models it contains as special cases, so that the same networks are
+counted three ways: by a flat block model, by a nested one, and by the nested one
+with an alphabet of motifs. What separates the three is worth pinning down before
+the numbers arrive, because the whole chapter turns on it.
 
 \begin{calculation}{the three methods, and what separates them}
 All three minimize the same description length,
@@ -578,23 +523,91 @@ how finely a method can see, and a change between the last two is about what it
 is willing to call a community.
 \end{calculation}
 
-\noindent Growing local search and duplication--split with the same generators,
-and fitting every realisation all three ways, gives, at $\epsilon=0.05$ and a
-hundred realisations per size:
+\noindent Two quantities are read off each fit. The first is
+Chapter~\ref{ch:communities}'s Ramsey community number $r_\kappa$, the size at
+which communities become certain --- $P_\kappa\ge0.95$ over a hundred
+realisations up to $n=200$ and twenty above it --- which asks \emph{whether} a
+network has communities. The second is Chapter~\ref{ch:graphons}'s exponent
+$\beta$ in $\kappa\propto n^{\beta}$, which asks \emph{how many}. Here is
+everything, for every rule, all three ways.
 
-\begin{center}
-\begin{tabular}{lrrrr}
-\hline
- & \multicolumn{4}{c}{Ramsey number $r_\kappa$}\\
- & flat & nested & $+$ motifs & published \\
-\hline
-$LS(n,1)$   & $70$ & $80$  & $\mathbf{200}$ & $81$\\
-$DS(n,0.5)$ & $90$ & $100$ & $\mathbf{100}$ & $98$\\
-\hline
-\end{tabular}
-\end{center}
+\input{tab-master-motifs}
 
-\noindent The two block-model columns bracket the published numbers without
+\noindent The last column is the fraction of a network's links that the alphabet
+actually succeeds in naming at the largest size fitted, and it is there because it
+turns out to be what decides the rest. The dagger marks the one row taken from
+Chapter~\ref{ch:communities} rather than measured here. The lattices are
+deterministic, one network per size, so $r_\kappa$ is not defined for them; their
+exponents are fitted from $n=366$ and $n=684$ upward, the smaller generations
+being below the resolution of any of the three methods.
+
+Read down the table and the rules fall into three classes, which are the
+organising fact of this chapter and the three sections that follow.
+
+\emph{No communities.} $P_\kappa$ never reaches certainty; the fit returns a
+single group at arbitrarily large size. Chapter~\ref{ch:communities}'s non-local
+control $BA(n,2)$ is the canonical member --- preferential attachment with no
+step that ever looks at a neighbourhood, and no communities at any size. It is
+the one row here not measured with this chapter's instrument, and is marked
+accordingly: the ``never'' is that chapter's flat fit, and neither the nested
+model nor the alphabet has been run on it, so it stands as the class's definition
+rather than as a comparison. What is new is that a network with a perfectly good
+local rule can be moved into the same class by nothing more than a change of
+vocabulary: $BB(n,2)$ has a Ramsey number of $400$ under both block models and
+none at all once its squares can be named.
+
+\emph{Constant density.} $\beta=1$, so $b=\kappa/n$ stops depending on size and
+becomes a number the rule has, in the sense of Chapter~\ref{ch:graphons}'s
+Eq.~\eqref{eq:gr-density}. Six of the eight measured rules are here, the nested
+model and the alphabet agreeing on every one of them to within about a tenth.
+
+\emph{Fractal.} Communities emerge, their number grows, and the density does not
+survive: $0<\beta<1$, so $b\to0$ as a power of the size. One member, the diamond
+lattice at $\beta=0.31$, and it is there only under the motif alphabet.
+
+Three things about that classification need saying immediately, because they
+qualify everything after it.
+
+The first is that a class is a property of a network \emph{together with the code
+used to describe it}, and the table shows this in the plainest possible way: two
+of the eight rules change class when the vocabulary changes, and nothing about
+the networks changes at all. This is the same lesson Chapter~\ref{ch:graphons}
+learned twice --- once for the prior and once for the sample --- and it is
+sharper here, because a prior moved an exponent while a vocabulary moves a rule
+from one class to another.
+
+The second is what the flat column says. Under the flat block model \emph{every}
+rule in the table reads $\beta$ between $0.48$ and $0.78$: on that instrument the
+whole book is in the fractal class. It is not. The flat model is sitting on its
+own $\sqrt n$ ceiling, as Chapter~\ref{ch:graphons} established, and the apparent
+fractality is the ceiling talking. Any claim that a network is in the third class
+has to be made with a model that could have reported the first two, which is why
+the diamond's $0.31$ is quoted from the motif fit and not from the flat one.
+
+The third is a caution about the third class itself. It has one member, measured
+over three sizes, and $\kappa=3,5,7$ at $n=684$, $2732$, $10\,924$ is as
+consistent with $\log n$ as with $n^{0.31}$; Section~\ref{sec:gr-square} says so
+where the number is derived. What is certain is that the density is gone. Whether
+what replaces it is a genuine fractal exponent or something slower is not settled
+by three points, and the class is named for where it sits rather than for a law
+that has been established.
+
+\section{The rules that keep their density}
+\label{sec:gr-chapter6}
+
+Six of the eight rules are in the constant-density class, and they get there by
+two quite different routes: either the alphabet names their motif and the density
+survives anyway, or the alphabet cannot name it at all. Both routes are worth
+following, because between them they say what the vocabulary is and is not able
+to do.
+
+Start with what naming a motif does to the \emph{onset}. The two rules
+Chapter~\ref{ch:communities} published Ramsey numbers for are local search, at
+$81$, and duplication--split, at $98$. The master table puts the first at $70$
+under the flat model and $80$ under the nested one, and the second at $90$ and
+$100$.
+
+The two block-model columns bracket the published numbers without
 quite reproducing them, and the gap is worth a word, since the flat column is
 supposed to be Chapter~\ref{ch:communities}'s own method. It is the same method
 in the sense that matters --- a degree-corrected block model, its number of groups
@@ -609,14 +622,13 @@ column. Agreement to a grid step is the check that this is the same measurement.
 Equality was never on offer, and the columns to compare against each other are
 the three measured here, which do share an implementation.
 
-The motif alphabet then moves one of
-them and not the other. Local search \emph{is} the triadic-closure rule, so its
-local structure is triangles; an alphabet that contains the triangle books that
-structure as planted motifs instead of reading it as evidence for communities,
-and the size at which communities become certain is pushed from $80$ to $200$.
-Duplication--split makes no triangles at all, its squares overlap heavily and
-compress little, and its Ramsey number does not move
-(Figure~\ref{fig:gr-ramsey}).
+The motif alphabet then moves one of them and not the other. Local search
+\emph{is} the triadic-closure rule, so its local structure is triangles; an
+alphabet that contains the triangle books that structure as planted motifs
+instead of reading it as evidence for communities, and the size at which
+communities become certain is pushed from $80$ to $200$. Duplication--split makes
+no triangles at all, its squares overlap heavily and compress little, and its
+Ramsey number does not move (Figure~\ref{fig:gr-ramsey}).
 
 \begin{figure}[t]
   \centering
@@ -630,42 +642,35 @@ compress little, and its Ramsey number does not move
   crossing defines the Ramsey community number. Duplication--split makes no
   triangles and the three curves lie on top of one another; local search
   \emph{is} the triadic-closure rule, and naming its triangles moves the crossing
-  from $80$ to $200$. How many communities each method finds, rather than whether
-  it finds any, is a matter of resolution rather than vocabulary and is shown in
-  Figure~\ref{fig:gr-scaling}.}
+  from $80$ to $200$.}
   \label{fig:gr-ramsey}
 \end{figure}
 
-What the same comparison does to the \emph{number} of communities is a question
-about resolution rather than vocabulary, and the answer is that the alphabet
-barely touches it. Fitted with motifs, the number of communities grows with the
-same exponent the nested model gives on its own, close enough that plotting the
-two series together would show one curve; that is why
-Figure~\ref{fig:gr-scaling} carries only the two block models, and the
-comparison is made numerically in Section~\ref{sec:gr-doubledissoc} instead.
+$BB(n,1)$, which closes triangles by a quite different mechanism --- laying a
+single new node across a random link rather than closing a path --- behaves like
+local search and not like its own square-closing sibling. Its onset moves from
+$100$ to $400$ and nothing else happens: past the threshold the motif model's
+community count converges on the nested model's rather than collapsing away from
+it, $5.6$ against $5.8$ at $n=200$ and $11.1$ against $11.9$ at $n=400$, and its
+exponent is $0.892$ with the alphabet against $0.886$ without it. The
+pseudofractal web says the same from the deterministic side: $1.02$ against
+$0.99$, a lattice built entirely of triangles whose density is untouched by being
+allowed to name them.
 
-\section{When a motif dissolves a community}
-\label{sec:gr-square}
+So where the alphabet names the rule's own motif, it postpones the onset by a
+factor of two to four and leaves the exponent alone. That is the first route into
+this class, and the more informative one, because the alphabet was working and
+the density survived anyway.
 
-So far the alphabet has delayed a Ramsey number and never abolished one. This
-section finds the case where it does abolish one, and then asks what that case
-has that the others lack --- which turns out not to be the motif.
+\subsection*{Where the alphabet names nothing}
 
-Local search and duplication--split differ in whether the alphabet can name their
-motif, but neither is a clean test of the square, and for opposite reasons.
-Duplication--split closes squares and then \emph{subdivides} them: its split step
-replaces a link by a path of two, turning a cycle of length $L$ into one of
-length $L+1$ and destroying the parity, so its cycle counts are non-zero at every
-length from four upward. The bubble rule $BB(n,2)$ closes squares and leaves them
-alone. And there is a third rule, closer to biology than either, that closes
-squares in profusion and yet defeats the alphabet completely.
-
-That rule is duplication with divergence, $DD(n,q)$: copy a random node, then
-delete each copied link independently with probability $q$ --- $q$ being the
-divergence, the chance that a redundant link is \emph{lost}, as in
-Chapter~\ref{ch:duplication}. It never subdivides anything, so unlike
-duplication--split it stays bipartite, a copy sitting on the same side of the
-division as its original. Counted directly at $q=\tfrac12$:
+The second route is duplication with divergence, and its entry in the table is
+the $0\%$ in the last column: at $n=800$ the alphabet succeeds in naming
+essentially none of the network's links. That is not for want of squares.
+$DD(n,q)$ copies a random node and deletes each copied link independently with
+probability $q$; it never subdivides anything, so unlike duplication--split it
+stays bipartite, and counted directly at $q=\tfrac12$ it has mass at the even
+lengths and exactly nothing at the odd ones:
 
 \begin{center}
 \begin{tabular}{lrrrrrr}
@@ -679,315 +684,30 @@ $n=200$ & $0$ & $3\,658$ & $0$ & $143\,822$ & $0$ & $7\,002\,135$\\
 \end{tabular}
 \end{center}
 
-\noindent Mass at the even lengths and exactly nothing at the odd ones --- the
-same support as the diamond lattice and $BB(n,2)$. By the reading of
-Section~\ref{sec:gr-arity} this is a square-built network if ever there was one.
+\noindent By the reading of Section~\ref{sec:gr-conjecture} this is a square-built
+network if ever there was one, and the motif model declines to plant a single
+square in it. Fitted at $q$ from $0.2$ to $0.6$ the enlarged alphabet buys
+nothing: it costs a few tens of bits on average, and the scatter between repeated
+fits of the same network is larger than the cost, so the only thing the number
+says is that nothing was gained.
 
-The motif model declines to plant a single square in it. Fitted at $q$ from
-$0.2$ to $0.6$ the enlarged alphabet buys nothing: it costs a few tens of bits on
-average, and the scatter between repeated fits of the same network is larger than
-the cost, so the only thing the number says is that nothing was gained. The reason is that duplication does not make a square. It makes a node
-with $d$ shared neighbours --- a complete bipartite $K_{2,d}$ --- holding
-$\binom{d}{2}$ four-cycles laid over one another. At $n=200$ and $q=\tfrac12$ the
-sharing runs to fourteen common neighbours between one pair of nodes, so that
-pair alone accounts for $91$ four-cycles, and across the network each link sits
-in some twenty-four of them. A decomposition that gives every link to exactly one
-motif can name a handful and must leave the rest unspoken. In $BB(n,2)$, where
-each step closes a fresh square on two new nodes, a link sits in $1.3$ of them
-and the alphabet takes them up readily.
+The reason is that duplication does not make a square. It makes a node with $d$
+shared neighbours --- a complete bipartite $K_{2,d}$ --- holding $\binom{d}{2}$
+four-cycles laid over one another. At $n=200$ and $q=\tfrac12$ the sharing runs
+to fourteen common neighbours between one pair of nodes, so that pair alone
+accounts for $91$ four-cycles, and across the network each link sits in some
+twenty-four of them. A decomposition that gives every link to exactly one motif
+can name a handful and must leave the rest unspoken.
 
-The consequences for community detection run in opposite directions
-(Figure~\ref{fig:gr-squares}). For $DD(n,q)$ the alphabet does nothing, the three
-curves lie on top of one another, and the Ramsey community number is $40$
-whichever method is used. For $BB(n,2)$ the alphabet works, and naming the
-squares dissolves the apparent communities altogether. Both block models put its
-Ramsey community number at $400$; the motif model never reaches the $95\%$
-threshold at all. Its likelihood peaks near $0.65$ around $n=1600$ and then falls
-away --- $0.20$ at $3200$, and at $6400$ every one of ten realisations returns a
-single community while the block model returns a hundred and two.
-
-Pushed to larger sizes, though, that second statement turns into something more
-awkward than a suppression. The motif model's answer for $BB(n,2)$ is not small,
-it is \emph{bimodal}. At $n=3200$, sixteen realisations in twenty return a single
-community and the other four return between thirty-five and forty-one, which is
-what the block model returns throughout. The two outcomes are not a good answer
-and a bad one. Averaged over the twenty realisations they differ in description
-length by eleven bits in fifty-one thousand:
-
-\begin{center}
-\begin{tabular}{lrr}
-\hline
-$BB(n{=}3200,2)$ & squares planted & $\Sigma$ (bits)\\
-\hline
-one community    & $686$ of $1200$ & $51\,663$\\
-many communities & $414$ of $1200$ & $51\,652$\\
-\hline
-\end{tabular}
-\end{center}
-
-\noindent One description plants many squares and needs no communities at all;
-the other finds the communities and plants fewer squares; and the criterion is
-indifferent between them to a part in five thousand. Which one comes back is
-settled by where the search happens to start. So the squares and the communities
-are not competing hypotheses that the description length adjudicates --- they are
-two ways of spending the same bits on the same links, and for this rule they cost
-the same. That is also why $BB(n,2)$ carries no motif-model
-exponent in the table of Section~\ref{sec:gr-doubledissoc}: its mean is the
-mixing ratio of two outcomes rather than a law, and it turns over at $n=3200$
-for that reason and no other --- as does its likelihood in
-Figure~\ref{fig:gr-squares}a, which is the same mixture seen from the other
-side.
-
-There is a control for all this, and the rule that provides it differs from
-$BB(n,2)$ in one place only. The bubble rule lays a chain of $L$ new nodes across
-a random link and so closes a cycle of length $L+2$: squares at $L=2$, and
-\emph{triangles} at $L=1$. If what dissolved the communities was the square, or
-the fact that a motif in the alphabet matches the rule, then $BB(n,1)$ should
-dissolve the same way. It does not.
-
-\begin{center}
-\begin{tabular}{llrrr}
-\hline
- & & \multicolumn{3}{c}{Ramsey number $r_\kappa$}\\
-rule & motif & flat & nested & $+$ motifs\\
-\hline
-$LS(n,1)$ & triangle & $70$  & $80$  & $200$\\
-$BB(n,1)$ & triangle & $90$  & $100$ & $200$--$400$\\
-$BB(n,2)$ & square   & $400$ & $400$ & never\\
-\hline
-\end{tabular}
-\end{center}
-
-\noindent $BB(n,1)$ behaves like local search, not like its own sibling. Naming
-its triangles postpones the onset by a factor of two to four and does nothing
-else; past the threshold the motif model's community count converges on the
-nested model's rather than collapsing away from it --- $5.6$ against $5.8$ at
-$n=200$, $11.1$ against $11.9$ at $n=400$, where $P_\kappa$ has already reached
-one.
-
-Nor is the difference that triangles are harder to name than squares. Counting
-what the fits actually plant at $n=200$: $BB(n,1)$ plants $62$ triangles covering
-forty-seven per cent of its links, $BB(n,2)$ plants $40$ squares covering
-fifty-three per cent. Comparable effort, opposite outcome.
-
-What separates them is on the other side of the ledger --- how much community
-structure there was to destroy. $BB(n,2)$ is a marginal community-former to begin
-with, its block-model Ramsey number of $400$ standing at four times $BB(n,1)$'s.
-A near-tie in description length is only reachable when the partition's own
-contribution is thin, and eleven bits in fifty-one thousand is what a thin one
-looks like. So the finding of this section is narrower than it first appeared, and
-more useful for being narrower: what the alphabet does to a rule depends on the
-balance between two descriptions rather than on which motif is in it. On the
-evidence so far that looks like a clean split --- abolished where the rule was
-marginal, delayed where it was not --- and the next two pages show it is not, by
-finding a case in between.
-
-One explanation for that thinness suggests itself, and testing it takes a pair of
-lattices. Chapter~\ref{ch:communities} found that locality has a \emph{range}: a
-rule whose chain is one node long reaches two steps and gives $r_\kappa=108$,
-while one whose chain is two nodes long reaches three and gives $326$. $BB(n,2)$
-is a three-step rule by that measure and $BB(n,1)$ a two-step one, so perhaps
-reach is what decides whether a community survives being renamed. The trouble is
-that in $BB(n,L)$ the two candidate causes move together: lengthening the chain is
-the only way to lengthen the cycle, so nothing in that family can separate a
-rule's reach from the cycle it closes.
-
-Two lattices can. The pseudofractal web hangs a new node on both ends of every
-link, closing a triangle; the diamond replaces every link by two parallel paths of
-one node each, closing a square. Both reach exactly two steps --- every new node is
-adjacent to nodes that were already adjacent --- and both rebuild the whole lattice
-at once, which is what keeps their cycles clean, since a rule that subdivides one
-link at a time stretches the cycles it has already made. They differ in the cycle
-they close and in nothing else that matters here.
-
-The quantity to watch is not how many communities each method finds but how that
-number \emph{scales}, which is Chapter~\ref{ch:graphons}'s $\beta$. Both lattices
-put the block model at the modular limit, $\beta\simeq1$, so both have a constant
-density of communities in the sense of Section~\ref{sec:gr-density}. The question
-is whether naming the motif leaves that density intact.
-
-\begin{center}
-\begin{tabular}{llrr}
-\hline
- & & \multicolumn{2}{c}{$\beta$, growth of $\kappa$}\\
-lattice & motif & nested & $+$ motifs\\
-\hline
-pseudofractal & triangle & $1.07$ & $\mathbf{0.99}$\\
-diamond       & square   & $1.05$ & $\mathbf{0.31}$\\
-\hline
-\end{tabular}
-\end{center}
-
-\noindent The pseudofractal keeps its law and the diamond loses it. This is worth
-stating carefully, because the diamond's communities do not disappear: its motif
-fit returns $3$, $5$ and $7$ groups at $n=684$, $2732$ and $10\,924$, a count that
-climbs steadily. But it climbs by a fixed amount while the lattice quadruples, so
-$\kappa$ grows like the logarithm of $n$ where the block model has it growing like
-$n$ itself, and the density $b=\kappa/n$ falls away to nothing. Under the motif
-alphabet the diamond is not a network with fewer communities. It is a network with
-no community \emph{density} --- exactly the intensive quantity
-Chapter~\ref{ch:graphons} identified as what a locally grown network converges to.
-The pseudofractal, fitted the same way, still has one.
-
-So reach is not the discriminator. Two rules that reach exactly as far as each
-other end up on opposite sides of $\beta=1$, and what separates them is the length
-of the cycle they close --- which is what Chapter~\ref{ch:communities}'s table said,
-ranking a triangle rule at $r_\kappa=108$ against a square rule at $326$ before
-any of this was fitted. The reach of $BB(n,2)$ was a correlate of its square, not
-the cause.
-
-There is a mechanism visible in the counts. On the diamond at the smaller
-generations the alphabet plants \emph{every} square and leaves not one link over
---- sixteen of sixteen, then sixty-four of sixty-four --- a perfect tiling of the
-lattice by its own motif, after which a partition has nothing left to explain. The
-pseudofractal's triangles never tile it that way: they overlap on the links that
-every generation piles onto the same hubs, so a decomposition giving each link to
-one motif must leave most of them unspoken, and the partition keeps its work. What
-makes a motif dangerous to a community is not its shape but whether the rule lays
-it down in a pattern the decomposition can take up whole.
-
-Before any of this can be believed, one thing has to be checked. A description
-that loses the density is only interesting if it is the description the criterion
-\emph{prefers}; a worse code can say anything. Reducing the alphabet to the link
-alone recovers the ordinary degree-corrected model exactly
-(Section~\ref{sec:gr-motifsbm}), so the two are directly comparable:
-
-\begin{center}
-\begin{tabular}{rrrrr}
-\hline
-$n$ & $\Sigma$ link only & $\Sigma+$ motifs & $\Delta\Sigma$ & $\kappa$\\
-\hline
-$684$   & $8\,908$  & $7\,812$  & $-1\,096$ & $5\to3$\\
-$2\,732$ & $41\,929$ & $37\,213$ & $-4\,716$ & $25\to5$\\
-\hline
-\end{tabular}
-\end{center}
-
-\noindent The motif description wins, and wins by a margin that widens as the
-lattice grows. So this is not a case of a poor code being allowed to speak. On
-the diamond, the best available description of the network is one in which the
-communities have no density.
-
-Three behaviours have now appeared, and they are worth separating, because the
-middle one is easy to mistake for either of the others.
-
-\begin{center}
-\small
-\begin{tabular}{lcc}
-\hline
- & communities & density\\
- & emerge? & survives?\\
-\hline
-$LS(n,1)$, $BB(n,1)$, pseudofractal & yes & yes\\
-diamond                             & yes & \textbf{no}\\
-$BB(n,2)$                           & \textbf{no} & ---\\
-\hline
-\end{tabular}
-\end{center}
-
-\noindent Only $BB(n,2)$ has its communities abolished. The diamond keeps
-them --- three groups at $n=684$ and seven at $n=10\,924$, a genuine emergence at a
-genuine threshold --- and loses only the law by which their number grows. The two
-questions Chapter~\ref{ch:communities} asked, whether a network has communities
-at all and how many it has, come apart here in a way they have not come apart
-before: an alphabet can leave the first alone while destroying the second.
-
-What decides which of the three a rule falls into is visible in one number, and it
-is not the motif's shape. Count how many of a network's links an edge-disjoint
-decomposition can actually take up. On the diamond the squares cover the whole
-lattice at the smaller generations and around ninety per cent thereafter; on the
-pseudofractal the triangles reach only fifty-five per cent, because every
-generation piles them onto the same hub links and a decomposition that gives each
-link to one motif must leave the rest unspoken. Where the motif can tile the
-network, the partition has nothing left to describe and the density dies. Where
-the motifs overlap, they cannot absorb what the partition was explaining, and the
-density survives. The same overlap that made duplication's bicliques unnameable a
-few pages ago is here doing something useful.
-
-The random rules say as much from the other side. $BB(n,1)$, whose triangles
-overlap as the pseudofractal's do, grows its communities as $n^{0.892}$ with the
-alphabet and $n^{0.886}$ without it, over $n=400$ to $3200$ ---
-indistinguishable. Naming a motif that cannot tile the network costs its density
-nothing.
-
-\begin{quote}
-\emph{To follow up.} Chapter~\ref{ch:graphons} measured the community density of
-three real growing networks with a vocabulary that could not name a triangle, and
-the diamond shows that such a vocabulary can flatter a network into a density it
-does not have. Whether the Internet and the yeast interactome keep $\beta=1$ under
-the full alphabet is being measured and is not settled here; the collaboration
-graph, at sixty thousand nodes, is beyond what the motif fit can reach at present.
-The interesting outcome would be the middle one. A real network landing at
-$\tfrac12<\beta<1$ and staying there under motif correction would be the first
-genuinely fractal community structure in this book --- Chapter~\ref{ch:communities}'s
-$0.61$ having turned out to be the flat model's ceiling, and
-Chapter~\ref{ch:graphons}'s $0.80$ a sample that mixed grown networks with
-catalogued ones.
-\end{quote}
-
-The caution generalises past this one rule. Wherever an alphabet can absorb the
-same links that a partition would have explained, the two descriptions trade off
-against each other, and minimum description length has no reason to prefer either
---- which is a limit on what any such method can be asked to settle, and not a
-defect of this implementation.
-
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=\linewidth]{figs/fig-gr-squares.pdf}
-  \caption{\textbf{Two rules built from squares, and only one of them says so.}
-  Panels as in Figure~\ref{fig:gr-ramsey}: $P_\kappa$ from a hundred networks at
-  each size up to $n=200$ and twenty above it. \textbf{(a)} $BB(n,2)$ closes one
-  square per step on two new nodes, so its squares are nearly disjoint, the
-  alphabet takes them up, and the communities the block model reports are largely
-  dissolved. \textbf{(b)} $DD(n,q)$ at $q=\tfrac12$ closes squares in far
-  greater numbers, but as overlapping $K_{2,d}$ bicliques rather than separable
-  motifs; the alphabet plants none of them, and all three methods agree.}
-  \label{fig:gr-squares}
-\end{figure}
-
-Adding self-interaction does not rescue it. The duplication rule of
-Chapter~\ref{ch:duplication} allows the copy to bind its own original with some
-probability $p$, and since the pair already shares neighbours, every such link
-closes triangles. At $p=0.1$ and $q=0.45$ the network is no longer bipartite, the
-odd cycle lengths fill in, and the clustering coefficient rises from zero to about
-$0.18$ and stays there as the network grows --- the interactome-like behaviour that
-motivated the rule. The alphabet still plants nothing: at $n=100$, $200$ and $400$
-the enlarged model costs bits rather than saving them. The triangles
-stack exactly as the squares did, all of those at a duplicated pair sharing the
-one link between the pair, so that a single link can carry eleven of them and an
-edge-disjoint decomposition can name at most one per pair. Duplication defeats the
-alphabet whether or not it makes triangles, because everything it builds is piled
-onto the same shared neighbourhood.
-
-So the alphabet needs more than the right arity. It needs the rule's footprint to
-be a fixed object that can be named once and counted. Duplication's footprint is
-a biclique whose size is set by how much of the copied neighbourhood survives,
-and the square is only its smallest case. That is a third way for the scheme to
-fail --- distinct from a motif outside the alphabet, as with the pentagon-built
-rules, and from a motif spoiled by subdivision, as with duplication--split --- and
-it is the one most likely to matter, since duplication with divergence is the
-standard account of how protein interaction networks grow. It is also, as the
-next section shows, not quite the right diagnosis.
-
-\section{The vocabulary was not the problem}
-
-The previous section blamed the alphabet for lacking a symbol. That is a
-testable complaint, and the test is to supply the symbol.
-
-Add the biclique $K_{2,d}$: two hubs joined to the same $d$ leaves, $d+2$ nodes
-and $2d$ links. Its automorphism group has size $|\mathrm{Aut}|=2\,d!$ --- the
-count of relabellings of the motif's own nodes that leave it looking identical,
-which is what Eq.~\eqref{eq:gr-omega} divides by so that one planted copy is
-charged once rather than once per way of writing it down. Here the two hubs may
-swap, giving the factor of two, and the $d$ leaves permute freely among
-themselves, giving the $d!$. It is exactly what duplication builds, and $d=2$ is the
-square, so the family starts at $d=3$. Each $d$ is its own symbol rather than one
-symbol of variable size, which leaves the pool arithmetic of
-Eq.~\eqref{eq:gr-omega} untouched and makes a fit that reaches for many different
-$d$ pay to announce each of them.
-
-On a network of planted bicliques it does what it should. Twenty disjoint
-$K_{2,6}$, which is $240$ links:
+That diagnosis blames the alphabet for lacking a symbol, which is a testable
+complaint, and the test is to supply the symbol. Add the biclique $K_{2,d}$: two
+hubs joined to the same $d$ leaves, $d+2$ nodes and $2d$ links. Its automorphism
+group has size $|\mathrm{Aut}|=2\,d!$ --- the two hubs may swap, and the $d$
+leaves permute freely --- which is what Eq.~\eqref{eq:gr-omega} divides by so
+that one planted copy is charged once rather than once per way of writing it
+down. It is exactly what duplication builds, and $d=2$ is the square, so the
+family starts at $d=3$. On a network of planted bicliques it does what it should.
+Twenty disjoint $K_{2,6}$, which is $240$ links:
 
 \begin{center}
 \begin{tabular}{lrl}
@@ -1019,30 +739,271 @@ own division into eleven groups, and the number of biclique candidates is
 shared neighbours by a block boundary, and a motif that straddles a boundary is
 not representable at all.
 
-That is a more damaging limitation than the one the last section named, and it is
+That is a more damaging limitation than the missing symbol, and it is
 self-inflicted. The restriction of motifs to the inside of a single block is what
 kept the parameter count at $3B+B^2$ rather than the $B^4/24$ of a tensor, and so
 kept the resolution at $\sqrt{n}$ instead of $n^{1/4}$
 (Section~\ref{sec:gr-motifsbm}). The saving is real. It also happens to break the
-scheme on the one rule that most needs it, because duplication puts a copy and its
-original in different groups --- they have the same neighbours but need not be
-joined to each other, which is exactly the configuration a block model splits.
-
+scheme on the one rule that most needs it, because duplication puts a copy and
+its original in different groups --- they have the same neighbours but need not
+be joined to each other, which is exactly the configuration a block model splits.
 Worse, the two descriptions cannot be combined. One block with the bicliques
 named costs $3458$ bits; eleven groups with nothing named costs $3163$; and there
 is no fit that has both, because choosing the groups destroys the motifs. The
 block structure wins by some three hundred bits, so the model reports communities
-and no motifs, which is what Figure~\ref{fig:gr-squares} shows --- but it reports
-them by default rather than by preference, having been given no option that keeps
-the duplication visible.
+and no motifs --- but it reports them by default rather than by preference,
+having been given no option that keeps the duplication visible.
 
-A last caution, which applies to every $\Delta\Sigma$ quoted in these sections.
-The fit is a stochastic search, and repeated fits of the \emph{same} network
-return description lengths that differ. For $DD(n,q)$ at $n=400$ the spread over
-five fits is around $150$ bits, larger than most of the differences being
-compared. Where a sign is reported here it is the sign of an average, and the
-small numbers should be read as saying that nothing was gained rather than as
-measurements of how much was lost.
+Adding self-interaction does not rescue it. The duplication rule of
+Chapter~\ref{ch:duplication} allows the copy to bind its own original with some
+probability $p$, and since the pair already shares neighbours, every such link
+closes triangles. At $p=0.1$ and $q=0.45$ the network is no longer bipartite, the
+odd cycle lengths fill in, and the clustering coefficient rises from zero to
+about $0.18$ and stays there as the network grows --- the interactome-like
+behaviour that motivated the rule. The alphabet still plants nothing: at $n=100$,
+$200$ and $400$ the enlarged model costs bits rather than saving them. The
+triangles stack exactly as the squares did, all of those at a duplicated pair
+sharing the one link between the pair, so that a single link can carry eleven of
+them and an edge-disjoint decomposition can name at most one per pair.
+Duplication defeats the alphabet whether or not it makes triangles, because
+everything it builds is piled onto the same shared neighbourhood.
+
+So duplication reaches the constant-density class by the uninteresting route: its
+$\beta$ is $1.11$ with the alphabet and $1.12$ without it because the alphabet
+never got started. A rule whose footprint is a biclique of variable size, laid
+over a shared neighbourhood the partition wants to cut, is out of reach of a
+scheme that names fixed objects inside single blocks --- and that is the rule
+most often proposed for how protein interaction networks grow.
+
+A last caution, which applies to every $\Delta\Sigma$ quoted in this chapter. The
+fit is a stochastic search, and repeated fits of the \emph{same} network return
+description lengths that differ. For $DD(n,q)$ at $n=400$ the spread over five
+fits is around $150$ bits, larger than most of the differences being compared.
+Where a sign is reported here it is the sign of an average, and the small numbers
+should be read as saying that nothing was gained rather than as measurements of
+how much was lost.
+
+\section{The rule with no communities left}
+\label{sec:gr-none}
+
+$BB(n,2)$ is the one rule in the table that the alphabet moves into the first
+class. Both block models put its Ramsey community number at $400$; the motif
+model never reaches the $95\%$ threshold at all. Its likelihood peaks near $0.65$
+around $n=1600$ and then falls away --- $0.20$ at $3200$, and at $6400$ every one
+of ten realisations returns a single community while the block model returns a
+hundred and two (Figure~\ref{fig:gr-squares}a).
+
+Pushed to larger sizes, that statement turns into something more awkward than a
+suppression. The motif model's answer for $BB(n,2)$ is not small, it is
+\emph{bimodal}. At $n=3200$, sixteen realisations in twenty return a single
+community and the other four return between thirty-five and forty-one, which is
+what the block model returns throughout. The two outcomes are not a good answer
+and a bad one. Averaged over the twenty realisations they differ in description
+length by eleven bits in fifty-one thousand:
+
+\begin{center}
+\begin{tabular}{lrr}
+\hline
+$BB(n{=}3200,2)$ & squares planted & $\Sigma$ (bits)\\
+\hline
+one community    & $686$ of $1200$ & $51\,663$\\
+many communities & $414$ of $1200$ & $51\,652$\\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent One description plants many squares and needs no communities at all;
+the other finds the communities and plants fewer squares; and the criterion is
+indifferent between them to a part in five thousand. Which one comes back is
+settled by where the search happens to start. So the squares and the communities
+are not competing hypotheses that the description length adjudicates --- they are
+two ways of spending the same bits on the same links, and for this rule they cost
+the same. That is why $BB(n,2)$ carries no motif-model exponent in the master
+table: its mean is the mixing ratio of two outcomes rather than a law, and it
+turns over at $n=3200$ for that reason and no other.
+
+There is a control for all this, and the rule that provides it differs from
+$BB(n,2)$ in one place only. The bubble rule lays a chain of $L$ new nodes across
+a random link and so closes a cycle of length $L+2$: squares at $L=2$, and
+triangles at $L=1$. If what dissolved the communities was the square, or the mere
+fact that a motif in the alphabet matches the rule, then $BB(n,1)$ should
+dissolve the same way. It does not --- it sits in the previous section, its onset
+merely postponed. Nor is the difference that triangles are harder to name than
+squares: counting what the fits actually plant at $n=200$, $BB(n,1)$ plants $62$
+triangles covering forty-seven per cent of its links and $BB(n,2)$ plants $40$
+squares covering fifty-three per cent, and the master table's last column has
+them at $54\%$ and $57\%$ at the largest sizes fitted. Comparable effort,
+opposite outcome.
+
+What separates them is on the other side of the ledger --- how much community
+structure there was to destroy. $BB(n,2)$ is a marginal community-former to begin
+with, its block-model Ramsey number of $400$ standing at four times $BB(n,1)$'s.
+A near-tie in description length is only reachable when the partition's own
+contribution is thin, and eleven bits in fifty-one thousand is what a thin one
+looks like.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{figs/fig-gr-squares.pdf}
+  \caption{\textbf{Two rules built from squares, and only one of them says so.}
+  Panels as in Figure~\ref{fig:gr-ramsey}: $P_\kappa$ from a hundred networks at
+  each size up to $n=200$ and twenty above it. \textbf{(a)} $BB(n,2)$ closes one
+  square per step on two new nodes, so its squares are nearly disjoint, the
+  alphabet takes them up, and the communities the block model reports are largely
+  dissolved. \textbf{(b)} $DD(n,q)$ at $q=\tfrac12$ closes squares in far
+  greater numbers, but as overlapping $K_{2,d}$ bicliques rather than separable
+  motifs; the alphabet plants none of them, and all three methods agree.}
+  \label{fig:gr-squares}
+\end{figure}
+
+\section{The lattice with no density left}
+\label{sec:gr-square}
+
+The third class has one member, and reaching it takes a pair of lattices, because
+the obvious explanation for $BB(n,2)$ has to be eliminated first.
+
+That explanation is reach. Chapter~\ref{ch:communities} found that locality has a
+\emph{range}: a rule whose chain is one node long reaches two steps and gives
+$r_\kappa=108$, while one whose chain is two nodes long reaches three and gives
+$326$. $BB(n,2)$ is a three-step rule by that measure and $BB(n,1)$ a two-step
+one, so perhaps reach is what decides whether a community survives being renamed.
+The trouble is that in $BB(n,L)$ the two candidate causes move together:
+lengthening the chain is the only way to lengthen the cycle, so nothing in that
+family can separate a rule's reach from the cycle it closes.
+
+Two lattices can. The pseudofractal web hangs a new node on both ends of every
+link, closing a triangle; the diamond replaces every link by two parallel paths
+of one node each, closing a square. Both reach exactly two steps --- every new
+node is adjacent to nodes that were already adjacent --- and both rebuild the
+whole lattice at once, which is what keeps their cycles clean, since a rule that
+subdivides one link at a time stretches the cycles it has already made. They
+differ in the cycle they close and in nothing else that matters here. And the
+master table puts them in different classes: both at the modular limit under the
+nested block model, $1.02$ and $1.05$, and then $0.99$ against $0.31$ once the
+alphabet is available.
+
+The pseudofractal keeps its law and the diamond loses it. This is worth stating
+carefully, because the diamond's communities do not disappear: its motif fit
+returns $3$, $5$ and $7$ groups at $n=684$, $2732$ and $10\,924$, a count that
+climbs steadily. But it climbs by a fixed amount while the lattice quadruples, so
+$\kappa$ grows like the logarithm of $n$ where the block model has it growing
+like $n$ itself, and the density $b=\kappa/n$ falls away to nothing. Three points
+cannot tell $\log n$ from $n^{0.31}$, and no claim is made that they can; what
+the three points do establish is that the density is gone. Under the motif
+alphabet the diamond is not a network with fewer communities. It is a network
+with no community \emph{density} --- exactly the intensive quantity
+Chapter~\ref{ch:graphons} identified as what a locally grown network converges
+to. The pseudofractal, fitted the same way, still has one.
+
+So reach is not the discriminator. Two rules that reach exactly as far as each
+other end up in different classes, and the only thing left that distinguishes
+them is the cycle they close --- which is what Chapter~\ref{ch:communities}'s
+table said, ranking a triangle rule at $r_\kappa=108$ against a square rule at
+$326$ before any of this was fitted. The reach of $BB(n,2)$ was a correlate of
+its square, not the cause. Which is not to say that the square is the cause
+either: Section~\ref{sec:gr-decides} finds that the operative property is not the
+motif's shape but how the rule lays it down, and the cycle length is itself a
+correlate of that.
+
+Before any of this can be believed, one thing has to be checked. A description
+that loses the density is only interesting if it is the description the criterion
+\emph{prefers}; a worse code can say anything. Reducing the alphabet to the link
+alone recovers the ordinary degree-corrected model exactly
+(Section~\ref{sec:gr-motifsbm}), so the two are directly comparable:
+
+\begin{center}
+\begin{tabular}{rrrrr}
+\hline
+$n$ & $\Sigma$ link only & $\Sigma+$ motifs & $\Delta\Sigma$ & $\kappa$\\
+\hline
+$684$    & $8\,908$   & $7\,812$   & $-1\,096$  & $5\to3$\\
+$2\,732$  & $41\,929$  & $37\,213$  & $-4\,716$  & $25\to5$\\
+$10\,924$ & $198\,987$ & $171\,368$ & $-27\,619$ & $95\to7$\\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent The motif description wins at every size, and the absolute margin
+widens twenty-five-fold across the range while the block model's own $\kappa$
+climbs from $5$ to $95$ and the motif model's from $3$ to $7$. As a fraction of
+the description it is steadier than that --- about an eighth throughout, $12\%$,
+$11\%$, $14\%$ --- which is the honest way to put it: the alphabet's advantage is
+not growing relative to the size of the problem, it is simply never in doubt. So
+this is not a case of a poor code being allowed to speak. On the diamond, the
+best available description of the network is one in which the communities have no
+density.
+
+\section{What decides the class}
+\label{sec:gr-decides}
+
+Three classes, and two rules that changed class when the vocabulary changed. What
+is it about a rule that decides which way it goes?
+
+Not the motif's shape: triangles dissolve nothing on local search, $BB(n,1)$ or
+the pseudofractal, and squares dissolve everything on $BB(n,2)$ and the diamond
+while doing nothing whatever on $DD(n,q)$ or duplication--split. Not the rule's
+reach, which the two lattices controlled for and eliminated. What the master
+table's last column measures is the quantity that does the work: how many of a
+network's links an edge-disjoint decomposition can actually take up.
+
+At one end sits the diamond. Its squares cover the whole lattice at the smaller
+generations --- sixteen of sixteen, then sixty-four of sixty-four --- and around
+ninety per cent thereafter, which is a perfect tiling of the lattice by its own
+motif, after which a partition has nothing left to explain. At the other sits
+duplication--divergence at nought per cent, where every square is stacked on the
+same shared neighbourhood and the decomposition can name almost none of them. The
+pseudofractal is in between at fifty-six per cent: its triangles never tile it,
+because every generation piles them onto the same hub links, so a decomposition
+giving each link to one motif must leave the rest unspoken and the partition
+keeps its work.
+
+That is the mechanism, and it is a clean one at the ends. Where the motif tiles
+the network, the partition has nothing left to describe and the density dies.
+Where the motifs overlap, they cannot absorb what the partition was explaining,
+and the density survives. The same overlap that made duplication's bicliques
+unnameable is here doing something useful.
+
+The middle of that column is where the explanation has to be stated more
+carefully, because it does not separate the two bubble rules. $BB(n,1)$ names
+$54\%$ of its links and keeps its communities; $BB(n,2)$ names $57\%$ and loses
+them. Coverage alone cannot be the criterion, and the previous sections said what
+the missing half is: what matters is the ratio of what the alphabet can absorb to
+what the partition was explaining in the first place. Tiling is the numerator,
+and above ninety per cent it settles the matter on its own. Below that the
+denominator decides, and $BB(n,2)$'s is thin --- a Ramsey number of $400$ against
+$BB(n,1)$'s $100$, a rule that barely forms communities at all, so that a little
+over half its links being spoken for is enough to tip a near-tie. Local search
+names $62\%$ of its links, more than either bubble rule, and its communities are
+in no danger at all, because there is a great deal of community structure there
+to defend.
+
+The random rules confirm the reading from the side where nothing happens.
+$BB(n,1)$, whose triangles overlap as the pseudofractal's do, grows its
+communities as $n^{0.892}$ with the alphabet and $n^{0.886}$ without it, over
+$n=400$ to $3200$ --- indistinguishable. Naming a motif that cannot tile the
+network costs its density nothing.
+
+The caution generalises past any one rule. Wherever an alphabet can absorb the
+same links that a partition would have explained, the two descriptions trade off
+against each other, and minimum description length has no reason to prefer either
+--- which is a limit on what any such method can be asked to settle, and not a
+defect of this implementation. $BB(n,2)$'s eleven bits in fifty-one thousand is
+that limit made visible.
+
+\begin{quote}
+\emph{To follow up.} Chapter~\ref{ch:graphons} measured the community density of
+three real growing networks with a vocabulary that could not name a triangle, and
+the diamond shows that such a vocabulary can flatter a network into a density it
+does not have. Whether the Internet and the yeast interactome keep $\beta=1$
+under the full alphabet is being measured and is not settled here; the
+collaboration graph, at sixty thousand nodes, is beyond what the motif fit can
+reach at present. The interesting outcome would be the third class. A real
+network landing at $\tfrac12<\beta<1$ and staying there under motif correction
+would be the first genuinely fractal community structure in this book ---
+Chapter~\ref{ch:communities}'s $0.61$ having turned out to be the flat model's
+ceiling, and Chapter~\ref{ch:graphons}'s $0.80$ a sample that mixed grown
+networks with catalogued ones.
+\end{quote}
 
 \section{Which change moves which number}
 \label{sec:gr-doubledissoc}
@@ -1050,91 +1011,84 @@ measurements of how much was lost.
 Three methods have been compared through these sections, and they differ in two
 ways rather than one. Flat against nested is a difference of resolving power and
 nothing else; nested against nested-with-motifs is a difference of vocabulary and
-nothing else (Section~\ref{sec:gr-motifsbm}). Setting the results side by side,
-the two differences turn out to move two different quantities, and each leaves
-the other alone.
+nothing else (Section~\ref{sec:gr-motifsbm}). Reading the master table of
+Section~\ref{sec:gr-classes} across rather than down, the two differences turn
+out to move two different quantities, and it is worth separating them because
+one of them is a great deal better behaved than the other.
 
 Where the first difference comes from was the subject of
 Chapter~\ref{ch:graphons}, and was priced there exactly: the two models express
 the same partitions and differ only in what naming one costs, the flat model
 paying a charge quadratic in the number of groups and so meeting
-Eq.~\eqref{eq:gr-flatceiling}'s ceiling of $\sqrt n$, the nested model compressing
-the group-level structure instead and reaching
+Eq.~\eqref{eq:gr-flatceiling}'s ceiling of $\sqrt n$, the nested model
+compressing the group-level structure instead and reaching
 Eq.~\eqref{eq:gr-nestedceiling}'s $n/\log n$. Nothing in that arithmetic mentions
-what the links are made of, which is the first half of why the vocabulary leaves
-the exponent alone.
+what the links are made of.
 
-\begin{center}
-\small\setlength{\tabcolsep}{4pt}
-\begin{tabular}{lrrrrr}
-\hline
- & \multicolumn{3}{c}{$\beta$, growth of $\kappa$} & \multicolumn{2}{c}{change}\\
- & flat & nested & $+$motifs & \small nested$-$flat & \small motifs$-$nested\\
-\hline
-$LS(n,1)$   & $0.54$ & $0.94$ & $1.04$ & $+0.40$ & $+0.11$\\
-$DS(n,0.5)$ & $0.76$ & $1.02$ & $1.01$ & $+0.26$ & $-0.01$\\
-$DD(n,0.5)$ & $0.78$ & $1.12$ & $1.11$ & $+0.34$ & $-0.01$\\
-\hline
- & \multicolumn{3}{c}{$r_\kappa$, onset of communities} & \multicolumn{2}{c}{ratio}\\
-\hline
-$LS(n,1)$   & $70$ & $80$  & $200$ & $1.14$ & $2.50$\\
-$DS(n,0.5)$ & $90$ & $100$ & $100$ & $1.11$ & $1.00$\\
-$DD(n,0.5)$ & $40$ & $40$  & $40$  & $1.00$ & $1.00$\\
-\hline
-\end{tabular}
-\end{center}
+\emph{Resolution moves the exponent, and only the exponent.} Going from the flat
+model to the nested one lifts $\beta$ by two to four tenths on every rule in the
+table without exception, and moves the onset $r_\kappa$ by at most a seventh ---
+$70$ to $80$, $90$ to $100$, $400$ to $400$, $40$ to $40$. It never changes a
+rule's class, because it cannot: the flat model's fractal-looking exponents are
+its ceiling, and lifting the ceiling reveals the density that was there all
+along.
 
-\noindent Lifting the resolution moves the exponent by two to four tenths every
-time, and moves the onset by at most a seventh. Changing the vocabulary moves the
-exponent by a hundredth --- excepting local search, where the alphabet does match
-the rule --- and moves the onset by a factor of two and a half where the alphabet
-contains the rule's own motif, and not at all where it does not.
-The dissociation is not a law, and Section~\ref{sec:gr-square} says where it
-fails: on the diamond lattice the vocabulary moves the exponent from $1.05$ to
-$0.31$, because there the motif tiles the network exactly and the partition is
-left with nothing to describe. What holds for the growth rules of this table is
-that a vocabulary which \emph{cannot} take up the whole network leaves the
-exponent alone.
-($BB(n,2)$ is left out of the table because its motif-model $\kappa$ is bimodal
-and its mean is not an exponent; on the other measure it is the extreme case, its
-onset going from $400$ to never.)
+\emph{Vocabulary moves the onset, and sometimes the class.} Naming a rule's own
+motif moves $r_\kappa$ by a factor of two to four --- $80$ to $200$ for local
+search, $100$ to $400$ for $BB(n,1)$ --- and leaves it untouched where the
+alphabet has nothing to name, as with duplication--split and
+duplication--divergence. On six of the eight rules it leaves $\beta$ alone to
+within a hundredth or two. On the other two it does something the resolution
+knob cannot do at all: it moves the rule out of the constant-density class
+entirely, $BB(n,2)$ into the first class and the diamond into the third.
 
-The reason is not mysterious once separated. The exponent is a statement about
-how finely a network can be cut, and nothing about the vocabulary for describing
-links changes how many groups a method is able to resolve --- that is fixed by
-what the description length charges for the block structure, $\sqrt n$ for the
-flat model against $n/\log n$ for the nested one. The Ramsey number is a
-statement about whether there is evidence to cut at all, and that does depend on
-the vocabulary, because a method that can name a triangle has an innocent
-explanation available for clustering that a method without one does not. Two
-knobs, two numbers, and each knob turns its own.
+So the tidy statement --- one knob for how finely a network can be cut, another
+for whether there is anything to cut --- holds for most of the table and fails in
+exactly the cases this chapter was written about. The failure is not a
+complication to be regretted; it is the finding. A vocabulary that
+\emph{cannot} take up the whole network leaves the exponent alone, and that is
+the common case. A vocabulary that can take up the whole network takes over the
+description, and then the exponent is not measuring the network's communities any
+more but the leftovers of a tiling.
 
-This tidies up the uncomfortable conclusion of Section~\ref{sec:gr-chapter6}. The
-claim there was that Chapter~\ref{ch:communities}'s exponent is in part a
-statement about the flat block model rather than about the networks, and it can
-now be said without reference to motifs at all. The motif alphabet is irrelevant
-to $\beta$; the whole of the shift is the nested model, which is a standard tool
-and not one invented here. Whatever else is uncertain about the machinery of the
-last four sections, that conclusion does not rest on it.
+The asymmetry has a reason. The exponent is a statement about how finely a
+network can be cut, and nothing about the vocabulary for describing links changes
+how many groups a method is \emph{able} to resolve --- that ceiling is fixed by
+what the description length charges for the block structure. But the vocabulary
+does change how many groups are \emph{worth} resolving, by offering an
+alternative account of the same links; and where that alternative can cover
+everything, the number of groups worth resolving falls to almost none. The
+ceiling and the demand are different things, and only the second is open to the
+alphabet.
 
-It also settles the question the last chapter left at its door. What
-Chapter~\ref{ch:graphons} found was a density: with the resolution lifted, the
-number of communities grows in proportion to the size, so the density $b=B/n$
-becomes a number
-a network has rather than a rate at which something grows. The obvious worry
-about such a quantity is that it might be an artefact of a poor vocabulary --- that
-a model forced to describe every triangle as three separate links would invent
-communities to absorb what it could not name, and that a richer alphabet would
-dissolve them. It does not. Give the model triangles, squares and bicliques and
-the density stays where the nested prior put it, to a hundredth in $\beta$ on
-every rule where the comparison is clean. The density survives the one attack
-this chapter knows how to mount on it.
+This also tidies up a conclusion that has been uncomfortable since
+Chapter~\ref{ch:graphons} drew it: that Chapter~\ref{ch:communities}'s exponent
+is in part a statement about the flat block model rather than about the networks.
+It can now be said without reference to motifs at all. On the rules where the alphabet cannot tile, it is
+irrelevant to $\beta$; the whole of the shift from $0.61$ is the nested model,
+which is a standard tool and not one invented here. Whatever else is uncertain
+about the machinery of these sections, that conclusion does not rest on it.
 
-Two instrument effects have now been found and separated, and it is worth
-noticing that they were found the same way. Chapter~\ref{ch:communities}'s $0.61$
-became $0.80$ when the prior stopped charging quadratically for groups, and $0.80$
-became $1$ when the sample stopped mixing grown networks with catalogued ones.
-Neither move was about networks; both were found by changing one thing about the
-method and watching which number moved. What this chapter adds is a negative of
-the same kind, and negatives of this kind are worth as much: the vocabulary was
-changed, and nothing moved.
+And it answers, with one qualification, the question Chapter~\ref{ch:graphons}
+left at its door. What that chapter found was a density: with the resolution
+lifted, the number of communities grows in proportion to the size, so $b=B/n$
+becomes a number a network has rather than a rate at which something grows. The
+obvious worry about such a quantity is that it might be an artefact of a poor
+vocabulary --- that a model forced to describe every triangle as three separate
+links would invent communities to absorb what it could not name, and that a
+richer alphabet would dissolve them. On six of the eight rules it does not: give
+the model triangles, squares and bicliques and the density stays where the nested
+prior put it. The qualification is the diamond, where exactly that worry is
+realised, and it is why Chapter~\ref{ch:graphons}'s conjecture has to be read as
+a claim about the best available description rather than about the network
+itself.
+
+Two instrument effects had already been found and separated before this chapter
+began, and it is worth noticing that all three were found the same way.
+Chapter~\ref{ch:communities}'s $0.61$ became $0.80$ when the prior stopped
+charging quadratically for groups, and $0.80$ became $1$ when the sample stopped
+mixing grown networks with catalogued ones. Neither move was about networks. What
+this chapter adds is a third of the same kind and a sharper one: change the
+vocabulary and a network can change not merely its exponent but the class it
+belongs to. A limit class, like an exponent, is a property of a network together
+with the code used to describe it.
