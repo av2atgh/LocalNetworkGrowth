@@ -539,10 +539,16 @@ which has no symbol and is the one motif in the book of no fixed size. The last
 column is the fraction of a network's links that the alphabet actually succeeds
 in naming at the largest size fitted, and it is there because it turns out to be
 what decides the rest. The dagger marks the one row taken from
-Chapter~\ref{ch:communities} rather than measured here. The lattices are
-deterministic, one network per size, so $r_\kappa$ is not defined for them; their
-exponents are fitted from $n=366$ and $n=684$ upward, the smaller generations
-being below the resolution of any of the three methods.
+Chapter~\ref{ch:communities} rather than measured here.
+
+The lattices need one remark, since they are deterministic --- one network per
+generation, not a hundred realisations per size. For them $P_\kappa$ is a step
+function rather than an estimate, so $r_\kappa$ is exactly the smallest
+generation whose fit returns more than one group, and the only imprecision is the
+grid: a lattice quadruples at every step, so the figures quoted are the first
+generation past the onset and the true crossing lies somewhere in the factor of
+four below. Their exponents are fitted from $n=366$ and $n=684$ upward, the
+smaller generations being below the resolution of any of the three methods.
 
 Read down the table and the rules fall into three classes, which are the
 organising fact of this chapter and the three sections that follow.
@@ -658,7 +664,10 @@ it, $5.6$ against $5.8$ at $n=200$ and $11.1$ against $11.9$ at $n=400$, and its
 exponent is $0.892$ with the alphabet against $0.886$ without it. The
 pseudofractal web says the same from the deterministic side: $1.02$ against
 $0.99$, a lattice built entirely of triangles whose density is untouched by being
-allowed to name them.
+allowed to name them. Its onset does not move either, sitting at $366$ under all
+three methods --- though that is weaker evidence than it looks, since the lattice
+triples at every generation and any delay of less than threefold would be
+invisible on so coarse a grid.
 
 So where the alphabet names the rule's own motif, it postpones the onset by a
 factor of two to four and leaves the exponent alone. That is the first route into
@@ -888,7 +897,11 @@ alphabet is available.
 The pseudofractal keeps its law and the diamond loses it. This is worth stating
 carefully, because the diamond's communities do not disappear: its motif fit
 returns $3$, $5$ and $7$ groups at $n=684$, $2732$ and $10\,924$, a count that
-climbs steadily. But it climbs by a fixed amount while the lattice quadruples, so
+climbs steadily from a threshold the table locates at $n=684$ against $44$ for
+both block models. So the alphabet does to the diamond what it did to local
+search and $BB(n,1)$ --- postpones the onset, here by somewhere between a factor
+of four and a factor of sixteen, the generations being too far apart to say
+which --- and then does something to it that it did to neither of them. But it climbs by a fixed amount while the lattice quadruples, so
 $\kappa$ grows like the logarithm of $n$ where the block model has it growing
 like $n$ itself, and the density $b=\kappa/n$ falls away to nothing. Three points
 cannot tell $\log n$ from $n^{0.31}$, and no claim is made that they can; what
@@ -1038,8 +1051,9 @@ along.
 
 \emph{Vocabulary moves the onset, and sometimes the class.} Naming a rule's own
 motif moves $r_\kappa$ by a factor of two to four --- $80$ to $200$ for local
-search, $100$ to $400$ for $BB(n,1)$ --- and leaves it untouched where the
-alphabet has nothing to name, as with duplication--split and
+search, $100$ to $400$ for $BB(n,1)$, and at least four and perhaps sixteen for
+the diamond, whose generations are too far apart to pin down --- and leaves it
+untouched where the alphabet has nothing to name, as with duplication--split and
 duplication--divergence. On six of the eight rules it leaves $\beta$ alone to
 within a hundredth or two. On the other two it does something the resolution
 knob cannot do at all: it moves the rule out of the constant-density class

@@ -55,18 +55,24 @@ def load():
                    ignore_index=True)
     th = pd.concat([pd.read_csv(f) for f in sorted(glob.glob(f"{FIGS}/ramsey_motif_threshold*.csv"))],
                    ignore_index=True)
-    lat = []
+    lat, full = [], []
     for f, name in ((f"{FIGS}/diamond_motif.csv", "diamond"),
                     (f"{FIGS}/pseudofractal_motif.csv", "pseudofractal")):
         x = pd.read_csv(f)
         x["model"] = name
-        lat.append(x[x.n >= LATTICE_MIN[name]])
-    return sc, th, pd.concat(lat, ignore_index=True)
+        full.append(x)                          # every generation, for r_kappa
+        lat.append(x[x.n >= LATTICE_MIN[name]])  # the fitted range, for beta
+    return sc, th, pd.concat(lat, ignore_index=True), pd.concat(full, ignore_index=True)
 
 
 def rows():
-    sc, th, lat = load()
-    both = pd.concat([sc, th], ignore_index=True)
+    sc, th, lat, latfull = load()
+    # A lattice is deterministic -- one network per generation -- so P_kappa is a
+    # step function and r_kappa is simply the smallest generation whose fit
+    # returns more than one group.  Pooling the lattices in here means the same
+    # P_kappa >= 0.95 rule produces both, and for the lattices it is exact rather
+    # than estimated from a hundred realisations.
+    both = pd.concat([sc, th, latfull], ignore_index=True)
     out = {}
     for name, g in pd.concat([sc, lat], ignore_index=True).groupby("model"):
         r = dict(n_lo=int(g.n.min()), n_hi=int(g.n.max()),
@@ -137,10 +143,8 @@ def main():
                          r"& --- & --- & --- & ---\\")
                 continue
             x = r[k]
-            det = k in ("diamond", "pseudofractal")
-            rks = ["---"] * 3 if det else [rk(x.get("rk_flat")),
-                                           rk(x.get("rk_nested")),
-                                           rk(x.get("rk_motif"))]
+            rks = [rk(x.get("rk_flat")), rk(x.get("rk_nested")),
+                   rk(x.get("rk_motif"))]
             bm = "---" if k == "BB(n,2)" else f2(x["motif"])
             L.append(f"\\quad {LABEL[k]} & {MOTIF[k]} & " + " & ".join(rks) +
                      f" & {f2(x['flat'])} & {f2(x['nested'])} & {bm} & "
