@@ -128,8 +128,9 @@ def main():
     order = [0, 1, 2, 3, 4, 5, 6]
     L = [r"\begin{center}", r"\footnotesize\setlength{\tabcolsep}{3pt}",
          r"\begin{tabular}{lccrrrrr}", r"\hline",
+         r" & & & & & \multicolumn{2}{c}{$\beta$} & \\",
          r"rule & motif & bip. & $\langle k\rangle$ & $r_\kappa$ "
-         r"& $\beta$ nested & $\beta+$mot. & named\\", r"\hline"]
+         r"& nested & $+$mot. & named\\", r"\hline"]
     for i in order:
         x = r[i]
         bm = "---" if x["bimodal"] else f"${x['b_mot']:.2f}$"
