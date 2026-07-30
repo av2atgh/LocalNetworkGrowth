@@ -105,13 +105,16 @@ def rows():
 
     # --- the two variants of L = 2
     ch = pd.read_csv(f"{DATA}/bb2_chord.csv")
-    for tag, label, bip in (
-            ("bb2par", r"$BB(n,2)+$ a link", True),
-            ("bb2chord", r"$BB(n,2)+$ a diagonal", False)):
+    # neither variant lays down a cycle, so neither can be drawn as one: the
+    # chorded footprint is K_4 minus an edge and the other is a square with a
+    # link running off it
+    for tag, label, bip, glyph in (
+            ("bb2par", r"$BB(n,2)+$ a link", True, r"\sqstub"),
+            ("bb2chord", r"$BB(n,2)+$ a diagonal", False, r"\sqdiag")):
         g = ch[ch.rule == tag]
         top = g[g.n == g.n.max()]
         out.append(dict(
-            rule=label, cyc=4, k=g.mean_k.mean(), bip=bip,
+            rule=label, cyc=glyph, k=g.mean_k.mean(), bip=bip,
             rk=onset(g, "kappa_dcsbm"),
             b_nest=beta(g, "kappa_dcsbm"), b_mot=beta(g, "kappa_kite"),
             named=top.named_kite.mean(), bimodal=False))
@@ -125,15 +128,18 @@ def main():
     order = [0, 1, 2, 3, 4, 5, 6]
     L = [r"\begin{center}", r"\footnotesize\setlength{\tabcolsep}{3pt}",
          r"\begin{tabular}{lccrrrrr}", r"\hline",
-         r"rule & cycle & bip. & $\langle k\rangle$ & $r_\kappa$ "
+         r"rule & footprint & bip. & $\langle k\rangle$ & $r_\kappa$ "
          r"& $\beta$ nested & $\beta+$mot. & named\\", r"\hline"]
     for i in order:
         x = r[i]
         bm = "---" if x["bimodal"] else f"${x['b_mot']:.2f}$"
         rk = "---" if x["rk"] is None else f"${x['rk']}$"
-        # the cycle column is drawn rather than counted: a pentagon is quicker to
-        # recognise than the numeral 5, and parity is what the column is for
-        L.append(f"{x['rule']} & \\ngon{{{x['cyc']}}} & "
+        # the footprint column is drawn rather than counted: a pentagon is
+        # quicker to recognise than the numeral 5, and parity is what the column
+        # is for. Rules whose footprint is a cycle get the polygon; the two that
+        # lay down something else carry their own glyph.
+        glyph = x["cyc"] if isinstance(x["cyc"], str) else f"\\ngon{{{x['cyc']}}}"
+        L.append(f"{x['rule']} & {glyph} & "
                  f"{'yes' if x['bip'] else 'no'} & "
                  f"${x['k']:.1f}$ & {rk} & ${x['b_nest']:.2f}$ & {bm} & "
                  f"${100*x['named']:.0f}\\%$" r"\\")

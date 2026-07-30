@@ -19,6 +19,15 @@
 \newcommand{\ngon}[1]{\tikz[baseline=-0.75ex]{\node[regular polygon,
   regular polygon sides=#1, draw, minimum size=2.5ex, inner sep=0pt,
   line width=0.5pt] {};}}
+% the two variants of L=2 do not lay down a cycle, so they cannot be named by
+% one: the chorded rule's footprint is K_4 minus an edge, whose shortest cycle
+% is a triangle, and the other's is a square with a link running off it
+\newcommand{\sqdiag}{\tikz[baseline=0.5ex]{%
+  \draw[line width=0.5pt] (0,0) rectangle (1.8ex,1.8ex);
+  \draw[line width=0.5pt] (0,0) -- (1.8ex,1.8ex);}}
+\newcommand{\sqstub}{\tikz[baseline=0.5ex]{%
+  \draw[line width=0.5pt] (0,0) rectangle (1.8ex,1.8ex);
+  \draw[line width=0.5pt] (1.8ex,1.8ex) -- ++(0.9ex,0.55ex);}}
 
 % Compact running heads that fit the narrow 5x8 page.
 \usepackage{fancyhdr}
