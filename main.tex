@@ -11,7 +11,14 @@
 \usepackage{microtype}
 \usepackage[most]{tcolorbox}
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta,calc,bending}
+\usetikzlibrary{arrows.meta,calc,bending,shapes.geometric}
+% an inline regular polygon, for naming a rule by the cycle it closes rather
+% than by the number of sides: \ngon{5} sets a small pentagon on the text line
+% sized so that six sides can be told from seven at print resolution; smaller
+% than this and the higher polygons all read as circles, which defeats the point
+\newcommand{\ngon}[1]{\tikz[baseline=-0.75ex]{\node[regular polygon,
+  regular polygon sides=#1, draw, minimum size=2.5ex, inner sep=0pt,
+  line width=0.5pt] {};}}
 
 % Compact running heads that fit the narrow 5x8 page.
 \usepackage{fancyhdr}

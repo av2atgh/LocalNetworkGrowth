@@ -131,8 +131,11 @@ def main():
         x = r[i]
         bm = "---" if x["bimodal"] else f"${x['b_mot']:.2f}$"
         rk = "---" if x["rk"] is None else f"${x['rk']}$"
-        L.append(f"{x['rule']} & ${x['cyc']}$ & {'yes' if x['bip'] else 'no'} & "
-                 f"${x['k']:.2f}$ & {rk} & ${x['b_nest']:.2f}$ & {bm} & "
+        # the cycle column is drawn rather than counted: a pentagon is quicker to
+        # recognise than the numeral 5, and parity is what the column is for
+        L.append(f"{x['rule']} & \\ngon{{{x['cyc']}}} & "
+                 f"{'yes' if x['bip'] else 'no'} & "
+                 f"${x['k']:.1f}$ & {rk} & ${x['b_nest']:.2f}$ & {bm} & "
                  f"${100*x['named']:.0f}\\%$" r"\\")
         if i == 4:                      # rule off the sweep from the variants
             L.append(r"\hline")
