@@ -809,30 +809,63 @@ Pushed to larger sizes, that statement turns into something more awkward than a
 suppression. The motif model's answer for $BB(n,2)$ is not small, it is
 \emph{bimodal}. At $n=3200$, sixteen realisations in twenty return a single
 community and the other four return between thirty-five and forty-one, which is
-what the block model returns throughout. The two outcomes are not a good answer
-and a bad one. Averaged over the twenty realisations they differ in description
-length by eleven bits in fifty-one thousand:
+what the block model returns throughout. One description plants many squares and
+needs no communities at all; the other finds the communities and plants fewer
+squares; and which of them comes back is settled by where the search happens to
+start.
+
+Whether the criterion is \emph{indifferent} between them is a separate question,
+and it has to be asked carefully, because the obvious way of asking it gives the
+wrong answer. Comparing the mean $\Sigma$ of the realisations that landed on one
+community with the mean of those that landed on many puts them eleven bits apart
+in fifty-one thousand, which invites the conclusion that the two descriptions
+cost the same. They do not. That comparison is between \emph{different networks},
+sorted by which answer the search happened to find, so it measures which networks
+are easy at least as much as which description is shorter.
+
+The comparison to make is on one network at a time: fit it twice under the same
+alphabet, once from a single block, so that motifs are promoted before any
+partition exists, and once from the nested model's own partition, so that the
+communities are there first and the motifs must pay to displace them. Both are
+local minima --- neither search ever leaves the basin it started in --- so the
+two descriptions can be priced against each other on identical data.
 
 \begin{center}
+\small\setlength{\tabcolsep}{4pt}
 \begin{tabular}{lrr}
 \hline
-$BB(n{=}3200,2)$ & squares planted & $\Sigma$ (bits)\\
+$BB(n,2)$, both fits on one network & $n=1600$ & $n=3200$\\
 \hline
-one community    & $686$ of $1200$ & $51\,663$\\
-many communities & $414$ of $1200$ & $51\,652$\\
+$\kappa$ from one block             & $1.0$ & $1.0$\\
+$\kappa$ from the partition         & $22.6$ & $42.8$\\
+$\phi$, links named, from one block & $0.57$ & $0.57$\\
+$\phi$ from the partition           & $0.29$ & $0.27$\\
+\hline
+$\Delta\Sigma$ (bits)               & $-203$ & $-627$\\
+$\Delta\Sigma/n$ (bits/node)        & $-0.13\pm0.05$ & $-0.20\pm0.08$\\
+spread between networks (bits)      & $378$ & $903$\\
+communities win                     & $40\%$ & $8\%$\\
 \hline
 \end{tabular}
 \end{center}
 
-\noindent One description plants many squares and needs no communities at all;
-the other finds the communities and plants fewer squares; and the criterion is
-indifferent between them to a part in five thousand. Which one comes back is
-settled by where the search happens to start. So the squares and the communities
-are not competing hypotheses that the description length adjudicates --- they are
-two ways of spending the same bits on the same links, and for this rule they cost
-the same. That is why $BB(n,2)$ carries no motif-model exponent in the master
-table: its mean is the mixing ratio of two outcomes rather than a law, and it
-turns over at $n=3200$ for that reason and no other.
+\noindent Priced this way the motif description wins outright, and the margin per
+node grows rather than shrinking. The criterion is not indifferent; it has
+decided, and it decides more firmly as the network grows.
+
+What is true is that the decision is smaller than the scatter. The
+network-to-network spread is about half again the gap at both sizes, so an
+individual realisation lands on either side, and that is what produces the
+bimodality. It is also why the sorted comparison misleads: with a gap narrower
+than the noise, sorting realisations by outcome and then averaging recovers
+almost nothing of it.
+
+So the squares and the communities are two ways of spending the same bits on the
+same links, and for this rule they cost \emph{nearly} the same --- near enough
+that the search's starting point decides any single case, not near enough that
+the criterion is silent. That is why $BB(n,2)$ carries no motif-model exponent in
+the master table: its mean $\kappa$ is the mixing ratio of two outcomes rather
+than a law, and it turns over at $n=3200$ for that reason and no other.
 
 There is a control for all this, and the rule that provides it differs from
 $BB(n,2)$ in one place only. The bubble rule lays a chain of $L$ new nodes across
@@ -850,9 +883,9 @@ opposite outcome.
 What separates them is on the other side of the ledger --- how much community
 structure there was to destroy. $BB(n,2)$ is a marginal community-former to begin
 with, its block-model Ramsey number of $400$ standing at four times $BB(n,1)$'s.
-A near-tie in description length is only reachable when the partition's own
-contribution is thin, and eleven bits in fifty-one thousand is what a thin one
-looks like.
+A margin narrow enough for the starting partition to decide the outcome is only
+reachable when the partition's own contribution is thin, and a tenth of a bit per
+node is what a thin one looks like.
 
 \begin{figure}[t]
   \centering
@@ -1001,10 +1034,13 @@ network costs its density nothing.
 
 The caution generalises past any one rule. Wherever an alphabet can absorb the
 same links that a partition would have explained, the two descriptions trade off
-against each other, and minimum description length has no reason to prefer either
---- which is a limit on what any such method can be asked to settle, and not a
-defect of this implementation. $BB(n,2)$'s eleven bits in fifty-one thousand is
-that limit made visible.
+against each other, and the margin between them can fall below the
+network-to-network scatter --- at which point the criterion still has a
+preference but no single fit reliably reports it, and what comes back is decided
+by where the search began. That is a limit on what any such method can be asked
+to settle from one realisation, and not a defect of this implementation.
+$BB(n,2)$ is that limit made visible: a real preference of a tenth of a bit per
+node, carried on a scatter half again as large.
 
 \begin{quote}
 \emph{To follow up.} Chapter~\ref{ch:graphons} measured the community density of

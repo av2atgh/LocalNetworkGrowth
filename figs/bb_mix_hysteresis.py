@@ -144,7 +144,12 @@ def main():
     ap.add_argument("--reps", type=int, default=10)
     ap.add_argument("--jobs", type=int, default=7)
     ap.add_argument("--calibrate", action="store_true")
+    ap.add_argument("--pgrid", default=None,
+                    help="comma-separated p1 values; default is the wide scan. "
+                         "Once the crossing is bracketed the larger sizes are "
+                         "run on a narrow grid around it instead.")
     a = ap.parse_args()
+    grid = (tuple(float(x) for x in a.pgrid.split(",")) if a.pgrid else P_GRID)
 
     if a.calibrate:
         t = time.time()
@@ -156,8 +161,8 @@ def main():
 
     done = pd.read_csv(OUT) if os.path.exists(OUT) else pd.DataFrame()
     have = set() if done.empty else set(zip(done.p1, done.n, done.seed))
-    jobs = [(p, a.n, 900000 + 1000 * int(p * 100) + r)
-            for p in P_GRID for r in range(a.reps)]
+    jobs = [(p, a.n, 900000 + 1000 * int(round(p * 100)) + r)
+            for p in grid for r in range(a.reps)]
     jobs = [j for j in jobs if (j[0], j[1], j[2]) not in have]
     print(f"{len(jobs)} fits to run at n={a.n} on {a.jobs} workers", flush=True)
 
