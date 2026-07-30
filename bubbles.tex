@@ -125,24 +125,24 @@ The pattern is not subtle, and Figure~\ref{fig:bb-alternation}a is the whole of
 it. Naming a rule's own motif abolishes its communities when $L$ is even and
 leaves them exactly where they were when $L$ is odd.
 
+The figure plots a ratio rather than the two community counts, and the reason is
+worth a sentence, because it is the chapter's argument in miniature. These rules
+differ several-fold in how many communities they have to begin with --- $BB(n,2)$
+has three times $BB(n,4)$'s at the same size --- and that difference is exactly
+what does \emph{not} decide the outcome. Dividing it out leaves one quantity per
+rule, on a scale where surviving means one, and the five curves separate into two
+families that nothing else about them separates.
+
 \begin{figure}[t]
   \centering
   \includegraphics[width=\linewidth]{figs/fig-bb-alternation.pdf}
   \caption{\textbf{The alternation, and the diagonal that breaks it.} Both panels
-  plot the number of communities the motif alphabet reports, divided by the
-  number the same nested block model reports on the same networks. A rule whose
-  communities survive sits on one; a rule whose communities are carried off falls
-  away from it. The ratio is plotted rather than the two counts because these
-  rules differ several-fold in how many communities they have to begin with, and
-  that difference is precisely what does \emph{not} decide the outcome.
-  \textbf{(a)} $L=1$ to $5$, with odd $L$ filled and even $L$ open. The odd rules
-  lie on one at every size; the even rules peel away and keep going. Their
-  motifs cover between fifty-four and fifty-seven per cent of the links either
-  way. \textbf{(b)} $BB(n,2)$ against two variants that each add one link per
-  step. The bipartite one leaves the alphabet nothing separable to name and so
-  tests nothing; the diagonal destroys bipartiteness, and the communities return
-  while the alphabet takes up a larger share of that network --- sixty-four per
-  cent --- than of any other in this book.}
+  plot the community count under the motif alphabet divided by the count the
+  nested block model returns on the same networks: one where the communities
+  survive, falling away where they are carried off. \textbf{(a)}~$L=1$ to $5$,
+  odd $L$ filled and even $L$ open. \textbf{(b)}~$BB(n,2)$ against two variants
+  that each add one link per step, of which only the diagonal destroys
+  bipartiteness.}
   \label{fig:bb-alternation}
 \end{figure}
 
