@@ -81,6 +81,7 @@ Usage:
 
     python3 motif_sbm.py        # runs the self-test
 """
+import functools
 import itertools
 import math
 import random
@@ -96,6 +97,15 @@ MOTIFS = {
     "edge":     dict(k=2, links=1, aut=2),
     "triangle": dict(k=3, links=3, aut=6),
     "square":   dict(k=4, links=4, aut=8),
+    # The cycles above the square. |Aut| of an L-cycle is the dihedral group,
+    # 2L: L rotations and the reflection, so that k!/|Aut| = (k-1)!/2 recovers
+    # the number of distinct L-cycles on L labelled nodes. They are here so that
+    # BB(n,L) for L > 2 can be asked the same question as BB(n,2) -- whether
+    # naming the rule's own motif dissolves the communities it appears to have
+    # -- which cannot be asked of a rule whose motif is outside the alphabet.
+    "pentagon": dict(k=5, links=5, aut=10),
+    "hexagon":  dict(k=6, links=6, aut=12),
+    "heptagon": dict(k=7, links=7, aut=14),
 }
 
 # The biclique family. K_{2,d} is two hubs joined to the same d leaves: d+2
@@ -308,6 +318,36 @@ class MotifSBM:
                     if len(set(quad)) == 4 and all(l in free for l in cyc):
                         yield quad, list(cyc)
 
+    def _candidate_cycles(self, free, L):
+        """Simple L-cycles inside one block whose L links are all still loose.
+
+        Used for the pentagon and above. The triangle and the square keep their
+        own generators: those are the hot paths, and leaving them untouched means
+        no number measured before this family existed can have moved.
+
+        Each cycle is walked from its smallest node, so it is reached once per
+        direction and the link set deduplicates the pair.
+        """
+        b = self.blocks
+        seen = set()
+        for u in range(self.n):
+            stack = [(u, (u,), frozenset((u,)))]
+            while stack:
+                v, path, used = stack.pop()
+                if len(path) == L:
+                    if u in self.adj[v]:
+                        links = tuple(sorted(
+                            tuple(sorted((path[i], path[(i + 1) % L])))
+                            for i in range(L)))
+                        if links not in seen and all(l in free for l in links):
+                            seen.add(links)
+                            yield path, list(links)
+                    continue
+                for w in self.adj[v]:
+                    if w <= u or w in used or b[w] != b[u]:
+                        continue
+                    stack.append((w, path + (w,), used | {w}))
+
     def _candidate_bicliques(self, free):
         """Maximal K_{2,d} whose 2d links are all still loose, inside a block.
 
@@ -380,9 +420,18 @@ class MotifSBM:
         whichever instances do not pay their way individually.
         """
         improved = False
-        for name in self.higher:
-            gen = (self._candidate_triangles if name == "triangle"
-                   else self._candidate_squares)
+        # largest cycle first, for the reason the biclique pass is run before
+        # this one: a smaller symbol offered first consumes the links and the
+        # larger object can never be seen
+        for name in sorted(self.higher,
+                           key=lambda x: -spec(x)["k"]):
+            if name == "triangle":
+                gen = self._candidate_triangles
+            elif name == "square":
+                gen = self._candidate_squares
+            else:
+                gen = functools.partial(self._candidate_cycles,
+                                        L=spec(name)["k"])
             while True:
                 base = self.description_length()
                 free = self._singleton_edges()
@@ -436,7 +485,9 @@ class MotifSBM:
             # nodes = (hub, hub, leaf, leaf, ...)
             u, v = nodes[0], nodes[1]
             return [tuple(sorted((h, w))) for w in nodes[2:] for h in (u, v)]
-        return [tuple(sorted((nodes[i], nodes[(i + 1) % 4]))) for i in range(4)]
+        # every remaining symbol is a cycle, stored in cyclic order
+        L = len(nodes)
+        return [tuple(sorted((nodes[i], nodes[(i + 1) % L]))) for i in range(L)]
 
     # ------------------------------------------------------ partition moves
 
