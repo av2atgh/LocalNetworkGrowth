@@ -617,6 +617,31 @@ class MotifSBM:
                 break
         return self.description_length()
 
+    def fit_from_state(self, blocks, instances, sweeps=8, verbose=False):
+        """Run the same optimisation, but from a decomposition supplied by hand.
+
+        fit() always begins from every link its own instance and lets the
+        promote pass discover the motifs. On a lattice whose construction is
+        known that throws away information: the motifs closed at the last
+        generation are edge-disjoint by construction and tile the whole network,
+        and the greedy search does not find them. Seeding the search with a
+        decomposition and letting it move from there separates two questions the
+        ordinary fit conflates -- whether a description is good, and whether this
+        implementation can reach it.
+        """
+        self.blocks = list(blocks)
+        self._relabel()
+        self.instances = list(instances)
+        for it in range(sweeps):
+            if verbose:
+                print(f"    sweep {it}: Sigma = {self.description_length():.1f}")
+            moved = self._move_pass(verbose)
+            promoted = self._promote_bicliques(verbose) if self.bicliques else False
+            promoted = self._promote_pass(verbose) or promoted
+            if not (moved or promoted):
+                break
+        return self.description_length()
+
     def fit(self, sweeps=8, init_blocks="dcsbm", verbose=False):
         """Alternate partition sweeps and motif promotion until Sigma stops
         falling, from several starting partitions, keeping the best.
