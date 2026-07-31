@@ -71,6 +71,24 @@ $t =~ s!\\ngon\{(\d+)\}!ngon_tikz($1)!ge;
 $t =~ s!\\sqdiag\b!tikz_wrap(SQ . '\draw[line width=0.5pt] (0,0) -- (1.8ex,1.8ex);')!ge;
 $t =~ s!\\sqstub\b!tikz_wrap(SQ . '\draw[line width=0.5pt] (1.8ex,1.8ex) -- ++(0.9ex,0.55ex);')!ge;
 
+# 2e) inline math that tex4ht can only set as a picture. HTML has no radical
+# sign and no fraction bar, so $\sqrt{n}$, $\tfrac12$ and $\binom{n}{2}$ come out
+# as images: they do not reflow, do not scale with the reader's font size, cannot
+# be selected or searched, and sit badly on the line. Spelling them the way one
+# would in an email -- sqrt(n), 1/2, C(n,2) -- lets tex4ht set them as ordinary
+# text. Only inline math is touched; a display equation is a long formula and is
+# better as a picture than as a line of ASCII.
+#
+# The three arguments never nest a brace anywhere in this book (checked), so the
+# simple [^{}] match is enough and a recursive pattern is not needed.
+#
+# The span is deliberately unbounded in length. Capping it looks safer and is
+# not: a span longer than the cap fails to match, and the scan then pairs that
+# span's closing $ with the next opening one, inverting the pairing for the rest
+# of the paragraph and silently skipping every formula after it. A blank line
+# cannot appear inside the span, which keeps an unmatched $ from running away.
+$t =~ s/(?<!\\)\$((?:[^\$\n]|\n(?!\s*\n))*?)(?<!\\)\$/'$' . textify_inline($1) . '$'/ge;
+
 # 3) inline tikzpictures -> figures/<prefix>-N.tikz + \includegraphics
 my $n = 0;
 $t =~ s/(\\begin\{tikzpicture\}.*?\\end\{tikzpicture\})/save_fig($prefix . '-' . (++$n), $1)/gse;
@@ -82,6 +100,35 @@ $t =~ s/\\input\{(netfig-[^}]+)\}/save_input_fig($1)/gse;
 $t =~ s/\\(input|include)\{([^}\/]+)\}/\\$1\{..\/$2\}/g;
 
 print $t;
+
+# An argument is left bare in a quotient if it is a single number, letter or
+# command; anything with an operator in it gets brackets, so that \frac{a+b}{c}
+# becomes (a+b)/c and not the false a+b/c.
+sub atom {
+    my ($x) = @_;
+    $x =~ s/^\s+|\s+$//g;
+    return $x =~ /^(?:\\?[A-Za-z]+|\d+)(?:_\{?[A-Za-z0-9]+\}?)?$/ ? $x : "($x)";
+}
+
+sub textify_inline {
+    my ($m) = @_;
+    # \sqrt{X} -> sqrt(X); brackets always, since sqrt binds tighter than
+    # anything that can follow it
+    $m =~ s/\\sqrt\s*\{([^{}]*)\}/\\mathrm{sqrt}($1)/g;
+    # the brace-less form, \sqrt n, which takes the next single token
+    $m =~ s/\\sqrt\s*([A-Za-z0-9])/\\mathrm{sqrt}($1)/g;
+    # \binom{A}{B} -> C(A,B), the usual way of writing it on one line
+    $m =~ s/\\[td]?binom\s*\{([^{}]*)\}\s*\{([^{}]*)\}/\\mathrm{C}($1,$2)/g;
+    # \frac, \tfrac, \dfrac -> a quotient with a slash
+    $m =~ s!\\[td]?frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}!atom($1) . '/' . atom($2)!ge;
+    # the two-token short form, \tfrac12
+    $m =~ s!\\[td]?frac(\d)(\d)!$1/$2!g;
+    # \big( and friends size a delimiter to its contents, which HTML cannot do,
+    # so tex4ht sets each one as its own little image. Inline, an ordinary
+    # bracket reads the same.
+    $m =~ s/\\(?:bigg|Bigg|big|Big)[lrm]?(?=\s*[\(\)\[\]\|\.\\])//g;
+    return $m;
+}
 
 sub inline_file {
     my ($path) = @_;
