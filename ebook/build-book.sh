@@ -1,10 +1,10 @@
 #!/bin/sh
-# build-book.sh — full-book EPUB3 (preface + 8 chapters) with PNG math/figures.
+# build-book.sh — full-book EPUB3 (preface + 11 chapters) with PNG math/figures.
 # Print sources in ../ are never modified.
 set -e
 cd "$(dirname "$0")"
 
-CHAPTERS="introduction walks friends proteins projects communities distance outlook"
+CHAPTERS="introduction walks friends proteins projects communities graphons motifs bubbles distance outlook"
 
 echo ">> 1/6  preprocessing chapters -> *-body.tex (+ extract figures)"
 rm -rf figures

@@ -11,6 +11,9 @@
 use strict;
 use warnings;
 
+# the square both L=2 variants are drawn on, shared by \sqdiag and \sqstub
+use constant SQ => '\draw[line width=0.5pt] (0,0) rectangle (1.8ex,1.8ex); ';
+
 my $prefix = shift // 'fig';
 local $/;
 my $t = <>;
@@ -52,6 +55,22 @@ $t =~ s/\\end\{split\}/\\end{aligned}/g;
 # width/options are dropped because CSS (max-width:100%) handles sizing.
 $t =~ s!\\includegraphics(?:\[[^\]]*\])?\{figs/([^}]+?)(?:\.pdf)?\}!\\includegraphics{figures/$1}!g;
 
+# 2c') pull the shared tables in bodily rather than leaving them as \input.
+# Chapters 7 to 9 keep their master tables in ../tab-*.tex, and those tables are
+# where the motif glyphs live; leaving the \input for LaTeX to resolve would hide
+# them from rule 2d below and from the figure extraction in rule 3.
+$t =~ s!\\input\{(tab-[^}]+?)(?:\.tex)?\}!inline_file("../$1.tex")!ge;
+
+# 2d) inline motif glyphs. \ngon{k}, \sqdiag and \sqstub are defined in
+# ../main.tex with the \tikz short form rather than as tikzpicture environments,
+# so rule 3 below never sees them, and tex4ht would leave the motif column of
+# the chapter 8 and 9 tables empty. Rewriting them as tikzpictures hands them to
+# the same extraction path as every other figure. The drawing commands are kept
+# identical to the definitions in ../main.tex.
+$t =~ s!\\ngon\{(\d+)\}!ngon_tikz($1)!ge;
+$t =~ s!\\sqdiag\b!tikz_wrap(SQ . '\draw[line width=0.5pt] (0,0) -- (1.8ex,1.8ex);')!ge;
+$t =~ s!\\sqstub\b!tikz_wrap(SQ . '\draw[line width=0.5pt] (1.8ex,1.8ex) -- ++(0.9ex,0.55ex);')!ge;
+
 # 3) inline tikzpictures -> figures/<prefix>-N.tikz + \includegraphics
 my $n = 0;
 $t =~ s/(\\begin\{tikzpicture\}.*?\\end\{tikzpicture\})/save_fig($prefix . '-' . (++$n), $1)/gse;
@@ -63,6 +82,27 @@ $t =~ s/\\input\{(netfig-[^}]+)\}/save_input_fig($1)/gse;
 $t =~ s/\\(input|include)\{([^}\/]+)\}/\\$1\{..\/$2\}/g;
 
 print $t;
+
+sub inline_file {
+    my ($path) = @_;
+    open(my $fh, '<', $path) or die "cannot inline $path: $!";
+    local $/;
+    my $c = <$fh>;
+    close $fh;
+    return $c;
+}
+
+sub ngon_tikz {
+    my ($sides) = @_;
+    return tikz_wrap('\node[regular polygon, regular polygon sides=' . $sides
+                     . ', draw, minimum size=2.5ex, inner sep=0pt,'
+                     . ' line width=0.5pt] {};');
+}
+
+sub tikz_wrap {
+    my ($body) = @_;
+    return '\begin{tikzpicture}' . $body . '\end{tikzpicture}';
+}
 
 sub alignat_to_eqs {
     my ($body) = @_;
