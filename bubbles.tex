@@ -417,15 +417,17 @@ description length is choosing between dialects. Which is also why "the alphabet
 abolished the communities" was always a slightly misleading way to put it. The
 meso-structure did not go anywhere. It was renamed.
 
-The counts say so. Write $s$ for the number of motifs the fit plants and $\kappa$ for the number of
-communities it reports, and follow both along the family
-(Figure~\ref{fig:bb-meso}):
+The counts say so, and they read more easily if the notation admits the point.
+Write $\kappa_0$ for the number of motifs the fit plants, against $\kappa$ for the
+number of communities it reports: a motif is the null case of a community, the
+simplest form the thing can take, fixed in size and homogeneous in wiring, and
+the index says so. Follow both along the family (Figure~\ref{fig:bb-meso}):
 
 \begin{center}
 \footnotesize
 \begin{tabular}{lrrr}
 \hline
-rule & $\beta$ for $s$ & $\beta$ for $\kappa$ & $\beta$ for $s+\kappa$\\
+rule & $\beta$ for $\kappa_0$ & $\beta$ for $\kappa$ & $\beta$ for $\kappa_0+\kappa$\\
 \hline
 $BB(n,1)$ & $1.06$ & $0.89$ & $1.04$\\
 $BB(n,2)$ & $1.02$ & $\mathbf{0.25}$ & $1.01$\\
@@ -443,7 +445,7 @@ size, and every rule carries meso-structure in proportion to its size, with a
 slope of one to within a few hundredths in all ten cases.
 
 The two panels of Figure~\ref{fig:bb-meso} are nearly the same picture, and that
-is the point rather than a defect of it: $\kappa$ is a few per cent of $s+\kappa$
+is the point rather than a defect of it: $\kappa$ is a few per cent of $\kappa_0+\kappa$
 throughout, so the total is dominated by the motifs and the communities are a
 small residue. What the parity of $L$ decides is the size of that residue --- how
 much of the meso-structure is left over for the heterogeneous vocabulary once the
@@ -453,10 +455,10 @@ homogeneous one has taken what it can.
   \centering
   \includegraphics[width=\linewidth]{figs/fig-bb-meso.pdf}
   \caption{\textbf{Meso-structure, counted without regard to which vocabulary
-  names it.} \textbf{(a)}~motifs planted and \textbf{(b)}~motifs plus
-  communities, against size, with a line of slope one for the eye. Every rule is
-  parallel to it in both panels, while the community count alone runs from
-  $n^{0.25}$ to $n^{0.93}$ across the same five rules.}
+  names it.} \textbf{(a)}~motifs planted, $\kappa_0$, and \textbf{(b)}~motifs plus
+  communities, $\kappa_0+\kappa$, against size, with a line of slope one for the
+  eye. Every rule is parallel to it in both panels, while $\kappa$ alone runs
+  from $n^{0.25}$ to $n^{0.93}$ across the same five rules.}
   \label{fig:bb-meso}
 \end{figure}
 
