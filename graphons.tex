@@ -1033,20 +1033,20 @@ falls into which:
   This is where every rule in the table above sits, and it is what the conjecture
   describes.
 \item \emph{Fractal.} Communities emerge and their number grows, but more slowly
-  than the network: $0<\beta<1$, so the density falls away to nothing. No rule in
-  the table above is here, and one of them arrives here in
-  Chapter~\ref{ch:motifs}.
+  than the network: $0<\beta<1$, so the density falls away to nothing. It is a
+  coherent possibility and no rule in this book has been found in it.
 \end{itemize}
 
-\noindent That last clause is a qualification that belongs with the conjecture
-rather than after it, because the next chapter finds the counterexample and it is
-better met head-on. Every density quoted above was measured with a block model,
-whose vocabulary cannot name a triangle. Chapter~\ref{ch:motifs} fits the same
-networks with one that can, and on the diamond lattice --- a rule as local as any
-in this book --- the density evaporates: the number of communities falls from
-growing like $n$ to growing like $\log n$, and the description that says so is the
-one minimum description length prefers, at every size measured. So a network can
-have a density under one description and none under a better one.
+\noindent The first class is the one that turns out to matter, and a qualification
+belongs with the conjecture rather than after it, because the next chapter finds
+the counterexample and it is better met head-on. Every density quoted above was
+measured with a block model, whose vocabulary cannot name a triangle.
+Chapter~\ref{ch:motifs} fits the same networks with one that can, and on the
+diamond lattice --- a rule as local as any in this book --- the communities do not
+merely thin out, they go: the best available description uses a single group at
+every size, and it is the description minimum description length prefers. The
+pseudofractal web goes the same way. So a network can have a density of
+communities under one description and none at all under a better one.
 
 That is not a defeat for the conjecture so much as a statement of what it is
 conjecturing about. A limit class, like an exponent, is a property of a network
@@ -1056,7 +1056,10 @@ improving the code can move a network between classes and not merely shift its
 exponent. The conjecture should therefore be read as a claim about the best
 available description, and it stands or falls on whether the networks that matter
 keep their density when the description improves --- which is measured, for what
-it can reach, in Section~\ref{sec:gr-decides}.
+it can reach, in Section~\ref{sec:gr-decides}. Chapter~\ref{ch:bubbles} then
+finds that the answer turns on whether a rule's motifs overlap, and that a
+deterministic rule, whose motifs do not, is also the case where the fitting is
+least to be trusted.
 
 Two things are worth carrying forward. The first is a warning about instruments,
 learned twice in this chapter and at some cost. The exponent $\beta$ moved from
@@ -1065,6 +1068,8 @@ stopped mixing kinds of network; neither move had anything to do with the
 networks. A number measured through a method is a statement about the pair, and
 the only way to tell which half is speaking is to change the method and watch.
 The second is the density itself, which the next chapter will try to move by
-changing the vocabulary rather than the resolution. On six rules out of eight it
-will fail. On the other two it will succeed, and those two are the reason the
-classes have to be named at all.
+changing the vocabulary rather than the resolution. On most of the rules it will
+fail. On the three whose motifs can be laid over the whole network without
+overlapping it will succeed completely, taking the communities away rather than
+merely thinning them, and those three are the reason the classes have to be named
+at all.

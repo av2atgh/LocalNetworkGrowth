@@ -118,10 +118,18 @@ def main():
     # ---------------------------------------------------------- chapter 8
     # grouped by the class the rule lands in once the alphabet is available,
     # which is the point of the table
+    # Both lattices are in the first class, not the second and third. Each tiles
+    # perfectly by its own motif -- every generation gives every link exactly one
+    # new motif, so the last generation's motifs are edge-disjoint and cover all
+    # m links -- and priced that way each has one community at every size, more
+    # cheaply than the fit's answer. The fractal class ends up with no member:
+    # the diamond looked like one only because the greedy search was reporting a
+    # partition it did not need.
     CLASSES = (("constant density", ["LS(n,1)", "BB(n,1)", "DS(n,0.3)",
-                                     "DS(n,0.5)", "DD(n,0.5)", "pseudofractal"]),
-               ("no communities", ["BA(m,2)", "BB(n,2)"]),
-               ("fractal", ["diamond"]))
+                                     "DS(n,0.5)", "DD(n,0.5)"]),
+               ("no communities", ["BA(m,2)", "BB(n,2)", "pseudofractal",
+                                   "diamond"]))
+    LATTICE = ("pseudofractal", "diamond")
 
     def rk(v):
         return "never" if v is None else f"${v}$"
@@ -145,10 +153,17 @@ def main():
             x = r[k]
             rks = [rk(x.get("rk_flat")), rk(x.get("rk_nested")),
                    rk(x.get("rk_motif"))]
-            bm = "---" if k == "BB(n,2)" else f2(x["motif"])
+            if k in LATTICE:
+                # kappa = 1 at every size under the tiling, so there is no
+                # exponent to quote, and the links named are the tiling's, not
+                # the search's
+                bm, cover = "---", r"$100\%$"
+            else:
+                bm = "---" if k == "BB(n,2)" else f2(x["motif"])
+                cover = f"${100*x['cover']:.0f}\\%$"
             L.append(f"\\quad {LABEL[k]} & {MOTIF[k]} & " + " & ".join(rks) +
                      f" & {f2(x['flat'])} & {f2(x['nested'])} & {bm} & "
-                     f"${100*x['cover']:.0f}\\%$\\\\")
+                     f"{cover}\\\\")
         L.append(r"\hline")
     L += [r"\end{tabular}", r"\end{center}"]
     open(os.path.join(ROOT, "tab-master-motifs.tex"), "w").write("\n".join(L) + "\n")

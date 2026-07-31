@@ -553,26 +553,30 @@ smaller generations being below the resolution of any of the three methods.
 Read down the table and the rules fall into three classes, which are the
 organising fact of this chapter and the three sections that follow.
 
-\emph{No communities.} $P_\kappa$ never reaches certainty; the fit returns a
-single group at arbitrarily large size. Chapter~\ref{ch:communities}'s non-local
-control $BA(n,2)$ is the canonical member --- preferential attachment with no
-step that ever looks at a neighbourhood, and no communities at any size. It is
-the one row here not measured with this chapter's instrument, and is marked
+\emph{No communities.} $P_\kappa$ never reaches certainty; the best description
+uses a single group at arbitrarily large size. Chapter~\ref{ch:communities}'s
+non-local control $BA(n,2)$ is the canonical member --- preferential attachment
+with no step that ever looks at a neighbourhood, and no communities at any size.
+It is the one row here not measured with this chapter's instrument, and is marked
 accordingly: the ``never'' is that chapter's flat fit, and neither the nested
 model nor the alphabet has been run on it, so it stands as the class's definition
 rather than as a comparison. What is new is that a network with a perfectly good
 local rule can be moved into the same class by nothing more than a change of
-vocabulary: $BB(n,2)$ has a Ramsey number of $400$ under both block models and
-none at all once its squares can be named.
+vocabulary. $BB(n,2)$ has a Ramsey number of $400$ under both block models and
+none at all once its squares can be named, and both deterministic lattices go the
+same way for a reason Section~\ref{sec:gr-square} makes exact.
 
 \emph{Constant density.} $\beta=1$, so $b=\kappa/n$ stops depending on size and
 becomes a number the rule has, in the sense of Chapter~\ref{ch:graphons}'s
-Eq.~\eqref{eq:gr-density}. Six of the eight measured rules are here, the nested
-model and the alphabet agreeing on every one of them to within about a tenth.
+Eq.~\eqref{eq:gr-density}. Five of the measured rules are here, the nested model
+and the alphabet agreeing on every one of them to within about a tenth.
 
 \emph{Fractal.} Communities emerge, their number grows, and the density does not
-survive: $0<\beta<1$, so $b\to0$ as a power of the size. One member, the diamond
-lattice at $\beta=0.31$, and it is there only under the motif alphabet.
+survive: $0<\beta<1$, so $b\to0$ as a power of the size. It is a coherent
+possibility and no rule in this book occupies it. The diamond lattice appeared to
+for a while, at $\beta=0.31$, and Section~\ref{sec:gr-square} is the account of
+why it does not: the exponent was a partition the search was reporting and did
+not need.
 
 Three things about that classification need saying immediately, because they
 qualify everything after it.
@@ -590,21 +594,21 @@ rule in the table reads $\beta$ between $0.48$ and $0.78$: on that instrument th
 whole book is in the fractal class. It is not. The flat model is sitting on its
 own $\sqrt n$ ceiling, as Chapter~\ref{ch:graphons} established, and the apparent
 fractality is the ceiling talking. Any claim that a network is in the third class
-has to be made with a model that could have reported the first two, which is why
-the diamond's $0.31$ is quoted from the motif fit and not from the flat one.
+has to be made with a model that could have reported the first two --- and, as
+the diamond turns out to show, with a fit one has some reason to think is the
+best available.
 
-The third is a caution about the third class itself. It has one member, measured
-over three sizes, and $\kappa=3,5,7$ at $n=684$, $2732$, $10\,924$ is as
-consistent with $\log n$ as with $n^{0.31}$; Section~\ref{sec:gr-square} says so
-where the number is derived. What is certain is that the density is gone. Whether
-what replaces it is a genuine fractal exponent or something slower is not settled
-by three points, and the class is named for where it sits rather than for a law
-that has been established.
+The third is that the classification is a statement about the best description
+anyone has found, and not about the best there is. That distinction is usually
+academic and on the two lattices it is not: both were placed in other classes by
+a fit that turned out to be beaten, at every size, by a decomposition one can
+write down by hand. Section~\ref{sec:gr-square} does that, and the fractal class
+is empty as a result. Where a better description is found, a row moves.
 
 \section{The rules that keep their density}
 \label{sec:gr-chapter6}
 
-Six of the eight rules are in the constant-density class, and they get there by
+Five of the random rules are in the constant-density class, and they get there by
 two quite different routes: either the alphabet names their motif and the density
 survives anyway, or the alphabet cannot name it at all. Both routes are worth
 following, because between them they say what the vocabulary is and is not able
@@ -661,13 +665,14 @@ local search and not like its own square-closing sibling. Its onset moves from
 $100$ to $400$ and nothing else happens: past the threshold the motif model's
 community count converges on the nested model's rather than collapsing away from
 it, $5.6$ against $5.8$ at $n=200$ and $11.1$ against $11.9$ at $n=400$, and its
-exponent is $0.892$ with the alphabet against $0.886$ without it. The
-pseudofractal web says the same from the deterministic side: $1.02$ against
-$0.99$, a lattice built entirely of triangles whose density is untouched by being
-allowed to name them. Its onset does not move either, sitting at $366$ under all
-three methods --- though that is weaker evidence than it looks, since the lattice
-triples at every generation and any delay of less than threefold would be
-invisible on so coarse a grid.
+exponent is $0.892$ with the alphabet against $0.886$ without it.
+
+The pseudofractal web looks at first like the same story told deterministically
+--- $1.02$ against $0.99$, a lattice built entirely of triangles whose density
+appears untouched by being allowed to name them --- and it is not. That reading
+comes apart in Section~\ref{sec:gr-square}, and it comes apart in a way that says
+something about the instrument rather than about the lattice. It is left out of
+this section for that reason, and so is the diamond.
 
 So where the alphabet names the rule's own motif, it postpones the onset by a
 factor of two to four and leaves the exponent alone. That is the first route into
@@ -910,86 +915,101 @@ have picked.
   \label{fig:gr-squares}
 \end{figure}
 
-\section{The lattice with no density left}
+\section{The lattices that describe themselves}
 \label{sec:gr-square}
 
-The third class has one member, and reaching it takes a pair of lattices, because
-the obvious explanation for $BB(n,2)$ has to be eliminated first.
+Two lattices are left, and they are the ones on which the alphabet does the most
+and the search does the worst. Taking them together is what empties the fractal
+class and puts both of them in the first.
 
-That explanation is reach. Chapter~\ref{ch:communities} found that locality has a
-\emph{range}: a rule whose chain is one node long reaches two steps and gives
-$r_\kappa=108$, while one whose chain is two nodes long reaches three and gives
-$326$. $BB(n,2)$ is a three-step rule by that measure and $BB(n,1)$ a two-step
-one, so perhaps reach is what decides whether a community survives being renamed.
-The trouble is that in $BB(n,L)$ the two candidate causes move together:
-lengthening the chain is the only way to lengthen the cycle, so nothing in that
-family can separate a rule's reach from the cycle it closes.
+The pseudofractal web hangs a new node on both ends of every link, closing a
+triangle; the diamond replaces every link by two parallel paths of one node each,
+closing a square. Both reach exactly two steps --- every new node is adjacent to
+nodes that were already adjacent --- and both rebuild the whole lattice at once,
+which is what keeps their cycles clean, since a rule that subdivides one link at a
+time stretches the cycles it has already made. They differ in the cycle they
+close and in almost nothing else.
 
-Two lattices can. The pseudofractal web hangs a new node on both ends of every
-link, closing a triangle; the diamond replaces every link by two parallel paths
-of one node each, closing a square. Both reach exactly two steps --- every new
-node is adjacent to nodes that were already adjacent --- and both rebuild the
-whole lattice at once, which is what keeps their cycles clean, since a rule that
-subdivides one link at a time stretches the cycles it has already made. They
-differ in the cycle they close and in nothing else that matters here. And the
-master table puts them in different classes: both at the modular limit under the
-nested block model, $1.02$ and $1.05$, and then $0.99$ against $0.31$ once the
-alphabet is available.
+Fitted, they look like a clean contrast. Both sit at the modular limit under the
+nested block model, $1.02$ and $1.05$, and under the motif alphabet the
+pseudofractal reads $0.99$ while the diamond falls to $0.31$; the diamond's fit
+returns $3$, $5$ and $7$ groups at $n=684$, $2732$ and $10\,924$, a count
+climbing by a fixed amount while the lattice quadruples. That contrast was the
+original reading of this section, and it does not survive.
 
-The pseudofractal keeps its law and the diamond loses it. This is worth stating
-carefully, because the diamond's communities do not disappear: its motif fit
-returns $3$, $5$ and $7$ groups at $n=684$, $2732$ and $10\,924$, a count that
-climbs steadily from a threshold the table locates at $n=684$ against $44$ for
-both block models. So the alphabet does to the diamond what it did to local
-search and $BB(n,1)$ --- postpones the onset, here by somewhere between a factor
-of four and a factor of sixteen, the generations being too far apart to say
-which --- and then does something to it that it did to neither of them. But it climbs by a fixed amount while the lattice quadruples, so
-$\kappa$ grows like the logarithm of $n$ where the block model has it growing
-like $n$ itself, and the density $b=\kappa/n$ falls away to nothing. Three points
-cannot tell $\log n$ from $n^{0.31}$, and no claim is made that they can; what
-the three points do establish is that the density is gone. Under the motif
-alphabet the diamond is not a network with fewer communities. It is a network
-with no community \emph{density} --- exactly the intensive quantity
-Chapter~\ref{ch:graphons} identified as what a locally grown network converges
-to. The pseudofractal, fitted the same way, still has one.
+\subsection*{Both lattices tile themselves exactly}
 
-So reach is not the discriminator. Two rules that reach exactly as far as each
-other end up in different classes, and the only thing left that distinguishes
-them is the cycle they close --- which is what Chapter~\ref{ch:communities}'s
-table said, ranking a triangle rule at $r_\kappa=108$ against a square rule at
-$326$ before any of this was fitted. The reach of $BB(n,2)$ was a correlate of
-its square, not the cause. Which is not to say that the square is the cause
-either: Section~\ref{sec:gr-decides} finds that the operative property is not the
-motif's shape but how the rule lays it down, and the cycle length is itself a
-correlate of that.
+Each of these rules gives every existing link exactly one new motif per
+generation. So the motifs closed at the \emph{last} generation have distinct old
+links and disjoint new chains, and between them they use every link in the
+network exactly once. A perfect edge-disjoint tiling of the lattice by its own
+motif exists at every size, in both lattices, and it can be written down from the
+construction without fitting anything: $729$ triangles for the $2187$ links of
+the pseudofractal at $n=1095$, $1024$ squares for the $4096$ links of the diamond
+at $n=2732$.
 
-Before any of this can be believed, one thing has to be checked. A description
-that loses the density is only interesting if it is the description the criterion
-\emph{prefers}; a worse code can say anything. Reducing the alphabet to the link
-alone recovers the ordinary degree-corrected model exactly
-(Section~\ref{sec:gr-motifsbm}), so the two are directly comparable:
+Price that decomposition and compare it with what the search finds:
 
 \begin{center}
-\begin{tabular}{rrrrr}
+\footnotesize\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrrrrr}
 \hline
-$n$ & $\Sigma$ link only & $\Sigma+$ motifs & $\Delta\Sigma$ & $\kappa$\\
+ & & \multicolumn{2}{c}{as fitted} & \multicolumn{2}{c}{the tiling} & \\
+lattice & $n$ & $\Sigma$ & $\kappa$ & $\Sigma$ & $\kappa$ & cheaper by\\
 \hline
-$684$    & $8\,908$   & $7\,812$   & $-1\,096$  & $5\to3$\\
-$2\,732$  & $41\,929$  & $37\,213$  & $-4\,716$  & $25\to5$\\
-$10\,924$ & $198\,987$ & $171\,368$ & $-27\,619$ & $95\to7$\\
+pseudofractal & $366$    & $4\,474$   & $5$  & $3\,887$   & $1$ & $587$\\
+pseudofractal & $1\,095$  & $15\,428$  & $14$ & $13\,728$  & $1$ & $1\,700$\\
+pseudofractal & $3\,282$  & $53\,082$  & $44$ & $47\,673$  & $1$ & $5\,409$\\
+diamond       & $684$    & $7\,812$   & $3$  & $7\,434$   & $1$ & $378$\\
+diamond       & $2\,732$  & $37\,213$  & $5$  & $35\,666$  & $1$ & $1\,547$\\
+diamond       & $10\,924$ & $171\,368$ & $7$  & $166\,876$ & $1$ & $4\,493$\\
 \hline
 \end{tabular}
 \end{center}
 
-\noindent The motif description wins at every size, and the absolute margin
-widens twenty-five-fold across the range while the block model's own $\kappa$
-climbs from $5$ to $95$ and the motif model's from $3$ to $7$. As a fraction of
-the description it is steadier than that --- about an eighth throughout, $12\%$,
-$11\%$, $14\%$ --- which is the honest way to put it: the alphabet's advantage is
-not growing relative to the size of the problem, it is simply never in doubt. So
-this is not a case of a poor code being allowed to speak. On the diamond, the
-best available description of the network is one in which the communities have no
-density.
+\noindent The tiling is cheaper at every size, on both lattices, by a margin that
+grows with the network. Handed to the optimiser as a starting state it does not
+move off it. And it uses \emph{one} community: a single block, every link spoken
+for by a motif, nothing left for a partition to explain.
+
+So on the criterion this chapter has used throughout, the best available
+description of the pseudofractal web has no communities --- not the fourteen the
+fit reports at $n=1095$, and not the forty-four it reports at $n=3282$ --- and the
+same is true of the diamond. The two rules are in the same class. Their
+description lengths are not merely similar but equal to the bit where their sizes
+coincide, $7434$ at $n=684$ and $35\,666$ at $n=2732$, because both are tiled by
+their own motif on the same $n$ and $m$.
+
+\subsection*{What that costs, and what it does not}
+
+It costs the contrast. The pseudofractal was this section's foil --- the lattice
+that keeps its law while the diamond loses it --- and there is no such foil.
+Along with it goes the argument that reach cannot be the discriminator because
+two rules of equal reach end up in different classes: they do not end up in
+different classes. Chapter~\ref{ch:communities}'s ranking of a triangle rule
+against a square rule may still be telling us something, but not this.
+
+It does not cost the finding. The diamond's own result is strengthened rather
+than weakened: an alphabet can take a network's communities away entirely, and
+under the best description available the diamond has none at all, rather than the
+vanishing density earlier arithmetic gave it. What was reported as $\kappa$
+growing like $\log n$ was a partition the search was carrying and did not need.
+
+Nor does it touch the comparison that made the finding safe. Reducing the
+alphabet to the link alone recovers the ordinary degree-corrected model exactly
+(Section~\ref{sec:gr-motifsbm}), and on the diamond it costs $8908$, $41\,929$
+and $198\,987$ bits at the three sizes against the motif description's $7434$,
+$35\,666$ and $166\,876$ --- margins of a sixth rather than the eighth the fitted
+comparison gave. The motif description wins by more than was claimed, not less.
+
+The awkward part is what it says about the instrument. These are the two networks
+in the book whose optimal description can be written down by hand, and they are
+the two where the greedy search is furthest from it --- by up to a tenth of the
+whole description length. That is not a coincidence, and
+Chapter~\ref{ch:bubbles} takes it up: a deterministic rule builds an exact
+optimum, and an exact optimum is a thing a greedy search can exactly miss. Every
+other rule in this book is stochastic, lays its motifs across links chosen at
+random, and has no such optimum to be missed.
 
 \section{What decides the class}
 \label{sec:gr-decides}
@@ -997,42 +1017,35 @@ density.
 Three classes, and two rules that changed class when the vocabulary changed. What
 is it about a rule that decides which way it goes?
 
-Not the motif's shape: triangles dissolve nothing on local search, $BB(n,1)$ or
-the pseudofractal, and squares dissolve everything on $BB(n,2)$ and the diamond
-while doing nothing whatever on $DD(n,q)$ or duplication--split. Not the rule's
-reach, which the two lattices controlled for and eliminated. What the master
-table's last column measures is the quantity that does the work: how many of a
-network's links an edge-disjoint decomposition can actually take up.
+Not the motif's shape: triangles dissolve nothing on local search or $BB(n,1)$
+and everything on the pseudofractal, and squares dissolve everything on
+$BB(n,2)$ and the diamond while doing nothing whatever on $DD(n,q)$ or
+duplication--split. What the master table's last column measures is the one
+quantity that separates the cases at the ends: how many of a network's links an
+edge-disjoint decomposition can take up.
 
-At one end sits the diamond. Its squares cover the whole lattice at the smaller
-generations --- sixteen of sixteen, then sixty-four of sixty-four --- and around
-ninety per cent thereafter, which is a perfect tiling of the lattice by its own
-motif, after which a partition has nothing left to explain. At the other sits
-duplication--divergence at nought per cent, where every square is stacked on the
-same shared neighbourhood and the decomposition can name almost none of them. The
-pseudofractal is in between at fifty-six per cent: its triangles never tile it,
-because every generation piles them onto the same hub links, so a decomposition
-giving each link to one motif must leave the rest unspoken and the partition
-keeps its work.
+At one end sit the two lattices, at a hundred per cent. Each gives every link one
+new motif per generation, so the last generation's motifs tile the whole network,
+and a partition is left with nothing to explain --- which is exactly what the fit
+finds when it is started from the tiling, one community and no residue
+(Section~\ref{sec:gr-square}). At the other sits duplication--divergence at
+nought per cent, where every square is stacked on the same shared neighbourhood
+and a decomposition that gives each link to one motif can name almost none of
+them; there the alphabet never engages and the partition keeps all of its work.
 
-That is the mechanism, and it is a clean one at the ends. Where the motif tiles
-the network, the partition has nothing left to describe and the density dies.
-Where the motifs overlap, they cannot absorb what the partition was explaining,
-and the density survives. The same overlap that made duplication's bicliques
+That is the mechanism where it can be seen cleanly. Where the motif tiles the
+network, the partition has nothing left to describe and the communities go. Where
+the motifs overlap, they cannot absorb what the partition was explaining, and the
+communities survive. The same overlap that made duplication's bicliques
 unnameable is here doing something useful.
 
-That account is complete for the two lattices, and it is worth being clear about
-why it is safe there. They differ by ninety-two per cent against fifty-six, which
-is not a marginal gap but the difference between a motif that covers the network
-and one that covers half of it; they are deterministic, so there is one network
-per size and no sampling to average over; and they were built to differ in the
-cycle they close and in nothing else. Where a motif tiles, the partition has
-nothing left to describe and the density dies. Where the motifs overlap, they
-cannot absorb what the partition was explaining, and the density survives. The
-same overlap that made duplication's bicliques unnameable is here doing something
-useful.
+Both ends are extremes, and it is worth saying what makes them legible. A
+hundred per cent against nought is not a marginal gap, and the lattices are
+deterministic --- one network per size, no sampling, and a decomposition that can
+be checked by construction rather than searched for.
 
-It does not extend to the bubble rules, and the last column says so plainly.
+Between the ends the account has nothing to say, and the last column says so
+plainly.
 $BB(n,1)$ names $54\%$ of its links and keeps its communities; $BB(n,2)$ names
 $57\%$ and loses them; local search names $62\%$, more than either, and is in no
 danger at all. Three rules within eight points of each other on the quantity that
@@ -1112,10 +1125,12 @@ motif moves $r_\kappa$ by a factor of two to four --- $80$ to $200$ for local
 search, $100$ to $400$ for $BB(n,1)$, and at least four and perhaps sixteen for
 the diamond, whose generations are too far apart to pin down --- and leaves it
 untouched where the alphabet has nothing to name, as with duplication--split and
-duplication--divergence. On six of the eight rules it leaves $\beta$ alone to
-within a hundredth or two. On the other two it does something the resolution
+duplication--divergence. On the five random rules where the alphabet cannot take
+up the whole network it leaves $\beta$ alone to within a hundredth or two. On the
+three where it can, it does something the resolution
 knob cannot do at all: it moves the rule out of the constant-density class
-entirely, $BB(n,2)$ into the first class and the diamond into the third.
+entirely --- $BB(n,2)$, the diamond and the pseudofractal all into the first,
+with no communities left at all.
 
 So the tidy statement --- one knob for how finely a network can be cut, another
 for whether there is anything to cut --- holds for most of the table and fails in
@@ -1151,9 +1166,10 @@ becomes a number a network has rather than a rate at which something grows. The
 obvious worry about such a quantity is that it might be an artefact of a poor
 vocabulary --- that a model forced to describe every triangle as three separate
 links would invent communities to absorb what it could not name, and that a
-richer alphabet would dissolve them. On six of the eight rules it does not: give
-the model triangles, squares and bicliques and the density stays where the nested
-prior put it. The qualification is the diamond, where exactly that worry is
+richer alphabet would dissolve them. On the rules whose motifs overlap it does
+not: give the model triangles, squares and bicliques and the density stays where
+the nested prior put it. The qualification is the three rules whose motifs do not
+overlap --- $BB(n,2)$ and the two lattices --- where exactly that worry is
 realised, and it is why Chapter~\ref{ch:graphons}'s conjecture has to be read as
 a claim about the best available description rather than about the network
 itself.
