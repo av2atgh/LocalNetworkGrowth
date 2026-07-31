@@ -45,7 +45,13 @@ were named \emph{network motifs} by \citet{milo2002}, who found them at
 frequencies no random graph with the same degrees would produce; random graph
 ensembles built to contain prescribed subgraphs rather than prescribed links were
 constructed by \citet{karrer2010subgraphs}, and the model of
-Section~\ref{sec:gr-motifsbm} is a block-structured version of theirs. Closest of
+Section~\ref{sec:gr-motifsbm} is a block-structured version of theirs. Looking for
+communities with motifs rather than with links is older still:
+\citet{arenas2008motif} rewrote Newman--Girvan modularity so that what it counts
+inside a group is copies of a chosen motif rather than edges, and showed that the
+partition one gets depends on which motif is chosen --- the same observation this
+chapter arrives at from the side of description length, and reached there by
+changing an objective rather than a code. Closest of
 all, \citet{peixoto2022triadic} put exactly the suspicion above to work: a block
 model in which each link is generated either by community membership or by
 triadic closure over an existing path, with the assignment inferred alongside the
