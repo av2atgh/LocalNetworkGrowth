@@ -1,4 +1,4 @@
-\chapter{Communities in the bubble family}
+\chapter{Motifs as blueprinted communities}
 \label{ch:bubbles}
 
 The last chapter left one thing conspicuously unfinished. An alphabet of motifs
@@ -477,53 +477,130 @@ the parity of the cycle; the density itself does not notice. Read that way,
 $BB(n,2)$ and the diamond never lost anything. They were re-described, in a
 dialect that happens to have a symbol for what they are made of.
 
-\section{Settled, and not settled}
+\section{What four chapters add up to}
 \label{sec:bb-conclusion}
 
-Settled: within the random family, whether naming a rule's own motif dissolves
-its communities is decided by the parity of the cycle the rule closes, and not by
-how much of the network the motif covers, nor by how much community structure
-there was to begin with, nor by the mean degree. The prediction was made before
-the chorded rule was grown and it came out right, which is the only sense in
-which any of this has been tested rather than fitted.
+This is the end of four chapters rather than of one, and the accounting is worth
+doing in one place. Chapter~\ref{ch:communities} asked whether locally grown
+networks have communities and found that they do, with a threshold size and an
+exactly solvable case to show why. Chapter~\ref{ch:graphons} asked how many, and
+found that the answer moved by four tenths in the exponent when the prior
+changed. Chapter~\ref{ch:motifs} asked what the describer is allowed to
+\emph{name}, and found that the answer could move by everything: a vocabulary
+that can call a set of links a triangle sometimes reports no communities at all
+where a vocabulary that cannot reports a constant density of them. This chapter
+turned the one dial that changes a rule's local structure and nothing else.
 
-Settled also, and less comfortably: on the deterministic members the same
-question cannot be answered by fitting at all. Those lattices tile perfectly by
-construction, the greedy search does not find the tiling, and handing it the
-tiling produces a description that is cheaper by up to seven thousand bits and
-has one community. The word \emph{random} in the paragraph above is doing real
-work, and Section~\ref{sec:bb-deterministic} says what it costs
-Chapter~\ref{ch:motifs}.
+Four chapters of numbers that disagree with each other invites the reading that
+none of them means anything. The opposite is the case, and the last section says
+why: they disagree because they are counting the same substance in two
+currencies. Count it in one.
 
-Not settled: why. The obvious story is that a square is what a bipartite network
-is made of, so that on the even rules the alphabet and the partition are
-competing to describe the same structure and either can stand in for the other,
-while an odd cycle expresses something no partition of a bipartite network needs
-to account for. It is a plausible story and this chapter does not establish it.
-What it establishes is that the parity of the shortest cycle is what the outcome
-tracks, across seven rules and one deliberate intervention.
+\input{tab-meso}
 
-Three things would test the story rather than restate it. A bipartite rule with
-separable motifs at $\langle k\rangle\simeq4$ would remove the last confound, if
-one can be constructed. Running the sweep to $L=6$ and $L=7$ would say whether
-the alternation continues where Chapter~\ref{ch:communities}'s Ramsey numbers say
-it should, and the alphabet now reaches far enough to ask. And the diagonal can
-be added to $BB(n,4)$ as it was to $BB(n,2)$: if parity is the mechanism, a
-chorded hexagon rule should keep its communities exactly as the chorded square
-rule does, and if it does not, the account is about the square in particular
-rather than about bipartiteness.
+\noindent Thirteen local rules, every one measured in this book, sorted into the
+two limits they converge to under the best description available, and one
+exponent. The exponent does not sort. It sits on one --- between $0.94$ and
+$1.21$, and within a few hundredths of one wherever the alphabet engages at
+all --- on both sides of a division that was supposed to separate a network with
+communities from a network without any.
 
-And one thing this chapter changes about how the question should be asked at all.
-Section~\ref{sec:bb-meso} counts motifs and communities together, and the total
-comes out proportional to $n$ on every rule in the family, with a slope of one to
-within a few hundredths, while the community count alone runs from $n^{0.25}$ to
-$n^{0.93}$. If that holds beyond this family, then \emph{dissolved} was never the
-right word for what an alphabet does. The meso-structure is conserved and only
-its vocabulary changes, and the density Chapter~\ref{ch:graphons} conjectured
-survives the diamond after all --- as a density of meso-structure rather than of
-communities. Whether it holds beyond this family is the obvious next measurement,
-and the rules of Chapters~\ref{ch:friends} and \ref{ch:duplication} are where to
-take it.
+\subsection*{Two classes, and what actually separates them}
+
+The classes are real. In the first, the best description uses a single group at
+any size: the network is made of copies of one small object, laid down where the
+rule put them, and once they are named there is nothing left for a partition to
+say. In the second, naming the motifs leaves a residue that only heterogeneous
+groups of unbounded size can describe, and the number of those groups grows in
+proportion to the network.
+
+What separates them is not how much meso-structure a rule builds. It is whether
+the rule's own footprint can be laid down over the whole network without
+overlapping itself. Where it can --- exactly, in the two lattices, which tile
+themselves; nearly, in $BB(n,2)$ and $BB(n,4)$, whose fresh cycles land on new
+nodes --- the blueprint suffices and the communities go. Where the footprints
+pile onto each other, as duplication's bicliques do at nought per cent and local
+search's triangles do at sixty-two, a decomposition that gives each link to one
+motif cannot take up the network, and the leftover is what a community is.
+
+That is the sense in which a motif is a blueprinted community. Both say
+\emph{these nodes belong together, and here is how they are joined}. A motif says
+it from a template fixed in advance, identical in every copy, and pays for the
+template once. A community says it bespoke, with a size and an internal density
+inferred for each one, and pays for every group separately. Minimum description
+length is not choosing between structure and no structure. It is choosing how
+much of the network can be described from a blueprint, and billing the remainder
+at the bespoke rate.
+
+\subsection*{The limit, restated}
+
+Chapter~\ref{ch:graphons} conjectured that a locally grown network converges to
+no kernel on the unit square, and that what characterises its limit is intensive:
+the density of communities $b=B/n$, constant in size and set by the rule. The
+diamond then broke it, and the repair is one substitution. The intensive quantity
+is the density of \emph{meso-structure}, $(\kappa_0+\kappa)/n$, and it is
+constant for every local rule in the table. The density of communities is
+constant only for those in the second class, and zero for those in the first,
+because $b$ measures how much of the meso-structure happened to need the
+expensive vocabulary.
+
+Read that way the two classes stop being a taxonomy of networks and become a
+statement about compressibility. A rule in the first class builds a network that
+is wholly blueprinted: one symbol, repeated, with no remainder. A rule in the
+second builds one that is partly blueprinted, with a remainder that scales.
+Nothing in either case converges to a shape one could draw on the unit square,
+and the reason is the one Chapter~\ref{ch:graphons} gave --- the structure never
+coarsens, because the rule keeps writing it at whatever scale the network has
+reached --- but what fails to coarsen is now countable, and it is the same
+quantity in both classes.
+
+\subsection*{What the inference costs}
+
+The other thing these chapters have between them established is how much of a
+community count belongs to the counter. Three knobs, and each was found by
+turning it and watching:
+
+\emph{Resolution.} The flat block model cannot report more than about $\sqrt n$
+groups. Chapter~\ref{ch:communities}'s $0.61$ was that ceiling as much as it was
+the networks; the nested prior lifts it and the exponent goes to one.
+
+\emph{Vocabulary.} What the model may name decides what it must partition. Give
+it the rule's own motif and three of the eight rules in Chapter~\ref{ch:motifs}
+leave the constant-density class outright.
+
+\emph{Search.} The one this chapter had to learn the hard way. On the two
+lattices whose optimal description can be written down by hand, the greedy fit
+misses it by up to a tenth of the whole description length, and reports a
+partition it does not need. Every published number here is a statement about a
+network, a code, \emph{and} an optimiser, and only the first two are usually
+declared.
+
+The invariant survives all three. Whatever the resolution, whatever the alphabet,
+whatever the search finds, the meso-structure comes out proportional to $n$.
+
+\subsection*{Not settled}
+
+Three things, and they are the obvious next measurements rather than
+reservations.
+
+Why parity decides the random family is not established. The story --- that a
+square is what a bipartite network is made of, so on the even rules the alphabet
+and the partition describe the same structure and either can stand in for the
+other --- is plausible and untested. A chorded hexagon rule would test it: if
+parity is the mechanism, $BB(n,4)$ with a diagonal should keep its communities
+exactly as $BB(n,2)$ with one does.
+
+Whether the meso-structure density is constant beyond this book's rules is
+unmeasured. Every entry in the table is a growth rule whose construction is
+known. The three real growing networks of Chapter~\ref{ch:graphons} are where to
+take it, and the fit is within reach for two of them.
+
+And whether the first class contains anything real is open. Its members here are
+all lattices or near-lattices, built to tile; no real network is likely to be a
+perfect blueprint of one motif. What a real network might plausibly be is a
+member of the second class with an unusually large blueprinted fraction, and that
+is a quantity this machinery can measure --- the last column of the table --- on
+any network one can fit.
 
 One last observation, which belongs to the book's argument rather than to this
 family. Every result in this chapter required an alphabet that did not exist when
@@ -534,4 +611,4 @@ was not hiding in the data waiting to be noticed. It was unreachable until the
 instrument was rebuilt, and the instrument was only rebuilt because a conjecture
 about the family made a specific enough claim to be worth the trouble. A limit
 class is a property of a network together with the code used to describe it, and
-this chapter is what that sentence costs when it is taken seriously.
+these four chapters are what that sentence costs when it is taken seriously.
