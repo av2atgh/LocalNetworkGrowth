@@ -1,22 +1,57 @@
 \chapter{Motifs as blueprinted communities}
 \label{ch:bubbles}
 
-The last chapter left one thing conspicuously unfinished. An alphabet of motifs
-abolished the communities of $BB(n,2)$ and did nothing at all to those of
-$BB(n,1)$, and the two rules are the same rule with one number changed. Something
-about that number decides whether a network keeps its communities when they are
-renamed, and Chapter~\ref{ch:motifs} could not say what, because two values of a
-parameter are not a measurement of what the parameter does.
+Chapter~\ref{ch:motifs} ended in a state that ought to be uncomfortable. The same
+networks, counted by three methods differing only in what they are permitted to
+say, gave community counts a hundred apart --- $BB(n,2)$ at $n=6400$ reads
+$102$ communities under a nested block model and one under the same model with
+squares in its alphabet. Three rules changed limit
+class when nothing about them changed but the vocabulary. And the quantity
+Chapter~\ref{ch:graphons} had offered as what a locally grown network converges
+to --- the density of communities, constant in size and set by the rule --- came
+out as one number under a block model and another under a block model that can
+name a square. A quantity that moves that far when the describer's vocabulary
+changes invites the question whether it was measuring the network at all.
 
-This chapter turns the dial. The bubble model $BB(n,L)$ of
-Chapter~\ref{ch:communities} lays a chain of $L$ new nodes across a randomly
-chosen existing link, closing a fresh cycle of length $L+2$, and it is the only
-rule in this book with a knob that changes the local structure and nothing else.
-The reach changes with $L$, and so does the density, but the construction, the
-attachment rule and the growth are fixed. Sweeping $L$ from one to five, and then
-building two variants of $L=2$ that break the pattern deliberately, turns
-Chapter~\ref{ch:motifs}'s puzzle into an answer --- though not the answer either
-of us would have guessed, and not one whose mechanism is settled.
+This chapter is the answer, and the answer is not that the disagreement was a
+mistake. It is that the two vocabularies were counting the same thing in
+different units.
+
+The hypothesis takes one sentence, and the rest of the chapter is what happens
+when it is taken seriously. A motif and a community are the same object at two
+scales. Both are the description saying \emph{these nodes belong together, and
+here is how they are joined}. A motif says it from a blueprint --- a template
+fixed in advance, identical in every copy, paid for once and then stamped out
+wherever it fits. A community says it bespoke --- a size and an internal density
+inferred for that group alone, paid for again for every group. Neither is more
+real than the other. They are two ways of buying the same structure, and minimum
+description length shops for the cheaper.
+
+Follow that and a good deal of what looked like instability turns into
+bookkeeping. A rule whose footprint can be stamped over the whole network needs
+no bespoke groups and reports none. A rule whose footprint overlaps itself can be
+only partly stamped, and whatever the blueprint cannot cover has to be bought at
+the bespoke rate --- which is what a community is. The community count stops
+being a property of the network and becomes the size of a remainder. What does
+not move is the total.
+
+That is a claim about descriptions rather than about any one network, so testing
+it needs a family and not an example: rules that differ in their local structure
+and in nothing else, so that the remainder can be made to grow and shrink while
+everything around it is held still.
+
+The bubble model is that family, and it is the reason this chapter exists.
+$BB(n,L)$ of Chapter~\ref{ch:communities} lays a chain of $L$ new nodes across a
+randomly chosen existing link, closing a fresh cycle of length $L+2$; it is the
+only rule in this book with a knob that changes the local structure and nothing
+else. The reach changes with $L$, and so does the density, but the construction,
+the attachment rule and the growth are fixed. Sweeping $L$ from one to five, and
+then building two variants of $L=2$ that break the pattern deliberately, puts
+rules on both sides of Chapter~\ref{ch:motifs}'s divide and lets us ask what
+survives the crossing. The answer, when it comes, is a single number that does
+not care which side a rule is on --- but the route to it runs through an
+alternation nobody predicted, a lattice that describes itself, and one experiment
+whose result was called in advance and came out right.
 
 \section{A dial for the shortest cycle}
 \label{sec:bb-dial}
