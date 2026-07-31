@@ -1,0 +1,930 @@
+# Chapter 7 working notes — "The limit of a network"
+
+Working log for the graphon chapter and the research thread it opened.
+Status as of 2026-07-28. Branch **`graphon`** (not merged, not pushed).
+
+> **Chapter 7 has been split.** `graphons.tex` is now **ch. 7 "Nested
+> communities"** — the graph-limit audit (7.1–7.8) followed by flat vs nested
+> only (7.9 two priors, 7.10 which prior the data prefers, 7.11 the `B ~ n^β`
+> scaling), with Figure 7.3 showing one `LS(200,1)` network divided by each.
+> `motifs.tex` is **ch. 8 "Communities with network motifs"**, nested vs
+> nested+motifs, opening on how cycle counts compound with length. The book runs
+> to 10 chapters / **185 pages**, clean build.
+>
+> The census answer is now *in the book*: β_flat 0.633 → **β_nested 0.804**, CI
+> [0.72, 0.88], over 81 census networks, n = 29…317,080. `communities.tex` §6
+> cites it directly.
+>
+> **The `L*` experiment of §3 has now been run, and `graphons.tex` is updated.**
+> Two results change the chapter. (i) The transfer matrix's branching factor is
+> `⟨k²−k⟩/⟨k⟩`, not `⟨k²⟩/⟨k⟩` — `Q_r = Σ k(k−1)`, not `Σ k²`. Every asymptotic
+> result in the chapter survives; finite-size numbers move. (ii) The `L*` law
+> itself does **not** hold on real networks: the block model's motif error is a
+> large roughly constant factor, not a geometric decay of slope `−ln λ`. Details
+> in §3. A third, unrelated bug in the pseudofractal's block cut surfaced on the
+> way and is in §6. §4 carries the Question 2 thread and now ends with a working
+> **motif-alphabet SBM** over `{edge, triangle, square}` (`figs/motif_sbm.py`),
+> costing `M·B + B²` parameters where a 4-uniform tensor would cost `B⁴/24` and
+> drop the resolution ceiling from `√N` to `N^{1/4}`. It recovers the right motif
+> on every lattice and growth rule with known truth, and correctly recovers
+> *nothing* on the pentagon- and hexagon-built ones.
+>
+> The chapter now runs to **§7.13**. Four new numbered sections — 7.10 "What the
+> crossing point does on real networks", 7.11 "An arity that can be measured",
+> 7.12 "Fitting the order, not assuming it", 7.13 "What this does to Chapter 6" —
+> plus Figure 7.3 (`fig-gr-crossover.pdf`), Figure 7.4 (`fig-gr-ramsey.pdf`, four
+> panels, a row per rule, fitted exponents in the legends), Eq. (7.13) the cycle
+> generator of `vazquez2005cycles`, Eq. (7.14) the `n^{1/4}` resolution bound,
+> Eq. (7.15) the motif wiring count and Eq. (7.16) the description length, and
+> Figures 7.5 and 7.6, three-community instances of `LS(100,1)` and `DS(100,0.5)`
+> drawn the way chapter 6 draws its networks. The
+> tensor-versus-alphabet argument and the definition of the three methods are
+> boxed. `communities.tex` is synced in three places for the method-dependence of
+> its exponent and its Ramsey numbers (§5). The book builds clean at **181
+> pages**, no undefined references, no overfull boxes.
+>
+> §7.14 "What the square does not buy" adds duplication-divergence `DD(n,q)`,
+> with `q` the *removal* probability to match the gene-duplication chapter. It is
+> bipartite and square-built, yet the alphabet plants nothing in it, because
+> duplication makes overlapping `K_{2,d}` bicliques rather than separable
+> squares. Figure 7.7 (`fig-gr-squares.pdf`) pairs it against `BB(n,2)`, where
+> the squares *are* separable and naming them dissolves the communities. Pushed
+> to n=3200, though, BB's answer turns out **bimodal** — 16 of 20 realisations
+> give κ=1 and 4 give ~40 — because "many squares, one community" and "fewer
+> squares, many communities" differ by **11 bits in 51,000**. Squares and
+> communities are two ways of spending the same bits, and MDL cannot adjudicate.
+> Both block models put BB's Ramsey number at **400**; the motif model never
+> reaches the 95% threshold at all out to n=3200.
+> Self-interaction (`p=0.1, q=0.45`) adds triangles and C≈0.18 but changes
+> nothing: they stack on the duplicated pair's link, up to 11 on one link.
+>
+> §7.15 "The vocabulary was not the problem" supplies the missing symbol,
+> `K_{2,d}`, as a fourth alphabet. On planted bicliques it recovers them exactly
+> (1028 bits against 1415 for squares). On DD in one block it finds **760**
+> candidates and plants 24 up to `K_{2,14}`, saving 252 bits. Under the fitted
+> partition it finds **zero** — every biclique straddles a block boundary. The
+> limitation is the within-block restriction, not the vocabulary.
+>
+> §7.16 "Which change moves which number" separates the two knobs. Resolution
+> (flat→nested) moves β by +0.22…+0.40 and r_κ by ≤14%. Vocabulary
+> (nested→motifs) moves β by ∓0.01 and r_κ by 2.5× or to infinity — but only
+> where the alphabet holds the rule's own motif. **The β result therefore rests
+> on the nested block model alone, not on the motif model.**
+
+    b32fa16  Chapter 7: the motif spectrum, and one quantity behind both deficits
+    34eac0c  Add chapter 7, "The limit of a network"
+    83c9299  (master) Rebuild the 1st-edition PDF with its missing bibliography
+
+`master` has 8 chapters / 141 pages; `graphon` has 9 chapters / 162 pages.
+Build with `latexmk -pdf main.tex` from the repo root — clean, no undefined
+references, no overfull boxes.
+
+---
+
+## 1. What the chapter says
+
+| § | Claim |
+|---|---|
+| 7.1 | Three sparsity regimes, not two: dense (graphons), sparse-but-densifying (`L^p`), fixed mean degree (neither). The book's own systems split across them — Internet AS `δ=-0.04`, cond-mat co-authorship `δ=+0.36`. The interactome series is cross-organism, so its trend measures curation effort, not densification. |
+| 7.2 | The degree-corrected SBM is a graphon `f(x)f(y)w(g(x),g(y))`. Degree correction = removal of the rank-one part. Explains the pseudofractal hub–leaf reversal. |
+| 7.3 | Resolution: `k* ~ n^{1/(1+α)}`, reproducing Gao–Lu–Zhou's rate `n^{-2α/(α+1)}` and Olhede–Wolfe's `√n` at `α=1`. |
+| 7.4 | Inverting `β = 1/(1+α)` gives `α ≈ 0.65`, CI `[0.49, 0.82]` — below Lipschitz. Answers a question Palla–Lovász–Vicsek posed in 2010. |
+| 7.5 | Five distinct `√n`'s; only three share a reason. Flags that chapter 6's counts came from the **flat** SBM, whose own ceiling is `√n`. |
+| 7.6 | The ring's split is not identifiable. The pseudofractal/diamond fall in a gap between local and global limit theories. |
+| 7.7 | Clustering is the sharpest obstruction; chapter 1's `C_ER` column *is* the graphon prediction (39×–2541× too few triangles). |
+| 7.8 | Exchangeability excludes locality — the thesis restated in the limit theory's vocabulary. |
+| 7.9 | The conjecture, two questions, and the motif results below. |
+
+---
+
+## 2. Results established (all exact, no simulation)
+
+### The λ law — one quantity behind everything
+
+For independent links the expected `L`-cycle count is `tr(P^L)/2L`. For a
+`K`-block fit this collapses onto a `K×K` transfer matrix
+
+    T_rs = ω_rs · sqrt(Q_r Q_s)      (degree-corrected, Q_r = Σ_{i∈r} k_i²)
+    T_rs = p_rs · sqrt(n_r n_s)      (plain)
+
+so the **entire motif spectrum is generated by one small matrix** and is a smooth
+geometric profile `λ^L/2L`. A two-variable model cannot place a feature at any
+particular length. With `λ ≈ ⟨k²⟩/⟨k⟩`:
+
+> **Correction (§3).** `Q_r = Σ k(k−1)`, not `Σ k²`. A cycle leaves a node by a
+> different edge than it entered by, and the fitted model holds degrees fixed,
+> so a node offers `k(k−1)` ordered pairs of edges and not `k²`. The one-block
+> eigenvalue is `κ = ⟨k²−k⟩/⟨k⟩ = λ−1`, the leading eigenvalue of the
+> non-backtracking operator. `figs/branching_verification.py` decides it against
+> exact counts on four synthetic ensembles: `κ` is right to 2% at every
+> `L = 3…8`, `λ` is off by 2× to 10×. Everything below that is asymptotic
+> survives, because `λ → ∞` on both lattices and `κ/λ → 1`; the exponents
+> `0.2619`, `0.214` and the deficits `n^0.214`, `n/(ln n)^4` are unchanged. What
+> moves is finite-size arithmetic — the diamond's exact `Q/S = t+1` becomes
+> `Q'/S = t`, so its degree-corrected prediction is `t⁴/4` and not `(t+1)⁴/4`.
+> On real networks `λ ≈ 3`, and `λ` versus `λ−1` is a factor of 25 at `L = 8`.
+
+    λ ~ n^{(3-γ)/(γ-1)}   (γ < 3)        λ ~ ln n   (γ = 3)
+    deficit at length L ≈ n / λ^L        crossover at L* = (γ-1)/(3-γ)
+
+Undercounts while `λ^L < n`, overcounts after.
+
+### Numbers
+
+| | pseudofractal (γ≈2.585) | diamond (γ=3) |
+|---|---|---|
+| rule arity | 3 (triangles) | 4 (four-cycles) |
+| true motif count | exactly `n-2` triangles | exactly `4^{t-1}` four-cycles |
+| plain SBM | saturates at **21.3** | saturates at **81/4 = 20.25** |
+| plain deficit | `~n` | `~n` |
+| degree-corrected | `(64/27)^t` | `t^4/4`, since `Q/S = t` exactly (was `(t+1)^4/4`) |
+| DC deficit | `n^{0.214}` | `n/(ln n)^4` |
+
+Two independent derivations of the λ exponent agree to 4 dp:
+`(3-γ)/(γ-1) = 0.2619` and `ln(4/3)/ln 3 = 0.2619`.
+Predicted crossover `L* = 3.82` matches the observed flip between L=3 and L=4.
+
+### The spectrum result (the strongest one)
+
+Diamond at `t=5`, counted exactly: **0** three-cycles, **256** four-cycles,
+**0** at five, six and seven, **1024** eight-cycles. Support is `L = 4, 8, 16, …`
+and empty elsewhere. Both fitted models put positive mass at *every* length
+(plain: 8.3 triangles, 42 five-cycles; DC: 40, 668 — was 69, 1560 before the
+`Q` correction).
+
+**The failure is of support, not magnitude.** No choice of blocks or degrees moves
+a smooth geometric profile onto a sparse set of lengths. This is the real argument
+for the conjecture: a higher-order object buys not a bigger number but the ability
+to have a shape.
+
+Gotcha found by enumeration: the diamond's 8-cycles number `4^t`, **not** `4^{t-2}`
+— each of the four positions on a parent 4-cycle offers two parallel paths, so
+`2^4` routes per parent. The closed-form guess was wrong by 16×. Enumerate before
+trusting a recursion here.
+
+### Scripts (all committed, closed form, integer arithmetic)
+
+    figs/pseudofractal_triples.py   triangles vs both fits, to t=28
+    figs/diamond_quads.py           four-cycles vs both fits, to t=26
+    figs/motif_spectrum.py          exact cycle enumeration + transfer matrices
+    figs/arity_models.py            DS and BB: the arity dial (§4)
+    figs/motif_sbm.py               MotifSBM: blocks + planted motifs (§4)
+    figs/motif_sbm_validate.py      the validation table for it
+    figs/ramsey_motif.py            r_kappa and the exponent, 3 methods (§5)
+    figs/mkfigs_ramsey.py           fig-gr-ramsey.pdf
+    figs/mkfigs_graphon.py          the two chapter figures
+
+---
+
+## 3. DONE — the `L*` experiment on real networks
+
+Both blockers are gone: this environment has **graph-tool 2.97** and reaches
+**Netzschleuder**. The experiment ran on **44 real networks**, selected from 100
+scouted ones, `n` from 29 to 335 000.
+
+### What was measured
+
+The prediction was tested in the two separately falsifiable forms the spec
+demanded, plus a third step the spec did not anticipate but that turned out to
+carry the whole result.
+
+    (a) operational:  L* = ln n / ln κ        with κ measured directly
+    (b) headline:     L* = (γ-1)/(3-γ)        from the degree exponent alone
+
+The spec's literal statistic — `ln(true_L / λ^L 2L)` regressed on `L` — cannot be
+used as it stands, because `tr(P^L)/2L` counts closed *walks* and equals the
+cycle count only when the profile is small next to `n`. At the sizes where the
+crossover is visible at all they are far apart: the rank-one formula gives the
+karate club 7.2 × 10⁵ eight-cycles where an actual degree-preserving rewiring of
+it has 1.4 × 10⁴. Using a formula as the null would manufacture a steep negative
+slope out of nothing but finite size. So **each model is represented by its own
+empirical null, sampled by rewiring**, three samples each:
+
+    null A   degrees preserved exactly                    -> the rank-one model,
+             (graph-tool "configuration")                    and the spec's control
+    null B   degrees *and* the fitted block matrix e_rs   -> the nested DC-SBM,
+             ("constrained-configuration")                   sampled, not linearised
+
+and the geometric profile is then tested **against that null** rather than
+assumed. That splits the chapter's claim into two pieces that turn out to have
+opposite fates.
+
+### Result 1 — the branching factor is wrong in the chapter (§2 correction)
+
+`Q_r = Σ k(k−1)`, not `Σ k²`; one-block eigenvalue `κ = ⟨k²−k⟩/⟨k⟩ = λ−1`.
+Settled by `figs/branching_verification.py` on four synthetic ensembles at
+`n = 40 000`, geometric-mean ratio of counted to predicted over all `L = 3…8`:
+
+| | `λ = ⟨k²⟩/⟨k⟩` | `κ = ⟨k²−k⟩/⟨k⟩` |
+|---|---|---|
+| 4-regular | 0.207 | **1.008** |
+| Poisson `⟨k⟩=5` | 0.359 | **0.980** |
+| power law `γ=2.8` | 0.525 | **1.017** |
+| power law `γ=2.4` | 0.593 | **1.018** |
+| overall | 0.390 | **1.006** |
+
+(One run's figures. graph-tool's graph generation is threaded and not bit-
+reproducible, so these move by about 1% between runs; the separation is four
+orders of magnitude wider than that.)
+
+See the §2 box for what this does and does not change in the chapter. Short
+version: no exponent moves, some finite-size arithmetic does.
+
+### Result 2 — the transfer-matrix theory HOLDS
+
+Slope of `ln(null_L / profile_L)` against `L`; flat means the profile is right.
+Over the 42 networks with a usable slope:
+
+| profile | median slope | IQR |
+|---|---|---|
+| rank-one, `κ` (corrected) | **−0.078** | [−0.170, −0.022] |
+| rank-one, `λ` (chapter as written) | −0.255 | [−0.334, −0.136] |
+
+and on the larger networks it is exact, not merely close: `ln(null/profile)` is
+within ±0.01 at every length for Gnutella (`n=62 561`) and both Amazon graphs
+(`n=262 111`, `n=334 863`). **A fitted model's own motif spectrum really is
+generated by its `K×K` transfer matrix.** The chapter's central machinery is
+confirmed. The residual −0.078 is finite-`n` exclusion and is carried entirely by
+the smallest graphs.
+
+### Result 3 — the `L*` law FAILS on real networks
+
+Slope of `ln(true_L / null_L)` against `L`. Chapter 7 predicts `−ln κ`:
+
+| comparison | median slope / (`−ln κ`) | IQR |
+|---|---|---|
+| vs degree-preserving rewiring | **0.088** | [0.026, 0.254] |
+| vs block-preserving rewiring | **0.043** | [0.011, 0.260] |
+
+**39 of 42 networks differ from `−ln κ` by more than two standard errors**, and
+five have a positive slope — the wrong sign entirely. The predicted deficit is
+roughly ten times steeper than anything real networks do.
+
+The signal is not in the slope. It is in the **level**: the median network has
+5× more triangles than its degree-preserving rewiring, and the largest graphs are
+far past that — Amazon co-purchase has 4100× more, falling only to 500× by
+`L = 6`. So
+
+> **locality shows up in the motif spectrum as an enormous roughly constant
+> factor, not as a length-dependent slope.**
+
+The lattices were special in exactly the way that matters. Their true motif count
+is *extensive and flat in `L`* — the pseudofractal has exactly `n−2` triangles,
+the diamond exactly `4^{t-1}` four-cycles — so dividing by a geometric profile
+gives a geometric deficit `n/κ^L` and a crossover. Real networks' cycle counts
+grow with `L` at very nearly the same rate as their rewirings do; the effective
+branching factor for cycles in a real network is close to `κ`. The `L*` law is a
+property of the deterministic webs, not of networks.
+
+`fig-gr-crossover.pdf` is the picture: panel (a) is Result 2, panel (b) is
+Result 3 with the predicted lines dashed against the measured ones.
+
+### Result 4 — where the crossover falls: neither form
+
+13 networks land in the visible window. Only **3 of 13** cross inside the range
+of `L` actually measured; the rest are extrapolations. Observed minus predicted:
+
+| form | median | IQR | N |
+|---|---|---|---|
+| (a) `ln n / ln κ` | +5.60 | [+0.92, +9.94] | 13 |
+| (b) `(γ-1)/(3-γ)` | −4.41 | [−6.34, −2.49] | 2 |
+
+Form (b) is barely testable: **11 of the 13 visible networks have no finite (b)
+at all**, because their fitted `γ` is not below 3. That is not bad luck, it is
+structural — see the design finding below.
+
+### Result 5 — the λ–γ scaling relation is not supported
+
+`ln κ` regressed on `ln n` within bands of similar `γ`, over the 22 scouted
+networks with a credible power-law tail (`2<γ<3`, ≥100 in the tail, KS < 0.10).
+This needs only degrees, so it runs on far more networks than the cycle counting:
+
+| band | N | median γ | measured | predicted `(3-γ)/(γ-1)` |
+|---|---|---|---|---|
+| [2.0, 2.4) | 11 | 2.11 | 0.393 ± 0.146 | 0.802 |
+| [2.4, 2.7) | 6 | 2.61 | 0.251 ± 0.219 | **0.245** |
+| [2.7, 3.0) | 5 | 2.88 | 0.607 ± 0.120 | 0.064 |
+
+One band agrees, two miss badly and in opposite directions. This is the step the
+spec flagged as most likely to break, and it broke — but note that it cannot
+rescue form (b) here, because form (a) failed too.
+
+### Design finding — the visible window is nearly empty, and that is derivable
+
+The crossover is only visible if `κ³ < n < κ⁸`. Of **163 Netzschleuder families
+with `n ≥ 200`, only 20 have any subnetwork with `L*` in [3, 8]**; the `L*` of
+the largest subnetwork per family is below 3 for 138 of the 163, about 85%. Most
+real networks are in the overcounting regime at *every* countable length.
+
+Worse, the window selects against the systems the chapter cares about. Visibility
+needs `κ ≤ n^{1/3}`; for a scale-free network with `κ ~ n^{(3-γ)/(γ-1)}` that is
+`(3-γ)/(γ-1) ≤ 1/3`, i.e. **`γ ≥ 2.5`**. Tractability needs `κ ≲ 20`. Between
+them, form (b) can only be tested for `γ` between about 2.5 and 2.78 — which is
+why 11 of 13 visible networks came back with `γ ≥ 3`. Any future version of this
+test has to select on `γ` from the start, or accept that it is testing (a) only.
+
+### What was built (all committed, all validated)
+
+    figs/cyclecount.c                    exact simple-cycle counts L=3..8, C,
+                                         canonical start + BFS distance pruning
+    figs/cyclecount_verification.py      validates it three ways
+    figs/branching_verification.py       decides κ vs λ (Result 1)
+    figs/crossover_scout.py              selection + γ, writes candidates CSV
+    figs/crossover_measure.py            the experiment
+    figs/crossover_analysis.py           the verdict
+    figs/mkfigs_crossover.py             fig-gr-crossover.pdf
+    figs/data/crossover_candidates.csv   100 networks: n, κ, γ, visibility
+    figs/data/crossover_results.csv      44 networks: counts, nulls, slopes
+
+The counter is checked against `true_cycles` in `motif_spectrum.py` on both
+lattices and on random graphs from tree-sparse to complete; against the `C3, C4,
+C5` trace identities the chapter already uses; against the diamond's known exact
+spectrum (support on `L = 4, 8` only, `4^t` eight-cycles); and incidentally
+against `K₁₂`, where it returns 1 247 400 = `C(12,8)·7!/2` eight-cycles.
+
+Two reproducibility choices worth knowing. Enumeration cost is bounded below by
+the answer, so depth is capped on the *predicted* count (`κ^L/2L ≤ 2×10⁷`) rather
+than on elapsed time — the cap is then machine-independent, and `lmax_reached` is
+reported per network so nothing is silently truncated. And the depth climbs
+(`-l 3`, then `-l 4`, …), so a timeout loses only the deepest length instead of
+everything.
+
+### What this means for the chapter
+
+§7.9's λ law needs the `Q_r = Σ k(k−1)` correction — cheap, and it strengthens
+the section, since the non-backtracking operator is the principled object for
+cycles and the argument is unchanged. The `L*` prediction should be **restated as
+a property of the deterministic webs**, with the real-network test reported as
+the negative result it is.
+
+The support argument of §2 ("the failure is of support, not magnitude") is
+untouched, and is now clearly the stronger of the two claims — because the
+experiment turned up a **real** network with the diamond's pathology. The two
+fullerenes have cycle spectra
+
+    C240   L = 3,4: 0    L = 5: 12    L = 6:  110    L = 7,8: 0
+    C6000  L = 3,4: 0    L = 5: 12    L = 6: 2990    L = 7,8: 0
+
+— exactly 12 pentagons, which is Euler's theorem for fullerenes and holds at
+every size, and `n/2 − 10` hexagons. Both fitted models put positive mass at
+every length (`C6000`, block-preserving null: 5.3 triangles, 43 four-cycles, 27
+seven-cycles, 296 eight-cycles). The deficit here is not 5× or 4100×, it is
+infinite in both directions, and no choice of blocks or degrees can fix it. This
+is the argument for the conjecture, made on a physical molecule rather than a
+constructed web, and it survives everything above unscathed.
+
+---
+
+## 4. NEXT — Question 2: what the higher-order object has to do
+
+Notes from working through whether the cycle structure can be encoded by letting
+a path bias its own closing — an object of type
+`([0,1]²→[0,1])^{L-1} → [0,1]`, and its arity-4 successor. Ends with a design and
+an order of work: **a motif-alphabet SBM over `{edge, triangle, square}`**, which
+is the affordable version of the idea and the thing to build next.
+
+### The reading that is forbidden, and why it is a theorem
+
+If the `L-1` slots hold the **pair-level** randomness of the path's edges — so
+that `A_ij` reads `ξ_ik` and `ξ_kj` — the object does not exist. Aldous–Hoover
+says a jointly exchangeable array is `A_ij = f(ξ_∅, ξ_i, ξ_j, ξ_ij)`: a pair may
+read its own seed and its two endpoints' seeds, and nothing else. Edges are still
+*correlated*, through `ξ_i`; what is excluded is any dependence beyond what node
+variables mediate, which is exactly why the triangle density is pinned to
+`∫∫∫ W(x,y)W(y,z)W(z,x)` and why chapter 1's `C_ER` column runs 39×–2541× short.
+
+This is §7.8 restated as a theorem rather than a gap. **Nothing inside
+exchangeability can make a path bias its closing.**
+
+If instead the slots hold the **graphon evaluated along the path**,
+`F(W(x₁,x₂),…,W(x_{L-1},x_L))`, the composite is a function of the node labels
+alone — an `L`-variable node kernel, which is the conjecture as it stands, and
+which §7.9's Question 2 already shows collapses back to a graphon in the dense
+case.
+
+### The construction that is legitimate
+
+Put the randomness on **triples** (or `k`-sets) and take the graph as the
+*shadow*. A `k`-uniform hypergraphon has one variable per subset of the index set
+— `2^k` of them, `ξ_∅`, the singletons, the pairs, …, up to `ξ_{i…k}` — and its
+pair-indexed arguments are permitted precisely because the exchangeable object is
+the `k`-array, not the graph. The graph read off it is *not* an exchangeable array
+with conditionally independent edges, so it is free to carry clustering. This is
+what makes §7.9's pair-indexing remark consistent with §7.8 instead of
+contradicting it, and it is the argument that should replace the unverified
+appeal to Elek–Szegedy in §6.
+
+Two corrections to the arity-4 version. On `{i,j,k,l}` there are **four** triples
+— `ijk, ijl, ikl, jkl` — and S₄-symmetry needs all of them; and the singletons
+`x_i…x_l` must stay, since degree heterogeneity is doing most of the work on real
+networks (see below). More important: **`W` cannot output a single probability.**
+If a hyperedge means "all six pairs present" the shadow is a union of `K₄`s, hence
+triangle-rich — and the diamond is triangle-free and the fullerene has no 3- or
+4-cycles at all. `W` has to output a *distribution over subgraphs of `K_k`*. The
+rule's footprint is a specific small graph — a triangle for triadic closure, a
+square for duplication — not a clique.
+
+### The fullerene shows this is realizable, exactly
+
+Extending the counts to `L=12` (`cyclecount -l 12`), a fullerene's whole spectrum
+is generated by its faces and their adjacencies, with every entry predicted:
+
+| L | C240 | C6000 | where it comes from |
+|---|---|---|---|
+| 3, 4 | 0 | 0 | no 3- or 4-faces |
+| 5 | 12 | 12 | Euler — exactly 12 pentagons at any size |
+| 6 | 110 | 2990 | `n/2 − 10` hexagons |
+| 7 | 0 | 0 | no two faces sum to 7 |
+| 8 | 0 | 0 | needs two *adjacent* pentagons; there are none |
+| 9 | 60 | 60 | `12 × 5` pentagon–hexagon pairs |
+| 10 | 300 | 8940 | hexagon–hexagon edges, `3n/2 − 60` |
+
+Two faces sharing an edge close a cycle of length `a+b−2`, so `5+6−2 = 9` and
+`6+6−2 = 10`, while `5+5−2 = 8` is empty because no two pentagons touch. The
+`L=9` count is 60 at *both* sizes, and `300 = 360−60`, `8940 = 9000−60`, exactly.
+The zeros are structural — a rule about which templates may be adjacent — not a
+numerical shortfall. (I did not chase `L=11, 12`: 60 and 180 / 60 and 5940.)
+
+The finite-`n` analogue already exists: Karrer–Newman random graphs with arbitrary
+subgraph distributions, and Newman/Miller's clustered configuration model, glue
+specified motifs at nodes and have exact generating-function theory for cycles.
+Read those before constructing the limit from scratch. **Cited from memory — check
+before relying on it**, as with everything else in §6.
+
+### The mechanism, already published — and a correction to this note
+
+`vazquez2005cycles` (Phys. Rev. E **71**, 025103, `10.1103/PhysRevE.71.025103`)
+gives the generator outright. The `h`-cycle density of a real network follows
+from the degree distribution and the degree-dependent clustering coefficient
+alone:
+
+    N_h/N = g_h Σ_k P(k) ((h-1)!/2) binom(k, h-1) C(k)^{h-2}
+
+Choose `h-1` neighbours of a central node, order them, and close the cycle by
+requiring `h-2` links among consecutive ones, each present with probability
+`C(k)`. Verified there at `h = 3, 4, 5` on co-authorship, the Internet and a
+semantic network, with the full cycle density and the centrally-connected density
+overlapping at `h = 3, 4`.
+
+**This corrects what an earlier draft of this note claimed.** I had written
+"arity buys the rule's footprint; it does not buy the rule's iteration," arguing
+from the diamond's `L = 4, 8, 16` tower that the tower needs a recursion. That is
+wrong. The tower is the *product* `C(k)^{h-2}` — one closing probability applied
+`h-2` times around the loop — so a fixed-arity local generator produces every
+length with no separate mechanism. **Arity three buys not just the triangle but
+the whole spectrum built from triangles**, which is why triangles do the job for
+so many real networks. What arity sets is *which* local closing quantity is
+non-vanishing, not how far the tower reaches.
+
+What does survive of the caveat: `C(k)^{h-2}` is smooth in `h`, so raising the
+arity inside this form still cannot produce exact zeros at particular lengths.
+The zeros need the closing motif to *be* a specific length, which is what the
+template picture supplies and a scalar `C` does not. Support and magnitude remain
+different demands.
+
+It also still follows that "order = arity" must mean *minimal* order: a 4-array's
+representation already contains the triple variables, so arity 4 subsumes arity 3.
+The strictness of that hierarchy is the content of the conjecture, not something
+the construction hands you.
+
+### The test: duplication–split, and the bubble family as an arity dial
+
+This is testable with the book's own models, and `DS(n,q)` is the case that
+isolates the `L=4` requirement. From `distance.tex` (chapter 8; chapter 6 uses it
+too, as the model that has communities without a single triangle): start from a
+4-cycle; to add
+node `i`, pick a random `j`, and with probability `q` duplicate `j`, else pick a
+random neighbour `k` of `j` and split `(j,k)` into `(i,j)` and `(i,k)`.
+**Duplication makes no triangles and splitting destroys any that might form; its
+motif is the square.**
+
+That makes DS the discriminating case, and the test is not a ratio but a
+zero: **`C(k) ≡ 0` makes the generator above vanish identically at every `h ≥ 3`.**
+Not an underestimate — an empty prediction, against a network full of cycles.
+Measured (`figs/arity_models.py`, seed 7):
+
+| DS(n, q=1/3) | ⟨k⟩ | C | L3 | L4 | L5 | L8 |
+|---|---|---|---|---|---|---|
+| n=500 | 3.50 | 0.0000 | **0** | 1,208 | 794 | 98,984 |
+| n=2000 | 3.77 | 0.0000 | **0** | 10,689 | 7,914 | 12,728,305 |
+
+So the arity-3 generator predicts zero where the truth is 10⁷. That is the
+sharpest form of "order = arity" available, and it needs no fitting at all.
+
+Two details worth keeping. DS is triangle-free but **not bipartite** — `L5 ≠ 0`,
+because splitting subdivides a link and flips parity — whereas `BB(n,2)` is. So
+the square generator DS needs must produce odd cycles too, which the naive
+"replace the closing edge by a path of length 2" version will not. And DS is
+**stochastic**, so it separates "the lattices were special because they are
+deterministic" from "the arity of the rule is what matters" — a distinction §3
+left open for the `L*` law and this closes for the support argument.
+
+### The bubble family is the dial, and it is already measured
+
+`BB(n,L)` closes a fresh cycle of length `L+2` at every step, so the motif is
+tunable. At `n = 4000`, seed 7:
+
+| model | motif | C | lengths present, L=3…10 |
+|---|---|---|---|
+| `BB(n,1)` | triangle | 0.7397 | every length |
+| `BB(n,2)` | square | 0 | 4, 6, 8, 10 |
+| `BB(n,3)` | pentagon | 0 | **5, 8** |
+| `BB(n,4)` | hexagon | 0 | **6, 10** |
+
+Only the first is within reach of the arity-3 generator. The others put mass
+exactly where the motif and its gluings put it, by the same `a+b−2` rule the
+fullerene obeys: pentagons give 5 and 5+5−2 = 8; hexagons 6 and 6+6−2 = 10;
+squares 4, 6, 8, 10; everything else empty. **A growth rule and a molecule
+agreeing on a rule about which templates may be adjacent** — which is what the
+template-shadow construction has to reproduce.
+
+`BB(n,1)` is the Dorogovtsev–Mendes rule, the stochastic cousin of the
+pseudofractal, so the pairing completes: DM/`BB(n,1)` against the pseudofractal at
+arity 3, `DS`/`BB(n,2)` against the diamond at arity 4. Chapter 8 already uses
+`BB` at `L=1…4` (`figs/data/model-bb_L*_nr100_vs_n_log.csv`, read by `mkfigs.py`),
+though those CSVs are summary statistics only — `figs/arity_models.py` now carries
+the generators and the exact counts.
+
+The rest of the §3 apparatus applies unchanged if a stronger version is wanted:
+compare against the degree-preserving and block-preserving nulls of
+`crossover_measure.py`. Both models are sparse, so they sit inside the tractable
+window — though DS grows hubs by duplication and reaches `κ ≈ 8` by `n = 2000`,
+which caps the enumeration at `L = 8`.
+
+### Can Peixoto's inference machinery fit a higher-order block model?
+
+Sources: `1705.10225` (Peixoto, *Bayesian stochastic blockmodeling*, the review)
+and `1310.4378` = Phys. Rev. E **89**, 012804, `10.1103/PhysRevE.89.012804` (the
+MCMC + greedy agglomerative engine, `O(N ln²N)` and independent of `B`, which is
+what `minimize_blockmodel_dl` actually runs).
+
+**The criterion transfers verbatim.** Peixoto's description length
+`Σ = −log₂ P(A, e, b)` is microcanonical and makes no use of the arity. Replace
+the `B×B` edge-count matrix `e_rs` by a symmetric `k`-tensor `e_{r₁…r_k}`, keep
+the partition priors untouched, generalise degree correction to hyperdegrees, and
+minimise the same `Σ`. Nothing conceptual breaks.
+
+**But the uninformative version is unusable.** Review Eq. (27):
+
+    Σ ≈ −(E − N) log₂B + [B(B+1)/2] log₂E
+
+The second term is the cost of describing a symmetric `B×B` matrix, and it is
+what caps `B ∝ √N`. For a `k`-tensor the number of independent entries is the
+multiset coefficient `C(B+k−1, k) ≈ B^k/k!`, so
+
+    Σ ≈ −(E_k − N) log₂B + C(B+k−1,k) log₂E_k
+
+Differentiating and setting to zero, `E_k/(B ln2) = (B^{k−1}/(k−1)!)·log₂E_k`,
+hence
+
+    B_max ≈ [ E_k (k−1)! / ln E_k ]^{1/k}
+
+`k=2` recovers `√N` (up to the log Peixoto drops). **`k=4` gives `N^{1/4}`.** At
+`N = 10⁵` that is 18 groups against 316. Concretely, from §3: the nested pair
+model found `B = 356` on `physics_collab/arXiv` (`n = 8798`), where `N^{1/4} ≈ 10`
+and `√N ≈ 94`. So the nested prior is not optional at `k=4`, it is mandatory —
+describe the `k`-tensor with another `k`-uniform SBM, recovering something like
+the `N/log N` the review quotes for `k=2`. Same lesson as §5.
+
+**The harder obstacle: the data is a graph, not a hypergraph.** The model
+generates a `k`-uniform hypergraph; we observe its 2-shadow. The likelihood
+needed is
+
+    P(A | e, b) = Σ_{H : ∂H = A} P(H | e, b)
+
+a sum over exponentially many hyperedge decompositions of the same graph. Three
+ways out, worst compromise last: (i) **observe the hypergraph** — co-authorship
+*is* one if the papers are kept, likewise protein complexes, and then the model
+works as written; (ii) make the **edge type** latent rather than the hyperedge,
+`O(E)` binary labels instead of exponentially many decompositions, which is
+MCMC-able (Peixoto's triadic-closure work does this — *from memory, locate it*);
+(iii) explicit **hypergraph reconstruction** (Young–Petri–Peixoto, also from
+memory).
+
+And underneath the computation, a statistical problem: with `E ~ N` and
+`C(N,4) ~ N⁴` possible 4-sets, the tensor is essentially all zeros, so most of its
+`B⁴` entries have no data at all.
+
+**What §3 says will happen if you just run it.** MDL will decline, correctly.
+Blocks already absorb 79% of the log-excess, leaving 1.4× at `L=3` — nowhere near
+enough to pay a `B⁴` penalty. The place higher order pays is not where the pair
+model is slightly wrong but where it is *infinitely* wrong: the support zeros.
+
+### The course — a motif-alphabet SBM
+
+Do not spend the parameters on a `k`-tensor. Spend them on a **small alphabet of
+motifs, planted inside blocks**. That is what "each block is generated from a
+higher-order object" should mean, and it is what makes the thing affordable.
+
+**Alphabet.** `M = {edge, triangle, square}` — 2, 3 and 4 nodes; 1, 3 and 4 links.
+Chosen because the book's own systems need exactly these: arity 3 for triadic
+closure, arity 4 for duplication, and the edge to recover the standard model.
+
+**Generative model**, microcanonical and in Peixoto's style:
+
+- partition `b` of `N` nodes into `B` blocks, with the **nested** partition prior
+  unchanged;
+- `m_{μ,r}` = number of motifs of type `μ ∈ M` planted wholly inside block `r`;
+- `e_rs` = ordinary edge counts *between* blocks, `r ≠ s`;
+- degree correction: each node carries a **motif-degree vector**
+  `d_i = (d_i^edge, d_i^tri, d_i^sq)`, how many motifs of each type it takes part
+  in, and motifs are wired by stub-matching within the block — which is exactly
+  Karrer–Newman, so their generating-function theory applies to the result.
+
+**Why it is affordable.** The parameter count is `M·B + B²`, not `B⁴/24`. The
+resolution ceiling is therefore the standard `√N`, or `N/log N` nested —
+*unchanged* from the pair model up to a negligible additive `M·B`. That is the
+whole argument for this design over the tensor.
+
+**Why MDL can identify it at all**, given that a triangle is also three edges: the
+entropy term falls when triangles are used (planting `T` triangles is more
+constrained, hence cheaper to specify, than placing `3T` independent edges) while
+the model term rises by the extra counts. Overrepresented triangles pay, incidental
+ones do not. That tradeoff *is* the mechanism, and it is the same one that makes
+the nested SBM work.
+
+**Nested model comparison.** Alphabet `{edge}` is precisely the standard DC-SBM,
+so `Σ` is directly comparable and adding `triangle`, `square` is a strictly
+nested enlargement. `ΔΣ < 0` iff the motif structure pays for itself. No new
+criterion is needed and no new engine — the greedy agglomerative scheme of
+`1310.4378` carries over, with motif counts as additional move types.
+
+**Validation, against exact ground truth before any real network.** Every row is
+already computable in this repo (`arity_models.py`, `motif_spectrum.py`):
+
+| system | truth | alphabet should return |
+|---|---|---|
+| pseudofractal | exactly `n−2` triangles | **triangle** |
+| `BB(n,1)` (Dorogovtsev–Mendes) | triangles | **triangle** |
+| diamond | exactly `4^{t−1}` squares | **square** |
+| `DS(n,q)` | squares, no triangles | **square** |
+| `BB(n,2)` | squares | **square** |
+| `BB(n,3)` | pentagons | **none** — must fall back to `edge` |
+| `BB(n,4)` | hexagons | **none** — must fall back to `edge` |
+| fullerene | pentagons + hexagons | **none** — must fall back to `edge` |
+| the 44 of §3 | mostly triangles | **edge + triangle** |
+
+The last four rows matter as much as the first five. `BB(n,3)`, `BB(n,4)` and the
+fullerenes are **negative controls**: their motifs are outside the alphabet, and a
+method that reports "square" for a pentagon-built network is hallucinating. They
+also make the point that the alphabet is a *choice* that has to be justified, not
+a free parameter — which is the honest limit of this whole approach, and the
+reason the alphabet is three symbols and not thirty.
+
+### BUILT — `figs/motif_sbm.py`, and what the validation returned
+
+Steps 1–4 above are done. `MotifSBM` in `figs/motif_sbm.py` carries the
+generative sampler, the description length, and the inference;
+`motif_sbm_validate.py` runs the table.
+
+**The description length, as implemented.** Instances are grouped into *pools*:
+one per (motif type, block) for triangles and squares, one per unordered block
+pair for edges. Given pool totals and per-node slot counts, the number of
+wirings of a pool of `m` instances of a `k`-node motif inside one block is
+
+    Ω = (k m)! / ( Π_i d_i! · m! · a^m ),      a = |Aut|: 2, 6, 8
+
+with the bipartite `Ω = e!/(Π_{i∈r} d_i! Π_{j∈s} d_j!)` for edges between two
+blocks. `Σ = Σ_pools log₂Ω` plus the model term: partition, pool totals,
+per-pool slot counts, each under a uniform prior over its compositions.
+
+All four checks in `motif_sbm.py --selftest` pass:
+
+- the closed form against direct enumeration, in **three** separate factors —
+  the split count `(km)!/(m!(k!)^m)`, the `k!/|Aut|` distinct motifs per node
+  set (1 for the edge and triangle, **3 for the square**, since a 4-cycle is not
+  determined by its four nodes), and the `Π d_i!` from the stub-relabelling group
+  acting freely on generic configurations;
+- alphabet `{edge}` reproduces the plain degree-corrected description length
+  exactly, differing only by the two empty-total announcements — the reduction
+  that makes alphabets comparable;
+- planted triangles are selected, and **incidental ones are refused**: 60
+  triangles in 60 nodes are kept, but on a 9-node graph with 26 of 36 possible
+  links none are, because there triangles are unavoidable rather than planted.
+
+**The validation table, all as expected** (`motif_sbm_validate.py`):
+
+| system | n | m | Σ plain → alphabet | ΔΣ | found | verdict |
+|---|---|---|---|---|---|---|
+| planted 2-block | 200 | 342 | — | — | 48 tri in one block, 39 sq in the other | **both, correctly separated** |
+| pseudofractal t=5 | 366 | 729 | 4887 → 4489 | −398 | 138 tri | **triangle** |
+| `BB(n,1)` (DM) | 500 | 997 | 7283 → 7023 | −259 | 157 tri | **triangle** |
+| diamond t=5 | 684 | 1024 | 8844 → 7812 | −1032 | 224 sq | **square** |
+| `DS(n,1/3)` | 500 | 876 | 7129 → 7090 | −39 | 71 sq | **square** |
+| `BB(n,2)` | 500 | 748 | 6665 → 6461 | −204 | 59 sq | **square** |
+| `BB(n,3)` pentagons | 500 | 665 | 6173 → 6194 | **+21** | none | **none** ✓ |
+| `BB(n,4)` hexagons | 502 | 626 | 6050 → 6070 | **+19** | none | **none** ✓ |
+| fullerene C240 | 240 | 360 | 3066 → 3083 | **+17** | none | **none** ✓ |
+
+The negative controls come out right: on pentagon- and hexagon-built networks the
+enlarged alphabet costs `+17` to `+21` bits and buys nothing, which is exactly
+the two empty-total announcements. It does not hallucinate a square.
+
+**Two things learned in the building that the design note did not anticipate.**
+
+- *Promotion is uphill one instance at a time.* The first motif of a type in a
+  block has to pay for a whole new pool — its slot description alone is about
+  `log₂ C(k + n_r − 1, n_r − 1)` bits — against a saving of a few links. Greedy
+  single promotion therefore never starts. A maximal edge-disjoint **batch** is
+  promoted together and kept only if `Σ` falls, then pruned instance by instance.
+- *The within-block restriction is a trap for the search, not only a modelling
+  cost.* On the diamond, chapter 6's branch cut puts **every** four-cycle across
+  the cut, so started from the DC-SBM partition the model finds zero candidates
+  and reports no motif structure at all. From a one-block start it finds all of
+  them and a `Σ` a thousand bits lower. So `fit()` runs several starts and keeps
+  the best. This is worth remembering: a partition that halves every motif hides
+  the motif structure completely, and single-node moves will not merge blocks
+  back to reveal it.
+
+**Still open.** The decomposition is edge-disjoint by construction, so
+overlapping motifs cannot all be represented — the pseudofractal truly has `n−2 =
+364` triangles but at most `729/3 = 243` are edge-disjoint, and 138 were found.
+That is a real ceiling on what the model can report, and it means the *counts*
+are not estimates of the true motif counts, only the *selection* is meaningful.
+The 44 real networks of §3 have not been run.
+
+### The caveat that limits how much this buys
+
+On real networks, conditioning on blocks removes **79% of the log-excess**: the
+`L=3` excess over a degree-preserving rewiring is 4.6×, and over a
+block-preserving rewiring only 1.4× (39 networks with both). The raw excess
+correlates with the number of blocks (`r = +0.73` against `ln B`); the residual
+after blocks does not (`r = −0.00`). A higher-order object is therefore **not**
+needed to supply the bulk of the clustering — a finer two-variable object gets it.
+It is needed for *support*.
+
+The support gap is now partly closed: it is no longer only a molecule. DS and the
+bubble family are *grown, stochastic* networks with exact support zeros, so the
+pathology does not depend on determinism or on crystallinity. What is still
+untested is whether any **empirically observed** network other than a molecule
+has a comparably rigid support — the 44 in §3 do not, and the arity-3 generator
+accounts for the ones that have triangles. That is the gap to close before the
+conjecture leans on support alone.
+
+Also worth recording against the alternatives: the Gibbs/ERGM form
+`P(A) ∝ exp(Σ_L θ_L C_L(A))` is literally "a path biases its closing" and is
+well defined, but the degeneracy results — Chatterjee–Diaconis in the dense
+regime, Bhamidi–Bresler–Sly on sparse mixing — say it collapses to essentially
+Erdős–Rényi or to a near-empty/near-complete mixture, so it does not deliver the
+clustering. Also from memory; verify.
+
+---
+
+## 5. PENDING — re-run the community census with the nested SBM
+
+Chapter 6's `B ∝ n^0.61` came from `minimize_blockmodel_dl`, the **flat** model,
+whose resolution ceiling scales as `√N` (Peixoto, PRX 2014 — the same paper the
+chapter cites). The ceiling and the null under test have the same functional form.
+
+The bias is conservative — a ceiling can only pull the fitted exponent *down*, so
+`β > 1/2` is measured in spite of the instrument. But these data **cannot certify
+an asymptotic exponent above 1/2**, because the estimator cannot report one.
+Re-running with `minimize_nested_blockmodel_dl` (ceiling `~n/ln n`) settles it.
+
+If `β` survives, Eq. (7.5) converts it directly into a statement about the
+roughness `α` of the limit. This is the single highest-value outstanding
+measurement in the chapter.
+
+**Partial down payment from §3.** The crossover run fitted
+`minimize_nested_blockmodel_dl` to 34 of the census networks as a side effect
+(column `sbm_blocks` in `crossover_results.csv`). Regressing `ln B` on `ln n` on
+that subset:
+
+    nested   β = 0.610 ± 0.113        flat   β = 0.418 ± 0.101   (N = 34)
+
+So the direction of the bias is as argued — the nested model reports a *higher*
+exponent than the flat one on the same networks — and `β > 1/2` survives. Do not
+quote this as the answer. The subset is selected for small `κ`, so it is skewed
+toward sparse and spatial systems, it spans only `n` = 29 to 335 000, and 34
+points is not 90. The full re-run is still worth doing; it now looks likely to
+confirm rather than overturn.
+
+### ANSWERED on models — the exponent is largely the instrument
+
+The real-network census is still pending, but the same question on the book's own
+rules is now settled, because there `n` can be pushed with controlled growth and
+20–100 realisations per size. `figs/ramsey_motif.py`, using the generators taken
+verbatim from `github.com/av2atgh/ramsey_netcom`, fits every realisation three
+ways. Over `n = 400 … 1600`:
+
+| β | flat | nested | + motifs |
+|---|---|---|---|
+| `LS(n,1)` | **0.50** | 0.94 | 0.92 |
+| `DS(n,0.5)` | **0.60** | 0.97 | 0.93 |
+
+**The flat model reproduces chapter 6 exactly** — 0.50 and 0.60 against the
+published 0.56 and 0.60, and for LS the counts match too (6.5, 13.5, 21.2 at
+n = 200, 800, 1600 against 6.7, 13.8, 20.0). And it reproduces it while sitting
+*on its own ceiling*: a flat fit cannot resolve more than `√n` groups, which is
+the same functional form as the fractal limit the exponent is being compared
+against. Lift the ceiling and β goes to ~0.95 — the modular limit, communities of
+roughly constant size (34 nodes for LS at n=1600, 21 for DS).
+
+So `β > 1/2` survives and strengthens; the *value* 0.61 and the "balance struck
+between fractal and modular" reading do not survive unqualified. This is §7.5's
+flag turned into a measurement.
+
+**Caveat that keeps the real-network re-run necessary.** This is measured on two
+growth rules, not on the census. The §3 partial refit on 34 real networks gave
+flat 0.418 → nested 0.610, so the *direction* agrees but the magnitude is nothing
+like 0.50 → 0.95. Real networks may well sit where chapter 6 puts them; the models
+do not.
+
+### Ramsey numbers, and a demonstration chapter 6 could not make
+
+Same runs, `P_κ(n) = Prob{κ ≥ 2}`, ε = 0.05, 100 realisations per size:
+
+| r_κ | flat | nested | + motifs | ch. 6 published |
+|---|---|---|---|---|
+| `LS(n,1)` | 70 | 80 | **200** | 81 |
+| `DS(n,0.5)` | 90 | 100 | **100** | 98 |
+
+The block-model columns bracket both published values, which is the check that
+this is the same measurement. The motif alphabet then moves LS by 2.5× and leaves
+DS untouched — because LS *is* the triadic-closure rule, so a method that can name
+a triangle stops counting it as evidence for a community, while DS makes no
+triangles at all. Chapter 6 insists `r_κ` is a property of the rule *and* the
+method but could only show it by swapping algorithm (block model vs Infomap);
+this shows it with the same criterion and a changed alphabet.
+
+`DS(n,0.3)` was measured first and is kept: `r_κ` = 250 there against 100 at
+q = 0.5, so the duplication rate matters enormously and the two are not
+interchangeable.
+
+### Both are now in the book
+
+`graphons.tex` §7.9 carries a new subsection, "What this does to Chapter 6", with
+both tables and Figure 7.4 (`fig-gr-ramsey.pdf`, from `mkfigs_ramsey.py`).
+`communities.tex` is synced in three places: a paragraph before the Ramsey table
+noting the method-dependence, a qualification after the model-exponent claim, and
+the chapter's closing summary, which no longer asserts β lies between one half and
+two thirds without saying whose measurement that is.
+
+---
+
+## 6. Open caveats
+
+- **A pre-existing bug turned up while applying the correction.**
+  `motif_spectrum.py` was not using chapter 6's branch cut for the pseudofractal.
+  `communities.tex` (Eq. `com-pfcounts`) says block 1 is *one branch plus the
+  three seed hubs*; that script put the seeds in the other block instead. The
+  hubs have degree `2^{t+1}`, so `Q_r` and everything downstream moved — its
+  triangle count was 849 where `pseudofractal_triples.py`, which had the cut
+  right all along, gave 1454. The two committed scripts had disagreed by 1.7×
+  on the same quantity. Fixed; they now agree on the plain model too (16.77).
+  The diamond was never affected — both scripts already gave 314.2 there.
+  **Consequence:** §7.9's pseudofractal spectrum sentence was quoting numbers
+  from the wrong cut, and separately had an off-by-one (its "factor of 20 at
+  `L=5`" was the `L=4` ratio). Both are now corrected in the chapter.
+- **Anything else quoting `Q = Σ k²` still needs checking.** The three lattice
+  scripts are fixed and `graphons.tex` is updated, but the exponents never moved,
+  so only finite-`t` numbers are at risk. Worth a grep before print.
+- **The block transfer matrix overestimates growth at high block resolution.**
+  `ln(null_B / profile)` has median slope −0.286, much worse than the rank-one
+  −0.078. With hundreds of small blocks (`physics_collab/arXiv`: `B = 356`,
+  `κ_SBM = 47` against `κ = 15`) the leading eigenvalue is set by a small dense
+  block that individually saturates, so the profile outruns the model's own
+  cycles. The linearisation is reliable at low `K`, not at the `K` the nested
+  model actually chooses. Worth understanding before leaning on `λ_SBM`.
+- **44 networks is not a survey.** The set is what exact cycle counting can
+  reach; it under-represents dense and hub-dominated systems by construction,
+  which is the same bias the visibility window imposes. Results 2 and 3 are
+  strong and consistent across it, but the `γ` coverage behind Result 5 is thin.
+- **Bibliography.** 11 of the 13 new entries were written from memory. Verified
+  from PDFs to hand: `palla2010` (PNAS 107(17):7640–7645), `backhausz2018`
+  (cited as arXiv:1811.00626 to sidestep uncertainty over journal publication).
+  Journal/volume/year checked by search for `olhede2014` and `gao2015`.
+  **Page numbers and DOIs elsewhere need checking before print.**
+- **Hypergraphon pair-indexing.** §7.9 argues the right object has arguments
+  indexed by *pairs* (`W(x_ij, x_ik, x_jk)`), not nodes. That is my reading of the
+  hypergraph-limit framework (Elek–Szegedy, Tao), not verified in the sources, and
+  it is load-bearing for Question 2. §4 now supplies the argument for *why* it has
+  to be pair-indexed — Aldous–Hoover permits it only because the exchangeable
+  object is the `k`-array rather than the graph — which is a better justification
+  than the appeal to the sources. The sources still need checking.
+- **Community-size arithmetic.** `B ∝ n^β` means mean community size `n^{1-β}`,
+  so `β=0.61` gives communities of `n^{0.39}` — *smaller* than `√n`. The "`n^α`
+  with `α ≥ 0.5`" framing corresponds to `β ≤ 0.5`, the fractal case. Worth
+  reconciling; it changes what the recursive picture looks like.
+- **Chapter 6 overlap.** Its closing calls `β` "super-fractal"; chapter 7 reframes
+  the same number as roughness. One of the two should probably give way.
+- **Novelty of the RG-as-limit-theory proposal** (§7.8 and the chat around it)
+  rests on two web searches, not a literature review. Check "inverse limits" and
+  "self-similar graph limits" before building on it.
+
+---
+
+## 7. Environment notes
+
+- `latexmk`, TeX Live 2023 present. Always `latexmk`, never bare `pdflatex` — the
+  1st-edition PDF shipped with no bibliography for exactly that reason.
+- Python: numpy, scipy, pandas, networkx, **graph-tool 2.97** (conda env `gt`,
+  `~/anaconda3/envs/gt/bin/python3` — the system python3 does not have it).
+- Netzschleuder is reachable, both through `graph_tool.collection.ns[...]` and
+  through `https://networks.skewed.de/api/nets?full=True`. The API's published
+  `degree_std_dev` and `average_degree` give `κ` for all 163 358 subnetworks
+  without downloading any of them — that is how §3 selected its extras.
+- `cc -O3 -o figs/cyclecount figs/cyclecount.c` builds the counter; the binary is
+  not tracked. `crossover_measure.py` finds it via `$CYCLECOUNT`, and the network
+  cache via `$CROSSOVER_CACHE` (edge lists, one file per network, not tracked).
+- `main.pdf` is tracked, so any rebuild dirties the tree.

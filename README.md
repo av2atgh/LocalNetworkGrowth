@@ -42,15 +42,16 @@ plain language, and the mathematics is set aside in boxes that can be skipped.
 | 4 | `proteins.tex` | Gene duplication — networks that copy themselves |
 | 5 | `projects.tex` | Activity specialization — project schedules, the vanishing critical path, delay risk as percolation |
 | 6 | `communities.tex` | Emergence of communities — the Ramsey community number, exactly solvable cases, how many communities real networks have |
-| 7 | `distance.tex` | Boosting shortest path multiplicity — mean-field theory, cycles and the boost, real networks |
-| 8 | `outlook.tex` | One principle, many faces; what remains to be done |
+| 7 | `graphons.tex` | The limit of a network — graphons and the three sparsity regimes, block models as step functions, how many communities can be seen, what clustering rules out |
+| 8 | `distance.tex` | Boosting shortest path multiplicity — mean-field theory, cycles and the boost, real networks |
+| 9 | `outlook.tex` | One principle, many faces; what remains to be done |
 
 `main.tex` is the driver (title page, preface, front matter); `references.bib`
 holds the bibliography.
 
 ## Building
 
-Print edition (5×8 in trim, 141 pages):
+Print edition (5×8 in trim, 156 pages):
 
 ```sh
 latexmk -pdf main.tex     # -> main.pdf

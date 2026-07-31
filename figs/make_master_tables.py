@@ -1,0 +1,175 @@
+#!/usr/bin/env python3
+"""Build the two master tables the reorganised chapters 7 and 8 want.
+
+Chapter 7's table is every growth rule under the two priors: the exponent beta of
+B ~ n^beta, the community density b = B/n, and the mean community size 1/b.
+Chapter 8's adds the motif alphabet as a third method and the two quantities that
+separate the three limit classes: whether communities emerge at all (the Ramsey
+number) and how their number scales.
+
+Writes tab-master-models.tex and tab-master-motifs.tex in the manuscript root.
+Reproduces tab-density-models.tex's four rows exactly, which is the check that
+this is the same measurement and not a new one.
+"""
+import glob
+import os
+
+import numpy as np
+import pandas as pd
+
+DATA = os.path.join(os.path.dirname(os.path.abspath(__file__)))
+ROOT = "/Users/avazquez/av2atg/LocalNetworkGrowth"
+FIGS = os.path.join(ROOT, "figs", "data")
+
+# the sizes each rule's exponent is fitted over.  For the random rules that is
+# every size the scaling runs cover; for the deterministic lattices the smallest
+# generations are dropped, since a lattice with one or two blocks is below the
+# resolution of any of the three methods and would fit a slope to nothing.
+LATTICE_MIN = {"diamond": 684, "pseudofractal": 366}
+
+ORDER = ["LS(n,1)", "BB(n,1)", "DS(n,0.3)", "DS(n,0.5)", "DD(n,0.5)",
+         "BB(n,2)", "pseudofractal", "diamond"]
+
+LABEL = {"LS(n,1)": r"$LS(n,1)$", "BB(n,1)": r"$BB(n,1)$",
+         "DS(n,0.3)": r"$DS(n,1/3)$", "DS(n,0.5)": r"$DS(n,0.5)$",
+         "DD(n,0.5)": r"$DD(n,0.5)$", "BB(n,2)": r"$BB(n,2)$",
+         "pseudofractal": "pseudofractal", "diamond": "diamond"}
+
+# the motif column is drawn rather than named: the page is five inches wide and
+# the words do not fit.  $K_{2,d}$ is the notation the text already uses for the
+# biclique, and has no symbol.
+TRI, SQ, BIC = r"$\triangle$", r"$\square$", r"$K_{2,d}$"
+MOTIF = {"LS(n,1)": TRI, "BB(n,1)": TRI, "DS(n,0.3)": SQ,
+         "DS(n,0.5)": SQ, "DD(n,0.5)": BIC, "BB(n,2)": SQ,
+         "pseudofractal": TRI, "diamond": SQ}
+
+
+def betafit(g, col):
+    s = g.groupby("n")[col].mean()
+    s = s[s > 0]
+    return np.polyfit(np.log(s.index.values), np.log(s.values), 1)[0] if len(s) > 2 else np.nan
+
+
+def load():
+    sc = pd.concat([pd.read_csv(f) for f in sorted(glob.glob(f"{FIGS}/ramsey_motif_scaling*.csv"))],
+                   ignore_index=True)
+    th = pd.concat([pd.read_csv(f) for f in sorted(glob.glob(f"{FIGS}/ramsey_motif_threshold*.csv"))],
+                   ignore_index=True)
+    lat, full = [], []
+    for f, name in ((f"{FIGS}/diamond_motif.csv", "diamond"),
+                    (f"{FIGS}/pseudofractal_motif.csv", "pseudofractal")):
+        x = pd.read_csv(f)
+        x["model"] = name
+        full.append(x)                          # every generation, for r_kappa
+        lat.append(x[x.n >= LATTICE_MIN[name]])  # the fitted range, for beta
+    return sc, th, pd.concat(lat, ignore_index=True), pd.concat(full, ignore_index=True)
+
+
+def rows():
+    sc, th, lat, latfull = load()
+    # A lattice is deterministic -- one network per generation -- so P_kappa is a
+    # step function and r_kappa is simply the smallest generation whose fit
+    # returns more than one group.  Pooling the lattices in here means the same
+    # P_kappa >= 0.95 rule produces both, and for the lattices it is exact rather
+    # than estimated from a hundred realisations.
+    both = pd.concat([sc, th, latfull], ignore_index=True)
+    out = {}
+    for name, g in pd.concat([sc, lat], ignore_index=True).groupby("model"):
+        r = dict(n_lo=int(g.n.min()), n_hi=int(g.n.max()),
+                 flat=betafit(g, "kappa_flat"), nested=betafit(g, "kappa_dcsbm"),
+                 motif=betafit(g, "kappa"))
+        s = g.groupby("n").kappa_dcsbm.mean()
+        b = s / s.index.values
+        r["b"], r["b_sd"], r["nB"] = b.mean(), b.std(), 1 / b.mean()
+        top = g[g.n == g.n.max()]
+        r["cover"] = (3 * top.n_tri + 4 * top.n_sq).sum() / top.m.sum()
+        out[name] = r
+    for name, g in both.groupby("model"):
+        for col, key in (("kappa_flat", "rk_flat"), ("kappa_dcsbm", "rk_nested"),
+                         ("kappa", "rk_motif")):
+            p = g.groupby("n")[col].apply(lambda s: (s > 1).mean())
+            ok = p[p >= 0.95]
+            if name in out:
+                out[name][key] = int(ok.index[0]) if len(ok) else None
+    return out
+
+
+def f2(x):
+    return "---" if x is None or (isinstance(x, float) and np.isnan(x)) else f"${x:.2f}$"
+
+
+def main():
+    r = rows()
+
+    # ---------------------------------------------------------- chapter 7
+    L = [r"\begin{center}", r"\small", r"\begin{tabular}{lrrrrr}", r"\hline",
+         r" & & \multicolumn{2}{c}{$\beta$, growth of $B$} & & \\",
+         r"rule & $n$ & flat & nested & $b$ & $\langle n_B\rangle$\\", r"\hline"]
+    for k in ORDER:
+        x = r[k]
+        L.append(f"{LABEL[k]} & ${x['n_lo']}$--${x['n_hi']}$ & {f2(x['flat'])} & "
+                 f"{f2(x['nested'])} & ${x['b']:.3f}\\pm{x['b_sd']:.3f}$ & "
+                 f"${x['nB']:.0f}$\\\\")
+        if k == "BB(n,2)":
+            L.append(r"\hline")
+    L += [r"\hline", r"\end{tabular}", r"\end{center}"]
+    open(os.path.join(ROOT, "tab-master-models.tex"), "w").write("\n".join(L) + "\n")
+
+    # ---------------------------------------------------------- chapter 8
+    # grouped by the class the rule lands in once the alphabet is available,
+    # which is the point of the table
+    # Both lattices are in the first class, not the second and third. Each tiles
+    # perfectly by its own motif -- every generation gives every link exactly one
+    # new motif, so the last generation's motifs are edge-disjoint and cover all
+    # m links -- and priced that way each has one community at every size, more
+    # cheaply than the fit's answer. The fractal class ends up with no member:
+    # the diamond looked like one only because the greedy search was reporting a
+    # partition it did not need.
+    CLASSES = (("constant density", ["LS(n,1)", "BB(n,1)", "DS(n,0.3)",
+                                     "DS(n,0.5)", "DD(n,0.5)"]),
+               ("no communities", ["BA(m,2)", "BB(n,2)", "pseudofractal",
+                                   "diamond"]))
+    LATTICE = ("pseudofractal", "diamond")
+
+    def rk(v):
+        return "never" if v is None else f"${v}$"
+
+    L = [r"\begin{center}", r"\footnotesize\setlength{\tabcolsep}{3pt}",
+         r"\begin{tabular}{llrrrrrrr}", r"\hline",
+         r" & & \multicolumn{3}{c}{$r_\kappa$} & \multicolumn{3}{c}{$\beta$}"
+         r" & links\\",
+         r"rule & motif & flat & nested & $+$mot. & flat & nested & $+$mot. & named\\",
+         r"\hline"]
+    for cls, keys in CLASSES:
+        L.append(r"\multicolumn{9}{l}{\emph{" + cls + r"}}\\")
+        for k in keys:
+            if k == "BA(m,2)":
+                # Chapter 6's non-local control, and the only row not measured
+                # here: its "never" is that chapter's flat fit, and the nested
+                # and motif fits have not been run on it.
+                L.append(r"\quad $BA(n,2)^{\dagger}$ & --- & never & --- & --- "
+                         r"& --- & --- & --- & ---\\")
+                continue
+            x = r[k]
+            rks = [rk(x.get("rk_flat")), rk(x.get("rk_nested")),
+                   rk(x.get("rk_motif"))]
+            if k in LATTICE:
+                # kappa = 1 at every size under the tiling, so there is no
+                # exponent to quote, and the links named are the tiling's, not
+                # the search's
+                bm, cover = "---", r"$100\%$"
+            else:
+                bm = "---" if k == "BB(n,2)" else f2(x["motif"])
+                cover = f"${100*x['cover']:.0f}\\%$"
+            L.append(f"\\quad {LABEL[k]} & {MOTIF[k]} & " + " & ".join(rks) +
+                     f" & {f2(x['flat'])} & {f2(x['nested'])} & {bm} & "
+                     f"{cover}\\\\")
+        L.append(r"\hline")
+    L += [r"\end{tabular}", r"\end{center}"]
+    open(os.path.join(ROOT, "tab-master-motifs.tex"), "w").write("\n".join(L) + "\n")
+
+    print(pd.DataFrame(r).T.to_string())
+
+
+if __name__ == "__main__":
+    main()

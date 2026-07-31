@@ -1,0 +1,8 @@
+series,name,n,m,kappa_link,kappa_motif,sigma_link,sigma_motif,d_sigma,n_tri,n_sq,secs
+route_views,route_views/19971108,3015,5156,7,10,40814.2,40730.3,-83.9,0,0,1678.3
+route_views,route_views/19980222,3391,6032,11,11,47812.7,47837.9,25.1,0,0,2559.1
+route_views,route_views/19980610,3717,6743,12,13,54001.6,53939.1,-62.5,0,0,3123.3
+route_views,route_views/19980929,4144,7710,17,14,61622.3,61631.2,8.8,0,0,4342.8
+route_views,route_views/19990501,4992,9517,20,20,76421.3,76447.7,26.4,0,0,6769.1
+route_views,route_views/19990818,5584,10653,17,12,86127.7,86107.3,-20.4,0,0,10390.9
+route_views,route_views/20000102,6474,12572,43,26,102822.1,101496.6,-1325.5,0,0,12113.1

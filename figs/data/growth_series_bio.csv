@@ -1,0 +1,14 @@
+series,name,n,m,B_nested
+yeast,yeast/1994,47,62,2
+yeast,yeast/1996,270,460,6
+yeast,yeast/1998,1031,1930,21
+yeast,yeast/2000,2169,4571,30
+yeast,yeast/2002,3742,14158,57
+yeast,yeast/2004,4214,17522,108
+yeast,yeast/2006,5249,34423,118
+yeast,yeast/2008,5724,43583,112
+yeast,yeast/2010,6047,53361,134
+yeast,yeast/2012,6286,71311,156
+yeast,yeast/2014,6387,81823,128
+yeast,yeast/2016,6923,97224,118
+yeast,yeast/2018,6976,112955,161

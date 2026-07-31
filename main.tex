@@ -11,7 +11,23 @@
 \usepackage{microtype}
 \usepackage[most]{tcolorbox}
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta,calc,bending}
+\usetikzlibrary{arrows.meta,calc,bending,shapes.geometric}
+% an inline regular polygon, for naming a rule by the cycle it closes rather
+% than by the number of sides: \ngon{5} sets a small pentagon on the text line
+% sized so that six sides can be told from seven at print resolution; smaller
+% than this and the higher polygons all read as circles, which defeats the point
+\newcommand{\ngon}[1]{\tikz[baseline=-0.75ex]{\node[regular polygon,
+  regular polygon sides=#1, draw, minimum size=2.5ex, inner sep=0pt,
+  line width=0.5pt] {};}}
+% the two variants of L=2 do not lay down a cycle, so they cannot be named by
+% one: the chorded rule's footprint is K_4 minus an edge, whose shortest cycle
+% is a triangle, and the other's is a square with a link running off it
+\newcommand{\sqdiag}{\tikz[baseline=0.5ex]{%
+  \draw[line width=0.5pt] (0,0) rectangle (1.8ex,1.8ex);
+  \draw[line width=0.5pt] (0,0) -- (1.8ex,1.8ex);}}
+\newcommand{\sqstub}{\tikz[baseline=0.5ex]{%
+  \draw[line width=0.5pt] (0,0) rectangle (1.8ex,1.8ex);
+  \draw[line width=0.5pt] (1.8ex,1.8ex) -- ++(0.9ex,0.55ex);}}
 
 % Compact running heads that fit the narrow 5x8 page.
 \usepackage{fancyhdr}
@@ -54,6 +70,10 @@
   coltitle=black,
   title={The mathematics behind it: #1 \hfill\textnormal{\itshape(this box can be skipped)}},
 }
+
+% TeX breaks this one as "pseud-ofractal" if left to itself, and it appears
+% often enough in chapters 6 and 7 to be worth telling it where the seams are.
+\hyphenation{pseudo-frac-tal pseudo-frac-tals}
 
 \pagenumbering{gobble}
 
@@ -181,6 +201,51 @@ figures --- the first plots of real data in the book, alongside fresh schematics
 --- aim to make the ideas visible as well as legible. The thesis is unchanged; the
 evidence for it is stronger.
 
+\emph{A note on the third edition.} The second edition ended its chapter on
+communities with a number: the count of communities grows as a power of network
+size, with an exponent above the self-similar one half. Three new chapters ask
+what that number is a number \emph{of}, and the answer turns out to depend less
+on the networks than on the instrument.
+
+The first of them replaces the flat description of communities with a
+\emph{nested} one, in which the groups are themselves grouped --- communities of
+communities, the block structure described by a block model of its own rather
+than spelled out entry by entry. That sounds like a technicality and is not. A
+flat description pays a charge growing with the square of the number of groups,
+and so cannot report more than about $\sqrt{n}$ of them however many are there;
+and $\sqrt{n}$ is precisely the self-similar benchmark the measured exponent was
+being held against, so the instrument could not have returned a value far above
+it even in principle. Lift that ceiling and the exponent goes from two thirds to
+one. The number of communities grows in proportion to size, their typical size
+stops growing, and what a locally grown network converges to is not a shape at
+all but a density --- so many communities per node, constant as the network grows
+and set by the rule that grew it. That is the second edition's power law resolved
+into something a network simply has, the way it has a clustering coefficient. It
+comes with a caution the same chapter supplies: of the hierarchy such a fit
+reports, only the bottom level is a measurement, and the tidy branching above it
+is the prior's own scaffolding.
+
+The other two chapters ask what the describer may \emph{name}. Giving the model a
+vocabulary that can call a set of links a triangle or a square, rather than only
+a pair of endpoints, can remove the communities altogether --- on networks whose
+communities the second edition had proved exist. And on the two lattices whose
+best description can be written down by hand rather than searched for, the
+fitting misses it, by a tenth of the description length; there is no better cure
+for confidence in one's own numbers than a case where the answer can be checked.
+
+What emerges from following that is a single object rather than two. A network
+motif and a network community are the same thing at two scales --- both say that
+a set of nodes belongs together and how it is joined, the motif from a template
+fixed in advance, the community bespoke and inferred --- and once they are
+counted together, the quantity that survives every change of instrument is the
+density of the two combined, constant in size and set by the growth rule. Local
+rules do not converge to a shape that can be drawn. They converge to a rate at
+which they keep writing structure, and the argument over how much of that
+structure is ``motif'' and how much is ``community'' turns out to be an argument
+about vocabulary. The three chapters are the case for that, and they are also, I
+hope, an honest record of how often the instrument had to be rebuilt before the
+measurement meant anything.
+
 \vspace{1em}
 \noindent Alexei Vazquez
 
@@ -226,6 +291,19 @@ evidence for it is stronger.
 % instructions
 % references
 % - https://arxiv.org/abs/2501.17042
+
+\include{graphons}
+
+\include{motifs}
+
+\include{bubbles}
+
+% instructions
+% references
+% - Lovasz & Szegedy 2006; Borgs et al. 2008 (dense graph limits)
+% - Olhede & Wolfe, PNAS 2014 (network histogram, sqrt(n) blocks)
+% - Gao, Lu & Zhou, Ann. Statist. 2015 (minimax graphon estimation)
+% - Peixoto, PRX 2014 (sqrt(N) resolution limit of the flat SBM)
 
 \include{distance}
 
