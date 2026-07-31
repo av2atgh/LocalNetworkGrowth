@@ -294,15 +294,206 @@ alternates against that ordering rather than following it: $L=1$ survives at the
 highest density in the family and $L=5$ survives at the lowest, with the two
 casualties in between. Nothing monotone in $\langle k\rangle$ can produce that.
 
+\section{The same rule, made deterministic}
+\label{sec:bb-deterministic}
+
+Everything so far has been measured on a rule that chooses one link at random per
+step. Make it deterministic --- lay a chain across \emph{every} link of the
+current network, at every generation --- and the family becomes a sequence of
+lattices, one network per size, in the way the pseudofractal web and the diamond
+lattice are lattices. Call it $DBB(n,L)$.
+
+Two of its members are already in this book under other names. $DBB(n,1)$ hangs
+one node on both ends of every link and is exactly the pseudofractal web; it
+reproduces $n$ and $m$ at every generation. $DBB(n,2)$ is a cousin of the diamond
+lattice rather than the lattice itself --- both quadruple their links each
+generation and agree on $n$ and $m$ at every size, but the diamond \emph{replaces}
+each link by two parallel paths and leaves its endpoints unjoined, while $DBB$
+keeps the link and runs the chain alongside it. The counts follow from the rule:
+$m_t=(L+2)^t$, $n_t = 2 + L\big((L+2)^t-1\big)/(L+1)$, and
+$\langle k\rangle\to 2(L+1)/L$, the same limiting density as the random family.
+
+Removing the randomness was meant to remove a nuisance. There is one network per
+size, nothing to average over, and the alternation --- if it is there --- has to
+show up in a single object rather than in a mean. What it removed instead was the
+cover the randomness had been providing, and the result is a caution that applies
+to Chapter~\ref{ch:motifs} as much as to this one.
+
+\subsection*{Every one of these lattices tiles perfectly}
+
+A generation gives every existing link exactly one chain. So the motifs closed at
+the \emph{last} generation have distinct old links and disjoint new chains, and
+they use $(L+2)\,m_{t-1}=m_t$ links between them: a perfect edge-disjoint tiling
+of the whole network by its own motif, at every size, for every $L$. Counted
+directly, $729$ of $729$ triangles on the pseudofractal at $t=7$, $1024$ of
+$1024$ squares on $DBB(n,2)$ at $t=6$, $625$ of $625$ pentagons on $DBB(n,3)$ at
+$t=5$. The same holds for the diamond lattice.
+
+That is a statement about the networks, proved by construction rather than
+fitted. Set against it, what the fit reports is a statement about the search:
+
+\begin{center}
+\footnotesize\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrrrr@{\hskip 10pt}rrr}
+\hline
+ & & \multicolumn{3}{c}{as fitted} & \multicolumn{3}{c}{seeded from the tiling}\\
+lattice & $n$ & $\Sigma$ & $\kappa$ & named & $\Sigma$ & $\kappa$ & named\\
+\hline
+pseudofractal & $366$   & $4\,724$  & $3$  & $45\%$ & $\mathbf{3\,887}$  & $1$ & $100\%$\\
+pseudofractal & $1\,095$ & $15\,487$ & $16$ & $56\%$ & $\mathbf{13\,728}$ & $1$ & $100\%$\\
+$DBB(n,2)$    & $684$   & $8\,459$  & $1$  & $66\%$ & $\mathbf{7\,434}$  & $1$ & $100\%$\\
+$DBB(n,2)$    & $2\,732$ & $42\,837$ & $26$ & $13\%$ & $\mathbf{35\,666}$ & $1$ & $100\%$\\
+diamond       & $684$   & $7\,812$  & $3$  & $88\%$ & $\mathbf{7\,434}$  & $1$ & $100\%$\\
+diamond       & $2\,732$ & $37\,213$ & $5$  & $88\%$ & $\mathbf{35\,666}$ & $1$ & $100\%$\\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent The right-hand columns are the known tiling handed to the optimiser as
+a starting state and allowed to move. It does not move: it stays on the tiling,
+and the description is cheaper than the fitted one every time, by $378$ bits at
+the smallest and $7172$ at the largest. So on the criterion this book uses
+throughout, the best available description of the pseudofractal web has
+\emph{one} community, not the sixteen the fit reports at $n=1095$ --- and the same
+is true of the diamond.
+
+Two of those rows have the same description length to the bit, $7434$ at $n=684$
+and $35\,666$ at $n=2732$, because $DBB(n,2)$ and the diamond are both tiled by
+squares on the same $n$ and $m$. Two lattices that Chapter~\ref{ch:motifs} placed
+in different limit classes are, under their best descriptions, indistinguishable.
+
+\subsection*{What that costs Chapter~\ref{ch:motifs}}
+
+Section~\ref{sec:gr-square} reported that the diamond loses its community density
+while the pseudofractal keeps its, and Section~\ref{sec:gr-decides} explained the
+difference by tiling: ninety-two per cent against fifty-six. Both lattices tile
+at a hundred per cent. The fifty-six was the search, the ninety-two was the
+search doing better on an easier instance, and the contrast between them is not a
+property of the two rules.
+
+What survives is the diamond's own finding, and it survives strengthened rather
+than weakened: an alphabet can take a network's communities away entirely, and
+under the best description available the diamond has none. What does not survive
+is the pseudofractal as its foil. Both lattices are in the same class, and
+Chapter~\ref{ch:motifs}'s argument that reach is not the discriminator while
+cycle length is was drawn from a comparison that the search, not the networks,
+was making.
+
+\subsection*{Why the random family is not touched}
+
+The randomness is what makes $BB(n,L)$ measurable. Its motifs are laid across
+links chosen at random, so they overlap: a link that has already been built into
+one motif can be chosen again, and no perfect tiling exists to be missed. The
+fifty-four to fifty-seven per cent the alphabet names there is close to what is
+available, not a sixth of it, and it is stable across sizes and realisations
+rather than collapsing as the network grows. That is why the alternation of
+Sections~\ref{sec:bb-family} to \ref{sec:bb-diagonal} is a measurement and this
+section is a caution.
+
+It is worth saying plainly which way that cuts. A deterministic rule looks like
+the cleaner instrument --- no sampling, no averaging, one object per size --- and
+it is the one on which the instrument fails. Stochasticity is not noise obscuring
+the structure here. It is what keeps the structure within reach of a greedy
+search, by ensuring there is no exact optimum to be exactly missed.
+
+\section{Motifs are small communities}
+\label{sec:bb-meso}
+
+There is a way of reading this whole chapter that makes the alternation less
+strange, and it is worth stating because it also says what the two vocabularies
+have been arguing about.
+
+A planted motif and a community are the same kind of object at two scales. Both
+are the description saying \emph{these nodes belong together, and here is how
+they are joined}. A motif is small, fixed and homogeneous: a handful of nodes, a
+wiring given once by the symbol, every copy identical. A community is large,
+variable and heterogeneous: as many nodes as the fit wants, an internal density
+given by a row of the count matrix, no two alike. Community detection, put this
+way, is the representation of a network by heterogeneous motifs of unbounded size
+and arbitrary internal connectivity, and an alphabet of motifs is the same
+representation with the size fixed and the wiring named in advance.
+
+That is why the two compete. They are not a structure and a description of it;
+they are two dialects for the same statement about the same links, and minimum
+description length is choosing between dialects. Which is also why "the alphabet
+abolished the communities" was always a slightly misleading way to put it. The
+meso-structure did not go anywhere. It was renamed.
+
+The counts say so. Write $M$ for the number of motifs the fit plants and $\kappa$
+for the number of communities it reports, and follow both along the family
+(Figure~\ref{fig:bb-meso}):
+
+\begin{center}
+\footnotesize
+\begin{tabular}{lrrr}
+\hline
+rule & $\beta$ for $M$ & $\beta$ for $\kappa$ & $\beta$ for $M+\kappa$\\
+\hline
+$BB(n,1)$ & $1.06$ & $0.89$ & $1.04$\\
+$BB(n,2)$ & $1.02$ & $\mathbf{0.25}$ & $1.01$\\
+$BB(n,3)$ & $0.99$ & $0.93$ & $0.99$\\
+$BB(n,4)$ & $1.01$ & $\mathbf{0.28}$ & $0.99$\\
+$BB(n,5)$ & $1.00$ & $0.70$ & $0.98$\\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent The middle column is the alternation this chapter has been about,
+running from $n^{0.25}$ to $n^{0.93}$ with the parity of $L$. The outer two do
+not alternate at all. Every rule in the family plants motifs in proportion to its
+size, and every rule carries meso-structure in proportion to its size, with a
+slope of one to within a few hundredths in all ten cases.
+
+The two panels of Figure~\ref{fig:bb-meso} are nearly the same picture, and that
+is the point rather than a defect of it: $\kappa$ is a few per cent of $M+\kappa$
+throughout, so the total is dominated by the motifs and the communities are a
+small residue. What the parity of $L$ decides is the size of that residue --- how
+much of the meso-structure is left over for the heterogeneous vocabulary once the
+homogeneous one has taken what it can.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{figs/fig-bb-meso.pdf}
+  \caption{\textbf{Meso-structure, counted without regard to which vocabulary
+  names it.} \textbf{(a)}~motifs planted and \textbf{(b)}~motifs plus
+  communities, against size, with a line of slope one for the eye. Every rule is
+  parallel to it in both panels, while the community count alone runs from
+  $n^{0.25}$ to $n^{0.93}$ across the same five rules.}
+  \label{fig:bb-meso}
+\end{figure}
+
+The density of that meso-structure is a constant of the rule, in exactly the
+sense Chapter~\ref{ch:graphons} gave the density of communities: $0.38$ per node
+for $L=1$, then $0.20$, $0.15$, $0.12$ and $0.09$ as the motif grows and fewer of
+them fit. It falls with $L$ for a reason with no depth in it --- a longer cycle
+uses more links per copy, and the mean degree is falling too --- but it is
+constant in $n$ for each rule, which is the part that matters.
+
+So Chapter~\ref{ch:graphons}'s conjecture can be restated in a form the diamond
+does not break. What a locally grown network converges to is a constant density
+of meso-structure. Whether a given description spends that density on motifs or
+on communities is a question about the vocabulary, and the answer alternates with
+the parity of the cycle; the density itself does not notice. Read that way,
+$BB(n,2)$ and the diamond never lost anything. They were re-described, in a
+dialect that happens to have a symbol for what they are made of.
+
 \section{Settled, and not settled}
 \label{sec:bb-conclusion}
 
-Settled: within this family, whether naming a rule's own motif dissolves its
-communities is decided by the parity of the cycle the rule closes, and not by how
-much of the network the motif covers, nor by how much community structure there
-was to begin with, nor by the mean degree. The prediction was made before the
-chorded rule was grown and it came out right, which is the only sense in which
-any of this has been tested rather than fitted.
+Settled: within the random family, whether naming a rule's own motif dissolves
+its communities is decided by the parity of the cycle the rule closes, and not by
+how much of the network the motif covers, nor by how much community structure
+there was to begin with, nor by the mean degree. The prediction was made before
+the chorded rule was grown and it came out right, which is the only sense in
+which any of this has been tested rather than fitted.
+
+Settled also, and less comfortably: on the deterministic members the same
+question cannot be answered by fitting at all. Those lattices tile perfectly by
+construction, the greedy search does not find the tiling, and handing it the
+tiling produces a description that is cheaper by up to seven thousand bits and
+has one community. The word \emph{random} in the paragraph above is doing real
+work, and Section~\ref{sec:bb-deterministic} says what it costs
+Chapter~\ref{ch:motifs}.
 
 Not settled: why. The obvious story is that a square is what a bipartite network
 is made of, so that on the even rules the alphabet and the partition are
@@ -321,6 +512,18 @@ be added to $BB(n,4)$ as it was to $BB(n,2)$: if parity is the mechanism, a
 chorded hexagon rule should keep its communities exactly as the chorded square
 rule does, and if it does not, the account is about the square in particular
 rather than about bipartiteness.
+
+And one thing this chapter changes about how the question should be asked at all.
+Section~\ref{sec:bb-meso} counts motifs and communities together, and the total
+comes out proportional to $n$ on every rule in the family, with a slope of one to
+within a few hundredths, while the community count alone runs from $n^{0.25}$ to
+$n^{0.93}$. If that holds beyond this family, then \emph{dissolved} was never the
+right word for what an alphabet does. The meso-structure is conserved and only
+its vocabulary changes, and the density Chapter~\ref{ch:graphons} conjectured
+survives the diamond after all --- as a density of meso-structure rather than of
+communities. Whether it holds beyond this family is the obvious next measurement,
+and the rules of Chapters~\ref{ch:friends} and \ref{ch:duplication} are where to
+take it.
 
 One last observation, which belongs to the book's argument rather than to this
 family. Every result in this chapter required an alphabet that did not exist when
