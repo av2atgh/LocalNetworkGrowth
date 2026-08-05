@@ -1,0 +1,1405 @@
+\chapter{Emergence of communities}
+\label{ch:communities}
+
+\section{Communities nobody designed}
+
+So far the local rules of this book have explained the \emph{degree} structure of
+networks --- their power laws, their clustering hierarchy, their correlations.
+This chapter turns to a feature of an altogether different kind: \emph{community
+structure}. A community is a group of nodes that are densely connected among
+themselves but only sparsely connected to the rest of the network --- a clump
+that hangs together. They are everywhere in real data: people fall into social
+circles, web pages into topics, proteins into functional modules, each group
+talking mostly to itself. Splitting a network into such groups is what
+researchers mean by \emph{community detection}, and a network that splits cleanly
+is said to have strong community structure.
+
+Where do these communities come from? The usual answer points to differences
+between the nodes themselves --- \emph{node heterogeneity}, in the jargon. People
+of the same profession or politics, web pages on the same subject, proteins with
+the same biological function: nodes of a kind, the story goes, are simply more
+likely to link to one another, and that built-in preference is what carves the
+network into groups. On this view, communities are stamped onto the network by
+properties the nodes carried in from the start.
+
+The thesis of this chapter, following \citet{vazquezcommunities2025}, is that no
+such stamp is needed. \emph{Communities emerge from local growth rules even when
+every node is identical.} The first hint is decades old: \citet{jin2001} showed
+that a social network grown purely by triadic closure --- the friends-of-friends
+rule of Chapter~\ref{ch:friends} --- develops communities although its nodes are
+all of one type, and the same was later seen in the gene-duplication models of
+Chapter~\ref{ch:duplication} \citep{sole2002}. If a featureless local rule
+segregates a network into groups all by itself, then community structure joins
+preferential attachment and the clustering hierarchy as one more thing that
+\emph{emerges} from locality rather than being designed in.
+
+To make that claim sharp we should ask it as a quantitative question, and the
+right way to frame it comes from a corner of mathematics called \emph{Ramsey
+theory}. Ramsey theory studies how large a random structure must become before
+some orderly pattern is forced to appear. Its best-known nugget is a party fact:
+in any gathering of six people, there are always either three who all know one
+another or three who are all mutual strangers --- order of that kind is
+unavoidable once the group is big enough. We will ask the analogous question of
+growing networks: given a local growth rule, how large must the network become
+before it is virtually \emph{certain} to contain communities? This chapter is, in
+effect, a Ramsey theory of community structure in growing networks.
+
+\section{The Ramsey community number}
+
+Before we can measure when communities appear, we need a trustworthy way to
+\emph{detect} them, and here some care is required, because the most popular
+method can be fooled. That method, \emph{modularity optimization}, looks for the
+division of a network that packs the most links inside groups; the trouble is
+that it will happily report groups even in a completely random network that has
+no real structure at all \citep{newman2006,fortunato2010}. To avoid being
+deceived, the work relies instead on two more discerning tools: the
+\emph{stochastic block model}, which fits the network to a statistical model of
+blocks and keeps only the structure that genuinely earns its keep
+\citep{karrer2011}, cross-checked against \emph{Infomap}, which finds groups by
+watching where a random walker gets trapped \citep{rosvall2008}. Both, crucially,
+report \emph{no} communities in a truly random network.
+
+That last point also supplies the essential control. To be sure a community is
+the work of the growth rule and not merely of the degrees, one compares the grown
+network against a \emph{rewired} version of itself --- the links shuffled at
+random while every node keeps its number of connections (this shuffling is called
+the configuration model). If the communities survive the shuffle, they were never
+more than an accident of the degrees; if they vanish, they were the doing of the
+local rule. For every local model in this chapter, the shuffled version has no
+communities at all --- so whatever structure we find is genuinely built by the
+dynamics.
+
+\begin{figure}[t]
+\centering
+\begin{adjustbox}{max width=\linewidth}\begin{tikzpicture}[
+  nd/.style={circle,draw=black!60,fill=black!4,minimum size=4.5mm,inner sep=0pt},
+  cL/.style={circle,draw=black,fill=black!55,minimum size=4.5mm,inner sep=0pt},
+  cR/.style={circle,draw=black,fill=white,minimum size=4.5mm,inner sep=0pt},
+  lnk/.style={draw=black!45,line width=0.7pt}]
+  % panel (a): two communities
+  \begin{scope}
+    \node[cL] (La) at (0.0,0.9)  {};
+    \node[cL] (Lb) at (1.0,1.0)  {};
+    \node[cL] (Lc) at (1.25,0.15){};
+    \node[cL] (Ld) at (0.15,-0.15){};
+    \node[cL] (Le) at (0.62,0.55){};
+    \draw[lnk] (La)--(Lb) (La)--(Le) (La)--(Ld) (Lb)--(Lc)
+               (Lb)--(Le) (Lc)--(Ld) (Lc)--(Le) (Ld)--(Le);
+    \node[cR] (Ra) at (2.70,0.9)  {};
+    \node[cR] (Rb) at (3.70,1.0)  {};
+    \node[cR] (Rc) at (3.95,0.15) {};
+    \node[cR] (Rd) at (2.85,-0.15){};
+    \node[cR] (Re) at (3.32,0.55) {};
+    \draw[lnk] (Ra)--(Rb) (Ra)--(Re) (Ra)--(Rd) (Rb)--(Rc)
+               (Rb)--(Re) (Rc)--(Rd) (Rc)--(Re) (Rd)--(Re);
+    \draw[lnk] (Lc)--(Rd);
+    \node[font=\footnotesize] at (2.0,-1.4) {(a) grown by a local rule};
+  \end{scope}
+  % panel (b): rewired, no communities
+  \begin{scope}[xshift=6.4cm]
+    \foreach \i in {0,...,9}
+      \node[nd] (d\i) at ({1.6+1.25*cos(90+36*\i)},{0.35+1.25*sin(90+36*\i)}) {};
+    \draw[lnk] (d0)--(d4) (d0)--(d6) (d0)--(d3) (d1)--(d5) (d1)--(d7)
+               (d2)--(d6) (d2)--(d8) (d2)--(d5) (d3)--(d7) (d3)--(d9)
+               (d4)--(d8) (d5)--(d9) (d6)--(d9);
+    \node[font=\footnotesize] at (1.6,-1.4) {(b) after random rewiring};
+  \end{scope}
+\end{tikzpicture}\end{adjustbox}
+\caption{\textbf{Communities emerge from local rules.} (a) A network grown by a
+local rule settles into dense communities (two here, one dark gray, one white) joined by
+only a few links. (b) Shuffling the links at random while keeping every node's
+number of connections destroys the communities --- so the structure was the work
+of the rule, not of the degrees alone.}
+\label{fig:com-rewire}
+\end{figure}
+
+With detection settled, we can pose the question precisely
+(Figure~\ref{fig:com-rewire}). The box below states
+the two definitions that do the work; both are short, and their meaning is given
+in words right after, so the box can be skipped.
+
+\begin{calculation}{the communities likelihood and the Ramsey community number}
+For a growth rule $f_G$ that produces a network of $n$ nodes, let a detection
+method $f_\kappa$ return the number $\kappa$ of communities it finds. Define the
+\emph{communities likelihood} as the probability --- estimated by generating many
+networks --- that an $n$-node instance has more than one community,
+\begin{equation}
+  P_\kappa(n) = \mathrm{Prob}\big\{\, \kappa \ge 2 \,\big\}.
+  \label{eq:com-pk}
+\end{equation}
+The \emph{Ramsey community number} is then the smallest size at which communities
+are all but guaranteed, at a confidence $1-\epsilon$ (we use $\epsilon=0.05$,
+i.e.\ $95\%$):
+\begin{equation}
+  r_\kappa = \min\{\, n : P_\kappa(n) \ge 1-\epsilon \,\}.
+  \label{eq:com-rk}
+\end{equation}
+A rule is said to have the \emph{emergent communities property} when such an
+$r_\kappa$ exists.
+\end{calculation}
+
+In plain terms: $P_\kappa(n)$ is the chance that a network grown to size $n$ has
+communities, and the Ramsey community number $r_\kappa$ is the size beyond which
+that chance is essentially $(1-\epsilon)100\%$. A \emph{finite} $r_\kappa$ is the fingerprint
+of emergence --- grow the network past it and communities are a near-certainty. A
+rule for which no such size exists, no matter how large the network, simply does
+not make communities on its own. The whole question ``do communities emerge from
+this rule?'' thus reduces to ``is $r_\kappa$ finite?''
+
+One caution should be lodged now and collected later. The definition above is
+stated \emph{relative to a detection method} $f_\kappa$: $r_\kappa$ is a property
+of the network \emph{and} of the rule used to interrogate it, and the two cannot
+be separated. For most of this chapter that dependence is a technicality, the
+choice of method shifting the numbers without touching the conclusions. In the
+last part of the chapter, where we can compute $r_\kappa$ exactly, it will turn
+out to be rather more than a technicality.
+
+\section{Local rules grow communities}
+
+We now line up two local rules against two controls. The local rules --- local
+search and duplication--split, both met earlier in this book --- have the emergent
+communities property; the controls --- reshuffling a network's links, and growing
+one with no locality at all --- do not. Holding the four side by side is the whole
+argument of the chapter in miniature.
+
+\paragraph{Local search.} The model $LS(n,\ell)$ is the search rule of
+Chapter~\ref{ch:search} in undirected form \citep{vazquez2001}: each new node
+takes a short walk of $\ell$ steps from a random starting node and links to every
+node it visits. It carries preferential attachment and high clustering, and ---
+though nothing in the rule ever mentions groups --- the block model resolves clear
+communities, with $P_\kappa$ climbing from near zero around $n=10$ to a
+near-certain one beyond about $n=100$, and staying there out to a hundred thousand
+nodes \citep{vazquezcommunities2025}. Figure~\ref{fig:com-ls} shows one such network.
+
+\begin{figure}[t]
+\centering
+\begin{adjustbox}{max width=\linewidth}\input{netfig-ls.tex}\end{adjustbox}
+\caption{\textbf{Communities in a local-search network.} An instance of the
+local-search model $LS(n{=}50,\ell{=}1)$. The stochastic block model
+resolves two communities, shown dark gray and white; they emerge even though the
+rule treats every node alike and never mentions groups.}
+\label{fig:com-ls}
+\end{figure}
+
+\paragraph{Duplication--split.} The model $DS(n,q)$ is the undirected
+cousin of the project-schedule rule of Chapter~\ref{ch:projects}: a new node
+either copies all of a random node's links (probability $q$) or splits one of its
+links in two. This model is the decisive case, because it builds \emph{no
+triangles whatsoever} --- duplication makes none, and splitting destroys any that
+might form --- and yet communities emerge just as reliably. The lesson is sharp: a
+network does not need to be cliquish to have communities. What it needs is
+locality, not triangles. Figure~\ref{fig:com-ds} shows an instance: two
+communities, and not a triangle in sight.
+
+\paragraph{Degree-preserving randomization.} To be sure the communities are the
+work of the local rule and not of the degrees alone, we need a way to wipe out the
+local structure while leaving every degree untouched. The \emph{configuration
+model}, met when we defined the Ramsey number, does exactly that: it takes a
+finished network and reshuffles its links at random, keeping each node's number of
+connections fixed but scrambling \emph{which} nodes are joined. Applied to a
+local-search or a duplication--split network, this reshuffling destroys the
+communities outright --- the randomized versions have no finite Ramsey number at
+all (the two ``randomized'' rows in the table below). Whatever the local rules
+built, the bare list of degrees cannot sustain.
+
+\paragraph{Barab\'asi--Albert.} Finally, $BA(n,m)$, the canonical
+preferential-attachment model, is our \emph{non-local} control: a growing,
+rich-get-richer network in which each newcomer attaches its $m$ links to nodes
+drawn from the \emph{whole} graph, never once consulting a neighborhood. Despite
+its growth and its rich-get-richer rule it has no emergent communities (the last
+row of the table), and the next section is devoted to teasing apart exactly why.
+
+\begin{figure}[t]
+\centering
+\begin{adjustbox}{max width=\linewidth}\input{netfig-ds.tex}\end{adjustbox}
+\caption{\textbf{Communities in a duplication--split network.} An instance of the
+duplication--split model $DS(n{=}50,q{=}0.3)$. Two communities (dark gray
+and white) again emerge --- even though this rule builds no triangles at all, so the
+network is far less cliquish than the local-search one of
+Figure~\ref{fig:com-ls}.}
+\label{fig:com-ds}
+\end{figure}
+
+A few representative Ramsey numbers, based on numerical estimates for $\epsilon=0.05$
+\citep{vazquezcommunities2025}, make the pattern concrete:
+
+\begin{center}
+\begin{tabular}{lcc}
+\hline
+Model & $r_\kappa$ (block model) & $r_\kappa$ (Infomap) \\
+\hline
+$LS(\ell=1)$               & $81$   & $222$  \\
+$DS(q=0.5)$             & $98$   & $622$  \\
+$LS(\ell=1)$, randomized   & ---    & ---    \\
+$DS(q=0.5)$, randomized & ---    & ---    \\
+$BA(m=2)$               & ---    & ---    \\
+\hline
+\end{tabular}
+\end{center}
+The two columns already show that $r_\kappa$ depends on how one looks: Infomap
+needs two to six times the size the block model does. The dependence goes deeper
+than a choice of algorithm. Chapter~\ref{ch:motifs} fits these same rules with a
+block model that can also describe its links as planted triangles and squares,
+and finds $r_\kappa=200$ for $LS(\ell=1)$ against the $81$ above, while
+$DS(q=0.5)$ does not move at all --- because local search's structure \emph{is}
+triangles, and a method that can name a triangle stops counting it as evidence
+for a community. Read the numbers below as properties of a rule seen through an
+instrument, which is what the definition says they are.
+
+Every genuinely local rule has a finite Ramsey number --- grow it past a few
+hundred nodes and communities are certain. The rules without local structure ---
+the bottom three rows, the two reshuffled networks and the Barab\'asi--Albert
+model --- have none: the dashes mean communities never become certain, however
+large the network. The exact figures differ between the
+two detection methods --- there is no single ``true'' definition of a community,
+and where the line falls depends a little on how one draws it --- but the
+\emph{split} between local rules (finite) and non-local ones (infinite) is the
+same either way. Local structure is a necessary condition for communities to
+emerge.
+
+\section{When globality fails: the Barab\'asi--Albert model}
+
+The natural control is the Barab\'asi--Albert model \citep{barabasi1999}, the
+textbook growing network with \emph{no} locality at all: each newcomer attaches
+its $m$ links to nodes chosen from the \emph{whole} network in proportion to
+their degree. It has growth and preferential attachment, but no step that ever
+looks at a node's neighborhood --- and it does \emph{not} have the emergent
+communities property. Its community likelihood rises only to about one-half near
+a thousand nodes and then \emph{falls} as the network grows further, never
+reaching certainty. The little structure it has comes from the mere age-ordering
+of its nodes, not from any local rule, and it washes out at scale.
+
+The boundary case is illuminating. Give the model a baseline ``attractiveness''
+$a$, so that a node is chosen with a probability proportional to $a +
+k_i/\sum_j k_j$ --- a fixed head-start $a$ on top of the usual degree preference.
+This tunes the degree exponent to $\gamma=2+a/m$. Tracking the Ramsey number
+across these variants reveals a clean rule of thumb: communities emerge exactly
+when the network is \emph{clustered} enough. The Ramsey number falls as the
+average clustering coefficient rises, and \emph{diverges} --- communities never
+become certain --- as the clustering goes to zero \citep{vazquezcommunities2025}. The standard Barab\'asi--Albert
+model sits right at that vanishing point, because its clustering decays toward
+zero as it grows (like $(\ln n)^2/n$): the bigger it gets, the fewer short cycles
+it has, and short cycles are what local structure is made of. So even here the
+principle holds --- where the dynamics happen to generate appreciable clustering
+(an \emph{implicit} bit of local structure), communities appear; where clustering
+fades, they do not.
+
+\section{How local must ``local'' be?}
+
+If locality is the cause, exactly how local must a connection be to count? Two
+dials settle it: the length of the cycles a rule creates, and the distance it
+reaches across. Triadic closure closes triangles (cycles of length three); the
+duplication--split rule works with squares (length four). To sweep the cycle
+length freely, use the \emph{bubble model}: at each step a chain of $L$ new nodes
+is added and its two ends are attached to the two ends of a randomly chosen
+existing link, creating a fresh cycle of length $L+2$. As $L$ grows --- as the
+rule weaves ever longer cycles --- the Ramsey number climbs with it, and steeply:
+from $r_\kappa=108$ for the shortest cycles to more than fifty thousand by $L=9$
+\citep{vazquezcommunities2025}, as the table below records. The climb is not quite
+smooth --- riding on top of it is a regular even--odd alternation, the odd-length
+cycles bringing communities on sooner than the even cycles around them, an effect
+plainest for the shorter cycles --- but the overall message is unmistakable: short
+cycles, tight local feedback, bring communities on soonest.
+
+The alternation is left unexplained here, and it does not stay that way. An odd
+cycle is what makes a network non-bipartite, so the rules that bring communities
+on sooner are exactly the ones that cannot be two-coloured;
+Chapter~\ref{ch:bubbles} finds the same parity deciding a quite different
+question, whether those communities survive being renamed as motifs, and takes
+the coincidence of the two as the reason to look at this family closely.
+
+\begin{center}
+\begin{tabular}{ccc}
+\hline
+$L$ & cycle length $L+2$ & $r_\kappa$ \\
+\hline
+1 & 3  & 108 \\
+2 & 4  & 326 \\
+3 & 5  & 246 \\
+4 & 6  & 2201 \\
+5 & 7  & 752 \\
+6 & 8  & 6595 \\
+7 & 9  & 2740 \\
+8 & 10 & 15863 \\
+9 & 11 & 56160 \\
+\hline
+\end{tabular}
+\end{center}
+
+Distance matters just as much. In the bubble model the chain's two ends attach to
+nodes that are a single step apart (the ends of one link). Loosen this so the
+ends may attach to nodes up to $W$ steps apart, with the chain length fixed at
+$L=1$. For $W=1$ communities still emerge with certainty, at $r_\kappa=108$;
+stretching to $W=2$ pushes the threshold up roughly tenfold, to $r_\kappa=1090$,
+but the communities still come. At $W=3$ --- and likewise if the ends are joined
+to nodes picked anywhere at random --- they stop appearing altogether, the Ramsey
+number ceasing to exist (the dash in the table) \citep{vazquezcommunities2025}.
+
+\begin{center}
+\begin{tabular}{cc}
+\hline
+$W$ & $r_\kappa$ \\
+\hline
+1 & 108 \\
+2 & 1090 \\
+3 & --- \\
+\hline
+\end{tabular}
+\end{center}
+
+For this model, ``local'' means roughly two steps: communities form
+when new links reinforce ties among nearby nodes, and dissolve once links are
+allowed to leap across the network. This is the whole book's premise made
+quantitative. It is not growth, nor preferential attachment, nor even clustering
+in the abstract that carves a network into communities --- it is the
+\emph{locality} of the rule by which it grew.
+
+\section{Networks we can solve exactly}
+
+Everything so far has been measured, not proved. The Ramsey numbers of the last
+three sections came from growing many networks and running a detection algorithm
+on each --- honest work, but it leaves the central question in the dark. We know
+\emph{that} communities appear beyond a certain size. We do not know \emph{why},
+and we cannot say what the size depends on.
+
+To answer that we need cases simple enough to solve with pencil and paper. Three
+have recently been found, and the rest of this chapter is their story. Each strips
+the problem down to a different bone. The \emph{ring} \citep{vazquezring2026}
+removes growth, randomness, and heterogeneity all at once, leaving nothing but
+local wiring. The \emph{diamond lattice} \citep{vazquezrg2026} --- the same
+lattice whose shortest paths we shall count in Chapter~\ref{ch:distance} --- lets
+us watch, exactly, why the evidence for communities accumulates at all. The
+\emph{pseudofractal web} \citep{vazquezpseudofractal2026} asks whether the
+communities we find are real or an illusion cast by the hubs.
+
+A warning before we start: these three networks are not \emph{grown} at all. They
+are fixed, deterministic constructions, and no detection algorithm is ever run on
+them. What they isolate is locality itself, stripped of every other ingredient,
+and what they answer is not ``can an algorithm find the communities?'' but ``at
+what size does the split become the better description?'' That is the question the
+Ramsey number was always asking, and here we can answer it exactly.
+
+The trick that makes all three solvable is to use the block model not as an
+algorithm but as a \emph{formula}. Given a network and a candidate split, the
+probability of the data under each hypothesis can be integrated in closed form,
+and the two compared.
+
+\begin{calculation}{the block model as a formula}
+Suppose the nodes are divided into blocks, and that the chance of a link between
+two nodes depends only on which blocks they are in: $\theta_1$ within block~1,
+$\theta_2$ within block~2, $\theta_{12}$ between. We do not know these
+probabilities, so we average over them, giving each a $\mathrm{Beta}(\alpha,\alpha)$
+prior, and likewise average over the label prior $\pi$ that decides how nodes are
+apportioned:
+\begin{equation}
+\begin{split}
+  P = \frac{1}{Z}\int
+  &\prod_{i\in\{1,2\}}\theta_i^{\,E_i}(1-\theta_i)^{\binom{n_i}{2}-E_i}\\
+  &\times\theta_{12}^{\,E_{12}}(1-\theta_{12})^{n_1n_2-E_{12}}\\
+  &\times\pi^{n_1}(1-\pi)^{n-n_1}\,P(\theta)P(\pi)\,d\theta\,d\pi .
+\end{split}
+\label{eq:com-model}
+\end{equation}
+Here $n_i$ is the size of block $i$, $E_i$ the number of links inside it, and
+$E_{12}$ the number crossing between. Every integral is of the same standard shape,
+\begin{equation}
+  \int_0^1 x^{E+\alpha-1}(1-x)^{N-E+\alpha-1}\,dx
+  = \mathrm{B}(E{+}\alpha,\,N{-}E{+}\alpha),
+  \label{eq:com-betaint}
+\end{equation}
+where $\mathrm{B}$ is the Beta function. So each hypothesis collapses to a product
+of Beta functions, and their ratio $R$ --- the \emph{evidence ratio} --- can be
+evaluated exactly. All we ever need is a handful of link counts.
+\end{calculation}
+
+Writing $R$ for the ratio of the evidence for the split to that for no split, the
+posterior weight of the partition is
+\begin{equation}
+  P(\mathrm{split}) = \frac{R}{1+R} = \frac{1}{1+e^{-\log R}},
+  \label{eq:com-psplit}
+\end{equation}
+so $\log R>0$ means the split is the better description, and the Ramsey number is
+the smallest size at which $P(\mathrm{split})$ reaches the certainty $q$ we demand.
+
+\section{The ring wants to be broken}
+
+Begin with the least promising network imaginable. Place $n$ nodes on a circle and
+join each to its $c$ nearest neighbors on either side --- the \emph{circulant
+ring} $C_n(1,\dots,c)$, the unrewired lattice that Watts and Strogatz started
+from. Every node is identical. Every node has the same degree $2c$, and the ring
+has $cn$ links. Nothing grows, nothing is random, and there is no group of nodes
+that belongs together more than any other. If any network has no communities, this
+one does not.
+
+Ask the block model anyway. The candidate split is into two contiguous arcs
+(Figure~\ref{fig:com-cutring}), and the counts it needs are elementary.
+
+\begin{figure}[t]
+\centering
+\begin{adjustbox}{max width=\linewidth}\begin{tikzpicture}[
+  nd/.style={circle,draw=black!65,minimum size=3.6mm,inner sep=0pt},
+  cA/.style={nd,fill=black!55},
+  cB/.style={nd,fill=white},
+  lnk/.style={draw=black!45,line width=0.7pt},
+  cut/.style={draw=accent,line width=1.1pt,dashed}]
+  \def\N{14}
+  \foreach \i in {1,...,\N}{
+    \pgfmathsetmacro\ang{90-(\i-1)*360/\N}
+    \coordinate (p\i) at (\ang:1.6);
+  }
+  % arcs: nodes 1..7 one community, 8..14 the other
+  \foreach \i in {1,...,\N}{
+    \pgfmathtruncatemacro\nextj{mod(\i,\N)+1}
+    \draw[lnk] (p\i)--(p\nextj);
+  }
+  \foreach \i in {1,...,7}{\node[cA] at (p\i){};}
+  \foreach \i in {8,...,\N}{\node[cB] at (p\i){};}
+  % the cut: between 14&1 and between 7&8
+  \draw[cut] ($(p14)!0.5!(p1)$)++(0.35,0.28) -- ($(p7)!0.5!(p8)$)++(-0.35,-0.28);
+  \node[accent,font=\scriptsize] at (2.35,0) {cut};
+  % rotation arrows suggesting the cut could sit anywhere
+  \draw[->,black!55,line width=0.5pt] (150:2.05) arc (150:120:2.05);
+  \draw[->,black!55,line width=0.5pt] (-30:2.05) arc (-30:-60:2.05);
+\end{tikzpicture}\end{adjustbox}
+\caption{\textbf{Cutting the ring.} The block model splits the ring into two
+contiguous arcs (dark and white), preferring this to no split at all once the ring
+is large enough. But every node looks the same, so the cut (dashed) could sit
+between any pair of beads and score exactly the same: the model says the ring
+\emph{must} be cut, without saying where. The two arcs are real communities in the
+way a magnet has a real direction --- fixed in any one outcome, undetermined by the
+symmetry.}
+\label{fig:com-cutring}
+\end{figure}
+
+\begin{calculation}{the ring's link counts and its evidence ratio}
+Take an arc of $n_i$ consecutive nodes. A link of span $k$ joins nodes $k$ apart,
+and $n_i-k$ such links fit inside the arc, so summing over the spans
+$k=1,\dots,c$,
+\begin{equation}
+  E_i = \sum_{k=1}^{c}(n_i-k) = c\,n_i - \frac{c(c+1)}{2},
+  \label{eq:com-ringEi}
+\end{equation}
+and the pairs inside the arc that are \emph{not} linked number
+$\binom{n_i}{2}-E_i=\binom{n_i-c}{2}$. Only links near the two cut points cross
+between the arcs, and counting them by span gives
+\begin{equation}
+  E_{12} = 2\sum_{k=1}^{c} k = c(c+1),
+  \label{eq:com-ringE12}
+\end{equation}
+independent of $n$. As a check, $E_1+E_2+E_{12}=cn$. For the balanced split
+$n_1=n_2=m\equiv n/2$; the unpartitioned ring has all $cn$ links among
+$\binom{n}{2}$ pairs. Feeding these into Eq.~\eqref{eq:com-model} and using
+Eq.~\eqref{eq:com-betaint} on every integral,
+\begin{equation}
+\begin{split}
+  R = \Big[ &\mathrm{B}\big(cm{-}\tfrac{c(c+1)}{2}{+}\alpha,\ \tbinom{m-c}{2}{+}\alpha\big)^{2}\\
+  \times{} &\mathrm{B}\big(c(c{+}1){+}\alpha,\ m^{2}{-}c(c{+}1){+}\alpha\big)\\
+  \times{} &\mathrm{B}(m{+}\alpha,\ m{+}\alpha) \Big]\\
+  \Big/ \Big[ &\mathrm{B}(\alpha,\alpha)^{2}\,
+  \mathrm{B}\big(cn{+}\alpha,\ \tbinom{n}{2}{-}cn{+}\alpha\big)\\
+  \times{} &\mathrm{B}(\alpha,\ n{+}\alpha) \Big].
+\end{split}
+\label{eq:com-ringR}
+\end{equation}
+No approximation has been made: this is exact for every $n$, $c$ and $\alpha$.
+\end{calculation}
+
+Evaluating Eq.~\eqref{eq:com-ringR} gives an answer that depends, with startling
+sharpness, on the range $c$ (Figure~\ref{fig:com-ring}a). The plain cycle, $c=1$,
+is \emph{never} split: its evidence ratio decays as a power of the size,
+\begin{equation}
+  \log R \sim A - (2\alpha+3)\log n \longrightarrow -\infty,
+  \label{eq:com-ringc1}
+\end{equation}
+so that $P(\mathrm{split})\sim n^{-(2\alpha+3)}$ vanishes and $r_\kappa=\infty$.
+But the next-nearest-neighbor ring, $c=2$, is split as soon as it exceeds about
+thirty-five nodes --- $r_\kappa\simeq34$ at $95\%$ certainty --- and beyond that
+the evidence piles up in proportion to the size, $\log R\sim(\ln 2)\,n$. A
+featureless ring of beads, given one extra reach, acquires communities.
+
+Why should one extra neighbor make such a difference? The published answer is that
+a plain cycle offers no density contrast for the block model to exploit. That
+cannot be right: an arc of a cycle is twice as dense as the whole cycle, and so is
+an arc of any other ring --- the contrast is a factor of two for \emph{every} $c$.
+The real reason is a cancellation, and it is worth seeing because it generalizes.
+
+\begin{calculation}{why the ring breaks, and when}
+Two quantities compete. Cutting the ring into two arcs of $n/2$ makes each arc
+look twice as dense as the whole ring did: the arcs hold nearly all $cn$ links but
+only about half the node pairs. Each link therefore gains $\ln 2$ of evidence, for
+a total \emph{gain} of $cn\ln 2$. Against this stands the price of naming the
+split --- of saying \emph{which} nodes go in which block. That price is the label
+term of Eq.~\eqref{eq:com-ringR}, and at $\alpha=1$ it is not merely of order
+$n\ln 2$ but exactly a binomial coefficient. With $n=2m$,
+\begin{equation}
+  \frac{\mathrm{B}(m{+}1,m{+}1)}{\mathrm{B}(1,n{+}1)}
+  = \frac{(m!)^{2}}{(2m{+}1)!}\,(n{+}1)
+  = \frac{(m!)^{2}}{n!}
+  = \binom{n}{n/2}^{-1},
+  \label{eq:com-labelexact}
+\end{equation}
+so the label term contributes
+\begin{equation}
+  -\log\binom{n}{n/2} \simeq -\,n\ln 2,
+  \label{eq:com-label}
+\end{equation}
+the entropy of labeling $n$ nodes with two labels. Subtracting the price from the
+gain,
+\begin{equation}
+  \log R \;\simeq\; \big(cn - n\big)\ln 2 \;=\; (c-1)\,n\ln 2 .
+  \label{eq:com-ringlaw}
+\end{equation}
+Since $cn$ is the number of links $m$, this reads
+$\log R\simeq(m-n)\ln 2$: the ring is split exactly when its links
+outnumber its nodes.
+\end{calculation}
+
+Equation~\eqref{eq:com-ringlaw} goes beyond what the ring paper states --- it
+reports only the $c=2$ case --- but it is easily checked against the exact formula
+for $c=1,\dots,4$, and it passes (Figure~\ref{fig:com-ring}b). It also dissolves
+the mystery of the cycle. The cycle is not \emph{reluctant} to break; it is
+exactly \emph{balanced}. A cycle has precisely as many links as nodes, so gain and
+price cancel to the last term, and the fate of the split is left to the smaller
+corrections of Eq.~\eqref{eq:com-ringc1}, which happen to be negative. Move to
+$c=2$ and the cancellation is broken by a whole factor of $n$. The celebrated
+contrast between the cycle and the ring is thus not a transition at all but a
+knife edge: $c=1$ sits at the zero of a perfectly smooth family, and the evidence
+grows linearly in $c-1$ thereafter.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figs/fig-com-ring.pdf}
+\caption{\textbf{The ring wants to be broken.} (a) The probability that a block
+model prefers two arcs to no split. The plain cycle ($c=1$) is never split; the
+next-nearest-neighbor ring ($c=2$) is split beyond $r_\kappa\simeq34$ nodes
+(dash-dotted line; dotted line marks $99\%$ certainty). (b) The evidence for the
+split against the prediction $\log R\simeq(c-1)\,n\ln 2$ (lines),
+Eq.~\eqref{eq:com-ringlaw}, for $c=1,\dots,4$. The cycle lies exactly on zero: it
+is balanced, not reluctant.}
+\label{fig:com-ring}
+\end{figure}
+
+And now the connection this book has been building toward. The quantity
+$m-n$ is, up to one, the number of \emph{independent cycles} a
+connected network carries. A tree has none, and is never split. A single ring has
+exactly one, and sits exactly on the fence. A network with an extensive number of
+independent cycles is split with an evidence proportional to how many it has. The
+same short loops that Chapter~\ref{ch:distance} will show multiplying shortest
+paths are what carve a network into communities here --- two faces, again, of the
+one local coin.
+
+There remains something troubling about calling the two arcs communities, and it
+should be said plainly. The ring looks the same from
+every node; rotate it by one bead and it is unchanged. So if cutting it at some
+point is favored, then cutting it at any \emph{other} point is favored exactly as
+much: all $n$ rotations of the balanced split have identical evidence. The block
+model is not telling us where the communities are. It is telling us that the ring
+\emph{must be cut somewhere}, while remaining perfectly silent about where --- and
+it is the ring's own symmetry that keeps it silent. Physicists know this situation
+well. A magnet below its critical temperature must point somewhere, though nothing
+in its physics prefers north to south; the symmetry of the laws survives in the
+multiplicity of the outcomes, not in any one of them. The ring's communities are
+of exactly this kind: real, in that the split genuinely describes the network
+better; degenerate, in that no particular split is preferred. The ring does not
+have communities so much as it wants to be broken.
+
+\section{Why communities emerge at all}
+
+The ring shows that locality suffices. It does not explain why size should be the
+deciding variable --- why every one of these networks has a threshold at all. For
+that we turn to the diamond lattice, which we shall meet again in
+Chapter~\ref{ch:distance}: begin with a single link between two poles $A$ and $B$,
+and at each generation replace \emph{every} link by $b$ parallel paths of $s$
+links each. Take $b=s=2$, the classic Migdal--Kadanoff cell
+\citep{migdal1975,kadanoff1976}. Generation $t$ has
+\begin{equation}
+  m = (bs)^t = 4^t \ \text{links}, \qquad
+  n_t = \tfrac{1}{3}\big(2\cdot 4^t + 4\big) \ \text{nodes},
+  \label{eq:com-diasizes}
+\end{equation}
+and a node born at generation $k$ ends with degree $2\cdot2^{t-k}$, while the two
+poles are permanent hubs of degree $b^t=2^t$. The lattice is strongly
+degree-heterogeneous, which is what will make the next section's question sharp.
+
+The $b$ bundles hanging between the poles are the obvious candidate communities
+(Figure~\ref{fig:com-diamond}). Take block~1 to be one bundle together with the two
+poles, block~2 the other bundle. Because the bundles meet \emph{only} at the poles,
+every crossing link joins a pole to a bundle-2 node, and the counts close in
+themselves.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.5\linewidth]{figs/fig-com-diamond.pdf}
+\caption{\textbf{The diamond's two communities.} The $b=s=2$ diamond lattice at
+generation $t=2$. Its two bundles --- the left half (open circles) and the right
+half (gray) --- are the two communities; they touch only at the poles $A$ and $B$
+(black), so the only links crossing between them are the few at top and bottom.
+As the lattice grows, that seam becomes an ever fainter share of each bundle's
+interior, which is why the split sharpens without limit.}
+\label{fig:com-diamond}
+\end{figure}
+
+\begin{calculation}{the counts, and the map that carries them}
+For the bundle cut of the $b=s=2$ diamond,
+\begin{equation}
+\begin{aligned}
+  e_{11} &= \tfrac{4^t}{2}, &\qquad e_{22} &= \tfrac{4^t}{2}-2^t, \\
+  e_{12} &= 2^t, &\qquad
+  \kappa_1 &= 4^t+2^t, \\
+  \kappa_2 &= 4^t-2^t, & &
+\end{aligned}
+\label{eq:com-diacounts}
+\end{equation}
+where $e_{rs}$ counts links between blocks $r$ and $s$ and $\kappa_r$ is the sum
+of degrees in block $r$. The seam is \emph{subextensive}: $e_{12}=2^t=\sqrt{m}$,
+so the fraction of links crossing the cut decays geometrically,
+$e_{12}/m=(1/s)^t\to0$.
+
+The point of the lattice is that these tallies renormalize \emph{exactly}. Collect
+them in $\mathbf{v}=(e_{11},e_{22},e_{12},\kappa_1,\kappa_2)^{\top}$; then
+$\mathbf{v}(t{+}1)=M\mathbf{v}(t)$ with
+\begin{equation}
+  M=\begin{pmatrix}
+     4&0&0&0&0\\ 0&4&2&0&0\\ 0&0&2&0&0\\ 0&0&-2&4&0\\ 0&0&2&0&4
+    \end{pmatrix}.
+  \label{eq:com-M}
+\end{equation}
+The entries read off the construction. A link inside either block is replaced by
+four links whose new nodes inherit its bundle label, so within-block links
+quadruple. A seam link joins a pole to a bundle-2 node; of its four children, the
+two at the pole stay seam links and the two at the far end are absorbed into
+block~2 --- whence $e_{12}'=2e_{12}$, with the displaced pair reappearing in
+$e_{22}'$. The spectrum is what matters:
+\begin{equation}
+  \lambda_{\mathrm{vol}} = bs, \qquad \lambda_{\mathrm{seam}} = b .
+  \label{eq:com-eigen}
+\end{equation}
+Read backwards, $M^{-1}$ is precisely the Migdal--Kadanoff decimation that strips
+the youngest generation; read forwards, $M$ is the growth generator of the
+detection problem.
+\end{calculation}
+
+Two eigenvalues, and their ratio is the whole story:
+\begin{equation}
+  \frac{\lambda_{\mathrm{seam}}}{\lambda_{\mathrm{vol}}} = \frac{1}{s} .
+  \label{eq:com-gap}
+\end{equation}
+For $s\ge2$ the seam is left behind by the bulk, so the boundary between the
+communities grows ever fainter relative to their interiors, and the split gets
+better and better with size. For $s=1$ the two rates are equal, the seam keeps
+pace, and the lattice never separates --- the diamond's exact counterpart of the
+plain cycle, and a pleasing echo of it. In a sentence: $b$ sets how many
+communities there are, and $s$ sets how sharply they are separated.
+
+To weigh the evidence we need a null model that already knows the degrees ---
+otherwise, as the next section will show, we would only be measuring the hubs. The
+degree-corrected block model \citep{karrer2011} supplies one.
+
+\begin{calculation}{the degree-corrected evidence}
+Let each node carry a propensity $\theta_i=k_i/\sqrt{2m}$ and let the expected
+number of links between $i$ and $j$ be $\theta_i\theta_j\,\omega_{g_ig_j}$, where
+$g_i$ is the block of $i$. Setting every $\omega_{rs}=1$ reproduces the
+configuration model exactly --- a network with the same degrees and nothing else
+--- so $\omega_{rs}$ measures departure from chance. The expected block-pair
+weights are
+\begin{equation}
+  \Omega_{rr} = \frac{\kappa_r^2}{4m}, \qquad
+  \Omega_{rs} = \frac{\kappa_r\kappa_s}{2m}\quad(r\neq s).
+  \label{eq:com-Omega}
+\end{equation}
+Giving each $\omega_{rs}$ a $\mathrm{Gamma}(\alpha,\alpha)$ prior, of mean one and
+so centered on the configuration model, and integrating it out,
+\begin{equation}
+  Z(e,\Omega) = \frac{\alpha^\alpha}{\Gamma(\alpha)}
+  \int_0^\infty \omega^{e+\alpha-1}e^{-(\Omega+\alpha)\omega}\,d\omega
+  = \frac{\alpha^\alpha}{\Gamma(\alpha)}\frac{\Gamma(e{+}\alpha)}{(\Omega{+}\alpha)^{e+\alpha}} .
+  \label{eq:com-Zdc}
+\end{equation}
+The evidence ratio for the split against no split is then
+\begin{equation}
+  R_{\mathrm{dc}} = \frac{Z(e_{11},\Omega_{11})\,Z(e_{22},\Omega_{22})\,Z(e_{12},\Omega_{12})}
+  {Z(m,\,m)} .
+  \label{eq:com-Rdc}
+\end{equation}
+For large counts, Stirling turns this into something recognizable,
+\begin{equation}
+  \log R_{\mathrm{dc}} \simeq \sum_{r\le s} e_{rs}\,\ln\frac{e_{rs}}{\Omega_{rs}},
+  \label{eq:com-KL}
+\end{equation}
+the surprise --- in the information-theorist's sense --- of finding the links where
+they are rather than where the degrees alone would have put them. This is the
+Bayesian, degree-corrected counterpart of modularity.
+\end{calculation}
+
+Everything now follows from two ratios. Write $u_{\mathrm{in}}=e_{rr}/\Omega_{rr}$
+for the density inside a block relative to chance, and
+$u_{\times}=e_{12}/\Omega_{12}$ for the seam. Inserting
+Eq.~\eqref{eq:com-diacounts} into Eq.~\eqref{eq:com-Omega} gives them exactly, as
+rational functions of $x=2^t$:
+\begin{equation}
+  u_{\mathrm{in}} = \frac{2x^2}{(x\pm1)^2},
+  \qquad
+  u_{\times} = \frac{2x}{x^2-1}.
+  \label{eq:com-densities}
+\end{equation}
+
+\begin{calculation}{the evidence per link}
+Under the flow, Eq.~\eqref{eq:com-densities} converges to the \emph{community
+fixed point} (Figure~\ref{fig:com-rg}b),
+\begin{equation}
+  (u_{\mathrm{in}}, u_{\times}) \longrightarrow (K, 0),
+  \label{eq:com-fixed}
+\end{equation}
+with $K=b$ the number of communities, the seam density decaying as
+$(\lambda_{\mathrm{seam}}/\lambda_{\mathrm{vol}})^t=(1/s)^t$. At the fixed point
+each within-block term of Eq.~\eqref{eq:com-KL} contributes $\tfrac{m}{2}\ln K$
+and the cross term is subleading, so the evidence density converges to a pure
+number:
+\begin{equation}
+  \frac{\log R_{\mathrm{dc}}}{m} \longrightarrow \ln K .
+  \label{eq:com-lnK}
+\end{equation}
+The reason is pure counting, and owes nothing to the diamond. If $K$ equal,
+well-separated communities hold all the links, each holds $e_{rr}=m/K$ of them,
+while the configuration model --- knowing only the degrees --- expects
+$\Omega_{rr}=m/K^2$. The ratio is $K$ identically, and every link contributes
+exactly $\ln K$: the entropy of resolving which of $K$ communities it belongs to.
+This is the same $\ln 2$ per link that broke the ring.
+\end{calculation}
+
+Equation~\eqref{eq:com-lnK} explains the emergence of communities in one line, and
+it is the answer this chapter has been missing. The evidence for a partition is
+\emph{extensive}: it grows in proportion to the number of links, each one
+contributing its $\ln K$. The price of positing the partition --- the extra block
+affinities a model must fit --- grows only like the \emph{logarithm} of the size. A
+quantity growing like $m\ln K$ must eventually overtake one growing like $\ln m$,
+and once it does it never looks back. Emergence is not a delicate phenomenon
+requiring a special mechanism; it is arithmetic. All that remains to ask is
+\emph{where} the crossing happens:
+\begin{equation}
+  r_\kappa(q) = n_t\big|_{t_\star}, \qquad
+  t_\star = \min\Big\{t : \log R_{\mathrm{dc}}(t) \ge \ln\tfrac{q}{1-q}\Big\},
+  \label{eq:com-cross}
+\end{equation}
+the threshold $\ln[q/(1-q)]$ being set by the certainty $q$ we demand
+(Figure~\ref{fig:com-rg}a). With $\log R_{\mathrm{dc}}\simeq(\ln K)(bs)^t$ from
+Eq.~\eqref{eq:com-lnK}, the crossing generation is
+\begin{equation}
+  t_\star \simeq \Big\lceil \log_{bs}\frac{\ln[q/(1-q)]}{\ln K} \Big\rceil .
+  \label{eq:com-tstar}
+\end{equation}
+This is the precise sense in which the Ramsey number is a
+re\-nor\-mal\-iza\-tion-group
+crossing: it is the generation at which a running, extensive evidence --- driven by
+the volume eigenvalue, once the flow has turned onto the community fixed point ---
+first clears a fixed detection threshold.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figs/fig-com-rg.pdf}
+\caption{\textbf{The Ramsey number as a crossing.} (a) Evidence for the split on
+the diamond lattice against size. $r_\kappa$ is simply where the curve clears the
+threshold $\ln[q/(1-q)]$ (dotted, $q=0.99$): at $n=44$ for a degree-corrected
+block model (dashed line) but only at $n=684$ for a plain one (dash-dotted).
+(b) The densities of Eq.~\eqref{eq:com-densities} flow to the community fixed
+point $(K,0)$: the interiors settle at $K=2$ times chance, the seam fades to
+nothing.}
+\label{fig:com-rg}
+\end{figure}
+
+The whole $(b,s)$ family can be done at once, and the result is the closest thing
+this book has to a formula for emergence.
+
+\begin{calculation}{the Ramsey number in closed form}
+The key structural fact is a lemma: for $s\ge2$, at every generation each link
+either lies inside a single bundle or joins a pole to a bundle node; no link ever
+joins two distinct bundles. (Induction on the replacement: a link inside a bundle
+spawns links inside that bundle, and a pole-to-bundle link spawns pole-to-bundle
+links and bundle-interior links.) So write $c_t$ for the number of pole-to-bundle
+links of one bundle and $i_t$ for its interior links. Replacement gives the
+triangular recursion
+\begin{equation}
+  c_{t+1} = b\,c_t, \qquad i_{t+1} = bs\,i_t + b(s-1)\,c_t,
+  \label{eq:com-recbs}
+\end{equation}
+whose spectrum can be read straight off the diagonal --- $\lambda_{\mathrm{vol}}=bs$
+and $\lambda_{\mathrm{seam}}=b$, now proved for all $(b,s)$, not just the symmetric
+cell where the two roles cannot be told apart. With $c_1=2$, $i_1=s-2$,
+\begin{equation}
+  c_t = 2\,b^{\,t-1}, \qquad i_t = b^{\,t-1}\big(s^t-2\big).
+  \label{eq:com-icbs}
+\end{equation}
+The block statistics follow: $e_{00}=i_t+c_t=b^{\,t-1}s^t$ for the pole block,
+$e_{rr}=i_t$ and $e_{0r}=c_t$ for each bundle $r\ge1$, and $e_{rs}=0$ for distinct
+bundles. The degree sums are $\kappa_r=2b^{\,t-1}(s^t{-}1)$ and
+$\kappa_0=2b^{\,t-1}(s^t{-}1{+}b)$, and since each replaced link adds $b(s{-}1)$
+nodes,
+\begin{equation}
+  n_t = 2 + \frac{b(s{-}1)\big[(bs)^t-1\big]}{bs-1}.
+  \label{eq:com-nbs}
+\end{equation}
+The densities, with $x=s^t$, are again rational and again flow to $(b,0)$:
+\begin{equation}
+  \frac{e_{00}}{\Omega_{00}} = \frac{b\,x^2}{(x{+}b{-}1)^2},
+  \quad
+  \frac{e_{rr}}{\Omega_{rr}} = \frac{b\,x(x{-}2)}{(x{-}1)^2},
+  \quad
+  \frac{e_{0r}}{\Omega_{0r}} \to \frac{b}{s^t}.
+  \label{eq:com-ratiosbs}
+\end{equation}
+The $\ln b$ contributions sum to $m\ln b$ \emph{exactly}, and the only deficit is
+the seam's --- the price of the $b^t$ crossing links still present:
+\begin{equation}
+  \log R_{\mathrm{dc}} = m\ln b\,\big[1-\delta_t\big],
+  \qquad
+  \delta_t = \frac{2(b{-}1)}{b\ln b}\,\frac{t\ln s+1}{s^{t}} .
+  \label{eq:com-delta}
+\end{equation}
+Setting this equal to the threshold and inverting Eq.~\eqref{eq:com-nbs},
+\begin{equation}
+\begin{aligned}
+  r_\kappa(b,s;q) &= 2 + \frac{b(s{-}1)}{bs-1}\Big[(bs)^{t_\star}-1\Big], \\
+  t_\star &= \Big\lceil \log_{bs}\Big(\ln\tfrac{q}{1-q}\Big/\ln b\Big) \Big\rceil .
+\end{aligned}
+\label{eq:com-rkbs}
+\end{equation}
+\end{calculation}
+
+Equation~\eqref{eq:com-rkbs} deserves a moment. The Ramsey community number, which
+three sections ago was a number we could only obtain by simulating thousands of
+networks, is here a formula. And look at what survives in it: $b$, through the
+entropy accumulated per link, and $s$, through the volume growth. The degrees drop
+out. The priors drop out. The details of the lattice drop out. Emergence, it turns
+out, depends on almost nothing about the network except how fast its communities
+grow and how fast their boundary does.
+
+\section{Communities, or just degrees?}
+
+One doubt remains, and it is the sharpest of all. Every network in this book is
+hub-dominated. A block model handed a scale-free network can improve its fit
+simply by putting the hubs in one group and the rest in another --- not because
+there is any community structure, but because there is a degree distribution to
+absorb. How do we know that what we have been calling communities is not just the
+hubs in disguise?
+
+The pseudofractal web of \citet{dorogovtsevgoltsev2002} settles it. Its rule is as
+local as they come: start from a triangle, and at every generation let each
+existing link spawn a new node joined to both of its ends, keeping all the old
+links (Figure~\ref{fig:com-pseudofractal}). What grows is deterministic, and
+elementary bookkeeping gives
+\begin{equation}
+  n_t = \tfrac{3}{2}\big(3^{t}+1\big), \qquad E_t = 3^{\,t+1},
+  \label{eq:com-pfNE}
+\end{equation}
+so the mean degree tends to four. A node born at generation $\tau$ ends with
+degree $2^{\,t-\tau+1}$, and counting nodes by birth generation gives a power-law
+degree distribution, $p(k)\sim k^{-\gamma}$ with
+\begin{equation}
+  \gamma = 1 + \frac{\ln 3}{\ln 2} \simeq 2.585,
+  \label{eq:com-pfgamma}
+\end{equation}
+squarely in the scale-free range of real networks. Three seed hubs of degree
+$2^{t+1}$ tower over everything. This web has exactly the degree heterogeneity
+that makes the doubt bite.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figs/fig-com-pseudofractal.pdf}
+\caption{\textbf{Building the pseudofractal web.} The deterministic rule, shown for
+the first three generations. Start from a triangle ($t=0$); at each step, every
+existing link gives birth to a new node joined to both its ends, and the old links
+are kept. The three corners of the original triangle (black) never stop gaining
+neighbors and become the towering hubs; each later node is fainter the later it was
+born.}
+\label{fig:com-pseudofractal}
+\end{figure}
+
+It also has two rival splits with completely different characters. The
+\emph{branch} cut follows the recursive construction, separating one branch of the
+web from the others. The \emph{hub--leaf} cut ignores the construction entirely and
+simply puts the high-degree nodes on one side.
+
+\begin{calculation}{the branch cut, and what a degree-blind model makes of it}
+Label the three seed links $0,1,2$; every new node and both its links inherit the
+label of the link that spawned it, so each non-seed node sits in exactly one
+branch. Take block~1 to be one branch plus the three seed hubs, block~2 the other
+two branches. The counts are exact:
+\begin{equation}
+\begin{aligned}
+  n_1 &= \tfrac{1}{2}\big(3^{t}+5\big), &\qquad n_2 &= 3^{t}-1, \\
+  E_1 &= 3^{t}+2, &\qquad E_2 &= 2\cdot 3^{t}+2-2^{\,t+2}, \\
+  E_{12} &= 2^{\,t+2}-4, & &
+\end{aligned}
+\label{eq:com-pfcounts}
+\end{equation}
+with $n_1+n_2=n_t$ and $E_1+E_2+E_{12}=E_t$. The seam is thin: $E_{12}$ grows only
+as $2^{t}=n^{\ln2/\ln3}\simeq n^{0.631}$, so the fraction of crossing links
+$E_{12}/E_t\sim(2/3)^{t}\to0$ --- the structural fact that drives everything.
+Feeding Eq.~\eqref{eq:com-pfcounts} into the plain evidence
+Eq.~\eqref{eq:com-model} and applying Stirling gives a linear growth,
+\begin{equation}
+  \log R \sim \Big(\ln 3 - \tfrac{2}{3}\ln 2\Big)\,n \approx 0.6365\,n,
+  \label{eq:com-pfslope}
+\end{equation}
+independent of the prior.
+\end{calculation}
+
+Now correct for the degrees. The block degree sums of the branch cut are
+\begin{equation}
+  \kappa_1 = 2\cdot 3^{t}+2^{\,t+2}, \qquad
+  \kappa_2 = 4\cdot 3^{t}-2^{\,t+2},
+  \label{eq:com-pfkappas}
+\end{equation}
+with $\kappa_1+\kappa_2=2E_t$, and inserting these into
+Eq.~\eqref{eq:com-Omega} gives densities that \emph{exceed} the configuration
+model's expectation inside the blocks while the crossing density vanishes:
+\begin{equation}
+  \frac{E_1}{\Omega_{11}}\to 3, \qquad
+  \frac{E_2}{\Omega_{22}}\to \tfrac{3}{2}, \qquad
+  \frac{E_{12}}{\Omega_{12}}\sim\Big(\tfrac{2}{3}\Big)^{t}\to 0 .
+  \label{eq:com-pfratios}
+\end{equation}
+The branch cut therefore survives the correction, and Eq.~\eqref{eq:com-KL} gives
+its slope:
+\begin{equation}
+  \log R_{\mathrm{dc}} \sim \Big(2\ln 3 - \tfrac{4}{3}\ln 2\Big)\,n \approx 1.2730\,n,
+  \label{eq:com-pfdcslope}
+\end{equation}
+exactly \emph{twice} the plain slope of Eq.~\eqref{eq:com-pfslope}. Correcting for
+the degrees does not weaken the case for these communities. It doubles it.
+
+The result is a reversal, and it is damning for the naive method. The plain block
+model prefers the hub--leaf cut --- it is chasing the degree gradient, exactly as
+feared. Correct for degrees and the hub--leaf cut collapses while the branch cut
+strengthens: the recursive communities are real, and they are what a degree-blind
+detector was missing while it stared at the hubs. The two verdicts on \emph{when}
+disagree just as violently (Figure~\ref{fig:com-degree}). The plain model reports
+no communities until $n=1095$; the corrected model has been sure of them since
+$n=42$. Same network, same partition, same question --- and a twenty-five-fold
+disagreement about the answer. The direction of that disagreement is the
+counterintuitive part: the degree gradient, far from manufacturing the split,
+\emph{delays} the detector that cannot see past it.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figs/fig-com-degree.pdf}
+\caption{\textbf{Communities, or just degrees?} The pseudofractal web under a
+plain block model (open circles) and one corrected for the degree sequence (filled
+squares). The corrected model is certain of the recursive communities from $n=42$;
+the plain one denies them until $n=1095$. The degree gradient, far from
+manufacturing the split, \emph{delays} the detector that cannot see past it.}
+\label{fig:com-degree}
+\end{figure}
+
+The moral is not that one number is right and the other wrong. It is that
+$r_\kappa$ was never a property of the network alone. It is a property of the
+network together with the question we ask of it, and the warning lodged when we
+defined it now has to be paid. The exactly solvable cases are valuable precisely
+because they let us see this: a quantity that looked like a fact about the web
+turns out to depend, by a factor of twenty-five, on which null model we hold it
+against. That does not dissolve the chapter's thesis --- under \emph{either} rule
+the local construction has a finite $r_\kappa$, while a network with no local
+structure has none --- but it does mean that a bare Ramsey number, quoted without
+its detection rule, says less than it appears to.
+
+How much less is worth knowing in advance, because the answer is larger than a
+factor of twenty-five. Both rules compared here describe a network as blocks and
+links, and differ only in what they expect the degrees to do. Give the detector a
+richer vocabulary --- let it call a set of links a triangle or a square, and not
+merely a pair of endpoints --- and Chapter~\ref{ch:motifs} finds that these two
+lattices have no communities at all: each is tiled exactly by copies of the motif
+its own rule lays down, and the cheapest description of it uses one group and no
+partition whatever. The communities established in this section are real, and
+they are real \emph{relative to a vocabulary that cannot name a triangle}. That
+is the same warning as the one above, pushed as far as it goes.
+
+\section{How many communities?}
+\label{sec:com-howmany}
+
+We have been asking whether a network splits in two. That was a convenience, and
+it is time to drop it. A self-similar network has structure at every scale, so
+why stop at the first cut?
+
+Take the pseudofractal web again, and cut it three ways instead of two, one block
+per branch. The symmetry now works for us rather than against us, and the counts
+are cleaner than the branch cut's:
+\begin{equation}
+  n_r = \tfrac{1}{2}\big(3^{t}+1\big), \quad
+  \kappa_r = 2\cdot 3^{t}, \quad
+  e_{rr} = 3^{t}-2^{t}, \quad
+  e_{rs} = 2^{t}.
+  \label{eq:com-three}
+\end{equation}
+The densities behave exactly as the diamond's fixed point promised, with $K=3$:
+\begin{equation}
+  \frac{e_{rr}}{\Omega_{rr}} = 3\big(1-(2/3)^{t}\big)\to 3,
+  \qquad
+  \frac{e_{rs}}{\Omega_{rs}} = \tfrac{3}{2}(2/3)^{t}\to 0,
+  \label{eq:com-threeratios}
+\end{equation}
+and the evidence density is $\ln 3$ per link, just as Eq.~\eqref{eq:com-lnK}
+requires of three well-separated communities:
+\begin{equation}
+  \log R_{\mathrm{dc}}^{(3)} \sim 2\ln 3\,n \approx 2.197\,n .
+  \label{eq:com-slope3}
+\end{equation}
+This beats the two-block cut of Eq.~\eqref{eq:com-pfdcslope} by exactly
+$\tfrac{4}{3}\ln 2\,n$ --- the evidence the branch cut forfeited by lumping two
+communities together. Three blocks describe the web better than two. And having
+seen that, there is no reason to stop: removing the links of generation $d$ leaves
+$3^{d+1}$ statistically identical sub-webs, and each level of refinement adds
+another $\simeq2\ln3\,n$ to the evidence.
+
+What stops it? The seams do. Every cut has to pay for the links it severs, and the
+deeper the cut the more of them there are. On the diamond the competition can be
+written down exactly. A depth-$d$ cut severs $c(d)=2^{t+d}$ links, leaving a
+fraction $e_{\mathrm{in}}/m=1-2^{d-t}$ inside blocks --- each level doubling the
+interface, which is the seam eigenvalue $\lambda_{\mathrm{seam}}=b=2$ acting once
+per level. Balancing that against the reward for splitting the degree sum evenly
+gives a modularity
+\begin{equation}
+  Q(d) = \frac{e_{\mathrm{in}}}{m} - \gamma\frac{\sum_c \kappa_c^2}{(2m)^2}
+  = 1 - 2^{\,d-t} - \gamma\,2^{-d} + O(2^{-t}),
+  \label{eq:com-Qd}
+\end{equation}
+where $\gamma$ is the resolution at which we choose to look. Maximizing over the
+depth gives $2^{2d}=\gamma 2^{t}$, that is
+\begin{equation}
+  d_\star = \tfrac{1}{2}\big(t+\log_2\gamma\big),
+  \qquad
+  q_{\mathrm{opt}} = 2^{d_\star} = \sqrt{\gamma}\;2^{t/2} \sim \sqrt{\gamma\,n}.
+  \label{eq:com-qopt}
+\end{equation}
+The number of communities that best describes the network is not two, and is not
+any fixed number: it \emph{grows with the network}, as its square root. The web
+does the same, with $K_{\mathrm{opt}}=3^{\lfloor t/2\rfloor}\sim\sqrt{n}$. The
+optimum sits at the geometric midpoint of the network's own hierarchy --- about
+$\sqrt{n}$ communities of about $\sqrt{n}$ nodes each --- and the two-block cut we
+labored over is merely the top of that tree. It is worth noting that $\sqrt{n}$ is
+the same scale that Chapter~\ref{ch:distance} will find in the exponent of the
+shortest path multiplicity on this very lattice; both are the seam scale $b^t$ in
+disguise.
+
+\section{Communities as a state of matter}
+
+There is one more thing the diamond will give us, and it is the strangest. So far
+communities have been an inference: the partition a statistician prefers. But the
+quantity being optimized is a Hamiltonian, and a Hamiltonian is physics. Written
+in the form of \citet{reichardt2004},
+\begin{equation}
+  \mathcal{H} = -\sum_{i\neq j}\big(A_{ij}-\gamma\,p_{ij}\big)\,\delta(\sigma_i,\sigma_j),
+  \qquad p_{ij} = \frac{\kappa_i\kappa_j}{2m},
+  \label{eq:com-rbH}
+\end{equation}
+where $\sigma_i$ labels the community of node $i$ and $A_{ij}$ is the adjacency
+matrix, the ground state is the community partition, and at $\gamma=1$ this is
+modularity itself. For two communities the labels are Ising spins, and the
+Hamiltonian rearranges into something a physicist recognizes at sight:
+\begin{equation}
+  \mathcal{H} = -\sum_{\langle ij\rangle}\sigma_i\sigma_j
+  + \frac{\gamma}{4m}\Big[M_\kappa^2 - \sum_i \kappa_i^2\Big],
+  \qquad
+  M_\kappa = \sum_i \kappa_i\sigma_i .
+  \label{eq:com-rbIsing}
+\end{equation}
+A ferromagnet --- neighbors want to agree, which is cohesion --- plus an
+infinite-range, degree-weighted penalty that punishes the whole network for
+agreeing too much, which is what forces a split.
+
+Because the penalty couples the spins only through the single collective variable
+$M_\kappa$, the model can be solved exactly on the diamond by decimation, and the
+answer is a genuine phase. Take the correlation between the two poles,
+$-\langle\sigma_A\sigma_B\rangle$, as the order parameter. Below the ferromagnetic
+critical temperature
+\begin{equation}
+  \frac{k_B T_c}{J} = 1.641,
+  \label{eq:com-Tc}
+\end{equation}
+the two poles lock into \emph{opposite} communities for any resolution $\gamma>0$,
+however small --- the degree-weighted penalty bites hardest on the two
+highest-degree nodes --- and the order survives as $n\to\infty$. The resolution
+selects \emph{which} partition orders, not \emph{whether} it does. The contrast
+with a plain ferromagnet is the whole point: an ordinary Ising model on the same
+lattice has no such phase, its ground state being the trivial single community. It
+is the community penalty that changes the ground state into a partition.
+
+Push to the growing hierarchy of the last section and the picture completes.
+With $q=2^d$ colors the model becomes a Potts model, whose series and parallel
+decimations are
+\begin{equation}
+\begin{aligned}
+  A_{\mathrm{ser}} &= A_1A_2 + (q{-}1)B_1B_2, \\
+  B_{\mathrm{ser}} &= A_1B_2 + B_1A_2 + (q{-}2)B_1B_2, \\
+  A_{\mathrm{par}} &= A_1A_2, \qquad B_{\mathrm{par}} = B_1B_2,
+\end{aligned}
+\label{eq:com-pottsRG}
+\end{equation}
+with $A$ the weight for two ends in the same community and $B$ for different ones.
+Solving these, every $q>2$ orders through a \emph{first-order} transition --- the
+partition snaps into place rather than fading in, as is known for Potts models on
+hierarchical lattices \citep{griffiths1982} --- at a temperature that falls only
+logarithmically with the
+number of communities,
+\begin{equation}
+  \frac{k_B T_c(q)}{J} \sim \frac{1}{c\,\ln q}, \qquad c\approx 0.70 .
+  \label{eq:com-Tcq}
+\end{equation}
+So the hierarchy orders level by level, coarsest first, each finer level freezing
+at a lower temperature; and since $q_{\mathrm{opt}}\sim\sqrt{n}$, the finest level
+still orders at $k_BT_c/J\sim1/\ln n$. Every thermodynamically stable level of the
+hierarchy survives as the network grows.
+
+The conclusion is worth stating baldly. On this lattice the community structure is
+not merely detectable, in the sense that a statistician would infer it. It is
+\emph{ordered}, in the sense that a physicist would recognize: a phase of matter,
+with a critical temperature, an order parameter, and a cascade of transitions
+building the hierarchy from the top down. Communities, born of nothing but local
+wiring, turn out to be a state that a network can be in.
+
+\section{How many communities do real networks have?}
+\label{sec:com-count}
+
+Everything so far has been theory: models grown by hand, and lattices solved with
+pencil and paper. It is time to ask the real world. The
+question of Section~\ref{sec:com-howmany} --- \emph{how many} communities a network
+has, and how that number grows --- was answered there only for self-similar
+constructions, where the best
+description settled on about $\sqrt{n}$ communities of $\sqrt{n}$ nodes each. Does
+anything so clean survive contact with the messy networks of the world? Following
+\citet{vazquezcount2026}, we can now say that it does, and better than the models
+led us to expect.
+
+Two idealized limits fix the range of possibilities
+(Figure~\ref{fig:com-caveman}). At one end is a network built of dense modules,
+like Watts's \emph{caveman} graph --- a ring of tight cliques, each clique so much
+denser inside than out that it is unmistakably its own community
+\citep{watts1999caveman}. There the number of communities $B$ simply counts the
+cliques, so it grows in direct proportion to size, $B\propto n$: the \emph{modular}
+limit, exponent one. At the other end are the self-similar networks of
+Section~\ref{sec:com-howmany}, whose community count grows only as the square root,
+$B\propto\sqrt{n}$: the \emph{fractal} limit, exponent one half. Writing
+$B\propto n^{\beta}$, every network must fall somewhere in $\tfrac12\le\beta\le1$.
+Where is an empirical question, and until it is measured we do not know whether
+real networks resemble stacks of modules, self-similar fractals, or neither.
+
+\begin{figure}[t]
+\centering
+\begin{adjustbox}{max width=\linewidth}\begin{tikzpicture}[
+  nd/.style={circle,draw=black!70,fill=black!12,minimum size=2.6mm,inner sep=0pt},
+  iedge/.style={draw=black!55,line width=0.5pt},
+  br/.style={draw=black!75,line width=0.9pt,dashed}]
+  \def\L{6}
+  \foreach \c in {1,...,\L}{
+    \pgfmathsetmacro\ca{90-(\c-1)*360/\L}
+    \coordinate (C\c) at (\ca:2.2);
+    % a 4-clique at each cave
+    \foreach \j in {1,...,4}{
+      \pgfmathsetmacro\ja{(\j-1)*90+45}
+      \coordinate (v\c\j) at ($(C\c)+(\ja:0.5)$);
+    }
+    \foreach \a/\b in {1/2,1/3,1/4,2/3,2/4,3/4}{\draw[iedge] (v\c\a)--(v\c\b);}
+    \foreach \j in {1,...,4}{\node[nd] at (v\c\j){};}
+  }
+  % ring of bridges between consecutive caves
+  \foreach \c in {1,...,\L}{
+    \pgfmathtruncatemacro\d{mod(\c,\L)+1}
+    \draw[br] (v\c2)--(v\d4);
+  }
+\end{tikzpicture}\end{adjustbox}
+\caption{\textbf{The modular limit: the caveman graph.} A ring of tight cliques
+(here six cliques of four nodes), each joined to its neighbors by a single bridge
+(dashed). Each clique is so much denser inside than out that it is unmistakably one
+community, so the number of communities simply counts the cliques and grows in
+proportion to size, $B\propto n$ ($\beta=1$). The self-similar networks of
+Section~\ref{sec:com-howmany} sit at the opposite limit, $\beta=\tfrac12$; real
+networks fall between.}
+\label{fig:com-caveman}
+\end{figure}
+
+So measure it. Take close to a hundred undirected networks from the Netzschleuder
+repository \citep{netzschleuder}, chosen only to span the widest possible range of
+sizes --- from Zachary's thirty-four-member karate club to networks of more than
+two million nodes --- and drawn from social, biological, infrastructural and
+collaboration settings with nothing else in common. Count the communities of each
+with the degree-corrected block model, letting the method infer the number of
+groups from the data rather than fixing it in advance \citep{peixoto2013,karrer2011}.
+The result is a clean straight line on logarithmic axes, across more than four
+decades of size (Figure~\ref{fig:com-count}):
+\begin{equation}
+  B \propto n^{\beta}, \qquad \beta \approx 0.61,
+  \label{eq:com-beta}
+\end{equation}
+with a bootstrap $95\%$ confidence interval, $[0.55,0.67]$, that lies wholly above
+one half and excludes it. The karate club resolves into a single group, a football
+schedule into ten, the Internet into several dozen, the largest social and
+collaboration networks into hundreds --- and one exponent threads them all,
+although they share no common origin, rule, or scale. Real networks are
+\emph{super-fractal}: they carry more resolvable community structure than
+self-similar models predict, yet they fall far short of the modular extreme.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figs/fig-com-count.pdf}
+\caption{\textbf{The number of communities grows as a power law of size.} Number
+of communities $B$ against number of nodes $n$ for close to a hundred real
+networks (log--log), each counted with the degree-corrected block model. The solid
+line is the fitted power law $B\propto n^{0.61}$; the dashed line is the fractal
+$\sqrt{n}$. Denser networks (darker fill) sit above the line, sparse ones below;
+geographic, spatially embedded networks (squares) are the sparsest and fall
+furthest below. The exponent lies well above the fractal one half.}
+\label{fig:com-count}
+\end{figure}
+
+The scatter about the line is not noise but signal: it tracks how dense the
+network is. At a fixed number of nodes, a denser web carries more information and
+supports a finer division, so dense networks (the darker points in
+Figure~\ref{fig:com-count}) sit above the line and sparse ones below, a trend that
+is statistically firm across the sample. The extreme cases are the geographic
+networks --- roads, power grids, transport --- which are the sparsest of all and
+lie furthest below; their position is explained by their low density, not by their
+spatial embedding as such.
+
+A cross-section of unrelated networks is one kind of evidence; following a
+\emph{single} system as it grows, so that the same mechanism lays down every
+point, is a sharper one. Do this for the three systems of the previous chapter ---
+the very networks whose shortest paths we counted there --- and each again traces a
+power law (Figure~\ref{fig:com-count-systems}): the Internet at the
+autonomous-system level, $\beta\approx0.62$; the protein interactomes across
+organisms, $\approx0.55$; and the condensed-matter co-authorship network,
+accumulated year by year to nearly four hundred thousand authors, $\approx0.71$.
+Grown by its own rules, each system multiplies its communities as a power law of
+size, with an exponent again between one half and two thirds.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figs/fig-com-count-systems.pdf}
+\caption{\textbf{The power law holds within a single growing system.} Number of
+communities $B$ against size $n$ (log--log) as three systems grow: (a) the Internet
+at the autonomous-system level, from daily snapshots; (b) protein interactomes
+across organisms; (c) the \texttt{cond-mat} co-authorship network, accumulated year
+by year to nearly $400{,}000$ authors. Each is a power law (solid line, fitted
+exponent) above the fractal $\sqrt{n}$ (dashed) --- the same super-fractal range as
+the cross-section of Figure~\ref{fig:com-count}, but now with the same rule laying
+down every point.}
+\label{fig:com-count-systems}
+\end{figure}
+
+And the book's own local rules do the same. Grow the triadic-closure and
+duplication--split models --- the social and biological rules of
+Chapters~\ref{ch:friends} and~\ref{ch:duplication} --- to a hundred thousand nodes
+and count their communities exactly as for the data, and both yield clean power
+laws with super-fractal exponents, $\beta\approx0.56$ and $0.60$, their confidence
+intervals again above one half (Figure~\ref{fig:com-count-models}). The
+super-fractal exponent is thus not a peculiarity of the data but a consequence of
+local growth: the same rules that make communities emerge at all, earlier in this
+chapter, also fix how their number multiplies with size, and fix it in the range
+the real networks occupy.
+
+One qualification has to be entered here, and it is taken up properly in
+Chapter~\ref{ch:graphons}. The counts above come from a flat block model, whose
+own resolution cannot exceed $\sqrt{n}$ groups however many are present. That
+ceiling has the same functional form as the fractal limit the exponent is being
+compared against, so the instrument cannot report a value far above one half even
+in principle. Refitting these two rules with a model whose resolution is not so
+bounded raises $\beta$ from $0.56$ and $0.60$ to about one on the very same
+networks, and refitting the real networks of Figure~\ref{fig:com-count} the same
+way raises the exponent of Eq.~\eqref{eq:com-beta} from $0.63$ to $0.80$, with an
+interval lying wholly above two thirds. What survives that is the inequality
+$\beta>\tfrac12$, which only strengthens; what does not survive unqualified is
+the particular value and the picture of a balance struck midway between fractal
+and modular.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figs/fig-com-count-models.pdf}
+\caption{\textbf{Local rules reproduce the super-fractal exponent.} Number of
+communities against size for the two local-growth models grown to $10^5$ nodes:
+(a) triadic closure and (b) duplication--split. Each follows a power law (solid
+line) with an exponent above the fractal $\sqrt{n}$ (dashed), in the same
+super-fractal range as the real networks of Figure~\ref{fig:com-count}.}
+\label{fig:com-count-models}
+\end{figure}
+
+The reading of Eq.~\eqref{eq:com-beta} is simple and worth stating plainly. The
+natural number of parts into which a network divides is not fixed but grows with
+the network, as $n^{\beta}$, while the typical community swells as $n^{1-\beta}$.
+With $\tfrac12<\beta<\tfrac23$ both grow without bound, yet the communities remain
+a vanishing fraction of the whole: one can neither summarize an arbitrarily large
+network with a fixed handful of groups, nor shatter it into ever more without
+limit. The exponent sets the balance --- and that it sits reliably above one half,
+across systems that share nothing else, is the finding. The number of communities
+is a stable, measurable property of how a network is organized, and network growth
+by local rules is what herds a system's components into that many clusters.
+
+\section{Summary}
+
+Community structure, long blamed on built-in differences between nodes, is
+instead something that \emph{emerges} from growing a network by local rules, even
+when every node is identical. Made precise through the Ramsey community number
+$r_\kappa$ --- the size beyond which communities are all but certain --- the
+statement is clean: the local rules of earlier chapters (search and
+duplication--split) have a finite $r_\kappa$, while their
+degree-preserving shuffles, and the non-local Barab\'asi--Albert model, have none.
+Triangles are not required (duplication--split makes none and still segregates),
+but locality is: communities come soonest for rules that close short cycles
+between nearby nodes, and disappear once links may span the whole network.
+
+Three networks simple enough to solve exactly turn all of that from a measurement
+into a theory. A featureless ring of beads, with no growth and no randomness
+whatever, is already split in two once each bead reaches beyond its nearest
+neighbor. The evidence for the split is $\log R\simeq(m-n)\ln 2$: a
+gain of $\ln 2$ for every link, against a price of $n\ln 2$ for saying which node
+goes where. So a network is broken into communities precisely when it carries more
+links than nodes --- which is to say, when it carries an extensive number of
+independent cycles. A tree never breaks; a single cycle sits exactly on the fence,
+which is why the plain cycle is not reluctant to split but exactly balanced. The
+same short loops that Chapter~\ref{ch:distance} shows multiplying shortest paths
+are what carve a network into communities.
+
+The diamond lattice says why any threshold exists at all. Its block-model tallies
+renormalize exactly, under a map with just two eigenvalues --- $bs$ for the bulk of
+a community, $b$ for the seam between them --- whose ratio $1/s$ decides
+everything: for $s\ge2$ the seam is left behind and the communities sharpen without
+limit, while for $s=1$ it keeps pace and the lattice never separates, the exact
+counterpart of the plain cycle. The densities flow to a fixed point where each
+community is $K$ times denser than chance and the seam has vanished, so every link
+contributes $\ln K$ --- the entropy of resolving which community it belongs to ---
+and the evidence is \emph{extensive} while the price of positing a partition grows
+only \emph{logarithmically}. A quantity growing like $m\ln K$ must overtake one
+growing like $\ln m$. Emergence is not delicate; it is arithmetic, and $r_\kappa$
+merely records where the crossing falls --- now a closed formula in which the
+degrees, the priors, and the lattice all drop out, leaving only how fast the
+communities grow and how fast their boundary does.
+
+The pseudofractal web supplies the caution and the reassurance together. Correct
+for the degree sequence --- score the split against a null that already knows every
+node's degree --- and the same web's Ramsey number moves from $1095$ to $42$, while
+the preferred cut flips from the hubs to the branches. The communities are real:
+they not only survive the correction but double their evidence under it, and the
+degree gradient turns out to \emph{delay} a degree-blind detector rather than fool
+it. But $r_\kappa$ belongs to the network and the question together, never to the
+network alone.
+
+Two closing surprises from the solvable models. Asking how many communities,
+rather than whether there are two, gives an answer that grows with the network:
+about $\sqrt{n}$ communities of about $\sqrt{n}$ nodes, the geometric midpoint of
+the network's own hierarchy, and the same $\sqrt{n}$ that governs shortest path
+multiplicity on the same lattice. And the partition is not merely something a
+statistician infers: written as a Hamiltonian it has a critical temperature, an
+order parameter, and a cascade of first-order transitions that build the hierarchy
+level by level. Communities are a state the network is in.
+
+Held up to the real world, the count grows faster than the fractal models predict.
+Across close to a hundred real networks, and within single systems followed as
+they grow, the number of communities is a power law of size, $B\propto n^{\beta}$
+with $\beta$ above the self-similar $\sqrt{n}$ --- measured here as between one
+half and two thirds, though Chapter~\ref{ch:graphons} shows that the upper end of
+that range is set by the resolving power of the method as much as by the
+networks, and that lifting it pushes the exponent towards the modular $n$. The
+book's own local rules reproduce whichever value the method reports, so the
+inequality, at least, is one more regularity that locality accounts for.
+
+Having already accounted for degree distributions, the clustering hierarchy, and
+degree correlations, this chapter adds community structure --- both its emergence
+and the power law that counts it --- to the list of global patterns that locality
+alone can explain \citep{vazquez2025}.

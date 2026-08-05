@@ -1,0 +1,1079 @@
+\chapter{Nested communities and network limits}
+\label{ch:graphons}
+
+\section{A photograph of the whole}
+\label{sec:gr-regimes}
+
+The last chapter counted communities. It found that the number grows as a power
+of the size, $B\propto n^{\beta}$ with $\beta\approx0.61$, and compared that
+exponent with the $\sqrt{n}$ of the self-similar models. This chapter asks what
+that comparison means, and the answer turns out to reach further than the
+question.
+
+Start with a way of looking at a network that we have not used yet. Draw its
+adjacency matrix as a picture: one pixel for each pair of nodes, black if they
+are linked, white if they are not. Order the nodes so that similar ones sit
+together. Now grow the network and watch the picture. If the network is
+\emph{dense} --- if each node links to a fixed \emph{fraction} of the others ---
+the picture settles down. The individual pixels become too small to see, and what
+survives is a pattern of greys: a smooth function $W(x,y)$ on the unit square
+giving, for each pair of positions, the probability of a link
+(Figure~\ref{fig:gr-limit}a). That limiting function is called a \emph{graphon},
+and it is the object that a growing dense network converges to
+\citep{lovasz2006,borgs2008}. Two networks with the same graphon are the same
+network as far as any large-scale statistic can tell.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figs/fig-gr-limit.pdf}
+\caption{\textbf{The limit picture, under two scalings.} Adjacency matrices of the
+same two-block structure at $n=60$, $240$, $960$, nodes ordered by block.
+(a)~Dense: the link probabilities are held fixed, and the picture sharpens onto a
+step function --- the graphon. (b)~Sparse: the mean degree is held fixed instead,
+so the probabilities fall as $1/n$. The structure is identical, and just as
+detectable, but the picture fades to white. Real networks are of the second kind.}
+\label{fig:gr-limit}
+\end{figure}
+
+This is a powerful idea, and it has a large and beautiful theory attached to it.
+It is also, applied naively to the networks in this book, useless --- and the
+precise way in which it fails is instructive. The reason is the second row of
+Figure~\ref{fig:gr-limit}. Real networks are not dense. The Internet, the
+interactome, a co-authorship graph, all keep a roughly fixed mean degree as they
+grow; so does every model in this book. When the mean degree is fixed the link
+probability falls like $1/n$, the pixels thin out, and the picture converges ---
+to white. The limit exists, and it has thrown away everything we care about.
+
+The obvious repair is to turn up the contrast: divide the whole picture by its
+own average darkness before taking the limit, so that what survives is the
+\emph{pattern} of the greys rather than their absolute level. This works, and it
+is the substance of a theory of sparse graph limits developed by
+\citet{borgs2019}. Rescaling costs something. Dividing by a shrinking average
+makes the values grow without bound, so the limit is no longer a probability
+between zero and one; it is what analysts call an \emph{$L^p$ function}, meaning
+one that may spike as high as it likes provided the average of its $p$-th power
+stays finite. A spike can be tall or it can be broad, but not both. That is
+exactly the licence a hub needs --- a few nodes joined to a large fraction of the
+rest --- and it is why the theory has to be rebuilt around a class of functions
+wider than the bounded ones. The gain is real. It is the first limit theory that copes with hubs, and with the
+power-law degree distributions that come with them.
+
+There are then three regimes, not two, and it is worth knowing which one a
+network is in. Dense networks have ordinary bounded graphons. Networks that are
+sparse but \emph{densifying} --- the link probability falling to zero while the
+mean degree still creeps up --- have $L^p$ graphons. And networks of genuinely
+fixed mean degree have neither. The rescaling that saves the middle case needs the
+mean degree to grow without bound, and when it does not, the rescaled picture
+concentrates instead of settling: for the ring it piles up along the diagonal,
+approaching not a function but a line of infinite density.
+
+Which regime a real system is in is a question with an answer, and the systems
+followed through this book do not give the same one. Track the mean degree against
+size and fit $\langle k\rangle\propto n^{\delta}$: the Internet at the
+autonomous-system level, over $733$ snapshots, gives $\delta=-0.04$ --- flat, or
+very slightly thinning, a mean degree that stays near four while the network grows
+sixty-fold. That is the third regime, and no limit theory yet reaches it. The
+cond-mat co-authorship network gives $\delta=+0.36$, and its mean degree climbs
+from $2.2$ to $19$ as it grows from four hundred to four hundred thousand authors.
+That is the middle regime: co-authorship densifies, and it is the one system here
+that the $L^p$ theory actually covers.
+
+The interactomes appear to densify too, more gently, but the appearance should not
+be trusted: that series runs across \emph{organisms} rather than across time, and
+a better-studied organism has both more proteins catalogued and more interactions
+recorded per protein. The trend there measures the attention of biologists at
+least as much as the architecture of cells.
+
+Even the middle regime is tighter than it looks, in a way the book's own models
+can measure. Since the exponent $p$ says how tall a spike the class will
+tolerate, membership in $L^p$ is a condition on how extreme the hubs are allowed
+to be: for a degree distribution $p_k\sim k^{-\gamma}$ it holds when
+$p<\gamma-1$, while the theory itself needs $p>1$, so there is a usable window
+only for $\gamma>2$. The
+pseudofractal web of the last chapter has $\gamma\simeq2.585$, leaving the window
+$1<p<1.585$; real networks, whose exponents cluster between two and three, are all
+squeezed into the same narrow slot, and it closes entirely as $\gamma\to2$. The
+limit theory reaches the scale-free world, but only just.
+
+Being in the third regime is worth stating plainly, because it explains the shape
+of the previous chapter. The evidence for a partition there grew like $m\ln K$, in
+proportion to the number of \emph{links}; the graphon limit normalizes by the
+number of \emph{pairs}, which is $n^2$. The two scales differ by the mean degree, and in
+the sparse world that ratio is the whole story. It is why the last chapter had to
+compute at finite $n$ and could not simply take a limit. The finite-size
+calculation was not a convenience. It was the only instrument that sees anything.
+
+\section{The block model is a graphon}
+\label{sec:gr-blockmodel}
+
+Set the difficulty aside for a moment, because the language is useful even where
+the limit theorem is not.
+
+A stochastic block model \emph{is} a graphon --- the simplest interesting kind. If
+the nodes fall into blocks and the link probability depends only on which blocks
+the endpoints are in, then $W$ is a step function: constant on each rectangle,
+jumping at the block boundaries. Fitting a block model to a network is fitting a
+step function to a picture, and asking how many blocks it needs is asking how
+finely the picture must be pixelated before the description stops improving.
+
+The degree-corrected model of the last chapter is a graphon too, and its shape
+says exactly what degree correction \emph{does}.
+
+\begin{calculation}{degree correction, as a factorization}
+Let the graphon factorize as
+\begin{equation}
+  W(x,y) = f(x)\,f(y)\;w\big(g(x),g(y)\big),
+  \label{eq:gr-factor}
+\end{equation}
+where $g(x)$ names the block at position $x$, $w$ is constant on block pairs, and
+$f$ is an arbitrary non-negative function. The first two factors form a
+\emph{rank-one} graphon: a product $f(x)f(y)$, in which a node's propensity to
+link is a single number and nothing about \emph{whom} it links to. That is the
+configuration model, and $f$ is the degree profile. Comparing with the discrete
+version of the last chapter, $\theta_i=k_i/\sqrt{2m}$ is the empirical estimate of
+$f$, and $\omega_{rs}$ is the block-constant residual $w$. Setting $w\equiv1$
+recovers the pure degree model, which is exactly the statement made there that
+$\omega_{rs}=1$ reproduces the configuration model.
+\end{calculation}
+
+So the two block models of the last chapter differ in one respect only: the
+baseline they measure structure against. The plain model tests the network
+against a \emph{constant} graphon; the degree-corrected model tests it against the
+best \emph{rank-one} graphon. Degree correction is the removal of the rank-one
+part, nothing more and nothing less.
+
+Seen this way the pseudofractal reversal loses its strangeness. A degree-blind
+model has no rank-one factor to spend, so the only way it can express a steep
+degree gradient is through the block structure itself --- and it duly spends its
+blocks on separating hubs from leaves, which is the hub--leaf cut it was found
+preferring. Give it a rank-one factor and the gradient is absorbed there, leaving
+the blocks free to describe what actually remains: the branch geometry. The
+correction does not weaken the case for the branch cut because the branch cut was
+never what the degrees were explaining.
+
+The evidence itself has a graphon reading as well. The large-count form of the
+degree-corrected evidence --- the sum of $e_{rs}\ln(e_{rs}/\Omega_{rs})$ over
+block pairs, met in the last chapter --- is $m$ times a relative entropy between
+the fitted residual $w$ and the flat one --- the same functional that governs large deviations for
+random graphs \citep{chatterjee2011}. This sharpens a claim made in passing there.
+The result $\log R_{\mathrm{dc}}/m\to\ln K$ was said to owe nothing to the diamond
+lattice; now we can say why. Relative entropy is a property of the limiting shape,
+not of the construction that produced it, and any arrangement of $K$ equal
+well-separated blocks has the same one.
+
+\section{How much can be seen}
+
+Now to the question the last chapter raised without quite asking: what sets the
+number of blocks?
+
+Fitting a step function to a picture is a balancing act familiar from any
+histogram. Too few bins and the description is crude --- real variation is
+averaged away. Too many and each bin holds too little data to estimate, so the
+description is noise. The optimum sits where the two costs meet, and it moves
+with the amount of data. This is the classical bias--variance trade-off, and for
+networks it has been worked out precisely.
+
+\begin{calculation}{the cost of a $k$-block description}
+Three terms compete. Smoothness here is measured by the \emph{H\"older
+exponent}, which grades how violently a surface is allowed to change when one
+moves a short distance across it: a graphon has smoothness $\alpha$ if, for some
+constant $M$,
+\begin{equation}
+  |W(x,y)-W(x',y')| \;\le\; M\big(|x-x'|^{\alpha}+|y-y'|^{\alpha}\big),
+  \label{eq:gr-holder}
+\end{equation}
+so that $\alpha=1$ is the Lipschitz case --- a surface of bounded slope --- and
+smaller $\alpha$ lets it swing more violently over a short distance. The
+\emph{approximation} error of describing such a surface by $k$ steps then follows
+in a line: cover the square with $k\times k$ cells of side $1/k$ and fit a constant
+on each; two points in a cell are at most $1/k$ apart, so
+Eq.~\eqref{eq:gr-holder} caps the deviation inside it at $Mk^{-\alpha}$, and since
+the risk is a mean \emph{squared} error, squaring gives $k^{-2\alpha}$. Against it
+run two estimation costs, established by
+\citet{gao2015}: a term $k^2/n^2$ for fitting the $k^2$ block parameters
+themselves, and a term $n^{-1}\ln k$ for the harder problem of not knowing which
+node belongs to which block. The total is
+\begin{equation}
+  \mathrm{risk}(k) \;\asymp\; k^{-2\alpha} \;+\; \frac{\ln k}{n} \;+\; \frac{k^2}{n^2}.
+  \label{eq:gr-risk}
+\end{equation}
+The two estimation terms both \emph{grow} with $k$, so on their own they would
+push towards a single block; it is the approximation error, falling with $k$, that
+creates an interior optimum. Balancing $k^{-2\alpha}$ against $k^2/n^2$ gives
+\begin{equation}
+  k^* \;\propto\; n^{\,1/(1+\alpha)} .
+  \label{eq:gr-kstar}
+\end{equation}
+\end{calculation}
+
+Equation~\eqref{eq:gr-kstar} is the key. For a Lipschitz graphon, $\alpha=1$ and
+the optimal description uses
+\begin{equation}
+  k^* \propto \sqrt{n}
+  \label{eq:gr-sqrtn}
+\end{equation}
+blocks --- which is precisely the $\sqrt{n}$ that \citet{olhede2014} propose for
+the network histogram, and which Figure~\ref{fig:gr-resolution}a recovers by
+direct minimization of Eq.~\eqref{eq:gr-risk}.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figs/fig-gr-resolution.pdf}
+\caption{\textbf{How many blocks can be seen.} (a)~The risk of a $k$-block
+description, Eq.~\eqref{eq:gr-risk}, for three network sizes, each normalized to
+its own minimum (dots). The optimum moves right as $\sqrt{n}$. (b)~That optimum
+against size, with the community counts of the real networks of the last chapter
+and their fitted power law. The vertical placement of the $k^*$ line depends on
+the graphon's smoothness constant and carries no meaning; its slope of one half
+does.}
+\label{fig:gr-resolution}
+\end{figure}
+
+And here the chapter's opening question returns, transformed. The $\sqrt{n}$ that
+the last chapter used as its fractal yardstick --- the self-similar prediction of
+$\sqrt{n}$ communities of $\sqrt{n}$ nodes --- turns out to be the same $\sqrt{n}$
+that statistics arrives at from an entirely different direction, as the resolution
+at which a smooth shape is best described. The local rule models and the statisticians'
+histograms agree on a number for reasons that have nothing to do with each other.
+
+\section{Rough, not smooth}
+
+Take the agreement seriously and the measured exponent stops being a curiosity and
+becomes a measurement of something.
+
+The real networks gave $\beta\approx0.61$, with a bootstrap interval
+$[0.55,0.67]$ that excludes one half. Read through Eq.~\eqref{eq:gr-kstar}, an
+exponent is no longer just a number above or below a fractal benchmark: it is a
+statement about the smoothness of the shape being described. Inverting
+$\beta=1/(1+\alpha)$,
+\begin{equation}
+  \alpha \;=\; \frac{1}{\beta}-1 \;\approx\; 0.65,
+  \qquad \alpha\in[0.49,\,0.82],
+  \label{eq:gr-alpha}
+\end{equation}
+and the interval lies wholly below $\alpha=1$. Direct minimization of
+Eq.~\eqref{eq:gr-risk} at $\alpha=0.65$ returns an exponent of $0.611$, against
+the measured $0.608$.
+
+So the excess over $\sqrt{n}$ is not merely ``more communities than a fractal.''
+It says that if real networks are converging to any limiting shape at all, that
+shape is \emph{rough}: not Lipschitz, not smooth in the sense the estimation
+theory assumes, but H\"older-continuous with an exponent around two thirds. A
+smooth graphon --- any smooth graphon, of any shape, at any scale, since the
+smoothness constant sets only the height of the line in
+Figure~\ref{fig:gr-resolution}b and not its slope --- supports a description that
+refines as $\sqrt{n}$ and no faster. Real networks refine faster than that. They
+keep resolving new structure at every scale, at a rate a smooth limit cannot
+supply.
+
+This is the same conclusion the last chapter reached in its own language, and the
+same one this book has been reaching since the introduction, arrived at from the
+outside. A network built by a local rule has no smooth limiting shape to converge
+to, because the rule keeps writing structure at whatever scale the network has
+currently reached.
+
+It is worth knowing that this is not a quarrel with the limit theory but an answer
+to a question its own authors left open. Introducing a network generator built from
+a singular measure rather than a function, \citet{palla2010} --- Lov\'asz among
+them --- put the alternatives as plainly as they can be put:
+
+\begin{quote}\small
+Should we expect that large real graphs converge to some limiting network in a
+strict sense of the convergence? Or, alternatively, their structure cannot be
+mapped onto a fixed function, and only an ever-changing (with the size of the
+network) measure (in the infinite network size limit becoming singular) can be used
+to reflect the underlying structural complexity?
+\end{quote}
+
+\noindent That was posed in 2010 and left as a question. Equation~\eqref{eq:gr-alpha}
+is a measurement bearing on it, taken across a hundred networks, and it comes down
+on the second side: no fixed smooth function will do, because the description keeps
+refining faster than any such function allows. The rest of this chapter is about how
+far that answer can be trusted.
+
+\section{Five meanings of one number}
+\label{sec:gr-five}
+
+A caution belongs here, and it is a sharp one. Five different arguments in this
+book and its neighbouring literature all deliver $\sqrt{n}$, and they are not the
+same statement:
+
+\begin{itemize}
+\item the \emph{fractal} $\sqrt{n}$ of the self-similar models --- a prediction
+  about how many communities the networks themselves hold;
+\item the \emph{geometric} $\sqrt{n}$ of Chapter~\ref{ch:distance} --- the
+  multiplicity of shortest paths on the same lattice, a prediction about how many
+  ways there are to cross it;
+\item the \emph{constructive} $\sqrt{n}$ --- the resolution any cascade of equal
+  cells is forced to, once its mean degree is held fixed;
+\item the \emph{statistical} $\sqrt{n}$ of Eq.~\eqref{eq:gr-sqrtn} --- the best
+  resolution obtainable for a smooth shape, a statement about descriptions;
+\item the \emph{algorithmic} $\sqrt{n}$ --- the resolution limit of the
+  non-nested block model, which cannot report more than of order $\sqrt{n}$
+  groups no matter how many are present \citep{peixoto2014hier}, and which is
+  derived, along with the ceiling that replaces it, in
+  Section~\ref{sec:gr-twopriors}.
+\end{itemize}
+
+\noindent The last of these has an older and better-known cousin. Long before
+anyone examined the block model's ceiling, \citet{fortunato2007} showed that
+modularity --- then the standard objective for community detection --- cannot
+resolve communities smaller than about $\sqrt{m}$ links in a network of $m$
+links, and so merges small ones no matter how clearly separated they are. The
+mechanism is different: modularity's limit comes from comparing against a global
+null model, the block model's from the cost of transmitting a matrix. But the
+lesson is the same, and it is one this chapter will keep returning to. A number
+of communities reported by a method is a statement about the method as much as
+about the network, and the only way to tell the two apart is to change the
+method and watch what moves.
+
+The third of these is the one just met, and it is worth making explicit, because it
+shows how little the number has to assume. Build a network from a singular measure
+in the manner of \citet{palla2010}: divide the square into $m^2$ cells, give each a
+probability, and multiply the whole pattern into itself $k$ times, so that the
+picture has $m^k$ rows and grows sharper with every iteration. If the cells are all
+the same size, the mean degree of the resulting network is $N m^{-2k}$, so holding
+it fixed while refining the measure forces
+\begin{equation}
+  m^{k} \;=\; \sqrt{N/\langle k\rangle} \;\propto\; \sqrt{N} .
+  \label{eq:gr-cascade}
+\end{equation}
+The construction resolves $\sqrt{N}$ rows because sparsity leaves it no choice. No
+network, no estimator and no smoothness assumption enters that argument --- only
+the bookkeeping of keeping a self-similar object sparse.
+
+Three of the five now have reasons, and they are the same reason. The fractal and
+geometric counts are a lattice's blocks and its routes tallied at the halfway point
+of its own construction, and the constructive count is what any equal-celled cascade
+must do to stay sparse; all three are self-similarity keeping its books. That is why
+$\beta=1/2$ is the natural exponent for a self-similar object, and why measuring
+$\beta>1/2$ says the object is not one --- the multifractal case, where the cells
+are allowed to differ in size, has no such constraint and its exponent is free.
+The remaining two agree with them for no reason at all.
+
+The algorithmic $\sqrt{n}$ is a property of neither the network nor the ideal
+description but of the instrument, and it deserves attention because the counts of
+the last chapter were produced by exactly that instrument: a flat degree-corrected
+block model selected by description length. Its ceiling and the null hypothesis under test
+have the same functional form, which is an uncomfortable coincidence.
+
+The bias runs in the reassuring direction --- a ceiling can only suppress the
+counts of the largest networks and so pull the fitted exponent \emph{down},
+meaning $\beta>1/2$ is measured in spite of the instrument rather than because of
+it. But the conclusion that survives is correspondingly narrower: these data
+establish an exponent above one half over four decades of size, and cannot by
+themselves certify that it persists asymptotically, because the estimator that
+produced them is not able to report an asymptotic exponent above one half. Only
+the nested block model, which lifts the ceiling to order $n/\ln n$, can settle
+that, and re-running the census with it is the obvious next measurement. Should
+the exponent survive, Eq.~\eqref{eq:gr-alpha} converts it directly into a
+statement about the roughness of the limit.
+
+\section{What the ring cannot tell us}
+
+One more thing the limit view clarifies, and it is a caveat about a result rather
+than a strengthening of one.
+
+The ring of the last chapter was found to prefer being split in two, for every
+range $c\ge2$. But every node of the ring is identical to every other, and the
+model was explicit that there is no preferred place to cut: rotate the proposed
+partition by one bead and the evidence is unchanged. In the language of limits
+that is a symmetry, and a continuous one. The ring's local limit --- what an
+observer sitting on a node sees, out to any fixed distance
+\citep{benjamini2001} --- is an infinite line, the same in every direction, with
+no communities anywhere in it.
+
+So the ring exhibits, in the cleanest possible form, a distinction the previous
+chapter's machinery does not itself draw. Evidence for splitting is not the same
+as the existence of a partition to be found. The ring supplies the first without
+the second: a whole continuum of cuts, all equally good, none of them recoverable
+from the data, and a limit object with no structure at all. What the evidence
+ratio reports is that one block is a poor description --- a true and interesting
+fact --- and not that two particular blocks are the right one. For the diamond
+lattice and the pseudofractal web, whose partitions are pinned by their
+construction, no such degeneracy arises and the identification is sound. It is the
+homogeneous case that needs the care.
+
+The ring is also the only one of the three entitled to that local limit, and the
+reason is worth recording, because it marks out exactly where this book's networks
+fall. A local limit of the kind just used requires an absolute ceiling on the
+degree: every node must look like every other from close up, out to a bounded
+number of neighbours. The ring obliges --- every node has degree $2c$ and always
+will. The diamond lattice and the pseudofractal web do not: their poles grow
+without bound, reaching degree $2^t$, so no ceiling exists and the local theory
+does not apply to them. Nor does the theory at the other end, which needs the
+number of links to outgrow the number of nodes, while theirs stays proportional
+to it.
+
+That is a genuine gap, and the book's central examples sit in it: too heavy-tailed
+for the local theory, too sparse for the global one. It is also a gap the subject
+knows about and is working to close --- a recent line of work \citep{backhausz2018}
+proposes treating a network not as a picture at all but as an \emph{operator}, and
+recovers dense graphons and local limits as two special cases of one notion of
+convergence. Whether it reaches the case that matters here --- bounded mean degree
+with unbounded hubs --- is precisely the question to put to it.
+
+\section{What clustering rules out}
+\label{sec:gr-clustering}
+
+Everything so far has been about \emph{shape} --- whether a limiting picture
+exists and how finely it can be resolved. There is a blunter test, and the
+introduction ran it before any of this machinery was in place.
+
+A graphon model, of any kind, draws its links independently once the positions of
+the nodes are fixed. That is what makes it tractable, and it has a consequence
+that cannot be argued away: a triangle needs three links, each drawn separately,
+so triangles are as rare as three coincidences. In a sparse network the clustering
+coefficient of such a model collapses to the link density itself, a number of
+order $\langle k\rangle/n$ --- vanishing. Real networks are not like that, and the
+introduction already measured by how much. Its column $C_{\mathrm{ER}}$, computed
+there as the clustering of a random network of the same size and density, is
+precisely the graphon prediction:
+
+\begin{center}
+\begin{tabular}{lccc}
+\hline
+Network & $C$ & $C_{\mathrm{ER}}$ & $C/C_{\mathrm{ER}}$ \\
+\hline
+Internet (AS)          & $0.230$  & $0.00018$ & $1254$ \\
+Gnutella               & $0.0055$ & $0.000076$ & $72$ \\
+Yeast proteins         & $0.071$  & $0.0018$  & $39$ \\
+cond-mat co-authorship & $0.657$  & $0.00026$ & $2541$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Between forty and two and a half thousand times too many triangles. No adjustment
+of the shape $W$ repairs a discrepancy of that size, because the shape is not what
+is wrong: the independence is.
+
+But the argument has to be made carefully, and the careful version is more
+interesting than the crude one. The comparison above is against a \emph{constant}
+graphon, and we have already seen in
+Section~\ref{sec:gr-blockmodel} that the constant is the weaker of the two
+baselines. Against the \emph{rank-one} graphon --- the network reshuffled to
+preserve every degree --- the verdict divides. The Internet's clustering falls only
+from $0.230$ to $0.123$ under that reshuffling, a factor of $1.9$: its degrees
+alone, hubs and all, manufacture most of its triangles, because a node of enormous
+degree is shared by many pairs and closes their triangles by accident. The
+co-authorship network, whose degrees are far less extreme, still stands $356$ times
+above its own reshuffling.
+
+So the two baselines separate the systems exactly as they separated the
+pseudofractal's two cuts. Where the degrees are wild, degree heterogeneity accounts
+for much of the clustering and little is left to explain. Where they are tame, the
+whole of it survives the strongest degree-preserving null available --- and that
+residue is what Chapter~\ref{ch:friends} was written to explain. Triadic closure is
+not an embellishment on a graphon; it is the thing the graphon cannot do.
+
+\section{Locality, or exchangeability}
+
+There is a reason all of this bears on the book's thesis rather than merely
+decorating it, and it is worth ending on.
+
+A graphon is not only a limit; it is a complete description of a certain
+\emph{kind} of random network --- those whose nodes are \emph{exchangeable},
+meaning the labels carry no information and any two nodes are, before we look,
+the same. Shuffle the names of the nodes and the probability of getting that
+network back is unchanged; nothing about a node except its hidden coordinate
+$x$ can matter \citep{aldous1981,diaconis2008}. Every graphon model is exchangeable and every
+exchangeable model is a graphon. Exchangeability is a strong assumption, and what
+it excludes is precisely geometry: a node's position, its neighbourhood, its
+history. It excludes locality.
+
+The chapters before this one have argued that networks are built by nodes acting
+on what is near them --- the page a surfer reached, the friend who made the
+introduction, the gene that was copied. A rule of that kind produces a network in
+which position matters, in which where a node attached is written into the
+structure around it. Such a network is not exchangeable, and so it has no graphon
+in the ordinary sense. The failure of the limit theory to say anything useful
+about real networks, which began this chapter as an inconvenience, is at bottom
+the same fact this book has been documenting all along, in a different vocabulary.
+Sparsity and roughness and the absence of a smooth limit are what locality looks
+like when a statistician goes looking for a shape.
+
+What the sparse limits should be instead is an open and active question, and the
+theory of sparse exchangeable graphs \citep{caron2017} is one serious attempt at
+it. But it would be wrong to end by filing all of this under work not yet begun,
+because on one point the previous chapter has already done a piece of it without
+saying so.
+
+The companion to the $L^p$ theory \citep{borgs2018} asks what it should
+\emph{mean} for a sparse network to converge, and proves that several answers that
+look quite different are the same answer. One can ask that the rescaled picture
+settle down. One can ask that the \emph{quotients} settle --- the tables of
+block-to-block densities produced by chopping the network into parts. One can ask
+that the best partition at fixed block sizes settle, or that the sum over all such
+partitions, weighted, settle: a ground state energy and a free energy, in the
+language of physics. These are all equivalent.
+
+That list is the last chapter's apparatus, item by item. A quotient is exactly the
+table of counts $e_{rs}$ against expectations $\Omega_{rs}$. Fixed block sizes are
+exactly the candidate split. The weighted sum over labelings, with the label prior
+integrated out, is exactly the evidence. And the renormalization flow
+$(u_{\mathrm{in}},u_\times)\to(K,0)$ is a quotient converging --- proved by hand,
+for one lattice, in precisely the sense the theorem intends. That is why the
+resulting $\ln K$ per link is so indifferent to the lattice that produced it:
+convergence of quotients is a statement about the limiting shape, and any
+arrangement with the same limiting quotient must give the same free energy.
+
+The hypotheses of that theorem do not cover a bounded-degree lattice, so what the
+last chapter proved is not a corollary of it; the flow had to be computed. But the
+agreement of the two routes is worth more than either alone, and it marks out what
+a limit theory for locally grown networks would have to look like. There is also,
+on the other side of Eq.~\eqref{eq:gr-alpha}, a number measured across a hundred
+real networks, still waiting to be explained. The rest of this chapter explains
+it, and the explanation turns out to be less about the networks than about the
+two instruments used to count them.
+
+\section{Two priors for the same partition}
+\label{sec:gr-twopriors}
+
+The last chapter counted communities with a block model, and this one has spent
+its length on what such a model can and cannot represent. It is time to ask a
+narrower question, and one that turns out to matter more than it looks: given
+that a block model is being fitted at all, \emph{which} block model, and does the
+choice change the answer?
+
+The choice at issue is between the flat model of Chapter~\ref{ch:communities} and
+the nested one --- both in the microcanonical, degree-corrected form developed by
+\citet{peixoto2014mcmc,peixoto2019bayesian} on the degree-corrected model of
+\citet{karrer2011}, and both fitted here with the same software --- and it is
+worth being precise about the difference, because it is
+not a difference in what the two can \emph{express}. Both describe a network as
+$B$ groups together with the matrix $e_{rs}$ of link counts running between them,
+both infer $B$ from the data rather than being told it, and any partition one can
+write down the other can write down too. What differs is the price of naming it.
+
+The flat model transmits the matrix under a uniform prior, as though its
+$B(B+1)/2$ entries were arbitrary numbers with no relation to one another, which
+costs about $\tfrac12B^2\log_2 m$ bits for a network of $m$ links. That charge
+grows with the square of the number of groups while the saving from splitting a
+group grows more slowly, and where the two meet is a ceiling: no flat fit
+recovers more than about $\sqrt n$ groups, however many are present
+\citep{peixoto2014hier}.
+
+The nested model spends less on the very same object, by declining to treat it as
+arbitrary. The counts $e_{rs}$ are themselves a network --- one node per group,
+one weighted link per pair --- and it is described by a block model of its own,
+which is described by another, and so on up. A group-level structure that is
+sparse or modular, as it usually is, then costs a fraction of what spelling out
+the matrix would; the quadratic charge disappears, and the ceiling rises to around
+$n/\log n$: some $8700$ groups at $n=10^5$ against $316$.
+
+\begin{calculation}{the price of a block structure, and the ceiling it sets}
+Both models describe a network by a partition $b$ and the matrix $e_{rs}$ of link
+counts, and score it by the description length
+$\Sigma=-\log_2P(A\mid e,b)-\log_2P(e,b)$. The first term is the likelihood, which
+they share. The second is the price of the description, which they do not.
+
+The flat model takes $e_{rs}$ to be an arbitrary symmetric matrix, so it must
+transmit $B(B+1)/2$ independent entries, each of size up to $m$. That costs about
+$\tfrac12B^{2}\log_2 m$ bits. Splitting one group into two saves at most of order
+$m/B$ bits of likelihood, so the two terms balance at
+\begin{equation}
+  B_{\max} \;\propto\; \sqrt{m} \;\propto\; \sqrt{n}
+  \label{eq:gr-flatceiling}
+\end{equation}
+for a network of fixed mean degree \citep{peixoto2014hier} --- the
+\emph{algorithmic} $\sqrt n$ of Section~\ref{sec:gr-five}, and the only one of the
+five that is a fact about a method rather than about a network. Past that point every
+further split costs more to announce than it saves, whatever the network looks
+like. The ceiling is a property of the code, not of the data.
+
+The nested model refuses the premise that $e_{rs}$ is arbitrary. The counts are
+themselves a network --- one node per group, one weighted link per pair --- so
+describe them with a block model, whose own count matrix is described by another,
+and so on until one group remains. Each level costs a fraction of what spelling
+out its matrix would, provided the group-level structure is itself sparse or
+modular, which it generally is. The quadratic charge never appears, and the
+ceiling rises to
+\begin{equation}
+  B_{\max} \;\propto\; n/\log n,
+  \label{eq:gr-nestedceiling}
+\end{equation}
+some $8700$ groups at $n=10^{5}$ against $316$. Setting the hierarchy to a single
+level recovers the flat model exactly, so the comparison between them is strictly
+nested and an extra level can only pay for itself or not.
+
+The same arithmetic answers a question the next chapter has to face, so it is
+worth doing here. Suppose one wanted a block model over $j$-sets of nodes rather
+than pairs --- a natural thought if the object generating the network acts on
+triples or quadruples. Its count tensor has about $B^{j}/j!$ entries, and
+repeating the balance above gives
+\begin{equation}
+  B_{\max} \;\approx\; \bigl[m\,(j-1)!\,/\ln m\bigr]^{1/j},
+  \label{eq:gr-bmax}
+\end{equation}
+which is $\sqrt n$ at $j=2$ and $n^{1/4}$ at $j=4$ once $m$ is of order $n$:
+eighteen groups against three hundred and sixteen at $n=10^{5}$. Raising the arity
+costs resolution, and costs it fast. A model that can no longer see communities is
+a poor instrument for asking what communities are made of, which is why
+Chapter~\ref{ch:motifs} reaches for a richer \emph{vocabulary} inside the ordinary
+pair model rather than for a tensor over $j$-sets.
+\end{calculation}
+
+So the two differ in a prior and not in a likelihood. Given the same partition and
+the same counts they assign the network the same probability; they disagree only
+about how surprising the counts were. Figure~\ref{fig:gr-flatnested} shows what
+that disagreement looks like on a single network.
+
+\begin{figure}[t]
+\centering
+\begin{minipage}{0.48\linewidth}\centering
+\begin{adjustbox}{max width=\linewidth}\input{netfig-fn-flat.tex}\end{adjustbox}\\[2pt]
+{\small (a) flat, $4$ groups, $\Sigma=2470$}
+\end{minipage}\hfill
+\begin{minipage}{0.48\linewidth}\centering
+\begin{adjustbox}{max width=\linewidth}\input{netfig-fn-nested.tex}\end{adjustbox}\\[2pt]
+{\small (b) nested, $5$ groups, $\Sigma=2458$}
+\end{minipage}
+\caption{\textbf{The same network, divided by the two priors.} An instance of
+$LS(n{=}200,\ell{=}1)$, laid out once and coloured twice. The flat model resolves
+four groups; the nested model splits the larger of them and resolves five, and it
+does so while spending twelve bits \emph{fewer} on the description as a whole ---
+which is the sense in which the finer division is not merely permitted but
+preferred. At $n=100$ the two return the same three groups: the ceiling has to be
+approached before it can be felt.}
+\label{fig:gr-flatnested}
+\end{figure}
+
+\section{Which prior the data prefers}
+\label{sec:gr-whichprior}
+
+A difference of prior invites an obvious objection. If the two models disagree
+only in what they expected before seeing anything, on what grounds is either to
+be believed?
+
+The answer is that a prior is a code, and a code can be measured. The whole point
+of the description length is that it needs no external arbiter: the better prior
+is the one that assigns a shorter description to the data that actually occurred.
+Both codes are complete, both are fixed before the answer is known, and comparing
+their lengths is a test rather than a preference.
+
+The comparison is also structurally safe, because the nested model with a single
+level \emph{is} the flat model. The hierarchy is a strict generalisation, so it
+can only help, up to the small cost of announcing how many levels there are. One
+is not choosing between rival beliefs but asking whether an extra layer of
+description pays for itself.
+
+On real networks it pays, and handsomely. Fitting both models to fourteen of the
+networks of Chapter~\ref{ch:communities}, and reading off the description length
+each achieves:
+
+\begin{center}
+\small
+\begin{tabular}{lrrrr}
+\hline
+network & $n$ & $\Sigma$ flat & $\Sigma$ nested & difference\\
+\hline
+netscience              & $379$    & $5\,775$     & $5\,583$     & $-192$\\
+kegg\_metabolic         & $1\,865$ & $40\,142$    & $39\,709$    & $-433$\\
+urban\_streets          & $2\,870$ & $43\,262$    & $42\,793$    & $-470$\\
+celegans\_interactome   & $5\,966$ & $619\,605$   & $606\,016$   & $-13\,589$\\
+ppi\_interolog\_human   & $16\,820$& $3\,041\,650$& $3\,037\,343$& $-4\,307$\\
+internet\_as            & $22\,963$& $404\,104$   & $399\,172$   & $-4\,932$\\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent Across the fourteen the nested model is shorter on thirteen, by $1772$
+bits on average. The one exception is a tie, on a network the model puts in a
+single group, where there is no group-level graph to compress and the hierarchy
+has nothing to do.
+
+The flat model is therefore not wrong. It is a code that pays for arbitrariness it
+does not need, and the data says so, in bits. Its $\sqrt n$ ceiling is a property
+of that code and not of networks --- which matters, because $\sqrt n$ is exactly
+the fractal limit the last chapter's exponent was being compared against.
+
+\section{How many communities?}
+\label{sec:gr-howmanyagain}
+
+Chapter~\ref{ch:communities} measured $B\propto n^{\beta}$ with
+$\beta\approx0.61$ and called real networks \emph{super-fractal}: above the
+self-similar $\tfrac12$, below the modular $1$. Everything above says that number
+should be re-examined with the other prior, and it does not survive intact.
+
+Take the book's own growth rules first, where the networks can be made to order
+and grown as far as patience allows. Fitting both models to the same realisations
+gives the table this chapter and the next both work from
+(Figure~\ref{fig:gr-scaling}):
+
+\input{tab-master-models}
+
+\noindent The first six rows are the random rules of
+Chapters~\ref{ch:friends}--\ref{ch:duplication}, the last two the deterministic
+lattices, whose smallest generations are dropped because a lattice the fit puts
+in one or two groups is below the resolution of either method and would
+contribute a slope fitted to nothing. The last two columns are read off the
+nested fit and are the subject of Section~\ref{sec:gr-density}; the exponents
+come first.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{figs/fig-gr-scaling.pdf}
+  \caption{\textbf{How many communities, under each prior.} The mean number of
+  communities against size for four growth rules, averaged over twenty networks
+  at each size, with the best power law fitted to each method and its exponent
+  in the legend. The flat model comes out near its own $\sqrt n$ ceiling
+  throughout; the nested model grows almost in proportion to $n$.}
+  \label{fig:gr-scaling}
+\end{figure}
+
+\noindent The flat model reproduces Chapter~\ref{ch:communities} --- it was that
+chapter's method --- and it reproduces it while sitting at its own ceiling. Its
+column is remarkably uniform in doing so: eight rules of quite different
+character, deterministic lattices among them, and every one of them reads between
+$0.48$ and $0.78$. A ceiling produces exactly that kind of agreement, and a
+network property has no reason to.
+
+Lift the ceiling and every rule moves to the modular limit: the exponents cluster
+on one, from $0.89$ to $1.12$, the number of communities grows in proportion to
+the size, and their typical size stops growing. At $n=1600$ local search divides
+into groups of about thirty-four nodes and duplication--split into groups of
+about twenty-one, and those figures barely change as the networks are grown
+further.
+
+The same question on the real networks gives a smaller shift in the same
+direction. Refitting close to ninety of them, from twenty-nine nodes to three
+hundred thousand, both ways:
+
+\begin{center}
+\begin{tabular}{lrl}
+\hline
+ & $\beta$ & $95\%$ interval\\
+\hline
+flat, as Chapter~\ref{ch:communities} published it & $0.633$ & $[0.57,\,0.69]$\\
+flat, refitted here                                & $0.630$ & $[0.57,\,0.69]$\\
+nested                                             & $\mathbf{0.804}$ & $[0.72,\,0.88]$\\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent The refit reproduces the published column to three decimals, which is
+the check that this is the same measurement and not a different one. The nested
+interval lies wholly above two thirds.
+
+What survives of Chapter~\ref{ch:communities}, then, is the inequality. Every
+method puts $\beta$ above one half, and lifting the resolution only raises it
+further, so real networks are certainly not self-similar in their community
+structure. What does not survive is the particular value, and with it the picture
+of a balance struck midway between two limits. On the growth rules the answer is
+the modular limit outright. On the real networks the census gives $0.80$ rather
+than $0.61$ --- still short of $1$, but no longer comfortably inside the range the
+last chapter named. The exponent was, in part, a property of the instrument.
+
+That $0.80$ will not survive Section~\ref{sec:gr-within} either, and for a reason
+that has nothing to do with priors. But the resolution question has to be settled
+before the measurement question can be asked, so it is settled here first.
+
+\section{The density of communities}
+\label{sec:gr-density}
+
+An exponent of one is a special number, and it is worth pausing on what it would
+mean if it were exact. If $B$ grows in proportion to $n$, then the ratio
+\begin{equation}
+  b \;=\; B/n, \qquad \langle n_B\rangle \;=\; 1/b \;=\; n/B,
+  \label{eq:gr-density}
+\end{equation}
+stops depending on size. Call $b$ the \emph{density of communities} --- how many
+of them there are per node --- and $\langle n_B\rangle$ its reciprocal, the mean
+number of nodes per community. Neither is then a rate of growth any longer; each
+is a \emph{quantity}, a number a network of any size simply has, and one may
+tabulate it the way one tabulates a clustering coefficient or a degree exponent.
+On the growth rules this is very nearly what happens, and it is the last two
+columns of the table above.
+
+The exponents straddle one, and the density is flat --- to within a few per cent
+for local search and duplication--split across sixteen-fold in size, for the
+bubble rule across sixty-four-fold, and for the two lattices across a range of
+sixteen and twenty-seven. The rules are not saying the same thing: their
+densities differ by a factor of five, and the typical community runs from
+twenty-one nodes under duplication--split to a hundred and thirteen on the
+diamond lattice. Those numbers are as much a signature of the rule as its degree
+exponent is.
+Nothing in the rules sets a community size directly --- there is no parameter with
+units of nodes anywhere in them --- and yet each settles on one and holds it while
+the network grows by orders of magnitude around it.
+
+That is a genuine finding, and it changes the reading of the whole exercise. It is
+tempting to describe it as the limit these networks converge to, and it is nearly
+the opposite. A graphon is a picture in which the group structure coarsens: as
+$n$ grows the number of groups stays put and each group swells in proportion, so
+that the labels shrink onto a fixed kernel on the unit square. Constant density is
+that picture refused. Communities of twenty or a hundred nodes never swell, and no
+matter how far the network is grown, the resolution needed to see its structure
+keeps pace with the network itself. This is a second obstruction, distinct from
+the sparsity of Section~\ref{sec:gr-regimes}: a sparse network could still have a
+fixed community structure, and these do not. What the growth rules converge to
+under a nested description is not a shape one could draw on the square. It is a
+density.
+
+On real networks the picture looked, at first, close but not the same.
+
+\input{tab-density-real}
+
+\noindent The community sizes are of the same order the rules produce --- around
+thirty nodes, with the infrastructure networks the exception at a hundred and
+sixty. But the exponent came out below one almost everywhere, and the last column
+says what that costs: $b$ falling as roughly $n^{-0.2}$, $\langle n_B\rangle$ growing
+about fourfold across the four decades the census spans. Taken at face value, that
+is a shortfall the growth rules would have to explain.
+
+It is not to be taken at face value, and seeing why is worth more than the number
+was.
+
+\section{What a census exponent measures}
+\label{sec:gr-within}
+
+The two exponents being compared are not measurements of the same thing. The
+rules' $\beta$ comes from a \emph{growth series}: one mechanism, one object,
+followed through a sequence of sizes. The census $\beta$ comes from a
+\emph{cross-section}: eighty-one different networks, built by different processes,
+recorded by different projects, with size as the only thing ordering them. The
+first says how the number of communities changes as a network grows. The second
+says how it varies between systems that happen to differ in size. Nothing
+guarantees these are the same number, and a census that mixes kinds of network
+will report the second while looking like the first.
+
+The census behaves the way a cross-section behaves. Restrict it to the sizes the
+rules were actually run at, $n$ between $100$ and $1600$, and it returns
+$\beta=0.58$; take all of it and it returns $0.80$. A genuine scaling law does not
+move by two tenths depending on which of its instances one includes. Two further
+symptoms point the same way. Networks sitting above the fitted line are markedly
+denser than those below --- median mean degree $13.4$ against $5.8$, with the
+residual correlating with mean degree at Spearman $\rho=+0.43$ --- and the
+spatially embedded networks sit systematically below it. Neither of those moves
+the exponent much when removed, which is the point: the scatter the line is drawn
+through is not error but structure, so the interval quoted around $0.80$ is
+narrower than the honest uncertainty.
+
+The way to settle it is to measure the thing the rules measure. A few real systems
+were recorded repeatedly \emph{while they grew}, and can be fitted along their own
+histories rather than against each other: the Internet at the autonomous-system
+level, from daily route-collector snapshots; the co-authorship network of the
+history of science, whose links carry the year they were made and can be
+accumulated; and the physical interactome of yeast, accumulated by the year each
+interaction was published.
+
+\input{tab-density-within}
+
+\noindent Every one of them exceeds the census figure, and the two that are
+genuinely growing networks --- the Internet and the collaboration graph --- come
+out at one, with the co-authorship interval excluding $0.80$ outright. Their
+community sizes are the ones the rules produce: twenty-three nodes for
+co-authorship, against twenty-one for duplication--split.
+
+So the shortfall was never a property of real networks. It was a property of
+averaging over kinds of them. The density of communities is constant, in the
+systems where the question has been asked properly, and the growth rules were
+right about it.
+
+The third row is the exception that shows the mechanism. Yeast's interactome is
+not a growing network at all --- the cell's protein interactions are not being
+created as we watch, they are being \emph{found} --- so its series measures how
+communities scale as a fixed object is discovered. It is the lowest of the three
+and the only one whose central value falls short of one. That is the same confound
+this chapter already flagged for the tree-of-life series, where the trend runs
+across organisms and a better-studied organism has both more proteins catalogued
+and more interactions recorded per protein. Here it runs across time instead, and
+it can be quantified: incomplete observation of a network does depress the
+apparent number of communities, and a census that mixes catalogued networks with
+grown ones will inherit some of that depression.
+
+Three cautions, so the table is not asked to carry more than it can. The
+Internet series covers only a threefold range in size, which is why its interval
+is so much wider than the others; co-authorship, at twenty-onefold, is the one
+that carries the weight. Three route-collector days were dropped because the
+collector was partly down; they are snapshots of less of the Internet, not of a
+smaller one, and keeping them lowers the exponent to $0.96$, which changes nothing
+about the conclusion. Four co-authorship snapshots were dropped for a reason worth
+naming, since it is the chapter's own lesson turned on itself: they had been fitted
+with fewer restarts of the minimiser than the rest, to save time, and a single
+restart lands in a worse optimum more often on a large network than on a small one.
+That puts a downward trend into the slope which belongs to the schedule and not to
+the data. The tell was that the $2005$ snapshot came back with fewer communities
+than the $1995$ one, which strictly contains it --- a cumulative series cannot lose
+groups as it grows. And three systems are three, not a survey: what has been
+shown is that the census exponent is not the growth exponent, and that where the
+growth exponent can be measured it is one, not that every network in the world
+obeys it.
+
+The general lesson outlasts the number. An exponent fitted across a heterogeneous
+collection of networks is a statement about the collection. It answers a question
+about how systems differ, and it will be read --- it was read, in
+Chapter~\ref{ch:communities} and in the first half of this section --- as a
+statement about how a network grows. The two coincide only if the collection is
+homogeneous in everything except size, which no census of real networks is.
+
+One caution belongs with any use of these numbers. A density of communities is
+not a property of a network alone; it is a property of a network together with the
+code used to describe it, and this chapter has spent its length showing how much
+that matters. Under the flat prior the same census gives $\beta=0.63$. The tables
+above mean what they say only because the model is fixed --- nested,
+degree-corrected, minimum description length --- and a density quoted without
+naming the model is not a measurement. That is a familiar situation rather than a
+disqualifying one. The clustering coefficient has two standard definitions that
+disagree, and the introduction had to say which one it meant before it could say
+anything about hierarchy.
+
+One thing the change of prior does \emph{not} touch is the Ramsey community
+number. Fitted both ways, local search crosses the ninety-five per cent threshold
+at $70$ against $80$, duplication--split at $90$ against $100$,
+duplication--divergence at $40$ either way. Resolution decides how finely a
+network can be cut; it says almost nothing about whether there is anything to cut
+at all. That second question depends on something else entirely, and is taken up
+in the next chapter.
+
+\section{The limit we found}
+\label{sec:gr-conclusion}
+
+This chapter set out to ask what the limit theories can say about networks grown
+by local rules, and the answer arrived from an unexpected direction.
+
+The expected answer was a shape. That is what a limit theory offers: let the
+network grow, let the pixels shrink, and read off the function on the unit square
+that survives. The chapter's first half is a catalogue of why that does not
+happen here. Real networks and the local rule models sit in the third regime, of fixed
+mean degree, where the rescaling that saves the sparse case has nothing to
+rescale by. Their adjacency pictures are rough rather than smooth, H\"older with
+an exponent near two thirds, so the histogram theorems that promise $\sqrt n$
+cells are promising more than can be delivered. And their clustering does not
+vanish, which any bounded graphon says it must.
+
+There was a natural guess about what to reach for instead, and the shape of the
+guess was: more arguments. A local rule does not act on pairs. Triadic closure
+acts on \emph{triples} --- a node, its neighbour, and that neighbour's neighbour
+--- and duplication acts on a node, its copy, and their shared neighbours, a
+configuration of four. If the statistics a rule generates are to be carried by a
+limiting object at all, the object may need arguments enough to hold the rule's
+own footprint: a kernel $[0,1]^3\to[0,1]$ where the rule closes triangles,
+$[0,1]^4\to[0,1]$ where it duplicates, with the fitted block model as the
+two-variable shadow of it. Chapter~\ref{ch:motifs} takes that guess apart, and
+finds it half right: a two-variable object provably loses the triangles, but a
+higher-arity kernel indexed by \emph{nodes} does not obviously get them back, and
+the natural object turns out to be indexed by pairs instead.
+
+Meanwhile this chapter found something the guess does not mention, by asking a
+narrower question and following it further than intended. Fit the nested model
+instead of the flat one and the number of communities grows in proportion to the
+size. The density $b=B/n$ of Eq.~\eqref{eq:gr-density} stops depending on $n$; it
+becomes a number a network has, the way it has a clustering coefficient. The growth rules hold it flat over one to
+two decades and disagree about its value by a factor of five, twenty-one nodes
+per community under duplication--split against a hundred and thirteen on the
+diamond lattice. On
+the real systems where the question can be asked properly --- those recorded
+repeatedly while they grew --- it is flat too, and the collaboration graph settles
+at twenty-three nodes per community, next to duplication--split's twenty-one.
+
+It is tempting to go one step further and say that the limit is a \emph{nested}
+structure: communities of communities, all the way up, with the same constant
+governing every level. The fitted hierarchies appear to say so. Read off the level
+sizes of a nested fit and the branching ratio is large at the bottom --- that is
+the community size --- and then settles at two to four for every level above it,
+on every rule, which looks like self-similarity.
+
+It is not, and the check that shows it is the one this chapter has been preaching.
+Fit the same model to a network built with no hierarchy above its bottom level: a
+planted partition of sixty-four equal groups and nothing else. The model recovers
+the sixty-four exactly, and then builds a four-four-four tree on top of them. The
+upper branching is the prior's own scaffolding. (On a network with no communities
+at all the model correctly returns a single level, so it is not inventing
+structure from nothing --- it is organising real groups into a tree that the data
+never asked for.) The bottom level is a measurement. The levels above it are a
+description device, and no claim about a self-similar hierarchy survives them.
+
+What survives is not one number but a small set of possibilities, and that is the
+finding.
+
+\begin{quote}
+\emph{Conjecture.} For large $n$ a locally grown network does not converge to a
+kernel on the unit square --- not of two arguments, and not of any fixed number.
+It converges \emph{locally}: the neighbourhood of a typical node settles down,
+and with it a community of bounded size. What the limit is characterised by is
+intensive, chief among these quantities the density of communities $b=B/n$,
+equivalently the mean community size $\langle n_B\rangle$, constant in $n$ and set
+by the growth rule.
+\end{quote}
+
+\noindent The word \emph{locally} is doing the work the word \emph{almost} used
+to do, and it points at a theory that already exists: local weak convergence
+\citep{benjamini2001}, in which one keeps a bounded neighbourhood around a
+randomly chosen root and asks what it looks like, rather than coarsening the
+whole picture onto a fixed shape.
+That is the natural home for a network whose communities never grow.
+
+And it explains why a graphon was never going to work, in a way that is worth
+stating in one sentence. A graphon is the picture in which group structure
+\emph{coarsens}: as $n$ grows the groups stay fixed in number and swell in
+proportion, until the labels shrink onto a kernel one could draw. Constant density
+refuses that twice over. The communities never swell, so there is nothing to shrink
+onto; and the resolution needed to see the structure keeps pace with the network
+forever, so no finite description ever suffices. This is an obstruction distinct
+from sparsity --- a sparse network could perfectly well have a fixed community
+structure, and these do not.
+
+Whether some higher-order exchangeable object could hold a bounded community
+around a typical node is exactly what remains open, and nothing here settles it.
+What is settled is that the two-variable picture cannot, and that looking for the
+answer as a picture at all may have been the wrong instinct.
+
+A constant density is not, however, the only thing a locally grown network can
+have, and the conjecture is better read as naming one of three outcomes than as
+naming the only one. There are three, and the next chapter measures which rule
+falls into which:
+
+\begin{itemize}
+\item \emph{No communities.} The fit returns a single group at any size, and
+  $r_\kappa$ is infinite. Chapter~\ref{ch:communities}'s non-local control
+  $BA(n,2)$ is the standing example, and locality is what the other rules have
+  that it does not.
+\item \emph{Constant density.} $\beta=1$, and $b=B/n$ is a number the rule has.
+  This is where every rule in the table above sits, and it is what the conjecture
+  describes.
+\item \emph{Fractal.} Communities emerge and their number grows, but more slowly
+  than the network: $0<\beta<1$, so the density falls away to nothing. It is a
+  coherent possibility and no rule in this book has been found in it.
+\end{itemize}
+
+\noindent The first class is the one that turns out to matter, and a qualification
+belongs with the conjecture rather than after it, because the next chapter finds
+the counterexample and it is better met head-on. Every density quoted above was
+measured with a block model, whose vocabulary cannot name a triangle.
+Chapter~\ref{ch:motifs} fits the same networks with one that can, and on the
+diamond lattice --- a rule as local as any in this book --- the communities do not
+merely thin out, they go: the best available description uses a single group at
+every size, and it is the description minimum description length prefers. The
+pseudofractal web goes the same way. So a network can have a density of
+communities under one description and none at all under a better one.
+
+That is not a defeat for the conjecture so much as a statement of what it is
+conjecturing about. A limit class, like an exponent, is a property of a network
+together with the code used to describe it; this chapter has said as much twice
+already, once for the prior and once for the sample. What the lattices add is that
+improving the code can move a network between classes and not merely shift its
+exponent --- and, since the improvement in their case was a decomposition written
+down by hand rather than found by fitting, that ``the best available
+description'' is a moving target. The conjecture should therefore be read as a claim about the best
+available description, and it stands or falls on whether the networks that matter
+keep their density when the description improves --- which is measured, for what
+it can reach, in Section~\ref{sec:gr-decides}. Chapter~\ref{ch:bubbles} then
+finds that the answer turns on whether a rule's motifs overlap, and that a
+deterministic rule, whose motifs do not, is also the case where the fitting is
+least to be trusted.
+
+Two things are worth carrying forward. The first is a warning about instruments,
+learned twice in this chapter and at some cost. The exponent $\beta$ moved from
+$0.63$ to $0.80$ when the prior changed, and from $0.80$ to $1$ when the sample
+stopped mixing kinds of network; neither move had anything to do with the
+networks. A number measured through a method is a statement about the pair, and
+the only way to tell which half is speaking is to change the method and watch.
+The second is the density itself, which the next chapter will try to move by
+changing the vocabulary rather than the resolution. On most of the rules it will
+fail, because their motifs pile onto each other and a decomposition that gives
+each link to one of them can take up only half the network. On the three whose
+motifs lie separately --- exactly so on the two lattices, nearly so on
+$BB(n,2)$ --- it will succeed completely, taking the communities away rather than
+merely thinning them, and those three are the reason the classes have to be named
+at all.
