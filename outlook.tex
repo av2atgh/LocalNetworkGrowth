@@ -55,9 +55,13 @@ node. The same rules that set the degrees also segregate the network into
 communities --- even when every node is identical --- a fact we made precise
 through the Ramsey community number, the size beyond which communities are all but
 certain (Chapter~\ref{ch:communities}). And not only whether communities appear,
-but how many: across close to a hundred real networks the number of communities
-was found to grow as a power law of size, $B\propto n^{\beta}$ with $\beta$ between
-one half and two thirds --- super-fractal, and reproduced by the same local rules.
+but how many: the number of communities grows in proportion to size, so that what a
+locally grown network converges to is not a shape but a constant \emph{density} of
+community --- so many per node, set by the rule that grew it. That holds for the rules
+and for the real systems recorded while they actually grew, where the exponent in
+$B\propto n^{\beta}$ comes out at one (Chapter~\ref{ch:graphons}). A census taken
+across eighty-one networks of different kinds reads lower, $0.80$, for a reason that
+turns out to be about censuses rather than about networks.
 Locality also threads the network with redundant shortest paths, multiplying the
 routes between nodes far faster than chance and in lockstep with those very
 communities (Chapter~\ref{ch:distance}).
@@ -130,15 +134,20 @@ redundant routes --- would fold the last two chapters into a single statement. T
 book's thesis makes the question natural; it does not answer it.
 
 Two smaller loose ends deserve naming, since both have the flavor of a clue rather
-than a nuisance. The number of communities that best describes a self-similar
-network grows as $\sqrt{n}$ --- proved exactly for the solvable lattices, where the
-optimum sits at the geometric midpoint of the network's own hierarchy, and the
-same $\sqrt{n}$ governs the shortest paths there. Real networks, though, divide
-\emph{more} finely: their community count grows as $n^{\beta}$ with $\beta$
-measured between one half and two thirds, above the self-similar value. What
-carries a real network past the fractal $\sqrt{n}$ --- what extra structure, absent
-from the self-similar models, its growth builds in --- is a concrete open question
-the exponent now makes measurable. And the Ramsey number's climb with cycle length
+than a nuisance. The number of communities that best describes a self-similar network
+grows as $\sqrt{n}$ --- proved exactly for the solvable lattices, where the optimum
+sits at the geometric midpoint of the network's own hierarchy, and the same $\sqrt{n}$
+governs the shortest paths there. Grown networks do not divide that way. Models and
+real systems alike come out at $\beta=1$, dividing in proportion to their size, so
+their community density is constant and their typical community stops growing. What
+separates the two --- what a deterministic lattice has that a grown network lacks ---
+is a question the book raises and does not close, though
+Chapter~\ref{ch:motifs} supplies half an answer by showing that a flat description
+cannot report more than about $\sqrt{n}$ groups however many are there, so part of the
+apparent agreement with the lattices was the instrument speaking. The other half is why
+a cross-section across kinds of network reads $0.80$ rather than one, with the denser
+networks sitting above the fitted line and the spatially embedded ones below. That is a
+question about what a census measures, and it is still open. And the Ramsey number's climb with cycle length
 carries a persistent even--odd alternation, odd cycles bringing communities on
 sooner than the even cycles around them. It is too regular to be noise and has no
 explanation. Chapter~\ref{ch:quantum} finds the same alternation in the walker's
