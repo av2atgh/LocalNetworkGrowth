@@ -1,0 +1,351 @@
+\chapter{Gene duplication}
+\label{ch:duplication}
+
+\section{Networks that copy themselves}
+
+The two rules of the preceding chapters each had a newcomer reach into the
+existing network and \emph{choose} where to attach --- by surfing, or by closing
+a triangle. Biology offers a third rule, and in some ways a more primitive one:
+the network grows by \emph{copying} a node that is already there. The newcomer
+does not pick its neighbors at all. It inherits them, wholesale, from a parent.
+
+The setting is the inner machinery of the living cell. Genomes evolve in good
+part through \emph{duplication} --- a gene, or sometimes an entire genome, is
+accidentally copied --- followed by \emph{divergence}, the slow accumulation of
+mutations that make the two copies drift apart. That duplication is a major
+engine of evolution was argued classically by \citet{ohno1970}. To turn this into
+a network statement we use the \emph{protein interaction network}: each node is a
+protein (the product of a gene), and a link joins two proteins that physically
+interact --- that bind to each other to do their job. Now watch what a gene
+duplication does to this network. Right after the gene is copied, the cell makes
+two identical proteins, so the new protein interacts with \emph{exactly the same
+partners} as the old one: the duplicate node arrives already wired to all the
+neighbors of its ancestor (Figure~\ref{fig:dup-diverge}). Mutations then add a few
+interactions and, more often,
+remove some, letting the twins diverge \citep{wagner2001,sole2002}. Both steps
+are thoroughly local --- the copy needs to know only its parent and its parent's
+neighbors, never the rest of the genome.
+
+\begin{figure}[t]
+\centering
+\begin{adjustbox}{max width=\linewidth}\begin{tikzpicture}[
+  nd/.style={circle,draw=black!65,fill=black!4,minimum size=5.5mm,inner sep=0pt,font=\scriptsize},
+  cp/.style={circle,draw=accent,fill=black!30,minimum size=5.5mm,inner sep=0pt,font=\scriptsize},
+  lnk/.style={draw=black!45,line width=0.8pt},
+  newl/.style={draw=accent,line width=1.3pt},
+  gone/.style={draw=black!22,line width=0.7pt,dotted}]
+  % panel (a) duplication
+  \begin{scope}
+    \node[nd] (i)  at (-0.2,0.6)  {$i$};
+    \node[cp] (ip) at (-0.2,-0.6) {$i'$};
+    \node[nd] (a)  at (1.5,1.05)  {};
+    \node[nd] (b)  at (1.75,0.0)  {};
+    \node[nd] (c)  at (1.5,-1.05) {};
+    \draw[lnk]  (i)--(a); \draw[lnk] (i)--(b); \draw[lnk] (i)--(c);
+    \draw[newl] (ip)--(a); \draw[newl] (ip)--(b); \draw[newl] (ip)--(c);
+    \draw[newl] (i)--(ip);
+    \node[font=\footnotesize] at (0.75,-1.85) {(a) duplication};
+  \end{scope}
+  \node at (3.25,0.0) {\large $\Rightarrow$};
+  % panel (b) divergence
+  \begin{scope}[xshift=5.7cm]
+    \node[nd] (i2)  at (-0.2,0.6)  {$i$};
+    \node[cp] (ip2) at (-0.2,-0.6) {$i'$};
+    \node[nd] (a2)  at (1.5,1.05)  {};
+    \node[nd] (b2)  at (1.75,0.0)  {};
+    \node[nd] (c2)  at (1.5,-1.05) {};
+    \draw[lnk]  (i2)--(a2);
+    \draw[newl] (ip2)--(b2);
+    \draw[lnk]  (i2)--(c2);
+    \draw[newl] (i2)--(ip2);
+    \draw[gone] (ip2)--(a2);
+    \draw[gone] (i2)--(b2);
+    \draw[gone] (ip2)--(c2);
+    \node[font=\footnotesize] at (0.75,-1.85) {(b) divergence};
+  \end{scope}
+\end{tikzpicture}\end{adjustbox}
+\caption{\textbf{Duplication and divergence.} (a) A gene duplication adds a copy
+$i'$ (gray) wired to every interaction partner of the ancestor $i$, plus a link
+between the twins when the protein is self-interacting. (b) Divergence then prunes
+the now-redundant interactions (dotted), each partner kept by only one twin, so
+the copies drift apart.}
+\label{fig:dup-diverge}
+\end{figure}
+
+The same picture reaches beyond biology. A new web page is often made by copying
+another page's hyperlinks and then editing the list --- duplication as copying,
+divergence as editing. Following \citet{vazquez2003} and \citet{vazquez2003pin},
+this chapter shows that copy-and-diverge, like the rules before it, produces an
+effective ``rich get richer,'' a power-law degree distribution, the clustering
+hierarchy, and --- as actually measured in protein networks \citep{maslov2002} ---
+\emph{disassortative} correlations. It also reveals something new: a
+\emph{multifractal} degree distribution, which we will unpack when we reach it, a
+fingerprint left by the act of inheritance.
+
+\section{Duplication and divergence, in their simplest form}
+
+Start with the simplest version, treating duplication and divergence as
+independent random events. The single idea that drives everything is this: a node
+gains a new link whenever one of its \emph{neighbors} is duplicated, because the
+neighbor's copy inherits a link back to it. A well-connected node has many
+neighbors, so it has many chances to be on the receiving end of a duplication ---
+and there, already, is the rich getting richer. The box makes this precise and
+reads off the degree distribution; the conclusion follows it.
+
+\begin{calculation}{degree growth and the power law from duplication}
+In a mean-field (average-quantities) description, with increasing the number of
+nodes $n$ the degree of node $i$ evolves as
+\begin{equation}
+  \frac{\partial k_i}{\partial n}
+    = \nu_D\, k_i + \nu_C\,(n - k_i) - \nu_L\, k_i,
+  \label{eq:dup-master}
+\end{equation}
+with $\nu_D$, $\nu_C$, $\nu_L$ the per-node rates of duplication, random link
+creation, and link loss. The first term is the key one: it is proportional to
+$k_i$ because each of $i$'s $k_i$ neighbors, if duplicated, hands $i$ a new link.
+Each duplication adds one node, so $\nu_D = 1/n$; writing $\nu_C=\mu_0/n$ and
+$\nu_L=\mu_1/n$ reduces the equation to
+\begin{equation}
+  n\,\frac{\partial k_i}{\partial n} = \mu_0 + (1-\mu_1)\, k_i,
+  \label{eq:dup-reduced}
+\end{equation}
+whose growth rate is linear in the degree. Integrating it gives the degree of
+node $i$ as the network grows,
+\begin{equation}
+  k_i(n) = \left(k_i(n_i) + \frac{\mu_0}{1-\mu_1}\right)
+           \left(\frac{n}{n_i}\right)^{\beta} - \frac{\mu_0}{1-\mu_1},
+  \label{eq:dup-growth}
+\end{equation}
+where $n_i$ and $k_i(n_i)$ are the network size and the node's degree at the
+moment it was added, and the exponent is
+\begin{equation}
+  \beta = 1 - \mu_1 \qquad (\mu_1 < 1),
+  \label{eq:dup-beta}
+\end{equation}
+the condition $\mu_1<1$ keeping the network from emptying out. To turn this growth
+law into a degree distribution, note that node $i$ has degree above $k$ exactly
+when its age and birth degree make Eq.~\eqref{eq:dup-growth} exceed $k$,
+\begin{equation}
+  P(k_i > k) = \Theta\!\left[\left(k_i(n_i) + \frac{\mu_0}{1-\mu_1}\right)
+           \left(\frac{n}{n_i}\right)^{\beta} - \frac{\mu_0}{1-\mu_1} > k\right],
+  \label{eq:dup-cumulative}
+\end{equation}
+with $\Theta[\cdot]$ the step function, $1$ when its bracket holds and $0$
+otherwise.
+Both its birth size $n_i$ and its birth degree $k_i(n_i)$ are random: for nodes
+added at a constant rate $n_i$ is uniform, $P(n_i{=}n)=1/n$, while a node inherits
+its ancestor's degree, so $P[k_i(n_i){=}k']=p_{k'}$ in the stationary state.
+Averaging over both,
+\begin{equation}
+\adjustbox{max width=\linewidth}{$\displaystyle
+  P(k_i > k) = \sum_{k'} p_{k'} \int_1^n \frac{dn_i}{n}\,
+    \Theta\!\left[\left(k' + \frac{\mu_0}{1-\mu_1}\right)
+           \left(\frac{n}{n_i}\right)^{\beta} - \frac{\mu_0}{1-\mu_1} > k\right]
+$}
+  \label{eq:dup-average}
+\end{equation}
+Differentiating this cumulative distribution and taking $n\gg1$ leaves,
+for nodes added at a constant rate, a power-law degree distribution
+\begin{equation}
+  p_k = \frac{\partial P(k_i > k)}{\partial k}
+      \sim \left(\frac{\mu_0}{1-\mu_1} + k\right)^{-\gamma}, \qquad
+  \gamma = 1 + \frac{1}{1-\mu_1}.
+  \label{eq:dup-pk}
+\end{equation}
+\end{calculation}
+
+The result is once again a power law, Eq.~\eqref{eq:dup-pk}, and its exponent is
+controlled entirely by $\mu_1$, the rate at which divergence removes links: the
+more aggressively the duplicates shed interactions, the steeper the tail and the
+fewer the giant hubs. As in the previous two chapters, the power law can be
+traced to a single term that grows in proportion to degree --- here the
+duplication term of Eq.~\eqref{eq:dup-reduced} --- and without it the distribution
+would decay as a featureless exponential. Copying, all by itself, is a
+rich-get-richer engine.
+
+\section{Cliquishness from self-interaction}
+
+If divergence added and removed links purely at random, this model would make no
+triangles, and its cliquishness would fade to nothing in a large network. But
+biology supplies one specific local source of triangles. Some proteins are
+\emph{self-interacting} --- they bind to copies of themselves. When the gene for
+such a protein is duplicated, the ancestor and its new twin can bind to
+\emph{each other}, because each still carries the self-binding site
+\citep{wagner2001}. That single interaction, laid down at the moment of
+duplication, is the seed of a triangle. The short box turns this into the
+clustering law.
+
+\begin{calculation}{the clustering hierarchy from self-interaction}
+Let a duplicated self-interacting protein bond to its ancestor with probability
+$q_v$. Then whenever a neighbor of node $i$ is duplicated, $i$ gains not only the
+copy as a new neighbor but, with probability $q_v$, a link between two of its
+neighbors (the ancestor and the copy). Hence the number of links $e_i$ between the
+neighbors of node $i$ change as
+\begin{equation}
+\frac{\partial e_i}{\partial n} \approx q_v\,\frac{\partial k_i}{\partial n}.
+\end{equation}
+Integrating, assuming $e_i=0$ when $k_i=1$, we get $e_i = q_v (k_i - 1)$.
+Inserting this result into the clustering definition,
+\begin{equation}
+  \langle c\rangle_k = \frac{2 e(k)}{k(k-1)} \approx \frac{2 q_v}{k}.
+  \label{eq:dup-ck}
+\end{equation}
+\end{calculation}
+
+So cliquishness again falls as one over the degree, Eq.~\eqref{eq:dup-ck} --- the
+clustering hierarchy of the introduction, reached now by a third independent
+route. There is one telling refinement: because removing an interaction also
+destroys triangles, and the biggest hubs have the most triangles to lose,
+divergence makes the clustering of high-degree nodes decay a little \emph{faster}
+than one over the degree. That slightly-too-steep falloff is a small signature
+that distinguishes duplication from the search and closure mechanisms.
+
+\section{When duplication and divergence are coupled}
+
+In a real protein network the two processes cannot truly be independent. The
+network does a job --- it keeps the cell alive --- so losing the wrong interaction
+can be lethal, and which links a duplicate keeps is under natural selection. The
+classical view of \citet{ohno1970} lets one redundant copy decay freely; the more
+modern \emph{subfunctionalization} picture of \citet{force1999} has the two
+copies divide the ancestor's duties between them, each keeping part, together
+keeping the whole. Either way the fates of the two copies' links are
+\emph{coupled}: a shared interaction is far more likely to be retained by one
+copy than dropped by both. To capture this, \citet{vazquez2003pin} use the
+following rule. Starting from two connected nodes, repeat:
+\begin{itemize}
+  \item \emph{Duplication.} Pick a node $i$ at random and add a copy $i'$ joined
+    to every neighbor of $i$; with probability $q_v$ also add the link $i$--$i'$
+    (the self-interaction case).
+  \item \emph{Divergence.} For each node $j$ now joined to both $i$ and $i'$,
+    delete one of the two redundant links $(i,j)$ or $(i',j)$, at random, with
+    probability $1-q_e$.
+\end{itemize}
+The divergence step touches only the \emph{redundant} pairs just created, and
+that is what couples it to duplication. Genomic data showing that duplicates
+diverge soon after they are born \citep{wagner2001} justify treating divergence
+as finishing before the next duplication, so the node count $n$ doubles as a
+clock. A related model with lopsided divergence is studied in \citet{vazquez2003}.
+
+Coupling makes the large-scale behavior considerably richer, in two ways worth
+previewing before the box. First, a single number --- the retention parameter
+$q_e$ --- decides whether the network stays sparse or grows ever denser, with a
+sharp switch between the two regimes. Second, the degree distribution is no
+longer a plain power law but a \emph{multifractal} one. A quick word on that
+term: a plain power law is described by one exponent, the same at every scale; a
+multifractal is described by a whole continuum of exponents, because different
+``moments'' of the distribution (the average degree, the average of the squared
+degree, and so on) scale with different powers of the network size. The box
+records the transition and the moment exponents; the interpretation follows.
+
+\begin{calculation}{the density transition and the multifractal spectrum}
+Tracking the mean degree through one duplication event gives
+\begin{equation}
+\adjustbox{max width=\linewidth}{$\displaystyle
+  \langle k\rangle(n+1)
+   = \frac{n\langle k\rangle(n) + 2q_v + (2q_e - 1)\langle k\rangle(n)}{n+1}
+$}
+  \label{eq:dup-meandeg}
+\end{equation}
+which in the large-network limit switches behavior at $q_e=1/2$: for $q_e<1/2$
+the mean degree saturates at the finite value $\langle k\rangle = 2q_v/(1-2q_e)$,
+while for $q_e>1/2$ it grows without bound as $N^{2q_e-1}$. A rate-equation
+treatment in the manner of \citet{kim2002} gives an attachment rate
+$A(k)=(q_v+q_e k)/n$ --- linear in degree again --- and predicts that the $l$-th
+moment of the degree distribution scales as $M_l\sim n^{\sigma_l(q_e)}$ with
+\begin{equation}
+  \sigma_l(q_e) = l\, q_e + 2\left[\left(\frac{1+q_e}{2}\right)^{l} - 1\right].
+  \label{eq:dup-moments}
+\end{equation}
+For each $l$ there is a value $q_l$ at which $\sigma_l$ changes sign, with
+$q_1=1/2$ and $q_2 = 2\sqrt{3}-3 \approx 0.46$.
+\end{calculation}
+
+The two messages of the box are these. First, Eq.~\eqref{eq:dup-meandeg} shows a
+genuine switch at $q_e=1/2$: keep too few links and the network settles into a
+sparse steady state; keep enough and it densifies forever. Second, and more
+subtle, the moment exponents $\sigma_l$ in Eq.~\eqref{eq:dup-moments} depend on
+$l$ in a curved, \emph{nonlinear} way --- the hallmark of a multifractal. Where
+the earlier chapters gave clean single power laws, duplication gives a spectrum
+of exponents, and the reason is exactly the inheritance at its core: each
+newcomer copies the degree environment of its parent, injecting a kind of
+heritable heterogeneity that a single exponent cannot capture. The deletion of
+links from the copies is what converts that inheritance into multifractality.
+
+\section{Disassortative correlations}
+
+Simulations spanning network sizes from a thousand to a million nodes confirm the
+analysis \citep{vazquez2003pin, vazquez2003}: the moment exponents match the multifractal prediction; the clustering
+falls with degree as a power law with exponent at or above one (steepening as
+link loss grows, just as Eq.~\eqref{eq:dup-ck} and its caveat foretold); and the
+average neighbor degree \emph{decreases} with degree, $\langle k_{nn}\rangle(k)
+\sim k^{-0.1}$. The duplication network is therefore \emph{disassortative} --- its
+hubs are surrounded by poorly-connected partners rather than by each other.
+
+This is the correct sign. Disassortative mixing is precisely what
+\citet{maslov2002} measured in the protein interaction network of yeast, and it
+files duplication alongside the technological networks of
+Chapter~\ref{ch:search} and against the social networks of
+Chapter~\ref{ch:friends}. With this third mechanism in hand, the three rules of
+the book so far bracket the empirical landscape, as the table summarizes (here
+$\beta$ is the rate at which cliquishness falls with degree, and $\alpha$ the
+slope of the neighbor-degree curve --- positive for assortative, negative for
+disassortative):
+\begin{center}
+\begin{tabular}{lcc}
+\hline
+Mechanism & $\langle c\rangle_k \sim k^{-\beta}$ & $\langle k_{nn}\rangle_k \sim k^{\alpha}$ \\
+\hline
+Connecting neighbors    & $0 < \beta < 1$ & $\alpha > 0$ \\
+Random walk             & $\beta = 1$     & $\alpha \le 0$ \\
+Duplication--divergence & $\beta \ge 1$   & $\alpha < 0$ \\
+\hline
+\end{tabular}
+\end{center}
+Every local rule produces a clustering hierarchy; what differs is the \emph{sign}
+of the correlations, which sorts the rules into the assortative (social,
+closure-driven) and disassortative (technological and biological, reach-driven)
+classes seen in real data.
+
+\section{The unifying principle}
+
+Three different stories --- surfing a network, closing a triangle, copying a node
+--- have each delivered the same effective ``rich get richer.'' That is no
+accident, and the duplication picture makes the reason simple enough to state in
+a single sentence.
+
+Picking a node \emph{at random} plays no favorites: every node is equally likely,
+hub or not. But none of the local rules in this book act on a randomly chosen
+node. They act on a \emph{neighbor} of one --- the page a surfer steps to, the
+friend a friend introduces, the partner a duplicated gene inherits. And the
+chance that a particular node $i$ is the neighbor of a randomly chosen node is
+\begin{equation}
+  \frac{k_i}{\sum_j k_j},
+  \label{eq:dup-unifying}
+\end{equation}
+which is exactly the linear preferential-attachment probability of the
+Barab\'asi--Albert model \citep{barabasi1999}. High-degree nodes are
+over-represented among the neighbors of a random node for the most elementary of
+reasons: they belong to more neighborhoods, so more random nodes have them as a
+neighbor. Preferential attachment never has to be imposed. It is induced
+automatically the instant a growth rule takes one step out from a random node to
+one of its neighbors. The clustering hierarchy has the same local root --- a rule
+that makes one link to a node tends to make another among that node's neighbors
+--- and the sign of the degree correlations depends on \emph{which} neighbor gets
+chosen. Locality is the common cause, and the three mechanisms are three faces of
+it.
+
+\section{Summary}
+
+Biological networks grow by duplication: a node is copied along with its
+connections, and the copies then diverge by gaining and losing links. Because a
+node gains a link whenever one of its neighbors is duplicated, the rule builds in
+an effective ``rich get richer'' and hence a power-law degree distribution, while
+duplications of self-interacting proteins generate a clustering hierarchy that
+link loss steepens. Coupling divergence to duplication adds a density transition
+at $q_e=1/2$ and a multifractal degree distribution born of inheritance, and the
+model reproduces the disassortative correlations measured in real protein
+networks. Together with the two previous chapters, duplication completes a simple
+and general principle: a growth rule that attaches to a \emph{neighbor} of a
+randomly chosen node attaches preferentially by degree --- and so preferential
+attachment, the clustering hierarchy, and degree correlations are all the generic
+harvest of locality.

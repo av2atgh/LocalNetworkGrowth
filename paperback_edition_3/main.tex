@@ -1,0 +1,319 @@
+\documentclass[10pt]{book}
+
+\usepackage[paperwidth=5in,paperheight=8in,includehead,
+            inner=0.55in,outer=0.4in,top=0.56in,bottom=0.64in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{adjustbox}
+\usepackage[round,authoryear]{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{microtype}
+\usepackage[most]{tcolorbox}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc,bending,shapes.geometric}
+% an inline regular polygon, for naming a rule by the cycle it closes rather
+% than by the number of sides: \ngon{5} sets a small pentagon on the text line
+% sized so that six sides can be told from seven at print resolution; smaller
+% than this and the higher polygons all read as circles, which defeats the point
+\newcommand{\ngon}[1]{\tikz[baseline=-0.75ex]{\node[regular polygon,
+  regular polygon sides=#1, draw, minimum size=2.5ex, inner sep=0pt,
+  line width=0.5pt] {};}}
+% the two variants of L=2 do not lay down a cycle, so they cannot be named by
+% one: the chorded rule's footprint is K_4 minus an edge, whose shortest cycle
+% is a triangle, and the other's is a square with a link running off it
+\newcommand{\sqdiag}{\tikz[baseline=0.5ex]{%
+  \draw[line width=0.5pt] (0,0) rectangle (1.8ex,1.8ex);
+  \draw[line width=0.5pt] (0,0) -- (1.8ex,1.8ex);}}
+\newcommand{\sqstub}{\tikz[baseline=0.5ex]{%
+  \draw[line width=0.5pt] (0,0) rectangle (1.8ex,1.8ex);
+  \draw[line width=0.5pt] (1.8ex,1.8ex) -- ++(0.9ex,0.55ex);}}
+
+% Compact running heads that fit the narrow 5x8 page.
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\small\thepage}
+\fancyhead[RE]{\small\nouppercase{\leftmark}}
+\fancyhead[LO]{\small\nouppercase{\rightmark}}
+\renewcommand{\headrulewidth}{0.3pt}
+\fancypagestyle{plain}{\fancyhf{}\renewcommand{\headrulewidth}{0pt}\fancyfoot[C]{\small\thepage}}
+
+% Make the blank verso pages inserted before each chapter truly blank (no header).
+\makeatletter
+\def\cleardoublepage{\clearpage\if@twoside\ifodd\c@page\else
+  \hbox{}\thispagestyle{empty}\newpage\if@twocolumn\hbox{}\newpage\fi\fi\fi}
+\makeatother
+% Grayscale palette (the book is printed in black and white).
+\colorlet{accent}{black!80}
+\colorlet{accentB}{black!50}
+
+% Looser float placement so figures do not leave near-empty pages on the small trim.
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.8}
+\renewcommand{\textfraction}{0.07}
+\renewcommand{\floatpagefraction}{0.7}
+\setcounter{topnumber}{2}
+\setcounter{totalnumber}{3}
+
+% Skippable "calculation" box. Usage: \begin{calculation}{what is being computed} ... \end{calculation}
+\newtcolorbox{calculation}[1]{%
+  breakable,
+  enhanced,
+  colback=black!4,
+  colframe=black!45,
+  boxrule=0.5pt,
+  arc=2pt,
+  left=6pt,right=6pt,top=6pt,bottom=6pt,
+  fonttitle=\bfseries\small,
+  fontupper=\small,
+  coltitle=black,
+  title={The mathematics behind it: #1 \hfill\textnormal{\itshape(this box can be skipped)}},
+}
+
+% TeX breaks this one as "pseud-ofractal" if left to itself, and it appears
+% often enough in chapters 6 and 7 to be worth telling it where the seams are.
+\hyphenation{pseudo-frac-tal pseudo-frac-tals}
+
+\pagenumbering{gobble}
+
+\begin{document}
+
+\title{Local network growth:\\How simple rules drive network complexity}
+
+\author{Alexei Vazquez}
+\maketitle
+
+\thispagestyle{empty}
+\vspace*{\fill}
+\begin{center}
+{\itshape To the ICTP, where it all started\ldots\\[0.7em]
+and Nodes \& Links, for a renaissance.}
+\end{center}
+\vspace*{\fill}
+\clearpage
+
+\chapter*{Preface}
+
+In the year 2000 I was at the International Centre for Theoretical Physics 
+(ICTP), located in Trieste, Italy. I had left my home country, Cuba, and gone 
+there, with many dreams and much nostalgia. At the ICTP I indulged myself in 
+the library, the scientific meetings, the computer cluster, and new friends. 
+Then, on May 22--25, 2000, I attended the Research Workshop on Graph Theory 
+and Statistical Physics. There was a presentation by an obscure Hungarian 
+physicist by the name of Albert-L\'aszl\'o Barab\'asi: ``Emergence of scaling 
+in complex networks.'' A small conference room and few attendees. Yet, it was 
+eye-opening, a fascinating introduction to the properties of real networks 
+and a hypothesis for their evolution. When I left that room I was charged, 
+full of ideas. Two weeks later I had my first paper on network science: 
+``Knowing a network by walking on it: emergence of scaling'' 
+\citep{vazquez2000walk}. And right there, it all started.
+
+Networks are everywhere, and so are the regularities they share. Whether one
+looks at the Internet, the World Wide Web, a society, a cell, or the scientific
+literature, the same statistical signatures recur: broad, often scale-free
+degree distributions; short distances between nodes; high local clustering that
+thins out in a regular hierarchy as degree grows; and systematic correlations
+between the degrees of neighboring nodes. That these features appear across
+systems with nothing else in common is one of the most striking findings of
+network science. Explaining them has been the field's central occupation for
+more than two decades.
+
+The dominant explanation has rested on the preferential attachment mechanism, 
+proposed by R\'eka Albert and Barab\'asi \citeyearpar{barabasi1999}: new nodes connect to existing ones
+in proportion to their degree, and a power law follows. It is a powerful 
+idea, but taken literally it is a \emph{global} rule, requiring each newcomer 
+to weigh every node in the network against every other. Real web pages, 
+proteins, and people do no such thing. They act on what is near them --- the 
+page a surfer reaches, the friend a friend introduces, the gene that gets 
+copied. Preferential attachment is a macroscopic perception. In the same way, our perception of temperature is a macroscopic consequence of air molecules heating our skin. This book is about the microscopic mechanism behind 
+preferential attachment and beyond: the regularities of real networks 
+\emph{emerge} from local rules. A growth rule that reaches just one step 
+beyond a randomly chosen node, to one of its neighbors, already attaches 
+preferentially by degree --- and the same locality that produces preferential 
+attachment produces the clustering hierarchy, the degree correlations, the 
+community structure, and the multiplicity of shortest paths, all as a 
+package. Coincidentally, I consolidated these ideas while working as a postdoctoral research associate in Barab\'asi's group, then at the University of Notre Dame.
+
+The chapters develop this thesis one mechanism at a time. After an introduction
+that fixes the measures and states the argument, I treat growth by search
+(citation and web graphs), by triadic closure (social networks), and by
+duplication (protein interaction networks) --- the three local rules of my 2003
+paper --- and then carry the same principle into more recent work: the
+duplication--split structure of project schedules, the emergence of communities
+from local rules, and the boosting of shortest path multiplicity. Each chapter
+pairs a concrete local rule with a class of real networks it illuminates, and
+each ends where it began, with the conclusion that locality is the common cause.
+
+The book is intended for anyone curious about how complex systems organize 
+themselves --- the interested general reader as much as the specialist. 
+Readers drawn to the \emph{general} principle will find it running through 
+every chapter. Mathematicians, computer scientists, and physicists, in 
+particular, will recognize a single idea applied again and again: that a 
+handful of simple local rules, with no global coordination, is enough to 
+account for the statistics that recur across otherwise unrelated networks; 
+the closing chapters on the emergence of communities and on the redundancy of 
+shortest paths push that idea furthest. Readers drawn instead to a 
+\emph{particular} system will find it given a chapter of its own. Social 
+scientists will recognize their networks of acquaintance and collaboration in 
+the friends-of-friends mechanism of Chapter~\ref{ch:friends}; biologists will 
+find the evolution of protein interaction networks through gene duplication 
+in Chapter~\ref{ch:duplication}; project managers and engineers will find the 
+anatomy of project schedules --- and the surprising irrelevance of the 
+critical path --- in the activity-specialization model of 
+Chapter~\ref{ch:projects}; and those who study the web, citation, or the 
+spread of information online will find the search-and-connect rule of 
+Chapter~\ref{ch:search}. Graduate students entering the field will find the 
+models developed in full. Whatever the entry point, the core ideas are told 
+in plain language, and the more technical calculations are set in boxes that 
+can be skipped without losing the thread. I have tried to keep the analysis 
+self-contained, favoring mean-field arguments that make the mechanisms 
+transparent over exhaustive rigor, and to let the empirical data set the 
+agenda throughout. Readers will find the degree denoted $k$, the elements of 
+a graph called nodes, and their relations called links, following the 
+now-standard usage of network science.
+
+Much of this material grew out of collaborations and conversations over many 
+years, with special mentions to Alessandro Vespignani, Yamir Moreno, Romualdo 
+Pastor-Satorras, Amos Maritan, Alessandro Flammini, Albert-L\'aszl\'o 
+Barab\'asi, Sara Nadiv Soffer and Christos Ellinas. The original research 
+papers on which the chapters draw are cited at the appropriate points and 
+collected in the bibliography. Parts of the prose, and several of the 
+figures, were prepared and edited with the help of Anthropic's Claude 
+(Opus~4.8). I am grateful to the colleagues who shaped these ideas, and to 
+the reader who, I hope, will come away persuaded that complex networks need 
+not be designed --- that they can grow themselves, one local decision at a
+time.
+
+\emph{A note on the second edition.} The first edition argued its case largely
+through models and mean-field reasoning; this one holds the models up to the
+world. Real networks now run through the book --- drawn from public repositories
+and measured with standard tools --- beginning in the introduction, where the
+recurring regularities are shown in data rather than only described, and where a
+closer look finds that one of them, the clustering hierarchy, is in good part an
+artifact of how it is usually measured. The two closing chapters have grown the
+most. The chapter on communities now makes exactly solvable, for several
+idealized networks, the question of \emph{when} a network acquires communities,
+and ends by measuring across close to a hundred real networks how their
+\emph{number} grows with size; the chapter on shortest paths gains a mean-field
+theory of redundancy and two constructions solved in closed form. Throughout, new
+figures --- the first plots of real data in the book, alongside fresh schematics
+--- aim to make the ideas visible as well as legible. The thesis is unchanged; the
+evidence for it is stronger.
+
+\emph{A note on the third edition.} The second edition ended its chapter on
+communities with a number: the count of communities grows as a power of network
+size, with an exponent above the self-similar one half. Three new chapters ask
+what that number is a number \emph{of}, and the answer turns out to depend less
+on the networks than on the instrument.
+
+The first of them replaces the flat description of communities with a
+\emph{nested} one, in which the groups are themselves grouped --- communities of
+communities, the block structure described by a block model of its own rather
+than spelled out entry by entry. That sounds like a technicality and is not. A
+flat description pays a charge growing with the square of the number of groups,
+and so cannot report more than about $\sqrt{n}$ of them however many are there;
+and $\sqrt{n}$ is precisely the self-similar benchmark the measured exponent was
+being held against, so the instrument could not have returned a value far above
+it even in principle. Lift that ceiling and the exponent goes from two thirds to
+one. The number of communities grows in proportion to size, their typical size
+stops growing, and what a locally grown network converges to is not a shape at
+all but a density --- so many communities per node, constant as the network grows
+and set by the rule that grew it. That is the second edition's power law resolved
+into something a network simply has, the way it has a clustering coefficient. It
+comes with a caution the same chapter supplies: of the hierarchy such a fit
+reports, only the bottom level is a measurement, and the tidy branching above it
+is the prior's own scaffolding.
+
+The other two chapters ask what the describer may \emph{name}. Giving the model a
+vocabulary that can call a set of links a triangle or a square, rather than only
+a pair of endpoints, can remove the communities altogether --- on networks whose
+communities the second edition had proved exist. And on the two lattices whose
+best description can be written down by hand rather than searched for, the
+fitting misses it, by a tenth of the description length; there is no better cure
+for confidence in one's own numbers than a case where the answer can be checked.
+
+What emerges from following that is a single object rather than two. A network
+motif and a network community are the same thing at two scales --- both say that
+a set of nodes belongs together and how it is joined, the motif from a template
+fixed in advance, the community bespoke and inferred --- and once they are
+counted together, the quantity that survives every change of instrument is the
+density of the two combined, constant in size and set by the growth rule. Local
+rules do not converge to a shape that can be drawn. They converge to a rate at
+which they keep writing structure, and the argument over how much of that
+structure is ``motif'' and how much is ``community'' turns out to be an argument
+about vocabulary. The three chapters are the case for that, and they are also, I
+hope, an honest record of how often the instrument had to be rebuilt before the
+measurement meant anything.
+
+\vspace{1em}
+\noindent Alexei Vazquez
+
+\tableofcontents
+
+\include{introduction}
+
+% instructions
+% references
+% - https://www.researchgate.net/publication/395472157_Degree_correlations_and_clustering_hierarchy_in_networks_measures_origin_and_consequences, chapter 2
+% - https://arxiv.org/abs/cond-mat/0211528, section I
+
+
+\include{walks}
+
+% instructions
+% references
+% - https://arxiv.org/abs/cond-mat/0211528, section III
+
+\include{friends}
+
+% instructions
+% references
+% - https://arxiv.org/abs/cond-mat/0211528, section IV
+% 1- https://www.researchgate.net/publication/395472157_Degree_correlations_and_clustering_hierarchy_in_networks_measures_origin_and_consequences
+%    Sub-chapter 4.2
+
+
+\include{proteins}
+
+% instructions
+% references
+% - https://arxiv.org/abs/cond-mat/0211528, section V
+
+\include{projects}
+
+% instructions
+% references
+% - https://www.nature.com/articles/s41598-022-27180-0
+
+\include{communities}
+
+% instructions
+% references
+% - https://arxiv.org/abs/2501.17042
+
+\include{graphons}
+
+\include{motifs}
+
+\include{bubbles}
+
+% instructions
+% references
+% - Lovasz & Szegedy 2006; Borgs et al. 2008 (dense graph limits)
+% - Olhede & Wolfe, PNAS 2014 (network histogram, sqrt(n) blocks)
+% - Gao, Lu & Zhou, Ann. Statist. 2015 (minimax graphon estimation)
+% - Peixoto, PRX 2014 (sqrt(N) resolution limit of the flat SBM)
+
+\include{distance}
+
+% instructions
+% references
+% - https://arxiv.org/abs/2605.25237
+
+\include{outlook}
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}

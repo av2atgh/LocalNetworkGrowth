@@ -1,0 +1,434 @@
+\chapter{Search and connect}
+\label{ch:search}
+
+\section{Finding what to link to}
+
+The introduction left us with a puzzle. The ``rich get richer'' rule explains
+why so many networks are scale-free, but as a literal recipe it asks the
+impossible: a newcomer would have to know the degree of every node in the
+network in order to favor the well-connected ones. In this chapter we solve the
+puzzle for an important family of networks --- the \emph{searchable} ones --- by
+replacing that impossible global rule with the most natural local act a newcomer
+can perform. It \emph{searches} the network, moving from node to node along the
+links, and connects to what it happens to find.
+
+The systems to keep in mind are collections of documents that point at one
+another. In the \emph{citation network}, each node is a published article and
+each link is a reference from one article to another. In the World Wide Web,
+each node is a page and each link is a hyperlink. These are \emph{directed}
+networks: a reference, like a hyperlink, points one way. An article cites an
+older one, not the reverse; a page links to another, which need not link back.
+Because direction matters, each node now has two kinds of degree. Its
+\emph{in-degree}, written $k^{in}$, counts the links pointing \emph{at} it ---
+how many times a paper has been cited, how many pages link to a given page. Its
+\emph{out-degree}, written $k^{out}$, counts the links pointing \emph{out} of it
+--- how many references a paper makes, how many hyperlinks a page contains. It is
+the in-degree that interests us, because in real document networks it is the
+in-degree --- the count of incoming attention --- that is broadly distributed,
+with a few hugely-cited classics and a long tail of papers cited once or never.
+
+How does a new document come to point at the old ones? Not by consulting a
+global popularity ranking. An author writing a new paper finds references by
+reading a few papers and following \emph{their} reference lists, and then the
+references of those, and so on \citep{price1965}. A web author discovers pages by
+surfing from link to link and by typing queries into a search engine
+\citep{brin1998}. In every case the information used is strictly local --- a
+document one has reached, and the documents it points to. The claim of this
+chapter is that this local searching, repeated by every newcomer, adds up to
+exactly the ``rich get richer'' behavior that the introduction had to assume by
+fiat, and that it brings the power-law degrees, the clustering hierarchy, and
+the degree correlations along with it \citep{vazquez2001,vazquez2003}.
+
+\section{Surfing as a random walk}
+
+To turn ``surfing'' into something we can analyze, we model the surfer as a
+\emph{random walker} on the network. A random walk is just what it sounds like:
+start somewhere, and step to a randomly chosen neighbor, then to a neighbor of
+\emph{that} node, and so on. Our surfer does this with a twist. From whatever
+page it is on, with probability $q_e$ it follows one of that page's outgoing
+hyperlinks, picked at random; with the remaining probability $1-q_e$ it gets
+bored, stops following links, and jumps to a completely random page elsewhere.
+The single dial $q_e$, a number between $0$ and $1$, sets how patiently the
+surfer explores along links before restarting from scratch.
+
+Now ask: in the long run, what fraction of its time does the walker spend at
+each page? Call that fraction the page's \emph{visiting probability}, $v_i$ for
+node $i$. A page is visited often if many links point to it and those linking
+pages are themselves visited often --- a self-referential condition that turns
+out to have a clean form. The remarkable thing, worth flagging before any
+algebra, is that this visiting probability is \emph{exactly the quantity that
+Google was built on}: it is the \emph{PageRank} of the page, the measure of
+importance that ranks search results \citep{brin1998}. So the local rule we are
+about to write is not a toy --- it is the very process real search engines compute
+and then display to the authors who go on to create new links.
+
+\begin{figure}[t]
+\centering
+\begin{adjustbox}{max width=\linewidth}\begin{tikzpicture}[>={Stealth[round,length=2.4mm]},
+  nd/.style={circle,draw=black!65,fill=black!4,minimum size=6.5mm,inner sep=0pt},
+  hub/.style={circle,draw=accent,fill=black!30,minimum size=8.5mm,inner sep=0pt},
+  ex/.style={->,draw=black!30,line width=0.6pt},
+  walk/.style={->,draw=accent,line width=1.4pt},
+  jump/.style={->,draw=accent,line width=1.0pt,dashed}]
+  \node[nd]  (n1) at (0,0)      {};
+  \node[nd]  (n2) at (1.9,1.05) {};
+  \node[nd]  (n3) at (1.7,-1.1) {};
+  \node[hub] (n4) at (3.7,0.05) {};
+  \node[nd]  (n5) at (3.5,-1.7) {};
+  \node[nd]  (n6) at (5.6,1.1)  {};
+  \node[nd]  (n7) at (5.6,-0.7) {};
+  \draw[ex] (n1) -- (n3);
+  \draw[ex] (n3) -- (n4);
+  \draw[ex] (n3) -- (n5);
+  \draw[ex] (n4) -- (n7);
+  \draw[ex] (n5) -- (n7);
+  \draw[walk] (n1) -- (n2);
+  \draw[walk] (n2) -- (n4);
+  \draw[walk] (n4) -- (n6);
+  \draw[jump] (n6) -- (n5);
+  \node[accent,font=\scriptsize] at (0.7,0.8)  {$q_e$};
+  \node[accent,font=\scriptsize] at (4.95,-1.55) {restart, $1-q_e$};
+\end{tikzpicture}\end{adjustbox}
+\caption{\textbf{Surfing as a random walk.} From the page it is on, the searcher
+follows one of the outgoing links with probability $q_e$ (solid arrows) or, with
+probability $1-q_e$, jumps to a page chosen at random (dashed arrow). A page
+reached along many routes --- like the highlighted hub --- is visited most often;
+this visiting frequency is the page's PageRank, and it grows in proportion to the
+number of links that point at the page.}
+\label{fig:walk-surf}
+\end{figure}
+
+The picture to keep in mind is Figure~\ref{fig:walk-surf}. We would like to know
+how a page's visiting probability depends on its
+in-degree. Getting there exactly is hard, so we make the standard physicist's
+move of replacing fluctuating quantities by their averages --- a so-called
+\emph{mean-field approximation}, ``mean'' as in average. The next box carries
+this out; the one sentence to carry away is stated right after it, so the box
+can be skipped.
+
+\begin{calculation}{from surfing to the visiting probability}
+The visiting probability of node $i$ obeys a balance condition: the walker
+arrives at $i$ either by a random jump (probability $1-q_e$, landing on any of
+the $n$ nodes equally) or by following a link into $i$ from some node $j$ that
+points to it,
+\begin{equation}
+  v_i = \frac{1-q_e}{n} + q_e \sum_j a_{ij}\, \frac{v_j}{k^{out}_j},
+  \label{eq:walk-pagerank}
+\end{equation}
+where $a_{ij}=1$ when $j$ points to $i$, and the factor $1/k^{out}_j$ accounts
+for $j$ spreading its attention over its $k^{out}_j$ outgoing links. This is the
+PageRank equation. To simplify it, replace the sum over the specific nodes
+pointing to $i$ by an average. A node is reached along an incoming link from a
+node of out-degree $k^{out}$ with probability $k^{out} p_{k^{out}}/\langle
+k^{out}\rangle$, and that link is then followed with probability $1/k^{out}$; the
+two factors of $k^{out}$ cancel, so each incoming link contributes the same
+average amount $\Theta = \langle v\rangle/\langle k^{out}\rangle$. Since node $i$
+has $k^{in}_i$ incoming links,
+\begin{equation}
+  v_i = \frac{1-q_e}{n} + q_e\, \Theta\, k^{in}_i.
+  \label{eq:walk-vi-mf}
+\end{equation}
+\end{calculation}
+
+The payoff is Eq.~\eqref{eq:walk-vi-mf}, and it is simple to state in words: a
+page's visiting probability grows in a straight line with its in-degree. Double
+the number of links pointing at a page and you roughly double how often the
+surfer lands on it. That straight-line relationship is the seed from which
+everything in this chapter grows.
+
+\section{An effective ``rich get richer''}
+
+Being visited is not the same as being linked to --- you read many pages you do
+not cite. So suppose that each time the surfer visits a page it creates a new
+incoming link to it only with some probability $q_v$. We can then ask how fast a
+page accumulates new links as a function of how many it already has. This rate
+is the network-growth analog of preferential attachment, and computing it is the
+crux of the chapter. The derivation is short; its conclusion is in the sentence
+after the box.
+
+\begin{calculation}{the rate at which a page gains links}
+Let $\nu_s$ surfers be active and $\nu_a$ new pages be added per unit time. The
+node count $n$ and link count $e$ grow as
+\begin{equation}
+  \frac{\partial n}{\partial t} = \nu_a, \qquad
+  \frac{\partial e}{\partial t} = \nu_s\, q_v\, \langle v \rangle\, n,
+  \label{eq:walk-growth}
+\end{equation}
+because each of the $\langle v\rangle n$ visits in a walk makes a link with
+probability $q_v$. Integrating fixes the average degree and hence $\Theta =
+\nu_a/(q_v\nu_s n)$. The rate at which a page of in-degree $k^{in}$ gains its
+next link is $A(k^{in}) = q_v\, v(k^{in})$; substituting
+Eq.~\eqref{eq:walk-vi-mf} and the value of $\Theta$,
+\begin{equation}
+  A(k^{in}) = \frac{1}{n}\left[\, q_v(1-q_e) + q_e\, \frac{\nu_a}{\nu_s}\, k^{in} \right].
+  \label{eq:walk-attach}
+\end{equation}
+\end{calculation}
+
+Equation~\eqref{eq:walk-attach} is the central result, and it deserves to be
+read slowly. The rate at which a page attracts new links has two parts: a
+constant piece, the same for every page, which gives even a brand-new page a
+chance of being noticed; and a piece \emph{proportional to its current
+in-degree}. That second piece is preferential attachment --- the rich getting
+richer --- but notice where it came from. The surfer never consulted a global
+ranking of pages; it only followed links, one at a time. The bias toward
+well-connected pages appeared on its own, for the simple reason that a page with
+many incoming links is a page the wandering surfer reaches by many routes. We
+have \emph{derived} the rule the introduction had to assume. The same logic
+underlies the ``redirection'' trick of \citet{krapivsky2001}, in which a newcomer
+points either to a random node or to whatever that node points to --- a one-step
+walk that yields the same effective preference.
+
+\section{The degree distribution}
+
+A linear attachment rate is exactly the ingredient needed to produce a power
+law. Working out the resulting distribution of in-degrees requires solving a
+balance equation for how many pages sit at each in-degree, which we do in the
+box. Readers willing to take the outcome on trust can jump to the discussion
+after it.
+
+\begin{calculation}{the in-degree distribution and its exponent}
+Let $n_{k^{in}}$ be the number of nodes with in-degree $k^{in}$. It changes as
+nodes climb from one in-degree to the next by gaining links, with new nodes
+injected at in-degree zero:
+\begin{equation}
+  \frac{\partial n_{k^{in}}}{\partial t}
+  = \nu_s\, A_{k^{in}-1}\, n_{k^{in}-1}
+  - \nu_s\, A_{k^{in}}\, n_{k^{in}}
+  + \nu_a\, \delta_{k^{in},0}\,,
+  \label{eq:walk-rate}
+\end{equation}
+the symbol $\delta_{k^{in},0}$ being $1$ only at $k^{in}=0$. For a network
+growing at a constant rate the ratio $\nu_s/\nu_a=\alpha$ is fixed and the shape
+of the distribution settles down, $n_{k^{in}}(t)=N p_{k^{in}}$. Solving for that
+stationary shape gives (with $\Gamma$ the gamma function, a smooth
+generalization of the factorial)
+\begin{equation}
+  p_{k^{in}} = \frac{1}{1+a}\,
+  \frac{\Gamma[a(\gamma-1)+k^{in}]}{\Gamma[a(\gamma-1)]}\;
+  \frac{\Gamma[(1+a)(\gamma-1)+1]}{\Gamma[(1+a)(\gamma-1)+k^{in}+1]},
+  \label{eq:walk-pk}
+\end{equation}
+\begin{equation}
+  \gamma = 1 + \frac{1}{q_e}, \qquad a = \alpha\, q_v\,(1-q_e),
+  \label{eq:walk-gamma}
+\end{equation}
+which for large in-degree is the power law
+\begin{equation}
+  p_{k^{in}} \sim (k^{in})^{-\gamma}.
+  \label{eq:walk-asym}
+\end{equation}
+\end{calculation}
+
+Two features of the result, Eq.~\eqref{eq:walk-gamma}, are worth dwelling on.
+First, the exponent $\gamma$ is at least $2$ --- exactly the range seen in real
+citation and web networks. Second, and more surprising, $\gamma$ depends
+\emph{only} on $q_e$, the surfer's patience for following links. It does not
+depend on $q_v$, how often readers actually cite what they read, nor on the
+growth rate of the network. Whether authors are generous or stingy with
+citations changes how many links there are, but not the \emph{shape} of the
+distribution; only the manner of \emph{exploring} the network does that. As the
+surfer explores ever more deeply ($q_e\to 1$) the exponent drops to its minimum
+of $2$, the most hub-dominated case; as the surfer restarts constantly ($q_e\to
+0$) the exponent grows without bound and the heavy tail of hubs disappears.
+
+\section{Cliquishness and correlations}
+
+The same walk that sets the degrees also lays down triangles, so it predicts the
+clustering hierarchy of the introduction with no extra assumptions. The reason
+is simple to picture: whenever the surfer steps from a page to one of that
+page's neighbors and links to both, it has closed a triangle. A short
+calculation turns this picture into a formula.
+
+\begin{calculation}{how clustering falls with degree}
+
+Counting the links $e_i$ among the neighbors of node $i$ created by the walk 
+gives $\partial e_i/\partial t \approx (1+q_e)\,\partial k^{in}_i/\partial 
+t$. Integrating this differential equation, assuming $e = 0$ for $k = 1$, we 
+obtain $e = (1 + q_e) (k - 1)$. Inserting this into the definition of the 
+clustering coefficient,
+$\langle c\rangle_k = 2e(k)/[k(k-1)]$, yields
+\begin{equation}
+  \langle c \rangle_k \approx \frac{2(1+q_e)}{k}.
+  \label{eq:walk-ck}
+\end{equation}
+\end{calculation}
+
+The message of Eq.~\eqref{eq:walk-ck} is that cliquishness is inversely
+proportional to degree: a node with twice the degree has roughly half the
+clustering. This is precisely the clustering hierarchy of
+Eq.~\eqref{eq:intro-hierarchy}, seen in the Internet, the Web, and the protein
+network --- and here it falls out for free from growth by searching. The
+intuition is that a node gains a triangle every time the surfer steps from it to
+a neighbor, so its triangles grow in step with its degree, while the number of
+\emph{possible} triangles grows much faster, like the square of the degree;
+their ratio, the clustering, therefore falls off as one over the degree.
+
+The degree correlations are governed by the same single dial $q_e$. Numerical
+simulation of the model shows that when $q_e$ is small the network looks
+essentially uncorrelated --- the average neighbor degree is flat, as in the
+baseline of Eq.~\eqref{eq:intro-knn-unc} --- while as $q_e$ grows the average
+neighbor degree develops the downward slope of a \emph{disassortative} network,
+hubs sitting amid poorly-connected pages. This matches the real Web, whose
+measured exponent $\gamma\approx 2.1$ corresponds through
+Eq.~\eqref{eq:walk-gamma} to a patient surfer with $q_e>0.5$, squarely in the
+disassortative regime. One knob, $q_e$, thus fixes the degree-distribution
+exponent, the cliquishness hierarchy, and the sign of the correlations all at
+once --- tying together what the introduction presented as three separate facts.
+
+\section{Two ways to search}
+
+It helps to see two concrete versions of the searching rule, because they behave
+differently and bracket the range of possibilities. Figure~\ref{fig:walk-models}
+contrasts them.
+
+\begin{figure}[t]
+\centering
+\begin{adjustbox}{max width=\linewidth}\begin{tikzpicture}[>={Stealth[round,length=2.2mm]},
+  nd/.style={circle,draw=black!65,fill=black!4,minimum size=5.5mm,inner sep=0pt,font=\scriptsize},
+  new/.style={circle,draw=accent,fill=black!30,minimum size=6mm,inner sep=0pt,font=\scriptsize},
+  ex/.style={->,draw=black!30,line width=0.6pt},
+  add/.style={->,draw=accent,line width=1.2pt}]
+  % panel (a): random-walk model
+  \begin{scope}
+    \node[nd]  (j)  at (0,0)       {$j$};
+    \node[nd]  (m1) at (1.5,0.95)  {};
+    \node[nd]  (m2) at (1.7,-0.05) {};
+    \node[nd]  (m3) at (1.4,-1.05) {};
+    \draw[ex] (j)--(m1); \draw[ex] (j)--(m2); \draw[ex] (j)--(m3);
+    \node[new] (i) at (-1.7,-0.05) {$i$};
+    \draw[add] (i)--(j);
+    \draw[add] (i) to[bend left=16] (m1);
+    \node[font=\footnotesize] at (0.2,-1.95) {(a) random-walk model};
+  \end{scope}
+  % panel (b): recursive-search model
+  \begin{scope}[xshift=6.6cm]
+    \node[nd]  (jj) at (0,0)       {$j$};
+    \node[nd]  (q1) at (1.5,0.95)  {};
+    \node[nd]  (q2) at (1.7,-0.05) {};
+    \node[nd]  (q3) at (1.4,-1.05) {};
+    \node[nd]  (p1) at (3.1,1.35)  {};
+    \node[nd]  (p2) at (3.2,-0.7)  {};
+    \draw[ex] (jj)--(q1); \draw[ex] (jj)--(q2); \draw[ex] (jj)--(q3);
+    \draw[ex] (q1)--(p1); \draw[ex] (q2)--(p2);
+    \node[new] (ii) at (-1.7,-0.05) {$i$};
+    \draw[add] (ii)--(jj);
+    \draw[add] (ii) to[bend left=12]  (q1);
+    \draw[add] (ii) to[bend left=3]   (q2);
+    \draw[add] (ii) to[bend right=16] (q3);
+    \draw[add] (ii) to[bend left=20]  (p1);
+    \draw[add] (ii) to[bend right=8]  (p2);
+    \node[font=\footnotesize] at (0.7,-1.95) {(b) recursive-search model};
+  \end{scope}
+\end{tikzpicture}\end{adjustbox}
+\caption{\textbf{Two ways to search, when a new node $i$ joins.} (a) In the
+random-walk model, $i$ links to a randomly chosen node $j$ and then takes a
+single step to one of $j$'s neighbors, linking to it as well. (b) In the
+recursive-search model, $i$ follows \emph{all} of $j$'s links, and then their
+links in turn, linking to every node its widening search reaches. New links are
+drawn in bold, pre-existing links thin and gray.}
+\label{fig:walk-models}
+\end{figure}
+
+\paragraph{The random-walk model.} The simplest version uses a single surfer
+that always links what it visits and starts a fresh search from a new node each
+time it stops. Stated as a recipe, beginning from a couple of connected nodes,
+repeat:
+\begin{itemize}
+  \item \emph{Add.} Create a new node with one link pointing to a randomly
+    chosen existing node.
+  \item \emph{Walk.} Having just linked to a node, then with probability $q_e$
+    also link to one of that node's neighbors; otherwise go back to the add
+    step.
+\end{itemize}
+%
+Here the surfer takes a single step along the network before possibly 
+stopping. This model produces the power-law tail in Eq.~\eqref{eq:walk-asym} 
+and the clustering law of Eq.~\eqref{eq:walk-ck} (the latter in very good 
+agreement with simulation), while the predicted exponent is a slight 
+overestimate --- the price of the mean-field approximation in the box above.
+
+\paragraph{The recursive-search model.} A more thorough searcher does not 
+stop after one step but follows \emph{all} the links of each node it reaches, 
+then all the links of those, exploring an ever-widening territory 
+\citep{vazquez2001}. Specifically,
+%
+\begin{itemize}
+  \item \emph{Add.} Create a new node with one link pointing to a randomly
+    chosen existing node.
+  \item \emph{Walk.} If a link is created to a node in the network then
+    with probability $q_e$ a link is also created to each of its nearest
+    neighbors. When no link is created go to the add rule.
+\end{itemize}
+%
+This version has a richer behavior --- in fact a genuine \emph{phase transition},
+a sudden change of character as the dial $q_e$ is turned, of the kind familiar
+from water freezing into ice. The next box records the two cases that can be
+solved exactly and the location of the transition; the meaning is summarized
+afterward.
+
+\begin{calculation}{the recursive searcher and its phase transition}
+
+For $q_e=0$ only the add step operates, every node is equally likely to be 
+linked and $A(k^{in}) = 1/n$ independently of $k^{in}$. In this case the 
+steady state solution $n_{k^{in}}(n) = n\, p_{k^{in}}$ of Eq.~\eqref{eq:walk-rate} is
+%
+\begin{equation}
+  p_{k^{in}} = 2^{-(k^{in}+1)}.
+  \label{eq:walk-rec0}
+\end{equation}
+%
+For $q_e=1$ the recursion reaches every neighbor, the attachment rate becomes 
+exactly linear, $A(k^{in})=(1+k^{in})/n$ --- genuine preferential attachment, 
+generated locally --- and the steady state solution $n_{k^{in}}(n) = n\, p_{k^{in}}$ of Eq.~\eqref{eq:walk-rate} is
+%
+\begin{equation}
+  p_{k^{in}} = \frac{1}{(k^{in}+1)(k^{in}+2)} \sim (k^{in})^{-2}.
+  \label{eq:walk-rec1}
+\end{equation}
+%
+In between, we don't have an analytical solution. Yet, the average out-degree 
+in the steady state is
+%
+\begin{equation}
+  \langle k^{out}\rangle = \frac{1 - \sqrt{1-4 q_e}}{2 q_e},
+  \label{eq:walk-rec-dou}
+\end{equation}
+which is finite only for $q_e \le q_c = 1/4$; above this threshold it diverges.
+\end{calculation}
+
+The exact results bracket the behavior: a fast-decaying exponential when the
+searcher barely explores, and a clean power law with exponent $2$ when it
+explores exhaustively. The new feature is the threshold $q_c$ in
+Eq.~\eqref{eq:walk-rec-dou}. Below it the network has a well-defined average
+connectivity; above it the average degree runs away and the in-degree
+distribution locks onto the power-law exponent $\gamma=2$, no matter the precise
+value of $q_e$. Simulations confirm this picture, with the threshold near $q_c
+\approx 0.5$.
+
+The striking part is that scale-invariance --- the power law --- is not produced
+by carefully tuning $q_e$ to one magic value, but holds across a whole range of
+$q_e$ above the threshold. Physicists have a name for systems that sit
+automatically at such a critical, scale-free point without fine-tuning:
+\emph{self-organized criticality}, the textbook example being a sandpile that,
+however you pour sand on it, keeps adjusting itself to the brink of avalanching.
+Here the slow addition of new pages and the fast exploration of the existing
+network play the roles of slow pouring and fast avalanching. Read this way, the
+ubiquity of scale-free citation and web networks is not a delicate coincidence
+but the generic, self-organized outcome of building a network by searching it.
+
+\section{Summary}
+
+Searchable networks grow by a rule with nothing global in it: a newcomer
+explores the existing network along its links and connects to what it finds.
+Modeling the explorer as a random walker --- the very PageRank process that ranks
+web pages --- we found that a page's visiting probability rises in a straight line
+with its in-degree, which converts the local act of walking into an effective
+``rich get richer.'' From that single mechanism follow a power-law in-degree
+distribution whose exponent $\gamma=1+1/q_e$ is set purely by how the network is
+explored, a clustering hierarchy in which cliquishness falls as one over the
+degree, and tunable, generically disassortative degree correlations. Letting the
+searcher explore exhaustively turns the smooth picture into a self-organized
+critical transition with a robust exponent of $2$. The puzzle of where
+preferential attachment ``comes from,'' for this family of networks, is thereby
+dissolved: it comes from walking.

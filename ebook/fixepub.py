@@ -44,6 +44,14 @@ for path in glob.glob(os.path.join(oebps, "*.xhtml")):
     # deprecated presentational attribute align=... (handled via CSS instead)
     s = re.sub(r"""\s+align=("[^"]*"|'[^']*')""", "", s)
 
+    # \multicolumn spanning a whole row -- used for the class labels in the
+    # master tables of chapters 8 and 9 -- comes out of tex4ht as an EMPTY <td>
+    # followed by a sibling <div class='multicolumn'>, and a <div> is not
+    # allowed between </td> and </tr>. Move the div's content into the td it
+    # belongs to, which is both valid and what the print table means.
+    s = re.sub(r"></td><div class=(?:\"|')multicolumn(?:\"|')[^>]*>(.*?)</div>",
+               lambda m: ">%s</td>" % m.group(1), s, flags=re.S)
+
     # Sanitise alt text. tex4ht emits multi-line ASCII-art alt for equations,
     # with HTML entities (&gt; &lt; &amp;). Amazon's KFX converter fails to parse
     # both multi-line attribute values AND entities inside alt (error E21018 on

@@ -1,0 +1,296 @@
+\chapter{Friends of friends}
+\label{ch:friends}
+
+\section{Triadic closure as a growth rule}
+
+The previous chapter built networks by exploration. This one builds them by
+introduction. Think about how you came to know the people you know. Only rarely
+did you befriend a complete stranger; far more often a friend introduced you to
+one of \emph{their} friends. This everyday mechanism --- a new tie forming
+between two people who already share a common acquaintance --- has a name in
+sociology: \emph{triadic closure}, because it ``closes'' a triangle by adding
+the third side to a path of two. Two people who both know a third are, in a
+sense, a triangle waiting to happen, and triadic closure is the event that
+completes it. Sociologists have long seen this as the engine of social structure
+\citep{granovetter1973}. If most new links close triangles, then triangles pile
+up, and the network acquires the high cliquishness --- the large clustering
+coefficient of the introduction --- that sets social networks apart from random
+ones.
+
+\begin{figure}[t]
+\centering
+\begin{adjustbox}{max width=\linewidth}\begin{tikzpicture}[
+  nd/.style={circle,draw=black!65,fill=black!4,minimum size=6mm,inner sep=0pt},
+  lnk/.style={draw=black!45,line width=0.8pt},
+  pot/.style={draw=accent,line width=1.0pt,dashed},
+  newl/.style={draw=accent,line width=1.5pt}]
+  % panel (a)
+  \begin{scope}
+    \node[nd] (A) at (0,1.15)    {};
+    \node[nd] (B) at (-1.2,-0.4) {};
+    \node[nd] (C) at (1.2,-0.4)  {};
+    \draw[lnk] (A)--(B);
+    \draw[lnk] (A)--(C);
+    \draw[pot] (B)--(C);
+    \node[accent,font=\scriptsize] at (0,-0.72) {potential link};
+    \node[font=\footnotesize] at (0,-1.5) {(a) friend of a friend};
+  \end{scope}
+  \node at (2.7,0.1) {\large $\Rightarrow$};
+  % panel (b)
+  \begin{scope}[xshift=4.9cm]
+    \node[nd] (A2) at (0,1.15)    {};
+    \node[nd] (B2) at (-1.2,-0.4) {};
+    \node[nd] (C2) at (1.2,-0.4)  {};
+    \draw[lnk] (A2)--(B2);
+    \draw[lnk] (A2)--(C2);
+    \draw[newl] (B2)--(C2);
+    \node[font=\footnotesize] at (0,-1.5) {(b) triangle closed};
+  \end{scope}
+\end{tikzpicture}\end{adjustbox}
+\caption{\textbf{Triadic closure.} Two people (bottom) who already share a common
+friend (top) form a \emph{potential link} --- a friend-of-a-friend pair, drawn
+dashed. Closing the triangle turns that potential link into a real one, the
+elementary step by which the friends-of-friends rule builds social structure.}
+\label{fig:fr-closure}
+\end{figure}
+
+Figure~\ref{fig:fr-closure} shows this elementary step. Notice that it is a
+thoroughly \emph{local} rule. To introduce two friends you
+need to know only one node and its neighbors: who you know, and who they know.
+That is exactly the kind of local information this book is built on, and the
+question, as always, is what such a rule produces in the aggregate. The answer,
+worked out below following \citet{vazquez2003} and reviewed in
+\citet{vazquez2025}, is that connecting friends-of-friends generates the whole
+suite of social-network signatures at once: an effective ``rich get richer'' and
+hence a power-law degree distribution, the clustering hierarchy in which
+cliquishness falls with degree, and --- in pointed contrast to the technological
+and biological networks of the other chapters --- \emph{assortative} degree
+correlations, the tendency of well-connected people to know one another.
+
+Models in this spirit have a history. \citet{davidsen2002} introduced an
+acquaintance-network model (the DEB model, after its authors) in which people are
+repeatedly introduced to friends of friends, producing a small world with high
+clustering; \citet{holme2002} bolted an explicit triangle-forming step onto
+preferential attachment to give it tunable clustering. What follows organizes
+these ideas around a single bookkeeping device that makes the mechanism
+transparent --- the \emph{potential link}.
+
+\section{Potential links}
+
+The key idea is that, under triadic closure, a pair of nodes is not just
+``connected'' or ``not connected.'' A pair that already shares a common neighbor
+is a triangle waiting to close --- a candidate in a way that an arbitrary pair of
+strangers is not. So we sort every pair of nodes into one of three states:
+\begin{itemize}
+  \item \emph{disconnected} ($s$): no link and no common neighbor --- two
+    strangers with no mutual acquaintance;
+  \item connected by a \emph{potential link} ($p$): no link yet, but at least one
+    common neighbor --- two friends-of-a-friend, poised to be introduced;
+  \item connected by a \emph{link} ($e$): already friends.
+\end{itemize}
+The \emph{potential link} is the formal stand-in for ``friend of a friend.'' We
+write $k_i$ for the ordinary degree of node $i$ (its number of friends) and
+$k^*_i$ for its \emph{potential degree}, the number of friends-of-friends it has
+--- the number of potential links waiting at it.
+
+Triadic closure is then a story about a pair changing state: a potential link
+($p$) becomes a real link ($e$) when the triangle closes. To track this we need
+to know the rates at which pairs hop between the three states, and one
+relationship among those rates is the mechanical heart of the model. It says
+that potential links are born in proportion to a node's degree --- introduce
+yourself to someone with many friends and you instantly acquire many
+friends-of-friends. The next box sets up the bookkeeping and draws out its main
+consequence; the conclusion is restated plainly afterward, so the box may be
+skipped.
+
+\begin{calculation}{from the three-state bookkeeping to ``rich get richer''}
+Let $\nu_{x\to y}$ be the rate (per unit of network size $n$) at which a pair
+hops from state $x$ to state $y$. Ignoring fluctuations, the average degree and
+potential degree of node $i$ evolve as
+\begin{align}
+  n\,\frac{\partial k_i}{\partial n}
+    &= \nu_{s\to e}\,\hat k_i + \nu_{p\to e}\,k^*_i
+       - (\nu_{e\to s}+\nu_{e\to p})\,k_i, \nonumber\\
+  n\,\frac{\partial k^*_i}{\partial n}
+    &= \nu_{s\to p}\,\hat k_i + \nu_{e\to p}\,k_i
+       - (\nu_{p\to s}+\nu_{p\to e})\,k^*_i,
+  \label{eq:fr-master}
+\end{align}
+where $\hat k_i = n - k_i - k^*_i$ is the number of nodes that are neither
+friends nor friends-of-friends of $i$. The link between the two kinds of
+connection comes from the geometry of triangles: when a new node $i$ attaches to
+an existing node $j$, it instantly shares the common neighbor $j$ with \emph{all}
+of $j$'s neighbors, gaining a potential link to each. Hence potential links are
+spawned in proportion to degree,
+\begin{equation}
+  \nu_{s\to p} = \nu_{s\to e}\, k_i, \qquad
+  \nu_{p\to s} = \nu_{e\to s}\, k_i.
+  \label{eq:fr-coupling}
+\end{equation}
+Now make two modeling choices. First, neglect link deletion, $\nu_{e\to s}=0$ ---
+accurate for, say, a co-authorship network, where having written a paper together
+is a fact that cannot later become false. Second, make closing a triangle far
+likelier than linking two strangers,
+\begin{equation}
+  \nu_{s\to e} = \frac{\mu_0}{n^2}, \qquad
+  \nu_{p\to e} = \frac{\mu_1}{n},
+  \label{eq:fr-rates}
+\end{equation}
+the stranger-linking rate carrying an extra factor of $1/n$. Substituting these
+into Eq.~\eqref{eq:fr-master} collapses the system to
+\begin{equation}
+  n\,\frac{\partial k_i}{\partial n} = \mu_0 + \mu_1\, k^*_i, \qquad
+  n\,\frac{\partial k^*_i}{\partial n} = \mu_0\, k_i - \mu_1\, k^*_i.
+  \label{eq:fr-reduced}
+\end{equation}
+\end{calculation}
+
+The upshot of Eq.~\eqref{eq:fr-reduced} is that a node's degree grows at a rate
+proportional to how many friends-of-friends it has --- and a node with many
+friends has, through them, many friends-of-friends. So once again the rich get
+richer, but this time the preference is manufactured by triadic closure rather
+than by surfing: a well-connected person is simply involved in more potential
+introductions. As in the previous chapter, no node ever consulted a global
+ranking; the bias toward hubs is a free by-product of a purely local act.
+
+\section{Degree distribution and clustering hierarchy}
+
+Because the growth rate is linear in degree, the same reasoning that gave a power
+law in the last chapter applies here, and it simultaneously fixes the
+cliquishness. The box carries out both; the two results and their meaning are in
+the paragraph after it.
+
+\begin{calculation}{the power law and the clustering hierarchy}
+Integrating the linear system~\eqref{eq:fr-reduced} gives power-law growth of
+both degrees with the age of the node,
+\begin{equation}
+  k_i(n) = k_0 \left(\frac{n}{n_i}\right)^{\beta}, \qquad
+  k^*_i(n) = k^*_0 \left(\frac{n}{n_i}\right)^{\beta},
+  \label{eq:fr-growth}
+\end{equation}
+where $n_i$ is the network size when node $i$ arrived and
+\begin{equation}
+  \beta = \frac{\mu_1}{2}\left(-1 + \sqrt{1 + 4\,\frac{\mu_0}{\mu_1}}\,\right).
+  \label{eq:fr-beta}
+\end{equation}
+With nodes added at a constant rate, $P(n_i{=}n)=1/n$, a node has degree above $k$
+only when it is old enough for Eq.~\eqref{eq:fr-growth} to exceed $k$; averaging
+over its birth time gives the cumulative distribution
+\begin{equation}
+\adjustbox{max width=\linewidth}{$\displaystyle
+  P(k_i > k) = P\!\left[k_0\left(\frac{n}{n_i}\right)^{\beta} > k\right]
+  = \int_0^n \frac{dn_i}{n}\,
+    \Theta\!\left[k_0\left(\frac{n}{n_i}\right)^{\beta} - k\right]
+$}
+  \label{eq:fr-cumulative}
+\end{equation}
+with $\Theta[\cdot]$ the step function, $1$ when its bracket holds and $0$
+otherwise. Differentiating it leaves a power-law degree distribution,
+\begin{equation}
+  p_k = \frac{\partial P(k_i > k)}{\partial k} \sim k^{-\gamma}, \qquad
+  \gamma = 1 + \frac{1}{\beta}.
+  \label{eq:fr-pk}
+\end{equation}
+For the clustering, the dominant way node $i$ gains a triangle is a potential
+link closing: when the potential link from $i$ to $j$ (sharing neighbor $k$)
+becomes real, $i$ gains both the neighbor $j$ and a link $j$--$k$ among its
+neighbors. Thus $\partial e_i/\partial n = \nu_{p\to e}\,k^*_i = \mu_1 k^*_i/n$,
+and integrating with Eq.~\eqref{eq:fr-growth},
+\begin{equation}
+  \langle c\rangle_k = \frac{2 e(k)}{k(k-1)} \approx \frac{2\mu_1}{k}.
+  \label{eq:fr-ck}
+\end{equation}
+\end{calculation}
+
+Two familiar results emerge. First, Eq.~\eqref{eq:fr-pk}: the degree
+distribution is again a power law. It is worth knowing exactly where the power
+law comes from --- it comes from the proportionality in
+Eq.~\eqref{eq:fr-coupling}, the fact that potential links are spawned in
+proportion to degree. Were they instead spawned at a flat rate, the mechanism
+would still create triangles but the degree distribution would decay
+exponentially, with no fat tail of hubs. Scale-freeness is the fingerprint of
+that degree-proportional spawning. Second, Eq.~\eqref{eq:fr-ck}: cliquishness
+again falls as one over the degree --- the clustering hierarchy of the
+introduction, now arriving by a third route (after search, and before
+duplication in the next chapter). Here its origin is especially vivid: every
+triangle a node owns is just a friend-of-a-friend pair that has been introduced.
+
+\section{Connecting nearest neighbors}
+
+The continuum theory is borne out by a minimal simulation, a growing version of
+the DEB rule \citep{davidsen2002}. Starting from a single node and no links,
+repeat:
+\begin{itemize}
+  \item with probability $1-u$, \emph{add} a new node and link it to a randomly
+    chosen node $j$ --- which by definition creates a potential link between the
+    newcomer and every neighbor of $j$;
+  \item with probability $u$, \emph{close} a triangle: pick a potential link at
+    random and turn it into a real link.
+\end{itemize}
+The single dial $u$ is the rate of triangle-closing relative to adding newcomers.
+Feeding the mapping $\mu_0=1$, $\mu_1=u/(1-u)$ into the formulas above gives the
+exponent in closed form, as the short box records.
+
+\begin{calculation}{the exponent as a function of the closure rate}
+With $\mu_0=1$ and $\mu_1=u/(1-u)$, Eqs.~\eqref{eq:fr-beta} and~\eqref{eq:fr-pk}
+give
+\begin{equation}
+  \gamma(u) = 1 + \frac{2(1-u)}{u}
+    \left(-1 + \sqrt{1 + 4\,\frac{1-u}{u}}\,\right)^{-1},
+  \label{eq:fr-gammau}
+\end{equation}
+with limiting values
+\begin{equation}
+  \gamma(0) = \infty, \qquad \gamma(1) = 2.
+  \label{eq:fr-limits}
+\end{equation}
+\end{calculation}
+
+In words, the exponent is tunable by how eagerly the network closes triangles.
+When closure is frequent and newcomers rare ($u\to 1$) the exponent sinks to its
+minimum of $2$, the most hub-dominated case; when newcomers arrive so fast that
+triangles never get a chance to close ($u\to 0$) the exponent blows up and the
+heavy tail of hubs is lost. Simulations up to a million nodes confirm the
+power-law degree distribution (the mean-field formula slightly overestimating the
+exponent, as in the previous chapter), and they confirm the clustering hierarchy,
+with cliquishness falling as a power of degree.
+
+\section{Why social networks are assortative}
+
+The most telling prediction is about the degree correlations --- and here the
+friends-of-friends rule parts company with every other rule in this book.
+Measuring the average neighbor degree $\langle k_{nn}\rangle(k)$ in the simulated
+network, one finds it \emph{rises} with degree: the well-connected are connected
+to the well-connected. The network is \emph{assortative}
+\citep{newman2002} --- ``birds of a feather'' --- exactly as measured in real
+collaboration and co-authorship networks, and exactly opposite to the
+disassortative Internet and protein networks of the introduction.
+
+Why the opposite sign? The reason becomes obvious once seen. Every new link here
+closes a triangle, joining two nodes that share a common neighbor. But a node
+that serves as the common neighbor of many pairs is, by definition, a high-degree
+node, and the two nodes it brings together are drawn from its own neighborhood,
+which is better connected than the network at large. So closure tends to wire
+together nodes of \emph{similar}, and similarly high, degree. The very mechanism
+that the disassortative models of the other chapters lack --- linking within a
+neighborhood rather than reaching out to a random or peripheral node --- is what
+tips the correlations positive. This is the deeper lesson of the chapter, and of
+the review that develops it \citep{vazquez2025}: the \emph{sign} of the degree
+correlations is not an arbitrary fitting knob but a direct readout of the
+microscopic rule. Search and duplication reach outward, to the periphery, and so
+make hubs that shun one another; triadic closure works inward, within
+neighborhoods, and so makes hubs that keep each other's company.
+
+\section{Summary}
+
+Modeling social growth by triadic closure --- a newcomer attaches to a node and
+then, over time, to that node's friends --- and formalizing ``friend of a friend''
+as a \emph{potential link}, we obtain a tractable theory in which potential links
+are created in proportion to degree. From that one ingredient follow an effective
+``rich get richer,'' a power-law degree distribution with a tunable exponent
+$\gamma = 1 + 1/\beta$, a clustering hierarchy in which cliquishness falls as one
+over the degree, and --- distinctively --- assortative degree correlations.
+Connecting friends-of-friends thus reproduces, from purely local moves, the
+characteristic shape of social networks, and explains why the sign of their
+correlations differs from that of the technological and biological networks
+treated elsewhere in this book.

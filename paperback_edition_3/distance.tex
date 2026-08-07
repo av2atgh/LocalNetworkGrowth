@@ -1,0 +1,996 @@
+\chapter{Boosting shortest path multiplicity}
+\label{ch:distance}
+
+\section{The redundancy of shortest paths}
+
+The small-world property, met back in the introduction, promises that any two
+nodes of a real network are joined by a \emph{short} path --- only a few hops
+apart. It says nothing, though, about how \emph{many} short paths there are.
+That count turns out to matter a great deal. If the only shortest route between
+two nodes runs through a single chain of intermediaries, the connection is
+fragile: cut one link and the shortest route is gone. If instead there are
+several shortest routes side by side, the connection is robust, and whatever
+flows between the two nodes --- a message, a signal, a delay --- can travel along
+all of them at once. The quantity that captures this is the \emph{shortest path
+multiplicity}: the number of distinct shortest routes between a pair of nodes. A
+simple picture: if two friends can each be reached from you in two handshakes,
+but by two completely different chains of acquaintances, the multiplicity of that
+connection is two. In real networks this multiplicity is conspicuously high.
+
+And it is not an isolated fact. \citet{deng2026} found that, across many real
+networks, the abundance of multiple shortest paths is strongly correlated with
+\emph{community structure} --- the very groupings of the previous chapter ---
+more strongly than with any other standard measure. Two networks of the same size
+and the same degree distribution can differ widely in their path multiplicity,
+and the difference tracks how community-rich they are. A correlation like that
+begs for an explanation. Does community structure somehow \emph{cause} paths to
+multiply, or do both spring from a common deeper source? The previous chapter
+hands us the obvious suspect: local growth rules, which we saw conjure
+communities out of nothing but locality. This chapter, following
+\citet{vazquezpaths2026}, completes the case by showing that those same local
+rules also \emph{boost} the multiplicity of shortest paths --- so that the
+striking link between paths and communities is not one causing the other, but the
+shared shadow cast by the rule that grew the network.
+
+The mechanism is easy to picture once named. Local rules build short
+\emph{cycles} --- closed loops --- as a matter of course: a triangle whenever a
+friend introduces a friend, a square whenever a gene is copied. And a cycle is
+exactly a structure that offers more than one way around. In a network with no
+loops at all --- a \emph{tree} --- there is precisely one route between any two
+nodes; the more loops a network carries, the more alternative shortest routes it
+affords. Path multiplicity is simply what local rules leave behind when they
+close loops.
+
+\section{Defining the multiplicity}
+
+We need only one quantity. Write $\mu_{ij}(G)$ for the number of distinct
+shortest paths between nodes $i$ and $j$ in a network $G$ --- counting every route
+that ties for the minimum number of hops. Averaging this over all pairs of nodes,
+and over many networks grown the same way, gives the \emph{average shortest path
+multiplicity} $\langle\mu\rangle$, the single number we will follow as the
+network grows to size $n$. A tree, with its unique routes, has $\langle\mu\rangle
+= 1$ exactly; anything above one measures the redundancy that loops provide. The
+whole chapter is about one question: how fast does $\langle\mu\rangle$ rise as the
+network gets bigger, and does that rate betray whether the network was grown by a
+local rule?
+
+Four growth rules will do all the work, and we have met them all before. Their
+definitions matter here more than they have so far, because we are about to
+compute their exponents, so let us state them exactly.
+
+\emph{Local search}, $LS(n,\ell)$, the search rule of Chapter~\ref{ch:search} in
+undirected form. Start from two connected nodes. To add a node, pick an existing
+node at random, take an $\ell$-step random walk from it, and link the newcomer to
+every node the walk visited. It carries preferential attachment because the chance
+of being visited, beyond the entry node, is proportional to degree; and it makes at
+least one triangle at every step, between the entry point and the first neighbor
+visited. For $\ell=1$ it \emph{is} the triadic-closure rule of
+Chapter~\ref{ch:friends}.
+
+\emph{Duplication--split}, $DS(n,q)$, the undirected cousin of the project rule of
+Chapter~\ref{ch:projects}. Start from a cycle of four nodes, so that no node has
+degree below two and no cycle is shorter than four. To add a node $i$, pick an
+existing node $j$ at random. With probability $q$, make $i$ a duplicate of $j$,
+linking $i$ to every neighbor of $j$. Otherwise pick a random neighbor $k$ of $j$
+and \emph{split} the link: delete $(j,k)$ and create $(i,j)$ and $(i,k)$. It
+carries preferential attachment because the chance that a node has a neighbor
+duplicated is proportional to its degree. Duplication makes no triangles and
+splitting destroys any that might form; its motif is the square.
+
+The \emph{bubble} model, $BB(n,L)$. Start from a cycle of $L+2$ nodes. At each
+step add a chain of $L$ new nodes and attach the two ends of the chain to the two
+ends of a randomly chosen existing link, closing a fresh cycle of length $L+2$. It
+carries preferential attachment because the chance of sitting at the end of the
+chosen link is proportional to degree. $BB(n,1)$ is the Dorogovtsev--Mendes rule.
+
+Against these we set the \emph{Barab\'asi--Albert} model $BA(n,m)$: start from a
+complete graph of $m+1$ nodes, and let every newcomer attach $m$ links to nodes
+chosen from the \emph{whole} network with probability proportional to degree. It
+is our non-local control.
+
+\section{The simplest case: a ring}
+
+Before any of that, it is worth feeling the measure on the plainest network that
+has a loop at all --- the same ring we broke into communities in the previous
+chapter. Place $n$ nodes on a circle, each joined to its two neighbors: the cycle
+$C_n$. Between any two nodes there are two ways round, and the shortest path is
+simply the shorter arc. Almost always one arc is strictly shorter than the other,
+so the shortest path is \emph{unique} and $\mu_{ij}=1$. The single exception is a
+pair of nodes exactly opposite each other on the circle: the two arcs then tie, and
+both are shortest, so $\mu_{ij}=2$ (Figure~\ref{fig:mu-ring}).
+
+\begin{figure}[t]
+\centering
+\begin{adjustbox}{max width=\linewidth}\begin{tikzpicture}[
+  nd/.style={circle,draw=black!65,fill=black!5,minimum size=3.2mm,inner sep=0pt},
+  ep/.style={circle,draw=accent!80!black,fill=black!30,minimum size=3.8mm,inner sep=0pt},
+  r1/.style={draw=black!80,line width=1.4pt},
+  r2/.style={draw=black!80,line width=1.4pt,dashed},
+  lnk/.style={draw=black!35,line width=0.55pt}]
+  % panel (a): plain cycle C_n(1), antipodal pair
+  \begin{scope}
+    \foreach \i in {1,...,10}{
+      \pgfmathsetmacro\ang{90-(\i-1)*36}
+      \coordinate (p\i) at (\ang:1.5);
+    }
+    \foreach \i in {1,2,3,4,5}{\pgfmathtruncatemacro\j{\i+1}\draw[r1] (p\i)--(p\j);}
+    \foreach \i in {6,7,8,9}{\pgfmathtruncatemacro\j{\i+1}\draw[r2] (p\i)--(p\j);}
+    \draw[r2] (p10)--(p1);
+    \foreach \i in {2,3,4,5,7,8,9,10}{\node[nd] at (p\i){};}
+    \node[ep] at (p1){}; \node[ep] at (p6){};
+    \node[font=\scriptsize] at (0,-2.05) {(a) cycle $C_n(1)$: $\mu=2$};
+  \end{scope}
+  % panel (b): next-nearest ring C_n(1,2), odd-separation pair
+  \begin{scope}[xshift=5.2cm]
+    \foreach \i in {1,...,8}{
+      \pgfmathsetmacro\ang{90-(\i-1)*45}
+      \coordinate (q\i) at (\ang:1.5);
+    }
+    % background: all first- and second-neighbor links
+    \foreach \a/\b in {1/2,2/3,3/4,4/5,5/6,6/7,7/8,8/1,1/3,2/4,3/5,4/6,5/7,6/8,7/1,8/2}
+      {\draw[lnk] (q\a)--(q\b);}
+    % two 2-hop shortest paths from q1 to q4
+    \draw[r1] (q1)--(q2)--(q4);
+    \draw[r2] (q1)--(q3)--(q4);
+    \foreach \i in {2,3,5,6,7,8}{\node[nd] at (q\i){};}
+    \node[ep] at (q1){}; \node[ep] at (q4){};
+    \node[font=\scriptsize] at (0,-2.05) {(b) ring $C_n(1,2)$: $\mu=2$};
+  \end{scope}
+\end{tikzpicture}\end{adjustbox}
+\caption{\textbf{Multiplicity on a ring.} (a) On the plain cycle, the two arcs
+between antipodal nodes tie, so both are shortest ($\mu=2$); every other pair has
+one arc strictly shorter, hence a unique shortest path. (b) On the
+next-nearest-neighbor ring, a step may cover one node or two, so for endpoints an
+odd number of steps apart there are several ways to combine the steps into a
+shortest path --- here the two two-hop routes from one highlighted node to the
+other. Redundancy that was confined to the lone antipodal pair in (a) now appears
+for pair after pair.}
+\label{fig:mu-ring}
+\end{figure}
+
+Those antipodal pairs are rare --- there are only about $n/2$ of them among the
+$\binom{n}{2}$ pairs in the ring --- so averaging gives
+\begin{equation}
+  \langle\mu\rangle = 1 + \frac{1}{n-1} \longrightarrow 1 .
+  \label{eq:mu-ring}
+\end{equation}
+A plain ring, in other words, is barely more redundant than a tree. Its one loop
+buys a second route for exactly one pair of nodes, the two farthest apart, and for
+nobody else.
+
+Give each node one more neighbor, though, and redundancy switches on
+(Figure~\ref{fig:mu-ring}b). In the ring $C_n(1,2)$, where every node also links
+to its second neighbors, a shortest path may step by one node or by two, and the
+freedom to mix those steps creates ties. Between two nodes $j$ steps apart, when
+$j$ is odd, there are exactly
+\begin{equation}
+  \mu = \frac{j+1}{2}
+  \label{eq:mu-ring2}
+\end{equation}
+shortest paths --- one for each position of the lone single-step among the
+double-steps --- while for even $j$ the all-doubles route is unique. The redundancy
+now \emph{grows} with how far apart the endpoints are, instead of sitting at one,
+and the average multiplicity climbs with the size of the ring rather than creeping
+down to it.
+
+That the two rings behave so differently comes down to a single number --- the same
+one that decided their communities in the previous chapter. A connected network of
+$n$ nodes and $m$ links carries $m-n+1$ independent cycles. The plain ring has
+$m=n$: one loop, and we have just seen it lifts the multiplicity by a mere
+$1/(n-1)$. The next-nearest ring has $m=2n$, so $m-n=n$ --- an \emph{extensive}
+number of independent cycles --- and its multiplicity grows in step. This is
+exactly the threshold at which Chapter~\ref{ch:communities} found the ring
+beginning to break into communities: there, too, a network split precisely when it
+carried more links than nodes. Both measures switch on together, at the same
+lever. Redundant routes, like community structure, need loops in extensive number
+--- supplied here by a ring of longer reach, and in the rest of this chapter by
+growth rules that pile cycles up as the network grows.
+
+\section{The baseline: random networks}
+
+To judge what counts as ``boosted,'' we first need the expectation in the
+\emph{absence} of any local structure. The natural reference is a random network,
+and here we can do better than simulate --- we can calculate. The answer is
+remarkably simple, and it turns on a single property of the degree distribution:
+the \emph{average excess degree}
+\begin{equation}
+  c_2 = \frac{\langle k(k-1)\rangle}{\langle k\rangle},
+  \label{eq:path-c2}
+\end{equation}
+which is the average number of \emph{further} links you find when you arrive at a
+node by following one of its links --- its degree, less the link you came in on.
+It is the natural branching factor of a network: from where you stand, $c_2$ is
+how many ways the path onward can continue.
+
+The cleanest way to see where Eq.~\eqref{eq:path-c2} comes from is to do the
+simplest case first --- the classic random graph of Erd\H{o}s and R\'enyi, in which
+every one of the $\binom{n}{2}$ possible links is present with the same probability
+$p$ --- and then repair it for a general degree distribution.
+
+\begin{calculation}{counting the shortest paths of a random graph}
+Write $c=np$ for the mean degree and $D=\ln n/\ln c$ for the typical distance
+between two nodes, and assume $c>1$ so the graph is connected. Fix two nodes. A
+path of length $d$ between them uses $d-1$ intermediate nodes, in order, drawn from
+the remaining $n-2$, so the number of \emph{candidate} paths is
+\begin{equation}
+  m_d = (n-2)(n-3)\cdots(n-d) \approx n^{\,d-1}
+  \label{eq:path-md}
+\end{equation}
+for $d\ll n$. Each candidate is \emph{realized} only if all $d$ of its links happen
+to be present, which has probability $p^d$; treating the candidates as independent,
+the number realized is binomial, with mean
+\begin{equation}
+  \langle M_d\rangle = m_d\,p^{d} \approx \frac{(np)^{d}}{n} = c^{\,d-D}.
+  \label{eq:path-Md}
+\end{equation}
+The shortest paths are those at the smallest $d$ for which any path exists at all,
+so we must weight $\langle M_d\rangle$ by the probability $F_{d-1}$ that nothing
+shorter exists:
+\begin{equation}
+  \langle\mu\rangle = \sum_{d}\langle M_d\rangle\,F_{d-1}.
+  \label{eq:path-mu-sum}
+\end{equation}
+Since $\Pr(M_d=0)=(1-p^d)^{m_d}\approx e^{-\langle M_d\rangle}$ for $p\ll1$,
+\begin{equation}
+  F_d = \prod_{k=1}^{d}\Pr(M_k=0) = \exp\Big(-\sum_{k=1}^{d}\langle M_k\rangle\Big).
+  \label{eq:path-Fsum}
+\end{equation}
+The sum in the exponent is a geometric series of ratio $c>1$, so it is dominated by
+its last term, $\sum_{k\le d}\langle M_k\rangle\approx c^{\,d-D}$, and
+\begin{equation}
+  F_d \approx \exp\big(-c^{\,d-D}\big).
+  \label{eq:path-Fd}
+\end{equation}
+Substituting Eqs.~\eqref{eq:path-Md} and \eqref{eq:path-Fd} into
+Eq.~\eqref{eq:path-mu-sum},
+\begin{equation}
+  \langle\mu\rangle \approx \sum_{d} c^{\,d-D}\,\exp\big(-c^{\,d-D-1}\big).
+  \label{eq:path-ersum}
+\end{equation}
+The summand is the function $x e^{-x/c}$ evaluated along a geometric ladder: it
+climbs by a factor $c$ per hop while $d<D$, and is then cut down
+super-exponentially. It therefore peaks sharply, one hop beyond the typical
+distance, at $d=D+1$, and evaluating it there leaves
+\begin{equation}
+  \langle\mu\rangle \approx \frac{c}{e} + O(1),
+  \label{eq:path-mfER}
+\end{equation}
+the $e$ being simply the value of $x e^{-x}$ at its maximum.
+\end{calculation}
+
+Equation~\eqref{eq:path-mfER} already tells us three things. If the graph is
+\emph{sparse} --- $c$ fixed as $n$ grows, which holds for every real network
+--- the multiplicity is a \emph{constant}. If it is \emph{minimally connected},
+$c=b\ln n$, the multiplicity grows as $(b/e)\ln n$. And if it is \emph{dense},
+$c\sim n$, it grows in proportion to $n$, recovering a result of
+\citet{dong2025}. But a real network is sparse \emph{and} hub-dominated, and an
+Erd\H{o}s--R\'enyi graph is neither. We need the same calculation for an arbitrary
+degree distribution.
+
+\begin{calculation}{the same count for any degree distribution}
+Let the degrees follow $\pi_k$, with mean $c_1=\sum_k \pi_k k$ and excess degree
+$c_2=\sum_k \pi_k k(k-1)/c_1$. (We write $\pi_k$ rather than $p_k$ here because $p$
+is already the probability that a link exists.) The calculation runs exactly as
+before; only the probability that the next link exists changes.
+
+Build a candidate path node by node. The first step is from a node picked at
+random to another node picked at random, which are linked with probability
+$p_1=c_1/n$, with associated distance $D_1=\ln n/\ln c_1$. Every step after the
+first is different, because we now stand at the \emph{end of a link}, and a node
+reached by following a link is not a typical node: its degree is distributed as
+$k\pi_k/c_1$, and one of those links is the one we arrived on, leaving $k-1$. The
+next node is picked at random and has degree $k'$ with probability $\pi_{k'}$; the
+chance the two are linked is $kk'/(nc_1)$, which on averaging over both gives
+\begin{equation}
+  p_2 = \frac{c_2 c_1}{n c_1} = \frac{c_2}{n},
+  \qquad D_2 = \frac{\ln n}{\ln c_2}.
+  \label{eq:path-p2}
+\end{equation}
+So a path of length $d$ costs one factor of $p_1$ and $d-1$ factors of $p_2$, and
+Eqs.~\eqref{eq:path-Md} and \eqref{eq:path-Fd} become
+\begin{equation}
+  \langle M_d\rangle \approx c_1 c_2^{\,d-D_2-1},
+  \qquad
+  F_d \approx \exp\big(-c_1 c_2^{\,d-D_2-1}\big),
+  \label{eq:path-Mdk}
+\end{equation}
+for $d>1$. Substituting into Eq.~\eqref{eq:path-mu-sum},
+\begin{equation}
+  \langle\mu\rangle \approx \sum_d c_1 c_2^{\,d-D_2-1}
+  \exp\big(-c_1 c_2^{\,d-D_2-2}\big),
+  \label{eq:path-ksum}
+\end{equation}
+whose summand again peaks sharply, now where $c_1 c_2^{\,d-D_2-2}=1$, leaving
+\begin{equation}
+  \langle\mu\rangle \approx \frac{c_2}{e} + O(1).
+  \label{eq:path-mf}
+\end{equation}
+For an Erd\H{o}s--R\'enyi graph $c_2=c_1=c$ and we recover
+Eq.~\eqref{eq:path-mfER}.
+\end{calculation}
+
+Equation~\eqref{eq:path-mf} is the baseline, and it is worth pausing on how much it
+explains. The multiplicity of a random network is simply its branching factor,
+divided by $e$. The mean degree does not appear; the whole distribution of degrees
+enters through the single number $c_2$. And notice what happened between the two
+boxes: $c_1$ was replaced by $c_2$ everywhere it mattered, because after the first
+step a path is always standing at the end of a link, where the branching is the
+\emph{excess} degree and not the degree.
+
+Everything now hinges on how $c_2$ behaves as the network grows, and since $c_2$
+involves $\langle k^2\rangle$, that is a question about hubs.
+
+\begin{calculation}{how the excess degree grows with size}
+Take a scale-free network, $p(k)\sim k^{-\gamma}$. For $\gamma>3$ the second moment
+$\langle k^2\rangle$ converges, so $c_2$ tends to a constant and there is nothing
+to discuss. For $\gamma\le3$ it diverges, and the divergence is cut off only by the
+largest degree actually present. That largest degree follows from asking which $k$
+is rare enough to appear about once in a network of $n$ nodes, $p(k_{\max})=1/n$:
+\begin{equation}
+  k_{\max}\sim n^{1/\gamma}.
+  \label{eq:path-kmax}
+\end{equation}
+Now do the sum. For $\gamma=3$ the summand $k^2 p(k)\sim1/k$, so
+\begin{equation}
+  c_2 \sim \sum_{k=1}^{k_{\max}}\frac{1}{k} \sim \ln k_{\max} \sim \ln n,
+  \label{eq:path-c2log}
+\end{equation}
+the logarithm of the size. For $2<\gamma<3$ the sum is dominated by its upper end,
+$c_2\sim k_{\max}^{3-\gamma}$, and using Eq.~\eqref{eq:path-kmax},
+\begin{equation}
+  c_2 \sim n^{-1+3/\gamma}.
+  \label{eq:path-c2pow}
+\end{equation}
+It is worth doing the $\gamma=3$ case explicitly, since three of our models share
+it. There $p_k = A\,\Gamma(k)/\Gamma(3+k) = A/[(2+k)(1+k)k]$, so
+\begin{equation}
+  \langle k\rangle \sim A\sum_{k\ge2}\frac{1}{(2+k)(1+k)}
+  = A\sum_{k\ge2}\Big(\frac{1}{k+1}-\frac{1}{k+2}\Big) \sim \frac{A}{3},
+  \label{eq:path-k1exp}
+\end{equation}
+a telescoping sum that converges, while
+\begin{equation}
+  \langle k^2\rangle \sim A\sum_{k=1}^{k_{\max}}\frac{1}{k}
+  \sim A\ln k_{\max} \sim \frac{A}{3}\ln n
+  \label{eq:path-k2exp}
+\end{equation}
+does not. Their ratio is $c_2\sim\ln n$, confirming Eq.~\eqref{eq:path-c2log}.
+\end{calculation}
+
+Feeding the three cases into Eq.~\eqref{eq:path-mf} gives the baseline in full:
+\begin{alignat}{2}
+  \langle\mu\rangle &= a, &&\qquad \gamma>3,
+  \label{eq:path-const}\\
+  \langle\mu\rangle &= a + \tfrac{1}{e}\ln n, &&\qquad \gamma=3,
+  \label{eq:path-log}\\
+  \langle\mu\rangle &= a + b\,n^{\alpha}, \qquad \alpha = \tfrac{3}{\gamma}-1,
+    &&\qquad 2<\gamma<3.
+  \label{eq:path-power}
+\end{alignat}
+When $\gamma>3$ the multiplicity \emph{stops growing altogether}. At $\gamma=3$ it
+creeps up like $\ln n$ --- about as slow as growth gets, since to add a fixed amount
+you must \emph{multiply} the size --- and the predicted slope is not merely
+logarithmic but exactly $1/e$. Below $\gamma=3$ the hubs are heavy enough to drive
+a genuine power law. So there is no single random baseline: the bar that a local
+rule must clear is set by the degree distribution it happens to produce, and we
+must compare like with like.
+
+\section{Which rule makes which exponent}
+
+That last sentence obliges us to know the exponent of every model in this chapter.
+Happily one calculation settles them all at once, because all four rules --- and
+the shuffled versions we shall compare them against --- attach in the same way: a
+node gains links at a rate that is affine in its degree.
+
+\begin{calculation}{one rate equation for every model}
+Let $n_k(n)$ be the expected number of nodes of degree $k$ once the network has
+grown to $n$ nodes. Suppose a node of degree $k$ gains a link at rate
+$(a+bk)/n$ --- a constant part $a$ and a preferential part $b$ --- and that the
+newcomer arrives either with degree $2$, with probability $c$, or as a duplicate of
+an existing node, at rate $d/n$. Then
+\begin{equation}
+\begin{split}
+  n_k(n+1) = n_k(n) &+ \frac{a+b(k-1)}{n}\,n_{k-1} - \frac{a+bk}{n}\,n_k \\
+  &+ c\,\delta_{k2} + \frac{d}{n}\,n_k .
+\end{split}
+\label{eq:path-rate}
+\end{equation}
+The first two terms are the traffic in and out of degree $k$; the last two account
+for the newcomer's own degree. This is mean field: the expectation after the step
+is computed from the expectations before it, ignoring the fluctuations of a single
+addition. Look for a steady state in which the shape of the distribution is fixed
+and only its size grows, $n_k(n)=n\,p_k$. Substituting and cancelling one power of
+$n$ gives a recursion in $k$ alone,
+\begin{equation}
+  p_k = \frac{\eta+k-1}{\nu+k}\,p_{k-1}
+  + \frac{c}{b}\,\frac{1}{\nu+k}\,\delta_{k2},
+  \qquad
+  \eta = \frac{a}{b},
+  \quad
+  \nu = \frac{1+a-d}{b},
+  \label{eq:path-pkrec}
+\end{equation}
+which unrolls into a ratio of Gamma functions,
+\begin{equation}
+  p_k = \frac{c}{b}\,\frac{\Gamma(2+\nu)}{\Gamma(2+\eta)}\,
+  \frac{\Gamma(k+\eta)}{\Gamma(k+1+\nu)} .
+  \label{eq:path-pk}
+\end{equation}
+(Check it by induction: it holds at $k=2$, and substituting $p_{k-1}$ from
+Eq.~\eqref{eq:path-pk} into Eq.~\eqref{eq:path-pkrec} returns $p_k$.) For
+$k\gg\max(\eta,\nu)$ the ratio of Gammas behaves as $k^{\eta-\nu-1}$, a power law
+$p_k\sim k^{-\gamma}$ with
+\begin{equation}
+  \gamma = 1 + \frac{1-d}{b} .
+  \label{eq:path-gamma}
+\end{equation}
+Only two of the four constants survive: the preferential rate $b$, and the
+duplication rate $d$.
+\end{calculation}
+
+Equation~\eqref{eq:path-gamma} is a small master key. Read off each rule's
+constants and its exponent falls out.
+
+For $BA(n,2)$ every newcomer brings two links and hands them out in proportion to
+degree, so $a=0$, $b=1/2$, $c=1$, $d=0$, and
+\begin{equation}
+  \gamma_{BA} = 3 .
+  \label{eq:path-gammaBA}
+\end{equation}
+For $LS(n,\ell)$ the walk lands on the entry node uniformly, which is the constant
+part $a=1$, and thereafter in proportion to degree, giving
+$b=\ell/\langle k\rangle=\ell/[2(\ell+1)]$ with $c=1$, $d=0$, so that
+\begin{equation}
+  \gamma_{LS} = \frac{3\ell+2}{\ell} .
+  \label{eq:path-gammaLS}
+\end{equation}
+For $DS(n,q)$ duplication is the only source of preference, $b=q$, and it is also
+the only way the newcomer copies a degree, $d=q$, with $a=0$ and $c=1-q$; then
+$\eta=0$, $\nu=-1+1/q$ and
+\begin{equation}
+  \gamma_{DS} = \frac{1}{q} .
+  \label{eq:path-gammaDS}
+\end{equation}
+For $BB(n,L)$ the chain's ends land on a random link, so $b=2/\langle
+k\rangle=1/(L+1)$ with $a=0$, $c=1$, $d=0$, $\eta=0$, $\nu=L+1$, and
+\begin{equation}
+  \gamma_{BB} = L+2 .
+  \label{eq:path-gammaBB}
+\end{equation}
+
+Two coincidences in this list are worth having. First, $DS(n,q)$ and $BB(n,L)$
+produce the \emph{same} degree distribution whenever $q=(L+2)^{-1}$ --- so any
+difference in their multiplicity cannot be blamed on their degrees. Second, and
+this is what makes the comparisons of the next section fair, $DS(n,1/3)$,
+$BB(n,1)$ and $BA(n,2)$ all sit at $\gamma=3$: three rules, one degree
+distribution, and --- as we are about to see --- three quite different
+multiplicities.
+
+And now the baseline can be made concrete. Take a network grown by a local rule and
+shuffle its links at random while leaving every node's degree untouched --- the same
+configuration-model scramble used as a control in the previous chapter. The result
+keeps the degree distribution and destroys everything else; we mark it with a star.
+By Eq.~\eqref{eq:path-gammaLS} the randomized local-search network $LS(n,1)^*$ has
+$\gamma=5$, and so by Eq.~\eqref{eq:path-const} its multiplicity must
+\emph{stop growing}; it duly flattens out (Figure~\ref{fig:mu-random}a). By
+Eq.~\eqref{eq:path-gammaDS} the randomized $DS(n,1/3)^*$ has $\gamma=3$, and creeps
+up logarithmically, close to the predicted slope $1/e$
+(Figure~\ref{fig:mu-random}b). The randomized $DS(n,2/5)^*$ has $\gamma=5/2$, for
+which Eq.~\eqref{eq:path-power} predicts $\alpha=3/\gamma-1=1/5$, and it climbs as
+$n^{1/5}$ (Figure~\ref{fig:mu-random}c). Plotted against $c_2$ rather than $n$, all
+of them --- and the Barab\'asi--Albert model with them --- collapse onto the single
+mean-field line $c_2/e$ of Eq.~\eqref{eq:path-mf} (Figure~\ref{fig:mu-random}d).
+Three regimes, one formula, and no fitted parameter anywhere except the additive
+constants.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figs/fig-mu-random.pdf}
+\caption{\textbf{The random baseline.} Average shortest path multiplicity
+$\langle\mu\rangle$ against network size $n$ for randomized networks (starred),
+which keep each node's degree but destroy all local structure. (a) $LS(n,1)^*$,
+degree exponent $\gamma=5$: growth stalls, the points falling away from the
+fitted logarithm. (b) $DS(n,1/3)^*$, $\gamma=3$: logarithmic, near the predicted
+slope $1/e$. (c) $DS(n,2/5)^*$, $\gamma=5/2$: the predicted power law $n^{1/5}$.
+(d) All models, including the non-local $BA(n,2)$, plotted against the excess
+degree $c_2$ collapse onto the mean-field line $c_2/e$ of
+Eq.~\eqref{eq:path-mf}.}
+\label{fig:mu-random}
+\end{figure}
+
+The Barab\'asi--Albert model deserves its own note, because it is a
+\emph{growing} network yet lands squarely on the random baseline. With $m=2$ it
+has $\gamma=3$ by Eq.~\eqref{eq:path-gammaBA}, and its multiplicity creeps up
+logarithmically, exactly as its reshuffled cousins do. It has no local structure to
+lose: its newcomers attach across the whole graph and never consult a neighborhood.
+This echoes the previous chapter, where the very same model failed to develop
+communities. Lacking locality, it builds neither the modules nor the redundant
+paths, and on both counts it behaves as though its links had been shuffled at
+random.
+\section{Local rules boost the multiplicity}
+
+Now run the same models \emph{without} shuffling, and compare each against its own
+starred baseline (Figure~\ref{fig:mu-local}). The multiplicity climbs decisively
+faster. It helps to keep a ladder of growth rates in mind: constant, then
+logarithmic, then \emph{log-quadratic}, then \emph{exponential} --- each rung
+leaving the one below it far behind.
+
+Most local rules --- local search and the bubble model among them --- sit on the
+log-quadratic rung,
+\begin{equation}
+  \langle\mu\rangle = a + b\ln n + c(\ln n)^2,
+  \label{eq:path-typeI}
+\end{equation}
+the extra squared term bending the curve clearly upward. For $LS(n,1)$ this is a
+particularly sharp contrast: the unshuffled network grows without limit while the
+shuffled one, with the very same degrees, stops growing altogether. Whatever is
+doing the work is not in the degree distribution at all.
+
+The duplication--split rule is different, and dramatically so: its multiplicity
+grows \emph{exponentially} with size,
+\begin{equation}
+  \langle\mu\rangle = a\, e^{bn}, \qquad a,b>0.
+  \label{eq:path-typeII}
+\end{equation}
+Exponential growth is a different world from logarithmic. Over the same range of
+sizes in which its shuffled counterpart moves from $\langle\mu\rangle\approx1.2$
+to $2.6$, the unshuffled $DS(n,1/3)$ runs from $1.3$ to more than $10^5$: by a
+thousand nodes, a typical pair of nodes is joined by hundreds of thousands of
+equally short routes. Copying, it turns out, is the great multiplier of shortest
+paths, and that is what the title of this chapter names.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figs/fig-mu-local.pdf}
+\caption{\textbf{Local rules boost the multiplicity.} (a) Local search
+$LS(n,1)$ grows log-quadratically, Eq.~\eqref{eq:path-typeI} --- while its
+shuffled counterpart, with identical degrees, saturates
+(Figure~\ref{fig:mu-random}a). (b) The same data against the inferred number of
+communities $\langle\kappa\rangle$: linear. (c) Duplication--split $DS(n,1/3)$
+grows exponentially, Eq.~\eqref{eq:path-typeII}; note the linear size axis and
+the logarithmic multiplicity axis, and that the vertical scale spans five decades.
+(d) Against $\langle\kappa\rangle$: exponential again. Communities are only
+detectable beyond the Ramsey size $r_\kappa$, so the leftmost points in (b) and
+(d) sit at $\langle\kappa\rangle=1$.}
+\label{fig:mu-local}
+\end{figure}
+
+\section{Cycles and the boost}
+
+Why should duplication outrun the rest? The answer is in the kind of loop each
+rule makes. The triadic-closure rule of the friends chapter closes
+\emph{triangles}, loops of length three --- but in a triangle the two nodes
+flanking a third are themselves directly linked, so there is still only \emph{one}
+shortest route between any pair. A triangle adds cohesion but no extra routes.
+Duplication, by contrast, closes \emph{squares}, loops of length four, and a
+square is the smallest loop that genuinely offers a choice: its two opposite
+corners are two hops apart by \emph{two} different paths, one around each side.
+That single observation is the seed of the boost; the box pushes it a little
+further, and the takeaway follows.
+
+\begin{figure}[t]
+\centering
+\begin{adjustbox}{max width=\linewidth}\begin{tikzpicture}[
+  nd/.style={circle,draw=black!65,fill=black!4,minimum size=6mm,inner sep=0pt},
+  ep/.style={circle,draw=accent!80!black,fill=black!30,minimum size=6mm,inner sep=0pt},
+  lnk/.style={draw=black!45,line width=0.8pt},
+  r1/.style={draw=black!80,line width=1.5pt},
+  r2/.style={draw=black!80,line width=1.5pt,dashed}]
+  % panel (a) triangle
+  \begin{scope}
+    \node[ep] (A) at (0,1.0)    {};
+    \node[nd] (B) at (-0.95,-0.5){};
+    \node[ep] (C) at (0.95,-0.5){};
+    \draw[lnk] (A)--(B);
+    \draw[lnk] (B)--(C);
+    \draw[r1]  (A)--(C);
+    \node[font=\footnotesize] at (0,-1.4) {(a) triangle: one route};
+  \end{scope}
+  % panel (b) square
+  \begin{scope}[xshift=5.4cm]
+    \node[ep] (A2) at (0,1.05)   {};
+    \node[nd] (B2) at (1.15,0)   {};
+    \node[ep] (C2) at (0,-1.05)  {};
+    \node[nd] (D2) at (-1.15,0)  {};
+    \draw[r1] (A2)--(B2); \draw[r1] (B2)--(C2);
+    \draw[r2] (A2)--(D2); \draw[r2] (D2)--(C2);
+    \node[font=\footnotesize] at (0,-1.55) {(b) square: two routes};
+  \end{scope}
+\end{tikzpicture}\end{adjustbox}
+\caption{\textbf{Why squares multiply routes.} The two highlighted corners are the
+endpoints. (a) In a triangle they are joined directly --- a single shortest route.
+(b) In a square they are opposite corners, two steps apart by \emph{two} distinct
+routes (drawn solid and dashed), one around each side. Local rules that close
+four-cycles, such as gene
+duplication, thread the network with these redundant shortest paths.}
+\label{fig:path-square}
+\end{figure}
+
+Figure~\ref{fig:path-square} makes the contrast concrete.
+
+\begin{calculation}{why copying multiplies routes}
+When a node is duplicated, the copy and the original share all their neighbors,
+so any two of those neighbors sit at opposite corners of a four-cycle --- each
+such pair instantly gains a second shortest route. A duplicated node of degree
+$k$ creates $\tbinom{k}{2}=k(k-1)/2$ such squares in a single stroke. Moreover the
+duplication rule carries its own preferential attachment, the chance of copying a
+node being proportional to its degree, which (as in Chapter~\ref{ch:projects})
+builds a heavy-tailed degree distribution with exponent $\gamma=1/q$. Squares are
+thus laid down in proportion to $k(k-1)$ --- the very combination that
+Eq.~\eqref{eq:path-c2} says controls the multiplicity --- on top of a distribution
+with many high-degree nodes. Each round of copying compounds the squares laid down
+by the last, and it is this compounding, rather than any one square, that is the
+suspected origin of the exponential law, Eq.~\eqref{eq:path-typeII}, though a full
+account of it remains open.
+\end{calculation}
+
+The lesson of the box is that squares, not triangles, are what multiply shortest
+routes. The bubble model lets us test that directly, since it dials the loop
+length by hand: a chain of $L$ added nodes makes a loop of length $L+2$. The
+geometric intuition survives the test (Figure~\ref{fig:mu-bubble}a). Even-length
+loops, whose opposite corners enjoy two equal routes, enrich the network more than
+odd ones: $L=2$ and $L=4$ sit well above $L=1$ and $L=3$. But the test also sets a
+limit on how much the geometry explains. Every bubble model, whatever its loop
+length, stays on the log-quadratic rung. Even loops beat odd ones, and squares
+beat triangles --- yet neither buys the exponential. The square-counting explains
+why duplication \emph{outruns} triadic closure; the full ferocity of
+duplication--split needs the compounding above.
+
+One more clue shows that randomness itself plays a role
+(Figure~\ref{fig:mu-bubble}b). The Dorogovtsev--Goltsev--Mendes ``pseudofractal''
+network \citep{dorogovtsevgoltsev2002} is a \emph{deterministic} relative of the
+bubble model, grown by a fixed clockwork rule rather than a random one: at every
+step, new nodes are added to \emph{every} link at once. Its degree distribution is
+scale-free with $\gamma = 1+\ln 3/\ln 2\approx 2.6$, so by
+Eq.~\eqref{eq:path-power} its randomized version should show a power law with
+$\alpha\approx0.16$ --- and it does. The deterministic original is a power law too,
+but a \emph{slower} one. Being deterministic it can be solved exactly, as the next
+section does, and the exponent comes out at $\alpha=0.100$, comfortably below the
+$0.161$ of its own shuffle. So the deterministic construction falls \emph{below}
+the random network built from its own degrees. The speed-up is not a property of
+the loop geometry alone; a clockwork rule that closes loops everywhere at once does
+worse than chance. It is the interplay of randomness and locality together, not
+either by itself, that boosts the multiplicity.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figs/fig-mu-bubble.pdf}
+\caption{\textbf{Cycle length and randomness.} (a) The bubble model $BB(n,L)$,
+which closes loops of length $L+2$. Even $L$ (2 and 4) reaches a higher
+multiplicity than odd $L$ (1 and 3), as the square-counting predicts --- yet every
+$L$ stays log-quadratic, so cycle geometry alone does not buy the exponential.
+(b) The deterministic bubble model $BBD(n,1)$ follows a power law $n^{0.10}$ ---
+found exactly in Section~\ref{sec:mu-exact} --- falling \emph{below} its own
+randomized version $BBD(n,1)^*$, which grows faster, as $n^{0.16}$
+(Eq.~\eqref{eq:path-power}). Locality without randomness is not enough.}
+\label{fig:mu-bubble}
+\end{figure}
+
+\section{How fast could it possibly grow?}
+\label{sec:mu-exact}
+
+If randomness and locality together drive the multiplicity up, it is fair to ask
+where the ceiling is. The stochastic rules can only be simulated, but two
+\emph{deterministic} relatives of the bubble model can be solved exactly, and set
+against each other they reveal what actually controls the growth. Both replace
+every link at every step, so both are clockwork versions of the bubble rule; they
+differ in a single detail. In the first, the subdivided link is \emph{kept}; in the
+second, it is \emph{removed}. That one choice, it turns out, is the difference
+between a power law and a stretched exponential.
+
+Keep the link, and you have the deterministic bubble --- the pseudofractal web met
+a moment ago. Start from a triangle and, at each step, add a new node across every
+existing link while leaving the old links in place.
+
+\begin{calculation}{the deterministic bubble grows as a power law}
+The construction renormalizes: generation $G_{t+1}$ is three copies of $G_t$ glued
+in pairs at the three corners of the original triangle. Because the two ends of
+every subdivided link stay adjacent, geodesics inside a copy are undisturbed by the
+rest of the graph, and the total number of geodesics $S_t=\sum_{i<j}\mu_{ij}$ obeys
+a closed linear recursion. Its growth ratio converges to
+\begin{equation}
+  \frac{S_{t+1}}{S_t}\longrightarrow \lambda = 10.0494\ldots,
+  \label{eq:bbd-lambda}
+\end{equation}
+the largest root of $\lambda^3-12\lambda^2+20\lambda-4=0$. Each generation triples
+the node count and so multiplies the number of \emph{pairs} by nine; the average
+multiplicity $\langle\mu\rangle=S_t/\binom{n_t}{2}$ therefore grows by $\lambda/9$
+per generation. Since the size itself grows by a factor of three, this is a power
+law in $n$,
+\begin{equation}
+  \langle\mu\rangle \sim n^{\alpha}, \qquad
+  \alpha = \frac{\ln(\lambda/9)}{\ln 3} = 0.1004\ldots,
+  \label{eq:bbd-alpha}
+\end{equation}
+matched to a relative error of $10^{-6}$ by the twelfth generation. So what looked
+logarithmic over the reachable sizes (Figure~\ref{fig:mu-bubble}b) is in fact a
+slow power law --- and slower than the $n^{0.161}$ of the network's own
+degree-preserving shuffle, confirming from the exact side that the deterministic
+rule lags its own randomization.
+
+The average is not the whole story. The \emph{largest} multiplicity anywhere in
+the graph grows faster than the mean: it is exactly the Fibonacci number
+$\max_{ij}\mu_{ij}=F_{t+2}$, which in terms of the size is
+$n^{\ln\varphi/\ln 3}=n^{0.438}$, with $\varphi=(1+\sqrt5)/2$ the golden ratio.
+Even in this most sluggish of our constructions, the best-connected pair of nodes
+already accumulates routes at a respectable clip.
+\end{calculation}
+
+Now remove the link instead. Replacing rather than subdividing gives the
+\emph{diamond lattice} \citep{migdal1975,kadanoff1976}. In its general $(b,s)$
+form, start with a single link joining two poles $A$ and $B$ and, at each
+generation, replace \emph{every} link by $b$ parallel paths of $s$ links each. The
+standard diamond is $b=s=2$: every link becomes two parallel two-link paths
+(Figure~\ref{fig:mu-diamond}a). It is the same lattice on which
+Chapter~\ref{ch:communities} watched the Ramsey community number become a
+renormalization-group crossing.
+
+\begin{calculation}{the multiplicity between the poles}
+The construction is exactly renormalizable, because distinct copies of the previous
+generation meet only at their corners. Read it backwards --- deflation --- and
+generation $G_t$ is $b$ parallel branches, each made of $s$ copies of $G_{t-1}$ in
+series. Two rules suffice. Along a series, lengths add and multiplicities
+\emph{multiply}, since a route must make each choice in turn. Across $b$ parallel
+branches of \emph{equal} length, multiplicities \emph{add}, since each branch offers
+its own routes and all tie. So the pole-to-pole distance $D_t$ and multiplicity
+$P_t\equiv\mu_{AB}$ obey
+\begin{equation}
+  D_t = s\,D_{t-1} = s^{\,t},
+  \qquad
+  P_t = b\,P_{t-1}^{\,s},
+  \label{eq:diamond-rec}
+\end{equation}
+with $P_0=1$. The second is nonlinear, but taking $\log_b$ linearizes it,
+$\log_b P_t = 1 + s\log_b P_{t-1}$, a geometric recursion whose solution is
+\begin{equation}
+  P_t = b^{\,(s^{t}-1)/(s-1)}
+  \;\xrightarrow{\ b=s=2\ }\;
+  2^{\,2^{t}-1} = 2^{\,D_t-1},
+  \label{eq:diamond-pole}
+\end{equation}
+a \emph{doubly} exponential count. (Equation~\eqref{eq:diamond-pole} has been
+checked against direct construction of the lattice for $(b,s)$ equal to $(2,2)$,
+$(3,2)$, $(2,3)$, $(4,2)$ and $(3,3)$.) The reason is transparent: a shortest route
+must thread $(s^t-1)/(s-1)$ successive scales, and at each one it independently
+picks one of $b$ parallel branches, so the choices multiply.
+\end{calculation}
+
+The poles are a special pair, so the average over \emph{all} pairs needs its own
+argument --- and it is here that the diamond's rigidity pays off again.
+
+\begin{calculation}{from the poles to the average}
+The key geometric fact is that every node lies on some pole-to-pole geodesic,
+\begin{equation}
+  d(v,A) + d(v,B) = D_t ,
+  \label{eq:diamond-onpath}
+\end{equation}
+proved by induction on $t$: within a replaced link the two poles of the sub-copy
+inherit the property, and any detour around a parallel branch is strictly longer.
+So a node is characterized by the single number $d(v,A)$ --- the lattice is, in
+this sense, one-dimensional. Now split the pairs into those internal to one copy of
+$G_{t-1}$ and those spanning two copies. The total geodesic count
+$S_t=\sum_{u<v}\mu_{uv}$ then satisfies
+\begin{equation}
+  S_t = 4\,S_{t-1} + \mathrm{Inter}_t ,
+  \label{eq:diamond-S}
+\end{equation}
+the four being the number of copies in the $b=s=2$ cell, and $\mathrm{Inter}_t$ a
+convolution of the two copies' pole-path counts, weighted by the factor $P_{t-1}$
+that any route pays to cross the shared corner. Carrying the recursion out exactly
+gives the average $\langle\mu\rangle_t = S_t/\binom{n_t}{2}$ as
+\begin{equation}
+  \langle\mu\rangle_t \;\sim\; \kappa\,\frac{2^{\,2^{t}}}{4^{t}}
+  \;\approx\; 2.1\,\frac{P_t}{n_t},
+  \qquad \kappa \to 1.576 ,
+  \label{eq:diamond-avg}
+\end{equation}
+where the prefactor $\kappa$ is the fixed point of the corner-transit convolution.
+So the average merely tracks the pole value divided by the node count: the sum is
+dominated by near-antipodal pairs, which inherit a geodesic count of order
+$P_{t-1}^2\sim P_t$.
+\end{calculation}
+
+Equation~\eqref{eq:diamond-avg} is expressed in the generation $t$; the scaling with
+size follows by inverting the node count.
+
+\begin{calculation}{the stretched exponential}
+Generation $t$ carries
+\begin{equation}
+  n_t = \tfrac{1}{3}\big(2\cdot4^{t}+4\big) \simeq \tfrac{2}{3}\,4^{t},
+  \label{eq:diamond-nt}
+\end{equation}
+so $4^{t}\simeq\tfrac32 n$ and therefore $2^{t}\simeq\sqrt{3n/2}$. Substituting both
+into Eq.~\eqref{eq:diamond-avg}, the doubly exponential in $t$ becomes a
+\emph{stretched exponential} in $n$:
+\begin{equation}
+  \langle\mu\rangle \approx a\,e^{\,b\sqrt{n}},
+  \qquad
+  b = \sqrt{\tfrac32}\,\ln 2 \approx 0.849,
+  \qquad
+  a = \tfrac{2\kappa}{3} \approx 1.05 .
+  \label{eq:diamond-n}
+\end{equation}
+The rate $b$ is exact; $a$ is the amplitude of the leading term, since
+$\ln\langle\mu\rangle\simeq b\sqrt{n}+\ln a$ and the algebraic factor $1/n$ from
+Eq.~\eqref{eq:diamond-avg} is subleading against $\sqrt{n}$. Retaining it, the
+reduced form $\langle\mu\rangle\simeq a\,e^{\,b\sqrt{n}}/n$ reproduces the exact
+values to better than $1\%$ from $t=4$ on.
+\end{calculation}
+
+The numbers are worth seeing, because they are exact rather than fitted
+(Figure~\ref{fig:mu-diamond}b). By the sixth generation the diamond has only
+$2732$ nodes, yet an average pair is joined by some $7\times10^{15}$ distinct
+shortest paths. This is the fastest growth among the constructions we can solve by
+hand --- but it is not, in fact, the fastest in the chapter. Duplication--split
+grows \emph{exponentially} in the size, Eq.~\eqref{eq:path-typeII}, and an
+exponential in $n$ outruns a stretched exponential in $\sqrt{n}$. Perfect,
+maximally symmetric, deterministic branching is a formidable generator of
+redundant routes, yet a stochastic rule that copies whole neighborhoods is more
+formidable still. There is no ceiling here; there is a hierarchy, and copying sits
+at the top of it.
+
+The two exactly solvable constructions, placed side by side, say exactly what the
+gap between them requires. Both are deterministic, both self-similar, both replace
+every link at every step; they differ only in whether the subdivided link
+survives. Keep it, and the two ends of every bubble stay one hop apart, so
+distances grow only logarithmically and the multiplicity crawls up the power law
+of Eq.~\eqref{eq:bbd-alpha}. Remove it, and the poles separate as $D_t=s^t$, so a
+route must make an independent branch choice at every one of a growing number of
+scales, and those choices compound into the stretched exponential of
+Eq.~\eqref{eq:diamond-n}. It is not the closing of a cycle that decides how fast
+routes multiply, but whether the cycle \emph{separates} the two nodes it joins.
+A triangle joins adjacent nodes and adds nothing; a square holds its corners two
+hops apart and doubles their routes; and a rule that drives its endpoints
+geometrically apart, scale after scale, is what makes the count run away.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figs/fig-mu-diamond.pdf}
+\caption{\textbf{The diamond lattice, solved exactly.} (a) The diamond lattice:
+every link is replaced, at every generation, by two parallel two-link paths. (b)
+Its average multiplicity, computed exactly, follows the stretched exponential of
+Eq.~\eqref{eq:diamond-n} across fifteen decades. With $2732$ nodes, a typical pair
+of nodes is already joined by some $7\times10^{15}$ equally short routes --- the
+fastest of the deterministic constructions, though still slower than the
+exponential growth of duplication--split.}
+\label{fig:mu-diamond}
+\end{figure}
+
+\section{Two sides of one coin}
+
+Because local rules also create communities, and the number of communities grows
+along with the network, we can ask how the multiplicity depends on the number of
+communities directly. The relationship is a clean one
+(Figure~\ref{fig:mu-local}b and d): linear for every local model tested, and ---
+once again the exception --- exponential for duplication--split. This is the
+empirical correlation of \citet{deng2026} restated from the inside: more
+communities go hand in hand with more shortest paths.
+
+The two exactly solvable constructions turn this from a plausible claim into a
+demonstration. Both carry communities, and --- as Chapter~\ref{ch:communities}
+found for each --- both carry the \emph{same} number of them, growing as
+$\langle\kappa\rangle\sim\sqrt{n}$. Their community structure is therefore
+identical in this respect, while their multiplicities could hardly differ more:
+one a slow power law in size, the other a stretched exponential. Eliminating the
+size between multiplicity and community count lays the two laws side by side,
+\begin{equation}
+  \langle\mu\rangle \sim \langle\kappa\rangle^{0.201}
+  \quad\text{(bubble)},
+  \qquad
+  \langle\mu\rangle \sim a\,e^{\,b'\langle\kappa\rangle}
+  \quad\text{(diamond)},
+  \label{eq:path-mukappa}
+\end{equation}
+a weak power of the community count in the one case, an exponential in it in the
+other. Were communities the \emph{cause} of redundant paths, two networks with the
+same community growth would have to show the same $\langle\mu\rangle$ against
+$\langle\kappa\rangle$. They flatly do not. The correlation is genuine in both, but
+its very shape is inherited from the rule that grew the network, not from any
+traffic between the paths and the communities.
+
+But the point of the chapter is that this partnership is not a case of one
+causing the other. ``Local rules boost shortest path multiplicity'' and
+``communities accompany high shortest path multiplicity'' are two true statements
+about the same networks, and as descriptions they say the same thing. Only one of
+them, however, names a \emph{mechanism}. Communities are something an algorithm
+reads off a finished network after the fact; the local rule is the process that
+actually built that network, node by node, closing the very loops that both carve
+it into communities and thread it with redundant routes. Community structure and
+path multiplicity are two sides of a single coin --- and the coin is locality.
+
+\section{Real networks}
+
+Models are one thing; the networks we started from are another. Three systems can
+be caught at different stages of their growth, which is what we need if we are to
+watch $\langle\mu\rangle$ move with $n$ (Figure~\ref{fig:mu-real}). The Internet
+at the level of autonomous systems, mapped daily over several years
+\citep{snapnets}. The protein interaction networks of a dozen organisms
+\citep{stark2006}, which stand in for successive stages of evolution. And the
+co-authorship network of the \texttt{cond-mat} preprint archive
+\citep{cornellarxiv}, accumulated year by year. In each case we can also compute
+the excess degree $c_2$ and so plot the mean-field expectation
+$c_2/e$ alongside the measurement --- the random network with the same degrees.
+The data are noisy and the systems are not stationary, so no strong claim is
+available; but the trends are instructive.
+
+One measurement choice needs stating, because these networks --- unlike the models
+--- are not connected, and the connected fraction itself changes as they grow.
+Averaging the multiplicity over \emph{all} pairs would then confound two things:
+the redundancy of routes, which is what we are after, and the swelling of the
+giant component, which is not. So we average only over pairs that are actually
+joined, writing
+\begin{equation}
+  \langle\mu\rangle_c = \frac{\langle\mu\rangle}{\psi},
+  \label{eq:path-muc}
+\end{equation}
+with $\psi$ the fraction of node pairs connected at all --- the convention of
+\citet{deng2026}. The correction is nothing for the Internet, where $\psi=1$
+throughout, but real for the rest: $\psi$ runs from $0.64$ to $1$ across the
+protein networks and from $0.007$ to $0.89$ across the co-authorship snapshots,
+the smallest values belonging to the earliest and sparsest. Reporting
+$\langle\mu\rangle_c$ keeps the trends below about routes between reachable nodes,
+not about how many nodes have become reachable.
+
+In every system the multiplicity rises with size, and in every system it is
+high: the human protein network reaches $\langle\mu\rangle_c\approx64$, meaning a
+typical connected pair of proteins is joined by some sixty-four equally short
+chains of interaction. The protein networks are also the ones that climb
+\emph{exponentially} with size, which is the signature of duplication --- and gene
+duplication is, of course, exactly how they are thought to grow
+(Chapter~\ref{ch:duplication}). The Internet and the co-authorship network both
+climb as power laws, more sedately.
+
+The most interesting feature, though, is which side of the mean-field line each
+system falls on. The Internet sits \emph{below} its random expectation, and it is
+\emph{disassortative}, its hubs presiding over peripheries of poorly connected
+nodes; such a star-like arrangement gives a route no alternatives, since
+everything must pass through the hub. The co-authorship network sits \emph{above}
+it, and it is \emph{assortative}, its well-connected authors writing with one
+another, a clique of hubs being exactly what furnishes many equally short ways
+across. The protein networks are disassortative and duly fall below the line. It
+is tempting to read the deviation straight off the correlations --- disassortative
+below, assortative above --- but that reading is a coincidence of these three
+systems, not a law. The exactly solvable constructions settle it: the deterministic
+bubble and the diamond are \emph{both} disassortative, yet the first falls far
+below the mean-field line and the second towers enormously above it. The sign of
+the correlations does not fix the sign of the deviation. What does is the
+architecture the growth rule builds --- something the mean-field calculation, which
+knows the network only through $c_2$, cannot yet capture. It is one of the clearer
+invitations this book leaves open.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figs/fig-mu-real.pdf}
+\caption{\textbf{Real networks.} Average multiplicity over connected pairs,
+$\langle\mu\rangle_c$ (Eq.~\eqref{eq:path-muc}), against size, with the mean-field
+expectation $c_2/e$ for a random network of the same degrees.
+(a) The Internet at the autonomous-system level: a power law, falling below the
+random expectation --- the mark of disassortative, star-like wiring. (b) Protein
+interaction networks of a dozen organisms: exponential growth, the duplication
+signature, reaching $\langle\mu\rangle_c\approx64$ for the human network. (c)
+\texttt{cond-mat} co-authorship: a power law lying \emph{above} the random
+expectation, as assortative mixing among prolific authors provides many equally
+short routes.}
+\label{fig:mu-real}
+\end{figure}
+
+\section{Summary}
+
+The shortest paths of real networks are richly redundant, and that redundancy
+travels with their community structure. For a random network the redundancy is no
+mystery: it is the branching factor, $\langle\mu\rangle\approx c_2/e$, and it
+grows only as fast as the hubs allow --- not at all when $\gamma>3$,
+logarithmically at $\gamma=3$, as a power law below it. Networks built by local
+rules leave that baseline behind, log-quadratically for most rules and
+exponentially for duplication, which closes the four-cycles that give opposite
+corners two shortest routes apiece. Neither cycle geometry nor locality is
+sufficient by itself: a deterministic rule that closes loops everywhere at once
+does worse than chance. Two such rules can be solved exactly, and what separates
+their power law from their stretched exponential is not the closing of a cycle but
+whether the cycle drives its endpoints apart. Fastest of all, though, is none of
+the clockwork constructions but the stochastic duplication--split rule, whose
+exponential growth outruns even the diamond lattice: copying whole neighborhoods
+is the most efficient generator of redundant routes we have found. Since the same
+local rules also produce the communities, the observed tie between path
+multiplicity and communities is best understood not as cause and effect but as two
+consequences of one underlying local dynamics.

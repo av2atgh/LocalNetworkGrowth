@@ -918,13 +918,116 @@ disqualifying one. The clustering coefficient has two standard definitions that
 disagree, and the introduction had to say which one it meant before it could say
 anything about hierarchy.
 
+\section{The onset is the density}
+\label{sec:gr-onset}
+
 One thing the change of prior does \emph{not} touch is the Ramsey community
 number. Fitted both ways, local search crosses the ninety-five per cent threshold
 at $70$ against $80$, duplication--split at $90$ against $100$,
 duplication--divergence at $40$ either way. Resolution decides how finely a
 network can be cut; it says almost nothing about whether there is anything to cut
-at all. That second question depends on something else entirely, and is taken up
-in the next chapter.
+at all.
+
+It does not follow that the two questions are strangers, and this section is the
+argument that they are the same question asked twice. It belongs here rather than
+in Chapter~\ref{ch:communities} because it needs the density, and the density is
+this chapter's find.
+
+The argument is one line. If the number of communities is $\kappa\simeq
+n/\langle n_B\rangle$ once the density has set in, then the \emph{mean} number of
+communities passes two at
+\begin{equation}
+  n_2 = 2\,\langle n_B\rangle,
+  \label{eq:gr-ntwo}
+\end{equation}
+for the plainest of reasons: a network cannot hold two communities until it has
+the nodes for two communities, and by Eq.~\eqref{eq:gr-density} it needs no more
+than that. The size at which communities appear should therefore be the size of a
+community, twice over. Chapter~\ref{ch:communities}'s question --- when does a
+network start having communities? --- would then have no answer of its own. It
+would be a corollary of how big a community is.
+
+That is measurable, and it is what happens. Twelve rules were run on a grid
+spaced by about a fifth in size, with a hundred realisations at each size --- sixty
+for the two largest --- and the nested model fitted to every one. Four of them ---
+$LS(n,2)$, $DS(n,0.7)$, $DD(n,0.3)$ and the longer bubbles --- are settings of
+rules this book names but had never put a Ramsey grid under, and they are here to
+widen the range of $\langle n_B\rangle$ from a factor of three to a factor of
+twenty-two.
+
+\input{tab-onset}
+
+\noindent The fourth column is Eq.~\eqref{eq:gr-ntwo}, and it is the tightest
+number in this chapter: $n_2/\langle n_B\rangle=1.93\pm0.24$ across all twelve,
+against a predicted two. It holds on rules whose community sizes run from
+fourteen nodes to three hundred, on triangle-builders and square-builders alike,
+and --- since it needs only $\kappa\propto n$ and not the constant of
+proportionality --- it holds on the rules whose density is still drifting as well
+as on those that have settled.
+
+The Ramsey number follows it. Fitting $r_\kappa$ against $\langle n_B\rangle$
+across the twelve gives an exponent of $1.11\pm0.13$, and restricting to the
+eight whose $\beta$ is within a tenth of one --- the rules for which a constant
+$\langle n_B\rangle$ exists to be measured --- gives $1.05\pm0.12$ with
+$R^2=0.93$. Forcing the exponent to one,
+\begin{equation}
+  r_\kappa \simeq 3.6\,\langle n_B\rangle,
+  \label{eq:gr-rknb}
+\end{equation}
+every rule within a factor of $0.65$ to $1.48$ of it. A quantity that
+Chapter~\ref{ch:communities} could only obtain by growing thousands of networks
+and running a detection algorithm on each is, to that accuracy, three or four
+times a number this chapter reads off a table.
+
+The last column is where the remaining scatter lives, and naming it is the honest
+way to state how much of this is explained. Write $r_\kappa=2\langle n_B\rangle
+\tau$; then $\tau$ is the gap between the size at which the \emph{average}
+network has two communities and the size at which \emph{nineteen networks in
+twenty} do. It runs from $0.75$ to $2.6$, and nothing measured here predicts it.
+It is not the spread of $n/\kappa$ across realisations, whose ninety-fifth
+percentile tracks $\tau$ no better than chance would; nor the mean degree, which
+anti-correlates with both quantities but leaves the partial correlation of
+$r_\kappa$ with $\langle n_B\rangle$ at $0.84$ when it is held fixed. The factor of two in Eq.~\eqref{eq:gr-ntwo} is arithmetic;
+the factor of two in $\tau$ is not yet anything.
+
+One thing can be said about it, and it settles an old debt. The bubble family is
+where $\tau$ varies most, and there it is exactly the even--odd alternation
+Chapter~\ref{ch:communities} recorded and could not explain. Measured at a common
+size, the community size climbs monotonically with the cycle length --- $63$,
+$132$, $305$, $402$, $746$ nodes for $L=2$ to $6$ --- with no alternation in it
+whatever. All of the alternation is in the multiple: $r_\kappa/\langle n_B\rangle$
+is $2.6$, $2.1$, $1.6$ for the odd $L$ and $5.1$, $5.2$ for the even ones, the
+non-bipartite rules needing half as many communities' worth of network as their
+bipartite neighbours. So the alternation was never about how large a community
+is; Chapter~\ref{ch:bubbles} takes up what it \emph{is} about, and finds
+bipartiteness on the other side of it too.
+
+Three cautions, and then what the section is for. The grid used here is finer
+than the master table's and moves three of its entries by a step --- $BB(n,2)$
+from $400$ to $320$, $BB(n,3)$ from $400$ to $280$, $BB(n,1)$ from $100$ to
+$110$ --- which is the resolution that table was quoted at and changes nothing in
+it. $BB(n,6)$ was measured and is not in the table: out to $n=25600$ its
+$P_\kappa$ was still wandering between $0.85$ and $0.98$, so it has no $r_\kappa$
+this grid can reach, and its $\langle n_B\rangle$ of some nine hundred nodes was
+still climbing. And the two deterministic lattices are left out on purpose: their
+sizes jump by a factor of three or more per generation, which quantises
+$r_\kappa$ past the point where a factor of two means anything.
+
+What survives is a bridge between two chapters that were built separately.
+Chapter~\ref{ch:communities} asked whether a rule has the emergent communities
+property and answered it with a threshold size; this chapter asked what a locally
+grown network converges to and answered it with an intensive quantity. They are
+the same answer. A rule with no communities has $\kappa=1$ at every size, so its
+$\langle n_B\rangle$ is the whole network and grows without bound --- which is to
+say that $r_\kappa$ is infinite exactly when $\langle n_B\rangle$ is, and the
+dichotomy Chapter~\ref{ch:communities} drew between local rules and $BA(n,2)$ is
+the dichotomy between a finite community size and none. That the Ramsey number
+barely notices the change of prior, where every exponent in this chapter moved,
+now reads as a consequence rather than a curiosity: $r_\kappa$ is a few times
+$\langle n_B\rangle$, which is a few dozen nodes, and at a few dozen nodes the
+flat model is nowhere near the $\sqrt n$ ceiling that makes the two priors
+disagree. At $n=80$ the two report $3.4$ communities against $2.9$; at $n=1600$,
+$21$ against $48$. The onset is measured where the instruments still agree.
 
 \section{The limit we found}
 \label{sec:gr-conclusion}
@@ -966,6 +1069,10 @@ diamond lattice. On
 the real systems where the question can be asked properly --- those recorded
 repeatedly while they grew --- it is flat too, and the collaboration graph settles
 at twenty-three nodes per community, next to duplication--split's twenty-one.
+The number is not inert, either. Section~\ref{sec:gr-onset} finds that it fixes
+the size at which communities become certain at all, so
+Chapter~\ref{ch:communities}'s threshold turns out to be this chapter's density
+wearing a different hat.
 
 It is tempting to go one step further and say that the limit is a \emph{nested}
 structure: communities of communities, all the way up, with the same constant

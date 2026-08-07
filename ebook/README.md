@@ -1,6 +1,6 @@
-# EPUB build — *Local network growth* (2nd edition)
+# EPUB build — *Local network growth* (3rd edition)
 
-Reflowable **EPUB3** conversion of the full book (preface + 8 chapters), with all
+Reflowable **EPUB3** conversion of the full book (preface + 11 chapters), with all
 math and figures rendered as images. The print sources in `../` are never
 modified — every intermediate here is regenerated from them.
 
@@ -48,6 +48,13 @@ Requires (all ship with TeX Live): `tex4ebook`, `make4ht`, `dvisvgm`, plus
 - **matplotlib `\includegraphics{figs/NAME.pdf}` → `figures/NAME`** — points at the
   rasterised PNG; width options dropped (CSS handles sizing).
 - **TikZ + `netfig-*` extraction** — each picture is written out for `renderfigs.sh`.
+- **`\input{tab-*}` inlined** — chapters 7--9 keep their master tables in
+  `../tab-*.tex`, and those tables hold the motif glyphs; leaving the `\input`
+  for LaTeX to resolve would hide them from the two transforms below.
+- **`\ngon{k}`, `\sqdiag`, `\sqstub` → tikzpictures** — the motif-column glyphs are
+  written in `../main.tex` with the `\tikz` short form, which the tikzpicture
+  extraction does not match; rewriting them as environments sends them down the
+  same path as every other figure. Without this the motif column comes out empty.
 
 The `calculation` box is defined in `ebook-preamble.tex` as a `<div class="calcbox">`;
 `\leavevmode … \EndP … \IgnorePar` keeps it valid block markup even when a box
@@ -58,7 +65,7 @@ directly follows a figure float.
 | file                 | role                                                          |
 |----------------------|--------------------------------------------------------------|
 | `build-book.sh`      | full pipeline → `book-ebook.epub`                            |
-| `book-ebook.tex`     | driver: preamble + preface + all 8 chapter bodies            |
+| `book-ebook.tex`     | driver: preamble + preface + all 11 chapter bodies           |
 | `ebook-preamble.tex` | shared preamble (packages, palette, `calculation` box)       |
 | `ebook.cfg`          | tex4ht config (SVG pictures)                                  |
 | `friends.css`        | stylesheet — edit this, then rebuild                         |
