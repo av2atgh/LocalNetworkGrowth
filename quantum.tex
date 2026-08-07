@@ -498,6 +498,20 @@ total, and it measures it in the units the total is denominated in.
 \section{How localized, exactly?}
 \label{sec:qw-exponent}
 
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=\linewidth]{figs/fig-qw-exponent.pdf}
+\caption{\textbf{What $\ell$ does over five octaves.} One panel per fitted behavior,
+window scaled as $[2n,4n]$, dashed lines the corresponding fits. Top row log--log, where
+a power law is straight: (a) the delocalized controls, $\ell\propto n$ dotted; (b) the
+two rules reading as powers, neither measured well enough to be reported as one. Bottom
+row linear in $\ell$ against logarithmic $n$, where a logarithm is straight and a
+constant flat: (c) the four rules preferring $a+b\ln n$, all bubble rules at long
+cycles; (d) rules preferring a constant, including both lattices, which carry no
+ensemble scatter. The full set is in the table.}
+\label{fig:qw-exponent}
+\end{figure}
+
 Section~\ref{sec:qw-flat} claimed that $\ell$ stops growing, and was careful to say
 that the rules with the largest footprints had not visibly stopped by $n=800$. That
 caution has to be paid for, because ``stops growing'' is a strong claim and the
@@ -573,10 +587,11 @@ $\ell(n)$ and compared by corrected Akaike information, which penalizes the two
 two-parameter models for their extra freedom, so that ``constant'' has to be beaten
 rather than merely tied.
 
+
 \input{tab-qw-exponent}
 
-\noindent The answer is not one answer, and the split is the most interesting thing
-in the chapter.
+\noindent The answer is not one answer, and the split --- laid out panel by panel in
+Figure~\ref{fig:qw-exponent} --- is the most interesting thing in the chapter.
 
 The two controls behave exactly as they must, which is the first thing to check: the
 ring gives $\nu=0.99\pm0.00$ and the random network $0.94\pm0.10$, both choosing the
@@ -632,16 +647,6 @@ hold. What it did not anticipate --- and what a measurement over three octaves c
 not have seen --- is that the marginal case comes with a logarithm attached for the
 rules with the loosest footprints.
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=\linewidth]{figs/fig-qw-exponent.pdf}
-\caption{\textbf{What $\ell$ does over five octaves.} (a) Stochastic rules and the
-two delocalized controls, with the averaging window scaled as $[2n,4n]$ and sizes to
-$n=3200$; the dotted line is $\ell\propto n$. (b) The deterministic lattices, which
-carry no ensemble scatter and so give the cleanest verdict: one network per size,
-nothing averaged over.}
-\label{fig:qw-exponent}
-\end{figure}
 
 \section{Duplication traps by symmetry}
 \label{sec:qw-twins}
@@ -735,12 +740,107 @@ they attribute to clustering is a symmetry, and it is the same symmetry that tra
 walkers on protein interaction networks, where the duplication is real and the
 triangles are not.
 
-Whether real interactomes show it is a measurement this chapter does not make, and
-it is the most concrete thing it leaves open. Duplicate genes are abundant and
-long-lived \citep{ohno1970,force1999}, so the twins should be there; but real
-divergence is not the independent link deletion of the model, and the question of how
-long a twin survives in a genome is exactly the question of how quickly the symmetry
---- and therefore the trap --- decays.
+\section{Real interactomes}
+\label{sec:qw-real}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=\linewidth]{figs/fig-qw-real.pdf}
+\caption{\textbf{Eight real interactomes.} (a) Localization volume against size:
+interactomes between $1.8$ and $6.7$ nodes, two non-biological controls of comparable
+sparsity at $15$ and $127$. (b) Multiplicity of eigenvalue $1$ against the twinned
+fraction, each interactome's degree-preserving rewiring hollow: the degeneracy tracks
+the twins, and the rewiring reproduces most of it but not all. (c) Each network against
+its own rewiring, diagonal dotted; every interactome lies \emph{above} it, so every one
+is more localized than its degrees alone require. Euroroad is the one case below.}
+\label{fig:qw-real}
+\end{figure}
+
+The model says duplication traps walkers. Real interactomes are the place to look,
+because duplicate genes are abundant and long-lived \citep{ohno1970,force1999}, so the
+twins ought to be there. Eight physical protein interaction networks from the
+Netzschleuder repository \citep{netzschleuder} --- two yeast, three human, two
+\emph{C. elegans}, and one restricted to PDZ domains --- are small enough to
+diagonalize exactly, and they are measured here beside two non-biological networks of
+comparable size and sparsity, and beside a degree-preserving rewiring of every one of
+them.
+
+
+\input{tab-qw-real}
+
+\noindent The first column of numbers is the one that matters, and it does not need
+any intervention on the networks to read (Figure~\ref{fig:qw-real}). \emph{Real interactomes localize a quantum
+walker, tightly.} Their localization volumes run from $1.8$ to $6.7$ nodes, with a
+mean of $3.8$ --- tighter than every stochastic rule in this book, comparable to the
+pseudofractal, and in the same place as the duplication model's own $\ell\approx5$.
+Two networks of similar size and mean degree grown by something other than
+duplication do not: the power grid gives $15$ and the Euroroad network $127$.
+
+That is not the degree sequence talking, and the rewiring is what establishes it.
+Shuffling every link while preserving every degree exactly --- so that the number of
+proteins seen once, the hubs, and the whole degree distribution are untouched ---
+raises $\ell$ in all eight cases, by factors from $1.4$ to $65$. The yeast network of
+\citet{collins2007}, the densest of the eight, goes from $6.7$ to $437$: its real
+wiring confines a walker to seven nodes and its degree-matched shuffle lets one roam
+over four hundred. What localizes these networks is where their links are, not how
+many each protein has.
+
+The symmetry is there too, and on the scale the theorem predicts. Between $31\%$ and
+$72\%$ of the entire spectrum of these interactomes sits at exactly $\lambda=1$,
+against $3\%$ for Euroroad and $12\%$ for the power grid. A network cannot carry that
+much degeneracy at that particular eigenvalue by accident.
+
+\subsection*{What the twins are, and what they are not}
+
+Whether the symmetry is \emph{duplication} is a different question, and the honest
+answer is that these data do not settle it.
+
+The difficulty is that a third to nearly three fifths of the proteins in these
+datasets have exactly one recorded partner, and any two degree-one proteins hanging
+off the same hub are false twins by definition. That is what an unfinished screen
+looks like as much as what a recently duplicated gene looks like. Counting only twins
+that share \emph{two or more} partners --- which one lucky bait-prey hit cannot
+manufacture --- the fraction collapses from $37\%$ on average to $3\%$.
+
+The rewiring separates the two contributions. Of the all-twin fraction, roughly two
+thirds to three quarters survives the shuffle: $38\%$ becomes $26\%$ in yeast, $49\%$
+becomes $36\%$ in \emph{C.\ elegans}. So most identical neighborhoods in an
+interactome are what a degree sequence with that many leaves produces on its own, and
+the excess over chance is real but modest. The twins that share two or more partners
+behave in the opposite way: rare in the data, at $1$ to $9\%$, and almost entirely
+absent from the rewirings, at $0$ to $0.6\%$. Those are a genuine structural
+signature, not a consequence of the degrees --- and they are the ones a duplication
+retaining more than a single link would leave behind.
+
+Two conclusions, and they point in different directions. The interactomes carry a
+population of multi-partner twins that no degree-matched null model reproduces, which
+is what duplication predicts and is the positive result. But that population is too
+small to be doing the trapping: it is a few per cent of the network, and the
+localization is extreme. Something else confines these walkers, and the best candidate
+in the table is the sparse hub-and-spoke geometry itself, of which the leaf twins are
+one expression among several.
+
+\subsection*{A test not to lean on}
+
+The demolition that worked on the model does not transfer, and it is worth saying why
+rather than quoting it. Merging every twin class in a real interactome does raise
+$\ell$ sharply --- $4.4$ to $21.0$ in the human network of \citet{rual2005} --- but the
+operation deletes up to $37\%$ of the nodes and essentially all of the leaves, so it
+conflates removing a symmetry with removing a third of the network and most of its
+periphery. Stripping leaves from any sparse network will delocalize a walk on it
+whether or not the leaves were twins. Merging only the multi-partner twins avoids that
+objection and changes $\ell$ by $9\%$ on average, which is consistent with their being
+too few to matter and equally consistent with the test having no power. Neither
+version supports a causal claim about real data, and neither is offered as one.
+
+What would settle it is a control this chapter does not run: remove the same number of
+\emph{non-twin} degree-one nodes and see whether $\ell$ moves as much. If it does, the
+merge was never about symmetry. Together with repeating the measurement on a saturated
+interactome, where degree-one proteins are rare and a surviving twin has to be
+biology, that is the concrete experiment the duplication reading now needs. The
+theorem of Eq.~\eqref{eq:qw-twin-eig} is exact and the localization of real
+interactomes is measured; the link between them, in real data, is not yet established.
+
 
 \section{What the walker measures}
 
@@ -820,7 +920,13 @@ footprint, growing like $6c-8$ in the length $c$ of the cycle closed, tightening
 when a deterministic cell branches more and loosening when its paths run longer.
 Duplication is a case apart and the sharpest of all: twins are exact automorphisms,
 they force eigenvectors of the walk Hamiltonian supported on two nodes, and merging
-them triples the walker's territory. The pseudofractal and the recursive triangle
+them triples the walker's territory. Eight real protein interaction networks then turn
+out to be more strongly localized than anything modelled here, at $\ell$ between $1.8$
+and $6.7$ nodes, and more localized than their own degree-preserving rewirings in every
+case --- so it is their wiring and not their degrees. Whether the symmetry doing it is
+duplication is left open rather than claimed: the multi-partner twins that duplication
+predicts are real, in that no rewiring reproduces them, but they are a few per cent of
+the network and too rare to be the cause. The pseudofractal and the recursive triangle
 webs that provoked this chapter are then not evidence that clustering localizes
 walks; they are the extreme point of the footprint law, the tightest trap available
 because the triangle is the shortest cycle there is.

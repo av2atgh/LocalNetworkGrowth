@@ -163,51 +163,110 @@ def report(df):
     return g
 
 
+def _xticks(ax, ticks):
+    ax.set_xscale("log")
+    ax.set_xticks(ticks)
+    ax.set_xticklabels([str(t) for t in ticks])
+    ax.set_xticks([], minor=True)
+
+
+def _lgd(ax, loc="upper left"):
+    ax.legend(frameon=False, loc=loc, fontsize=5.0, handletextpad=0.3,
+              labelspacing=0.2, borderpad=0.1, borderaxespad=0.2)
+
+
 def fig_exponent(g):
-    fig, axes = plt.subplots(1, 2, figsize=(W, W * 0.50))
+    """One panel per fitted behaviour, so the classification is the figure.
 
-    ax = axes[0]
-    show = [("ring", "ring"), ("ER(n,4)", "$ER(n,4)$"), ("BB2+link", r"$BB(n,2)+$link"),
-            ("BB(n,5)", "$BB(n,5)$"), ("BB(n,1)", "$BB(n,1)$"),
-            ("DD(n,0.5)", "$DD(n,0.5)$")]
-    for i, (r, lab) in enumerate(show):
+    The top row is log-log, where a power law is a straight line: (a) the two
+    delocalized controls at nu ~ 1, (b) the two rules that read as powers with
+    0 < nu < 1.  The bottom row is linear in ell against a logarithmic n, where
+    a logarithm is a straight line and a constant is a flat one: (c) the rules
+    that prefer a + b ln n, (d) the rules that prefer a constant.
+    """
+    fig, axes = plt.subplots(2, 2, figsize=(W, W * 0.92))
+
+    # ---------------------------------------------------------------- (a) ~ n
+    ax = axes[0, 0]
+    for i, (r, lab) in enumerate([("ring", "ring"), ("ER(n,4)", "$ER(n,4)$")]):
         d = g[g.rule == r].sort_values("n")
-        delocal = r in ("ring", "ER(n,4)")
-        ax.plot(d.n, d.L, ls="-" if delocal else "none", lw=0.7, ms=3.0,
-                color="0.45" if delocal else "none", label=lab, **MK[i % len(MK)])
-    ax.plot([90, 3600], [30, 1200], ls=":", lw=0.7, c="0.25", zorder=1)
-    ax.text(900, 130, r"$\propto n$", fontsize=6.5, color="0.25")
-    ax.set_xscale("log"); ax.set_yscale("log")
-    ax.set_xlabel("$n$"); ax.set_ylabel(r"$\ell$")
-    ax.set_xticks([100, 400, 1600]); ax.set_xticklabels(["100", "400", "1600"])
-    ax.set_xticks([], minor=True)
-    ax.set_yticks([5, 20, 100, 500]); ax.set_yticklabels(["5", "20", "100", "500"])
+        ax.plot(d.n, d.L, ls="-", lw=0.7, ms=3.0, color="0.45", label=lab,
+                **MK[i])
+    ax.plot([90, 3600], [31, 1240], ls=":", lw=0.7, c="0.25", zorder=1)
+    ax.text(260, 480, r"$\propto n$", fontsize=6, color="0.25")
+    ax.set_yscale("log")
+    _xticks(ax, [100, 400, 1600])
+    ax.set_yticks([30, 100, 300, 1000])
+    ax.set_yticklabels(["30", "100", "300", "1000"])
     ax.set_yticks([], minor=True)
-    ax.legend(frameon=False, loc="upper left", fontsize=5.2,
-              handletextpad=0.3, labelspacing=0.22, borderpad=0.1)
-    panel(ax, "(a)")
+    ax.set_xlabel("$n$"); ax.set_ylabel(r"$\ell$")
+    ax.set_title(r"delocalized, $\nu\simeq1$", fontsize=6.2, pad=2)
+    _lgd(ax, "lower right")
+    panel(ax, "(a)", x=-0.30)
 
-    # (b) the lattices, where there is no ensemble scatter to hide behind
-    ax = axes[1]
-    for i, (r, lab) in enumerate([("diamond(2,2)", "diamond $(2,2)$"),
-                                  ("diamond(3,2)", "diamond $(3,2)$"),
+    # ------------------------------------------------- (b) power, 0 < nu < 1
+    ax = axes[0, 1]
+    for i, (r, lab) in enumerate([("rec.triangle", "rec. triangle"),
+                                  ("BB2+link", r"$BB(n,2)+$link")]):
+        d = g[g.rule == r].sort_values("n")
+        x, y = d.n.values.astype(float), d.L.values
+        lam, _ = slope_ci(x, y)
+        ax.plot(x, y, ls="none", ms=3.0, label=rf"{lab}, $\nu={lam:.2f}$",
+                **MK[i])
+        xs = np.array([x[0] * 0.85, x[-1] * 1.18])
+        ax.plot(xs, np.exp(np.log(y).mean() + lam * (np.log(xs) - np.log(x).mean())),
+                ls="--", lw=0.6, c="0.35", zorder=1)
+    ax.set_yscale("log")
+    _xticks(ax, [100, 400, 1600])
+    ax.set_yticks([5, 10, 20, 50]); ax.set_yticklabels(["5", "10", "20", "50"])
+    ax.set_yticks([], minor=True)
+    ax.set_ylim(4, 90)
+    ax.set_xlabel("$n$"); ax.set_ylabel(r"$\ell$")
+    ax.set_title(r"power, $0<\nu<1$", fontsize=6.2, pad=2)
+    _lgd(ax, "lower right")
+    panel(ax, "(b)", x=-0.30)
+
+    # ------------------------------------------------------------- (c) ln n
+    # Linear ell against logarithmic n: a logarithm is a straight line here,
+    # which is the whole reason the bottom row does not use a log y axis.
+    ax = axes[1, 0]
+    for i, (r, lab) in enumerate([("BB(n,5)", "$BB(n,5)$"),
+                                  ("BB(n,6)", "$BB(n,6)$"),
+                                  ("BB(n,3)", "$BB(n,3)$"),
+                                  ("BB2+diag", r"$BB(n,2)+$diag.")]):
+        d = g[g.rule == r].sort_values("n")
+        x, y = d.n.values.astype(float), d.L.values
+        ax.plot(x, y, ls="none", ms=3.0, label=lab, **MK[i])
+        c = np.polyfit(np.log(x), y, 1)
+        xs = np.array([x[0] * 0.85, x[-1] * 1.18])
+        ax.plot(xs, np.polyval(c, np.log(xs)), ls="--", lw=0.6, c="0.35", zorder=1)
+    _xticks(ax, [100, 400, 1600])
+    ax.set_xlabel("$n$"); ax.set_ylabel(r"$\ell$")
+    ax.set_ylim(10, 72)
+    ax.set_title(r"logarithmic, $a+b\ln n$", fontsize=6.2, pad=2)
+    _lgd(ax, "upper left")
+    panel(ax, "(c)", x=-0.30)
+
+    # ---------------------------------------------------------- (d) constant
+    ax = axes[1, 1]
+    for i, (r, lab) in enumerate([("BB(n,1)", "$BB(n,1)$"),
+                                  ("LS(n,1)", "$LS(n,1)$"),
+                                  ("diamond(2,2)", "diamond $(2,2)$"),
                                   ("pseudofractal", "pseudofractal"),
-                                  ("rec.triangle", "rec. triangle")]):
+                                  ("DD(n,0.5)", "$DD(n,0.5)$")]):
         d = g[g.rule == r].sort_values("n")
-        ax.plot(d.n, d.L, ls="none", ms=3.0, label=lab, **MK[i % len(MK)])
-    ax.set_xscale("log"); ax.set_yscale("log")
+        x, y = d.n.values.astype(float), d.L.values
+        ax.plot(x, y, ls="none", ms=3.0, label=lab, **MK[i % len(MK)])
+        ax.plot([x[0] * 0.85, x[-1] * 1.18], [y.mean()] * 2, ls="--", lw=0.6,
+                c="0.35", zorder=1)
+    _xticks(ax, [100, 1000])
     ax.set_xlabel("$n$"); ax.set_ylabel(r"$\ell$")
-    ax.set_xticks([30, 100, 300, 1000, 3000])
-    ax.set_xticklabels(["30", "100", "300", "1000", "3000"])
-    ax.set_xticks([], minor=True)
-    ax.set_yticks([2, 5, 10, 20]); ax.set_yticklabels(["2", "5", "10", "20"])
-    ax.set_yticks([], minor=True)
-    ax.set_ylim(1.5, 30)
-    ax.legend(frameon=False, loc="upper left", fontsize=5.2,
-              handletextpad=0.3, labelspacing=0.22, borderpad=0.1)
-    panel(ax, "(b)")
+    ax.set_ylim(0, 28)
+    ax.set_title(r"constant, $\nu=0$", fontsize=6.2, pad=2)
+    _lgd(ax, "upper left")
+    panel(ax, "(d)", x=-0.30)
 
-    fig.tight_layout(pad=0.3)
+    fig.tight_layout(pad=0.25, h_pad=0.8)
     save(fig, "fig-qw-exponent.pdf")
 
 
