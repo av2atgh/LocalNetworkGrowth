@@ -17,11 +17,17 @@ On any connected network a random walk settles, after long enough, into the same
 stationary distribution --- each node visited in proportion to its degree, $v_i =
 k_i/2m$ --- and it settles there no matter where it started. That is precisely what
 made the chapter work: the visiting probability could be treated as a property of
-the node, not of the walk's history. It is also a kind of blindness. The stationary
-distribution of a random walk knows the degree sequence and nothing else. Two
-networks with the same degrees --- one grown by triadic closure, one wired at random
---- look identical to it. A classical walk cannot tell us which rule built the
-network it is walking on.
+the node, not of the walk's history. It is also a kind of blindness: the stationary
+distribution knows the degree sequence and nothing else, so two networks with the
+same degrees --- one grown by triadic closure, one wired at random --- are identical
+to it.
+
+That blindness must not be overstated, and Chapter~\ref{ch:diffusion} is the
+correction. What knows only the degrees is where a classical walk \emph{ends up};
+how it gets there knows a great deal, and the previous chapter read a spectral
+dimension and a whole renormalization group out of exactly that. But the reading had
+to be taken from the \emph{approach} to equilibrium, because a classical walk always
+reaches equilibrium in the end. What no classical walk can do is decline to spread.
 
 A \emph{quantum} walker does not forget. Replace the diffusion equation with the
 Schr\"odinger equation and the evolution becomes unitary: probability is shuffled

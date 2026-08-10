@@ -154,7 +154,28 @@ explanation. Chapter~\ref{ch:quantum} finds the same alternation in the walker's
 territory measured in meso-units, which at least establishes that whatever it is, it
 is not an artifact of one instrument.
 
-The closing chapter leaves questions of its own, and the sharpest is a prediction it
+The two closing chapters leave questions of their own. Chapter~\ref{ch:diffusion}
+finds that on a hierarchical lattice the specific heat of diffusion counts the
+generations of the construction and spaces them by a factor the lattice's parameters
+fix, and that the plateau it oscillates around measures the spectral dimension. Both
+predictions hold cleanly when the lattice branches in two and neither converges when it
+branches in three or four, at any size an exact diagonalization can reach. That is
+almost certainly a finite-size effect --- the numbers move the right way --- but
+``almost certainly'' is not a proof, and a sparse or iterative method that reached a
+few more generations would either close it or turn it into something more interesting.
+Two further questions from that chapter are open in a plainer way. The specific heat
+does not separate the growth rules, putting duplication and preferential attachment on
+top of each other, and whether any diffusion-based instrument can do that job is
+unanswered. The map equation, which finds communities by compressing a walk rather than an
+adjacency matrix, turns out to buy the community residue and not the meso-structure
+total: it reports a single module on the lattices whose footprint tiles them completely,
+however much structure they contain, because a walk is trapped only by a bottleneck and
+a triangle is not one. What that leaves open is narrower and sharper. The result holds
+at the default regularization and dissolves on either side of it, so a principled way to
+set that strength --- or a bottleneck measure that needs no such knob --- would turn a
+suggestive agreement into a statement.
+
+Chapter~\ref{ch:quantum} leaves questions too, and the sharpest is a prediction it
 could only half test. If a quantum walker holds a fixed number of meso-units, its
 localization exponent must be one minus the census exponent, $\nu = 1-\beta$. That
 makes Chapter~\ref{ch:motifs}'s fractal class --- communities whose number grows as a

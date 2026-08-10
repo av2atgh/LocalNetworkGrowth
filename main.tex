@@ -148,10 +148,11 @@ duplication (protein interaction networks) --- the three local rules of my 2003
 paper --- and then carry the same principle into more recent work: the
 duplication--split structure of project schedules, the emergence of communities
 from local rules, the vocabulary in which that structure is best described, and the
-boosting of shortest path multiplicity. A closing chapter puts a walker back on the
-networks the rules built --- a quantum one this time, which unlike the classical
-walker of Chapter~\ref{ch:search} does not forget where it started --- and finds the
-rule legible in how far it can travel. Each chapter
+boosting of shortest path multiplicity. Two closing chapters put a walker back on the
+networks the rules built. The first lets it diffuse, and reads the scales of a network
+off the thermodynamics of that spreading; the second makes it quantum, so that unlike
+the classical walker of Chapter~\ref{ch:search} it never forgets where it started,
+and finds the growth rule legible in how far it can travel. Each chapter
 pairs a concrete local rule with a class of real networks it illuminates, and
 each ends where it began, with the conclusion that locality is the common cause.
 
@@ -265,11 +266,32 @@ objection, and it is the right one to press. A statement about the cheapest
 description is a statement about descriptions. Is there anything in the network
 itself?
 
-This edition adds one chapter, and it is an attempt to answer that by putting a
-physical probe on the same networks and asking it. The probe is a quantum walker. It
-cannot fit a model, choose a prior, infer a number of blocks, or decide whether to
-call four links a square; it can only move, and one can measure how much of the
-network it ever reaches. The provocation was a paper of Lucas B\"ottcher and Mason
+This edition adds two chapters, and both answer that by putting a physical probe on
+the same networks and asking it. The probes are walkers. Neither can fit a model,
+choose a prior, infer a number of blocks, or decide whether to call four links a
+square; both can only move, and one watches where they get to.
+
+The first walker is the ordinary one, diffusing. Treat the spread of heat over a
+network as a Boltzmann weight and the diffusion time becomes a resolution knob, with
+a specific heat that is flat where there is no scale to find and peaks where there is
+one --- and whose height, it turns out, is the dimension the diffusion sees. On a
+ring that reads one, as it must. On the diamond lattice of Chapter~\ref{ch:communities}
+it becomes something better: the specific heat announces one peak per generation of
+the construction, spaced by a factor this book can derive, and the whole ladder
+oscillates around a plateau fixed by the lattice's parameters. That chapter's real
+payoff is a comparison. Chapter~\ref{ch:communities} built a renormalization group
+for the diamond out of counting links; the diffusion gives a second one, out of
+spreading over it, and the two differ by exactly one power --- structure rescales
+length, diffusion rescales time, and on this lattice time is length squared. Two
+renormalization groups on one object, agreeing in a way that can be written down.
+Against that I have to set what the same instrument cannot do: it does not tell the
+book's growth rules apart, and it puts gene duplication and preferential attachment
+on top of each other, which is the one pairing I would most like separated.
+
+The second walker is quantum, and it is there because the first one always relaxes in
+the end. It cannot fit a model either, but unlike the classical walker it never
+forgets, so it can be confined for all time rather than merely delayed, and one can
+measure how much of the network it ever reaches. The provocation was a paper of Lucas B\"ottcher and Mason
 Porter \citeyearpar{boettcher2025localization}, who found such a walker trapped on
 networks built by recursively attaching triangles and concluded that local clustering
 is what traps it. Their triangles are this book's
@@ -403,6 +425,16 @@ chapters arrived at by argument, and finds it again in something that moves.
 % instructions
 % references
 % - https://arxiv.org/abs/2605.25237
+
+% instructions
+% references
+% - Noh & Rieger, Phys. Rev. Lett. 92, 118701 (2004), mean first passage times
+% - Villegas et al., Nature Physics 19, 445 (2023), the Laplacian RG
+% - Villegas et al., Phys. Rev. Research 4, 033196 (2022), entropic transitions
+% - Rosvall & Bergstrom, PNAS 105, 1118 (2008), the map equation
+% - figs/heat_diffusion.py generates every number, table and figure in it
+
+\include{diffusion}
 
 % instructions
 % references
