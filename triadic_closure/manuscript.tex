@@ -50,6 +50,10 @@ other. The tree phase is weakly disassortative and has no community structure.
 Triadic closure, a link forming between two nodes that share a neighbour, is
 the mechanism behind the high clustering of social networks
 \cite{granovetter1973,davidsen2002,holme2002,vazquez2003,toivonen2006,jackson2007}.
+In an evolving university e-mail network, pairs two steps apart were about 30
+times more likely to form a tie than pairs three steps apart, and the
+probability of a new tie grew with the number of common contacts
+\cite{kossinets2006}, as it does under the census rule (w) below.
 In the local-search model $LS(n,\ell)$ \cite{vazquez2001,vazquez2003,book} with
 $\ell=1$ a newcomer picks a random node $j$, links to it and to a random
 neighbour of $j$. Every arrival closes one triangle, so arrival and closure are
@@ -66,9 +70,19 @@ with mutual friends with the decay of unrenewed ties, and found clustered
 networks with strong community structure. Bianconi \emph{et al.}
 \cite{bianconi2014} showed that growth by triadic closure alone generates
 communities, and that heterogeneous node fitness replaces them with a few
-superhubs that attract most of the links. Here the rates are uniform, and the
-question is what the balance between arrival, closure and opening alone
-produces.
+superhubs that attract most of the links. On a fixed population, link creation
+through friends of friends balanced by random link decay gives a discontinuous
+transition between a sparse and a dense society, with coexistence and
+hysteresis \cite{marsili2004}, and a birth rate that grows with the number of
+common neighbours gives bistability \cite{grindrod2012}. Closure through a
+uniformly random wedge, our rule (w) below, was analysed on a fixed vertex set
+to bound the growth of degrees \cite{ahmadian2021}. In the random triadic
+process each triad may close only if its triple is present in a random
+hypergraph of density $p$, and the graph becomes complete above the sharp
+threshold $p=1/(2\sqrt n)$ \cite{korandi2016}. Static triadic closure on a fixed
+backbone is exactly solvable for its motif densities \cite{cirigliano2024}.
+Here nodes keep arriving, the rates are uniform, and the question is what the
+balance between arrival, closure and opening alone produces.
 
 Section~\ref{sec:model} defines the model and four ways of choosing the triad.
 Section~\ref{sec:density} fixes the density and finds the first transition, at
@@ -98,7 +112,8 @@ opening rule:
 \item[(w)] \emph{random triad}: an open (closed) triad drawn uniformly from the
   whole network. The centre of an open triad is then chosen with weight
   $\propto k_c(k_c-1)$. A link belongs to as many closed triads as it has
-  triangles, $t_e$, so opening removes a link with probability $\propto t_e$;
+  triangles, $t_e$, so opening removes a link with probability $\propto t_e$.
+  The closure step is that of the wedge picking model \cite{ahmadian2021};
 \item[(p)] \emph{random potential link}: closure picks a uniformly random
   unlinked pair with a common neighbour (the rule simulated in
   Ref.~\cite{book}, Ch.~3); opening picks a uniformly random link with
@@ -299,7 +314,10 @@ were born among the first few thousand arrivals. This share does not shrink with
 size: $\phi(\sqrt n)=0.176$, $0.192$, $0.202$ at $n=10^4$, $10^5$, $10^6$, while
 the density climbs to $0.71$, $0.77$, $0.81$. The same holds for every $u\ge0.3$.
 The core is a dense block of $\Theta(\sqrt n)$ nodes inside a sparse network.
-The number of triangles therefore grows as $T\sim n^{3/2}$, and the transitivity
+The number of triangles therefore grows as $T\sim n^{3/2}$. The same scales
+appear in the random triadic process, which below its threshold stops at
+$O(n^{3/2})$ links and above it fills the whole graph \cite{korandi2016}; here
+the census rule fills only a $\sqrt n$ block, and the transitivity
 stays near $0.5$ while the mean local clustering vanishes
 (Table~\ref{tab:rules}). The degree distribution has a second maximum at
 $k\sim\sqrt n$ (Fig.~\ref{fig:degree}a), and the degree of the oldest nodes
@@ -658,10 +676,13 @@ run condenses near $10^6$ and then runs away ($\langle k\rangle=2.67$ at
 $1.6\times10^6$ and rising): once a core forms, $W\sim n^{3/2}$, and closures
 outpace arrivals. Since condensation appears to happen at every $u>0$,
 per-triad rates should have no stationary density at any $\beta_+>0$. Total
-rates in fixed ratio are the consistent choice.
+rates in fixed ratio are the consistent choice. On a fixed population, where
+per-pair birth rates grow with the number of common neighbours and links die at
+a constant rate, the same feedback yields two stable states, a sparse and a
+dense one \cite{grindrod2012}. With arrivals the dense state takes over.
 
 %=====================================================================
-\section{Discussion}
+\section{Conclusions}
 
 The model has two parameters once the clock is fixed: the net growth
 $\Delta=(\beta_+-\beta_-)/\alpha$, which sets the density, and the turnover
@@ -697,7 +718,10 @@ nodes, a sparse graph with a dense spike in graphon language.
 (i) A controlled theory of the onset $n^*(u)$, power law versus essential
 singularity, and of its seed-to-seed distribution. (ii) Whether the condensate
 boundary at $\beta_-/\beta_+\approx0.83$ is a sharp line or drifts with $n$, and
-a theory of the club exponent $a^*(\beta_-/\beta_+)$. (iii) The degree
+a theory of the club exponent $a^*(\beta_-/\beta_+)$. Closure balanced by decay
+gives discontinuous transitions with hysteresis on fixed populations
+\cite{marsili2004,grindrod2012}; whether the boundary here is first order could
+be tested by bimodality across seeds and by quenches in $\beta_-$. (iii) The degree
 distribution of the tree phase, which the $k^2$ erosion argument should give
 in closed form. (iv) The scaling of the sparse core of rule (p), and its phase
 diagram with opening. (v) Mixtures of local and census closure, which should
@@ -714,7 +738,7 @@ graph-tool). \texttt{mkfigs.py} draws the figures.
 Summaries are in \texttt{data/}.
 
 \begin{acknowledgments}
-All code is available at \url{https://github.com/av2atgh/LocalNetworkGrowth}.
+All code is available at Ref.~\cite{code}.
 The calculations were assisted by Claude Opus~5, an AI assistant developed by Anthropic. Nodes \& Links Ltd
 provided support in the form of salary for Alexei Vazquez but did not have any additional role in the conceptualization of the study, the
 analysis, the decision to publish or the preparation of the manuscript.
@@ -727,8 +751,14 @@ analysis, the decision to publish or the preparation of the manuscript.
 \bibitem{vazquez2003} A. Vazquez, Growing network with local rules: Preferential attachment, clustering hierarchy, and degree correlations, Phys. Rev. E \textbf{67}, 056104 (2003).
 \bibitem{toivonen2006} R. Toivonen, J.-P. Onnela, J. Saram\"aki, J. Hyv\"onen, and K. Kaski, A model for social networks, Physica A \textbf{371}, 851 (2006).
 \bibitem{jackson2007} M. O. Jackson and B. W. Rogers, Meeting strangers and friends of friends: How random are social networks?, Am. Econ. Rev. \textbf{97}, 890 (2007).
+\bibitem{kossinets2006} G. Kossinets and D. J. Watts, Empirical analysis of an evolving social network, Science \textbf{311}, 88 (2006).
+\bibitem{marsili2004} M. Marsili, F. Vega-Redondo, and F. Slanina, The rise and fall of a networked society: A formal model, Proc. Natl. Acad. Sci. USA \textbf{101}, 1439 (2004).
+\bibitem{grindrod2012} P. Grindrod, D. J. Higham, and M. C. Parsons, Bistability through triadic closure, Internet Math. \textbf{8}, 402 (2012).
+\bibitem{ahmadian2021} S. Ahmadian and S. Haddadan, The wedge picking model: A theoretical analysis of graph evolution caused by triadic closure and algorithmic implications, J. Strateg. Innov. Sustain. \textbf{16}(3), 74 (2021).
+\bibitem{korandi2016} D. Kor\'andi, Y. Peled, and B. Sudakov, A random triadic process, SIAM J. Discrete Math. \textbf{30}, 1 (2016).
+\bibitem{cirigliano2024} L. Cirigliano, C. Castellano, G. J. Baxter, and G. Tim\'ar, Strongly clustered random graphs via triadic closure: An exactly solvable model, Phys. Rev. E \textbf{109}, 024306 (2024).
 \bibitem{vazquez2001} A. Vazquez, Disordered networks generated by recursive searches, Europhys. Lett. \textbf{54}, 430 (2001).
-\bibitem{book} A. Vazquez, \emph{Local network growth: how simple rules drive network complexity} (2026).
+\bibitem{book} A. Vazquez, \emph{Local network growth: how simple rules drive network complexity} (Independently published, 2026), ISBN 979-8181138933.
 \bibitem{bianconi2001} G. Bianconi and A.-L. Barab\'asi, Bose-Einstein condensation in complex networks, Phys. Rev. Lett. \textbf{86}, 5632 (2001).
 \bibitem{jin2001} E. M. Jin, M. Girvan, and M. E. J. Newman, Structure of growing social networks, Phys. Rev. E \textbf{64}, 046132 (2001).
 \bibitem{bianconi2014} G. Bianconi, R. K. Darst, J. Iacovacci, and S. Fortunato, Triadic closure as a basic generating mechanism of communities in complex networks, Phys. Rev. E \textbf{90}, 042806 (2014).
@@ -740,6 +770,7 @@ analysis, the decision to publish or the preparation of the manuscript.
 \bibitem{karrer2011} B. Karrer and M. E. J. Newman, Stochastic blockmodels and community structure in networks, Phys. Rev. E \textbf{83}, 016107 (2011).
 \bibitem{peixoto2014} T. P. Peixoto, Hierarchical block structures and high-resolution model selection in large networks, Phys. Rev. X \textbf{4}, 011047 (2014).
 \bibitem{guimera2004} R. Guimer\`a, M. Sales-Pardo, and L. A. N. Amaral, Modularity from fluctuations in random graphs and complex networks, Phys. Rev. E \textbf{70}, 025101(R) (2004).
+\bibitem{code} \url{https://github.com/av2atgh/LocalNetworkGrowth}.
 \end{thebibliography}
 
 \end{document}
