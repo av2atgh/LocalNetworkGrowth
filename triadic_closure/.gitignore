@@ -1,0 +1,9 @@
+tc
+__pycache__/
+*.aux
+*.log
+*.fls
+*.fdb_latexmk
+*.out
+*Notes.bib
+*.bbl
