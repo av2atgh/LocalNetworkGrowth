@@ -18,10 +18,7 @@
 \begin{abstract}
 We study a network that grows by three independent processes: nodes arrive at
 rate $\alpha$ and attach to a random node, open triads close at rate $\beta_+$,
-and closed triads open at rate $\beta_-$. Since $\alpha+\beta_++\beta_-$ only
-sets the clock, the model has two parameters. We derive and characterize its
-phase diagram. The mean degree is $\langle k\rangle=2[1+(\beta_+-\beta_-)/\alpha]$
-for $\beta_+>\beta_-$. At $\beta_+=\beta_-$ the triangles become a critical queue,
+and closed triads open at rate $\beta_-$. At $\beta_+=\beta_-$ the triangles become a critical queue,
 and for $\beta_-\ge\beta_+$ the network is a tree whose degrees stay bounded,
 because every closure that is reversed strips a link from the centre of the
 triad. For $\beta_+>\beta_-$ the outcome depends on how the open triad is
@@ -70,7 +67,10 @@ with mutual friends with the decay of unrenewed ties, and found clustered
 networks with strong community structure. Bianconi \emph{et al.}
 \cite{bianconi2014} showed that growth by triadic closure alone generates
 communities, and that heterogeneous node fitness replaces them with a few
-superhubs that attract most of the links. On a fixed population, link creation
+superhubs that attract most of the links. Their model, which they name triadic
+closure, is one specific way of closing triads: closure is tied to arrival, a
+newcomer linking to a random node and, with probability $p$, to its
+neighbours, as in the local-search model \cite{vazquez2003,jackson2007}. On a fixed population, link creation
 through friends of friends balanced by random link decay gives a discontinuous
 transition between a sparse and a dense society, with coexistence and
 hysteresis \cite{marsili2004}, and a birth rate that grows with the number of
@@ -84,12 +84,27 @@ backbone is exactly solvable for its motif densities \cite{cirigliano2024}.
 Here nodes keep arriving, the rates are uniform, and the question is what the
 balance between arrival, closure and opening alone produces.
 
+Growth is what separates this model from the closure-and-decay models of
+Refs.~\cite{marsili2004,grindrod2012}, and it changes the outcome in two ways.
+First, in a fixed population every node is statistically equivalent, so the
+network as a whole is either sparse or dense, and the two states compete as
+alternatives: bistability, coexistence, hysteresis. In a growing network nodes
+differ by age. The old nodes accumulate closures, and the dense state appears
+locally, on a vanishing fraction of nodes that coexists with a sparse
+majority. Bistability between global states becomes condensation. Second, with
+per-pair rates and a fixed population the dense state is a finite fraction of
+all pairs, whereas arrivals bring a reservoir of new nodes and a density that
+can be held fixed. We show that this requires total rates in fixed ratio:
+per-triad rates, the analogue of the per-pair rates of
+Ref.~\cite{grindrod2012}, have no stationary density once nodes arrive
+(Sec.~\ref{sec:pertriad}).
+
 Section~\ref{sec:model} defines the model and four ways of choosing the triad.
 Section~\ref{sec:density} fixes the density and finds the first transition, at
 $\beta_+=\beta_-$. Section~\ref{sec:meanfield} gives the uncorrelated mean field.
 Section~\ref{sec:phase} lays out the phase diagram, and
 Secs.~\ref{sec:condensed}--\ref{sec:tree} characterize its three phases.
-Section~\ref{sec:local} treats the local rules, Sec.~\ref{sec:mixing} the
+Section~\ref{sec:local} treats the other closure rules, Sec.~\ref{sec:mixing} the
 degree correlations and communities, and Sec.~\ref{sec:pertriad} the
 alternative of per-triad rates.
 
@@ -130,8 +145,9 @@ its neighbourhood. If the selected configuration does not qualify, the
 selection is repeated. A closure that finds no open triad becomes an arrival,
 and an opening that finds no closed triad does nothing. Opening a triad never
 disconnects the network, since $a$ and $b$ remain joined through $c$.
-Rule (w) is the main object of this paper. The reference is $LS(n,1)$, which
-adds one node and two links per step.
+Rule (w) is the main object of this paper. Rules (p), (c) and (f) are
+treated, for comparison, in Sec.~\ref{sec:local}. The reference is $LS(n,1)$,
+which adds one node and two links per step.
 
 The simulation keeps adjacency lists, a hash set of links, a Fenwick tree over
 the triad weights $k_c(k_c-1)/2$, and, when opening is on, the triangle count
@@ -391,19 +407,6 @@ of the feedback is visible before the onset: in the normal plateau the five
 largest hubs keep a constant local clustering of $\approx0.1$ for every $u$
 between $0.02$ and $0.1$, instead of the $C\sim1/k$ hierarchy of the local rules.
 
-\paragraph*{Rule (p).}
-The potential-link rule also concentrates links on the oldest nodes
-(Fig.~\ref{fig:degree}a). The $1\%$ richest nodes hold $6.5\%$, $18\%$ and
-$37\%$ of all links at $n=10^4$, $10^5$, $10^6$ ($u=1/2$). Its core is sparse,
-with density $0.1$ among the $\sqrt n$ richest nodes and transitivity
-$0.03$--$0.017$. Its largest degree grows as about $n^{0.35}$. Without the
-$m$-fold weight of pairs sharing $m$ neighbours there is no drive towards a
-clique, but the links still concentrate. The mean-field exponent of
-Ref.~\cite{book} for this rule ($\gamma=2.62$ at $u=1/2$) assumes a closure rate
-per potential link. That makes the total closure rate proportional to the number
-of potential links, which is not the rule simulated, and which does not
-conserve the density (Sec.~\ref{sec:pertriad}).
-
 \subsection{With opening: a sparse club}
 
 \begin{figure*}[t]
@@ -489,9 +492,23 @@ same degree distribution as the tree phase. The two differ only in their
 $O(\sqrt n)$ versus $O(1)$ triangles.
 
 %=====================================================================
-\section{Local rules}
+\section{Other closure rules}
 \label{sec:local}
 
+\paragraph*{Potential-link rule (p).}
+Like rule (w), the potential-link rule concentrates links on the oldest nodes
+(Fig.~\ref{fig:degree}a). The $1\%$ richest nodes hold $6.5\%$, $18\%$ and
+$37\%$ of all links at $n=10^4$, $10^5$, $10^6$ ($u=1/2$). Its core is sparse,
+with density $0.1$ among the $\sqrt n$ richest nodes and transitivity
+$0.03$--$0.017$. Its largest degree grows as about $n^{0.35}$. Without the
+$m$-fold weight of pairs sharing $m$ neighbours there is no drive towards a
+clique, but the links still concentrate. The mean-field exponent of
+Ref.~\cite{book} for this rule ($\gamma=2.62$ at $u=1/2$) assumes a closure rate
+per potential link. That makes the total closure rate proportional to the number
+of potential links, which is not the rule simulated, and which does not
+conserve the density (Sec.~\ref{sec:pertriad}).
+
+\paragraph*{Local rules (c) and (f).}
 The local rules never condense. Without opening (Fig.~\ref{fig:degree}a and
 Table~\ref{tab:rules}), they follow Eq.~\eqref{eq:gamma} up to corrections from
 correlations and a five-decade window. The age exponent $b$ is $0.31$ for (f)
