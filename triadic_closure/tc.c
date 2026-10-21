@@ -2,14 +2,18 @@
  * opening decoupled.
  *
  *   cc -O3 -o tc tc.c -lm
- *   ./tc MODE PARAM N SEED OUTPREFIX [PARAM2]
+ *   ./tc MODE PARAM N SEED OUTPREFIX [PARAM2 [PARAM3]]
  *
- * Three processes run at total rates alpha (arrival), beta_+ (closure) and
- * beta_- (removal).  An event is an arrival with probability 1-u_+-u_-, a
- * closure with probability u_+ = PARAM, a removal with probability u_- = PARAM2
- * (default 0), u_pm = beta_pm/(alpha+beta_+ + beta_-).  Arrival: a new node
- * links to a uniformly random node.  <k> -> 2(1 + r_+ - r_-), r_pm = beta_pm/alpha,
- * as long as removals find a triangle.
+ * Four processes run at total rates alpha_+ (arrival), alpha_- (node
+ * deletion), beta_+ (closure) and beta_- (removal).  An event is a closure with
+ * probability u_+ = PARAM, a removal with probability u_- = PARAM2 (default 0),
+ * a deletion with probability d = PARAM3 (default 0) and an arrival otherwise;
+ * u_pm = beta_pm/Z, d = alpha_-/Z, Z = alpha_+ + alpha_- + beta_+ + beta_-.
+ * Arrival: a new node links to a uniformly random node.  Deletion: a uniformly
+ * random node loses all its links and is removed (refused below 4 nodes).
+ * For alpha_- < alpha_+, <k> -> 2(alpha_+ + beta_+ - beta_-)/(alpha_+ + alpha_-)
+ * as long as removals find a triangle; for alpha_- >= alpha_+ the size does a
+ * random walk held above 3 nodes, and the run needs MAXEV.
  *
  * MODE (closure rule, and the removal rule that mirrors it)
  *   l    LS(n,1): a new node links to a random node j and to a random
@@ -37,11 +41,15 @@
  *
  * Output
  *   OUTPREFIX.ts     checkpoints: N E kmean T Wall transitivity kmax closures removals
- *   OUTPREFIX.nodes  per node (id = birth order): k t knn_sum w_open
- *                    w_open = open triads with the node as an endpoint
+ *                    events deletions
+ *   OUTPREFIX.nodes  per node: k t knn_sum w_open born
+ *                    w_open = open triads with the node as an endpoint; born =
+ *                    arrival index (= id when there are no deletions)
  *   OUTPREFIX.edges  int32 pairs (a<b), binary
  *   OUTPREFIX.sum    one line: degree assortativity and totals
  *   With TSONLY set in the environment only OUTPREFIX.ts is written.
+ *   MAXEV=x stops after x events (needed when the network does not grow);
+ *   checkpoints are then also written at logarithmically spaced event counts.
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -83,6 +91,7 @@ static int fw_find(const fenwick *w, int64_t r) {      /* smallest i with prefix
 /* ---------------------------------------------------------------- graph */
 static int N, NMAX;
 static int **adj, *deg, *cap;
+static long *born, arrivals;                            /* arrival index of each node */
 static long E;
 
 static uint64_t *H; static int32_t *HV; static uint64_t HMASK;   /* edge -> id, key 0 = empty */
@@ -120,6 +129,7 @@ static void hash_delete(int a, int b) {                 /* linear probing, backw
 static fenwick FW; static int64_t Wall;
 /* links: id -> endpoints, triangles t_e; Fenwicks over t_e and over [t_e > 0] */
 static int *ea, *eb, *te, *freeid, nfree, nid, TE;
+static long EMAX;
 static fenwick FT, FI; static int64_t Tsum3, Nin;       /* sum t_e = 3T, links with t_e > 0 */
 static long T;                                          /* triangles */
 
@@ -160,6 +170,7 @@ static void add_edge(int a, int b) {
     fw_add(&FW, a, deg[a]); fw_add(&FW, b, deg[b]);     /* k(k-1)/2 grows by k */
     Wall += deg[a] + deg[b];
     push(a, b); push(b, a);
+    if (!nfree && nid >= EMAX) { fprintf(stderr, "tc: more than %ld links\n", EMAX); exit(2); }
     int id = nfree ? freeid[--nfree] : nid++;
     ea[id] = a; eb[id] = b; te[id] = 0;
     if (TE) te_add(id, c);
@@ -175,10 +186,31 @@ static void remove_edge(int a, int b) {
     Wall -= deg[a] + deg[b];
     freeid[nfree++] = id; E--;
 }
-static int add_node(void) { return N++; }
+static int add_node(void) { born[N] = arrivals++; return N++; }
+
+/* remove node v with its links; the last node takes over the id v */
+static void delete_node(int v) {
+    while (deg[v]) remove_edge(v, adj[v][deg[v] - 1]);
+    int u = N - 1;
+    if (u != v) {
+        for (int i = 0; i < deg[u]; i++) {
+            int x = adj[u][i], id = edge_id(u, x);
+            hash_delete(u, x); hash_insert(v, x, id);
+            if (ea[id] == u) ea[id] = v; else eb[id] = v;
+            for (int j = 0; j < deg[x]; j++) if (adj[x][j] == u) { adj[x][j] = v; break; }
+        }
+        int64_t w = (int64_t)deg[u] * (deg[u] - 1) / 2;
+        fw_add(&FW, u, -w); fw_add(&FW, v, w);
+        int *ta = adj[v]; adj[v] = adj[u]; adj[u] = ta;
+        int tc = cap[v]; cap[v] = cap[u]; cap[u] = tc;
+        deg[v] = deg[u]; deg[u] = 0; born[v] = born[u];
+    }
+    N--;
+}
 
 /* uniformly random open triad; returns 0 if none found */
 static int sample_open(int *pa, int *pb) {
+    if (Wall == 0) return 0;
     for (int tries = 0; tries < 1000000; tries++) {
         int c = fw_find(&FW, (int64_t)randint((uint64_t)Wall));
         int i = randint(deg[c]), j = randint(deg[c] - 1);
@@ -224,18 +256,22 @@ static int sample_closed(char mode, int *pa, int *pb) {
 }
 
 int main(int argc, char **argv) {
-    if (argc < 6) { fprintf(stderr, "usage: tc MODE PARAM N SEED OUTPREFIX [PARAM2]\n"); return 1; }
+    if (argc < 6) { fprintf(stderr, "usage: tc MODE PARAM N SEED OUTPREFIX [PARAM2 [PARAM3]]\n"); return 1; }
     char mode = argv[1][0];
-    double par = atof(argv[2]), par2 = argc > 6 ? atof(argv[6]) : 0;
+    double par = atof(argv[2]), par2 = argc > 6 ? atof(argv[6]) : 0, par3 = argc > 7 ? atof(argv[7]) : 0;
+    if (par3 > 0 && (mode == 'l' || mode == 'r')) { fprintf(stderr, "deletion needs mode w, p, c or f\n"); return 1; }
+    long maxev = getenv("MAXEV") ? (long)atof(getenv("MAXEV")) : 0;
     NMAX = atoi(argv[3]);
     seed_rng(strtoull(argv[4], 0, 10));
     const char *pre = argv[5];
     int local = mode == 'c' || mode == 'f';
     TE = par2 > 0 && !local;                     /* t_e bookkeeping only when needed */
 
-    long EMAX = mode == 'r' ? 10L * NMAX + 16
-              : mode == 'l' ? 2L * NMAX + 16 : (long)(NMAX * (1 + par / (1 - par - par2))) + 16;
+    EMAX = mode == 'r' ? 10L * NMAX + 16
+              : mode == 'l' ? 2L * NMAX + 16 : (long)(1.05 * NMAX * (1 + par / (1 - par - par2 - par3))) + 1024;
+    /* fluctuations in the closures exceed the mean link count without opening */
     adj = calloc(NMAX, sizeof(int *)); deg = calloc(NMAX, sizeof(int)); cap = calloc(NMAX, sizeof(int));
+    born = calloc(NMAX, sizeof(long));
     uint64_t hs = 1; while (hs < (uint64_t)(2 * EMAX)) hs <<= 1;
     H = calloc(hs, sizeof(uint64_t)); HV = calloc(hs, sizeof(int32_t)); HMASK = hs - 1;
     fw_init(&FW, NMAX);
@@ -245,20 +281,22 @@ int main(int argc, char **argv) {
 
     char fn[512];
     snprintf(fn, sizeof fn, "%s.ts", pre); FILE *fts = fopen(fn, "w");
-    fprintf(fts, "N E kmean T Wall transitivity kmax closures removals\n");
+    fprintf(fts, "N E kmean T Wall transitivity kmax closures removals events deletions\n");
 
     /* seed: a path of three nodes (one open triad) */
     add_node(); add_node(); add_node(); add_edge(0, 1); add_edge(1, 2);
     if (mode == 'l') { add_edge(0, 2); }       /* LS starts from a triangle */
-    long closures = 0, failed = 0, removals = 0, failed_rem = 0;
-    double nextck = 10;
+    long closures = 0, failed = 0, removals = 0, failed_rem = 0, deletions = 0, failed_del = 0, ev = 0;
+    double nextck = 10, nextev = 10;
     int kmax = 2;
 
-    while (N < NMAX) {
-        int close = 0, open = 0;
+    while (N < NMAX && (!maxev || ev < maxev)) {
+        int close = 0, open = 0, del = 0;
+        ev++;
         if (mode == 'w' || mode == 'p' || local) {
             double x = unif();
             close = x < par; open = !close && x < par + par2;
+            del = !close && !open && x < par + par2 + par3;
         } else if (mode == 'r') {
             double Wo = (double)(Wall - 3 * T), x = unif() * (N + par * Wo + par2 * 3.0 * T);
             close = x < par * Wo; open = !close && x < par * Wo + par2 * 3.0 * T;
@@ -281,17 +319,19 @@ int main(int argc, char **argv) {
             int a, b;
             int ok = local ? sample_local(mode, 1, &a, &b) : sample_closed(mode, &a, &b);
             if (ok) { remove_edge(a, b); removals++; } else failed_rem++;
+        } else if (del) {
+            if (N > 3) { delete_node(randint(N)); deletions++; } else failed_del++;
         } else {
             int j = randint(N), i = add_node(); add_edge(i, j);
         }
-        if (N >= nextck) {
+        if (N >= nextck || (maxev && ev >= nextev)) {
             kmax = 0;                               /* degrees can now fall */
             for (int i = 0; i < N; i++) if (deg[i] > kmax) kmax = deg[i];
-            fprintf(fts, "%d %ld %.6f %ld %lld %.6f %d %ld %ld\n", N, E, 2.0 * E / N, T,
-                    (long long)Wall, Wall ? 3.0 * T / Wall : 0, kmax, closures, removals);
+            fprintf(fts, "%d %ld %.6f %ld %lld %.6f %d %ld %ld %ld %ld\n", N, E, 2.0 * E / N, T,
+                    (long long)Wall, Wall ? 3.0 * T / Wall : 0, kmax, closures, removals, ev, deletions);
             fflush(fts);
-            nextck *= pow(10, 0.1);
-            if (nextck < N + 1) nextck = N + 1;
+            if (N >= nextck) { nextck *= pow(10, 0.1); if (nextck < N + 1) nextck = N + 1; }
+            if (maxev && ev >= nextev) { nextev *= pow(10, 0.1); if (nextev < ev + 1) nextev = ev + 1; }
         }
     }
     fclose(fts);
@@ -325,7 +365,7 @@ int main(int argc, char **argv) {
         }
         t[a] /= 2;                              /* each triangle seen via two edges */
         long w = knn - deg[a] - 2 * t[a];
-        fprintf(fn_, "%d %ld %ld %ld\n", deg[a], t[a], knn, w);
+        fprintf(fn_, "%d %ld %ld %ld %ld\n", deg[a], t[a], knn, w, born[a]);
     }
     fclose(fn_);
     snprintf(fn, sizeof fn, "%s.edges", pre); FILE *fe = fopen(fn, "wb");
@@ -336,9 +376,10 @@ int main(int argc, char **argv) {
     double r = (sxy / E - pow(sx / E, 2)) / (sx2 / E - pow(sx / E, 2));
     snprintf(fn, sizeof fn, "%s.sum", pre); FILE *fs = fopen(fn, "w");
     fprintf(fs, "mode %c param %g param2 %g N %d E %ld kmean %.6f T %ld transitivity %.6f assort %.6f "
-            "closures %ld failed %ld removals %ld failed_rem %ld\n",
+            "closures %ld failed %ld removals %ld failed_rem %ld param3 %g deletions %ld failed_del %ld "
+            "events %ld\n",
             mode, par, par2, N, E, 2.0 * E / N, T, Wall ? 3.0 * T / Wall : 0, r, closures, failed,
-            removals, failed_rem);
+            removals, failed_rem, par3, deletions, failed_del, ev);
     fclose(fs);
     return 0;
 }
