@@ -1,17 +1,14 @@
 """Figures for manuscript.tex.
 
     python mkfigs.py
-      fig-phase.pdf       phase diagram from the triangle-cluster order parameter f_T
+      fig-phase.pdf       phase diagram from the triangle-cluster order parameter P_triangle
       fig-degree.pdf      log-binned degree distributions
       fig-transition.pdf  condensation without opening: trajectories and onset size
       fig-cluster.pdf     nodes and links of the largest triangle cluster
-      fig-pertriad.pdf    <k> along per-triad-rate runs
-      fig-corr.pdf        assortativity over the phase diagram and k_nn(k)
 
 Inputs: data/raw/*.nodes (networks of 1e6 nodes; manuscript.tex, Reproducibility),
-data/ts/*.ts, data/onset.csv (onset.py), data/phase.csv (phase.py),
-data/cross.csv (cross.py), data/opgrid.csv, data/bnd.csv, data/delgrid.csv
-(opgrid.py, bnd.py, delgrid.py), data/rulesclust.csv (rulesclust.py).
+data/ts/*.ts, data/onset.csv (onset.py), data/opgrid.csv, data/bnd.csv,
+data/delgrid.csv (opgrid.py, bnd.py, delgrid.py), data/rulesclust.csv (rulesclust.py).
 """
 import csv, glob, os, re
 import numpy as np
@@ -34,25 +31,6 @@ MK_D = ("o", "s", "^", "D", "v")              # one symbol per net growth Delta 
 MK = ("o", "s", "^", "D", "v", "<", ">", "p", "h", "X")
 
 
-def n_handles():
-    """Legend entries for the three sizes: line style and fill (symbol shape gives Delta)."""
-    return [Line2D([], [], color="0.4", ls="--", lw=0.8, label=r"$n=10^5$ (open)"),
-            Line2D([], [], color="0.4", ls="-", lw=0.8, label=r"$n=10^6$ (filled)"),
-            Line2D([], [], color="0.4", ls="", marker="o", ms=4.5, mec="k", mew=0.5,
-                   label=r"$n=10^7$ (large)")]
-
-
-def by_delta(ax, rows, Ds, cols, y):
-    """y(row) against beta_-/beta_+ for each Delta and n."""
-    for D, c, mk in zip(Ds, cols, MK_D):
-        for n, ls in ((100000, "--"), (1000000, "-"), (10000000, "")):
-            sel = sorted([r for r in rows if float(r["D"]) == D and int(r["n"]) == n],
-                         key=lambda r: float(r["r_minus"]))
-            if not sel: continue
-            big = n == 10 ** 7
-            ax.plot([float(r["r_minus"]) / float(r["r_plus"]) for r in sel], [y(r) for r in sel],
-                    ls, marker=mk, color=c, ms=4.5 if big else 2.6, lw=0.8,
-                    mfc="white" if n == 100000 else c, mec="k" if big else c, mew=0.5 if big else 0.7)
 C_TREE, C_FREE, C_COND = "0.80", "tab:green", "tab:purple"
 
 
@@ -103,7 +81,7 @@ def mean_by(rows, col):
 
 
 def condensed(fT):
-    """Phase of each point from the trend of f_T between n = 1e5 and 1e6: True when it rises (or is ~1)."""
+    """Phase of each point from the trend of P_triangle between n = 1e5 and 1e6: True when it rises (or is ~1)."""
     out = {}
     for (D, a, x, n) in fT:
         if n == 1000000 and (D, a, x, 100000) in fT:
@@ -147,12 +125,12 @@ def fig_phase():
                                  label="boundary fit"),
                           Line2D([], [], ls="", marker="o", color=cm.Purples(0.9), ms=3, label=r"$\Delta=1$"),
                           Line2D([], [], ls="", marker="s", color=cm.Purples(0.55), ms=2.6, label=r"$\Delta=1/2$"),
-                          Line2D([], [], ls="", marker="h", color="0.3", ms=3.2, label=r"$f_T$ rising (filled)"),
+                          Line2D([], [], ls="", marker="h", color="0.3", ms=3.2, label=r"$P_\triangle$ rising (filled)"),
                           Line2D([], [], ls="", marker="h", color="0.3", mfc="white", ms=3.2,
-                                 label=r"$f_T$ falling (open)")],
+                                 label=r"$P_\triangle$ falling (open)")],
                  loc="upper left", bbox_to_anchor=(0.06, 0.99), fontsize=6.0, handlelength=1.6, labelspacing=0.3,
                  frameon=True, facecolor="white", edgecolor="0.6", framealpha=1)
-    # (b) f_T against beta_-/beta_+ at Delta = 1, three sizes, alpha_- = 0 and alpha_+/2
+    # (b) P_triangle against beta_-/beta_+ at Delta = 1, three sizes, alpha_- = 0 and alpha_+/2
     for a, col in ((0.0, cm.Purples(0.9)), (0.5, "tab:orange")):
         for n, ls, mk in ((10000, ":", "o"), (100000, "--", "s"), (1000000, "-", "^")):
             pts = sorted((x, v) for (D, a_, x, n_), v in fT.items() if D == 1.0 and a_ == a and n_ == n)
@@ -160,7 +138,7 @@ def fig_phase():
     for (D, a, x, n), v in fT.items():
         if n == 10000000:
             ax[1].plot(x, v, "D", color=cm.Purples(0.9), ms=4.5, mec="k", mew=0.5)
-    ax[1].set(xlabel=r"$\beta_-/\beta_+$", ylabel=r"$f_T$", xlim=(-0.02, 1.0), ylim=(-0.03, 1.05))
+    ax[1].set(xlabel=r"$\beta_-/\beta_+$", ylabel=r"$P_\triangle$", xlim=(-0.02, 1.0), ylim=(-0.03, 1.05))
     hd = [Line2D([], [], color=cm.Purples(0.9), lw=1.2, label=r"$\alpha_-=0$"),
           Line2D([], [], color="tab:orange", lw=1.2, label=r"$\alpha_-=\alpha_+/2$"),
           Line2D([], [], color="0.4", ls=":", marker="o", mfc="white", ms=2.6, lw=0.8, label=r"$n=10^4$"),
@@ -244,7 +222,7 @@ def fig_transition():
 def fig_cluster():
     fig, ax = plt.subplots(1, 2, figsize=(7.0, 2.7))
     rows = order_rows(); fN = mean_by(rows, "fN"); fE = mean_by(rows, "fE")
-    # (a) f_N against n
+    # (a) P_bullet (node fraction) against n
     xs = (0.0, 0.5, 0.67, 0.75, 0.8)
     for x, col, mk in zip(xs, [cm.Purples(v) for v in (1.0, 0.8, 0.6, 0.45)] + [C_FREE], MK):
         ns = sorted(n for (D, a, x_, n) in fN if D == 1.0 and a == 0 and x_ == x and n <= 1000000)
@@ -259,7 +237,7 @@ def fig_cluster():
         ax[0].loglog(ns, [np.mean([float(r["fN"]) for r in rc if r["mode"] == m and int(r["n"]) == n]) for n in ns],
                      ls, marker=mk, color=col, ms=2.6, lw=0.9, mfc="white", label=lab)
     x = np.array([1e4, 1e6]); ax[0].loglog(x, 6 * x ** -0.5, color="0.3", lw=0.6, ls="-.", label=r"$n^{-1/2}$")
-    ax[0].set(xlabel="$n$", ylabel="$f_N$", ylim=(3e-8, 3))
+    ax[0].set(xlabel="$n$", ylabel=r"$P_\bullet$", ylim=(3e-8, 3))
     ax[0].legend(loc="lower left", fontsize=5.8, ncol=2, columnspacing=0.6, handlelength=1.6, labelspacing=0.25)
     # (b) share of the net closure links inside the cluster, n = 1e6
     for (D, a), col, mk in (((1.0, 0.0), cm.Purples(0.9), "o"), ((0.5, 0.0), cm.Purples(0.55), "s"),
@@ -268,79 +246,9 @@ def fig_cluster():
         ax[1].plot(*zip(*pts), "-", marker=mk, color=col, ms=2.8, lw=0.8,
                    label=rf"$\Delta={D:g}$, $\alpha_-/\alpha_+={a:g}$")
     ax[1].axhline(1, color="0.6", lw=0.5, ls=":")
-    ax[1].set(xlabel=r"$\beta_-/\beta_+$", ylabel=r"$f_E\,(1+\Delta)/\Delta$", xlim=(-0.02, 1.0), ylim=(-0.03, 1.15))
+    ax[1].set(xlabel=r"$\beta_-/\beta_+$", ylabel=r"$P_{\bullet{-}\bullet}\,(1+\Delta)/\Delta$", xlim=(-0.02, 1.0), ylim=(-0.03, 1.15))
     ax[1].legend(loc="lower left", fontsize=6.2, handlelength=1.8, labelspacing=0.3)
     finish(fig, ax, "fig-cluster.pdf")
-
-
-# ------------------------------------------------------------------ fig 5
-def fig_pertriad():
-    fig, ax = plt.subplots(figsize=(3.4, 2.6))
-    bs = {}
-    for p in glob.glob(os.path.join(HERE, "data/ts/r_b*_n1e*_s1.ts")):   # keep the longest run per beta_+/alpha
-        b = float(re.search(r"b([\d.]+)_", p).group(1))
-        if b not in bs or os.path.getsize(p) > os.path.getsize(bs[b]): bs[b] = p
-    greens = cm.Greens(np.linspace(0.35, 1.0, len(bs)))
-    for (b, p), col, mk in zip(sorted(bs.items()), greens, MK):
-        N, d = ts(p)
-        ax.semilogx(N, d[:, 2], color=col, marker=mk, ms=2.4, markevery=(0.02, 0.1), label=rf"$\beta_+/\alpha_+={b:g}$")
-    ax.axhline(2.58, color="0.5", lw=0.5, ls="--", label="MF-max, 2.58")
-    ax.set(xlabel="$n$", ylabel=r"$\langle k\rangle$", ylim=(1.9, 17))
-    ax.legend(loc="upper left", fontsize=6, handlelength=1.6, labelspacing=0.25)
-    fig.tight_layout(pad=0.3)
-    fig.savefig(os.path.join(HERE, "fig-pertriad.pdf"))
-    plt.close(fig)
-
-
-# ------------------------------------------------------------------ degree correlations
-def knn(name, ratio=1.35):
-    """k_nn(k) <k>/<k^2> in the log bins of logbin()."""
-    d = np.loadtxt(os.path.join(RAW, name + ".nodes"), usecols=(0, 2))
-    k, s = d[:, 0].astype(np.int64), d[:, 1]
-    edges = np.unique(np.floor(ratio ** np.arange(0, 80)).astype(np.int64))
-    edges = np.append(edges[edges <= k.max()], k.max() + 1)
-    i = np.digitize(k, edges) - 1
-    cnt = np.bincount(i, minlength=len(edges) - 1)
-    val = np.bincount(i, s / k, minlength=len(edges) - 1)
-    x = np.sqrt(edges[:-1] * (edges[1:] - 1)); ok = cnt > 0
-    return x[ok], val[ok] / cnt[ok] * k.mean() / (k.astype(float) ** 2).mean()
-
-
-def fig_corr():
-    fig, ax = plt.subplots(1, 2, figsize=(7.0, 2.7))
-    rows = list(csv.DictReader(open(os.path.join(HERE, "data/phase.csv"))))
-    Ds = sorted({float(r["D"]) for r in rows})
-    cols = cm.Purples(np.linspace(0.4, 1.0, len(Ds)))
-    by_delta(ax[0], rows, Ds, cols, lambda r: float(r["assort"]))
-    cr = sorted([r for r in csv.DictReader(open(os.path.join(HERE, "data/cross.csv")))
-                 if r["mode"] == "w" and int(r["n"]) == 1000000 and float(r["r_minus"]) <= 2],
-                key=lambda r: float(r["r_minus"]))
-    ax[0].plot([float(r["r_minus"]) for r in cr], [float(r["assort"]) for r in cr], "-", marker="X", color="0.2",
-               ms=3.2, lw=0.8)
-    ax[0].axvspan(0.72, 0.78, color="0.85", lw=0)
-    ax[0].axhline(0, color="0.6", lw=0.5, ls=":")
-    ax[0].set(xlim=(-0.05, 2.12), ylim=(-0.25, 0.75), xlabel=r"$\beta_-/\beta_+$", ylabel="$r$")
-    hd = [Line2D([], [], color=c, marker=mk, ms=3, lw=1.2, label=rf"$\Delta={D:g}$")
-          for D, c, mk in zip(Ds, cols, MK_D)]
-    hd += n_handles() + [Line2D([], [], color="0.2", ls="-", marker="X", ms=3.2, lw=0.8,
-                                label=r"$\beta_+=\alpha_+$, $n=10^6$"),
-                         Patch(color="0.85", label=r"boundary, $\Delta=1/2$--$1$")]
-    ax[0].legend(handles=hd, loc="upper right", fontsize=6.2, handlelength=1.8, labelspacing=0.3)
-    runs = [("w_u0.5_n1000000", r"(w) $\beta_-/\alpha_+=0$", cm.Purples(1.0), "-"),
-            ("w_k4_rm1_n1000000", r"(w) $\beta_-/\alpha_+=1$", cm.Purples(0.75), "-"),
-            ("w_k4_rm4_n1000000", r"(w) $\beta_-/\alpha_+=4$", cm.Greens(0.5), "-"),
-            ("w_k4_rm8_n1000000", r"(w) $\beta_-/\alpha_+=8$", C_FREE, "-"),
-            ("w_tree_rp1_rm2_n1000000", r"(w) $\beta_+=\alpha_+,\ \beta_-=2\alpha_+$", "0.0", "-"),
-            ("w_rrt_n1000000", r"random tree ($\beta_\pm=0$)", "0.6", ":"),
-            ("l_u0.5_n1000000", r"$LS(n,1)$", "0.3", "--"),
-            ("f_u0.5_n1000000", "friend of a friend (f)", "0.55", "-.")]
-    for (name, lab, col, ls), mk in zip(runs, MK):
-        x, y = knn(name)
-        ax[1].loglog(x, y, ls, color=col, marker=mk, ms=2.2, lw=0.9, label=lab)
-    ax[1].axhline(1, color="0.6", lw=0.5, ls=":")
-    ax[1].set(xlabel="$k$", ylabel=r"$k_{nn}(k)\,\langle k\rangle/\langle k^2\rangle$", ylim=(5e-3, 8))
-    ax[1].legend(loc="lower right", fontsize=6.2)
-    finish(fig, ax, "fig-corr.pdf")
 
 
 if __name__ == "__main__":
@@ -348,5 +256,3 @@ if __name__ == "__main__":
     fig_degree()
     print(fig_transition())
     print(fig_cluster())
-    fig_pertriad()
-    fig_corr()

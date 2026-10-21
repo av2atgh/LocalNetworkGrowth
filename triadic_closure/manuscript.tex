@@ -23,9 +23,9 @@ at rate $\beta_-$. At $\beta_+=\beta_-$ the triangles become a critical queue,
 and for $\beta_-\ge\beta_+$ the network is a tree whose degrees stay bounded,
 because every closure that is reversed strips a link from the centre of the
 triad. For $\beta_+>\beta_-$ the outcome depends on how the open triad is
-found. As order parameter we take the fraction $f_T$ of all triangles that lie
+found. As order parameter we take the fraction $P_\triangle$ of all triangles that lie
 in the largest cluster of triangles sharing links. If triads are drawn
-uniformly from the whole network, the triangles condense: $f_T\to1$ while the
+uniformly from the whole network, the triangles condense: $P_\triangle\to1$ while the
 cluster spans a vanishing fraction of the nodes and holds every net closure
 link. Without opening the condensate is a near-clique of order $\sqrt n$ nodes,
 which appears beyond an onset size that grows roughly as $u^{-5}$,
@@ -105,7 +105,7 @@ all pairs, whereas arrivals bring a reservoir of new nodes and a density that
 can be held fixed. We show that this requires total rates in fixed ratio:
 per-triad rates, the analogue of the per-pair rates of
 Ref.~\cite{grindrod2012}, have no stationary density once nodes arrive
-(Sec.~\ref{sec:pertriad}).
+(Sec.~\ref{sec:density}).
 
 Section~\ref{sec:model} defines the model and four ways of choosing the triad.
 Section~\ref{sec:density} fixes the density and finds the first transition, at
@@ -113,9 +113,8 @@ $\beta_+=\beta_-$. Section~\ref{sec:meanfield} gives the uncorrelated mean field
 Section~\ref{sec:phase} introduces the triangle-cluster order parameter and lays
 out the phase diagram, and Secs.~\ref{sec:condensed}--\ref{sec:tree}
 characterize its three phases.
-Section~\ref{sec:local} treats the other closure rules, Sec.~\ref{sec:mixing} the
-degree correlations and communities, and Sec.~\ref{sec:pertriad} the
-alternative of per-triad rates.
+Section~\ref{sec:local} treats the other closure rules, and
+Sec.~\ref{sec:mixing} the communities.
 
 %=====================================================================
 \section{The model}
@@ -177,15 +176,20 @@ deletion. A run stops when the network first holds $n$ nodes.
 \label{sec:density}
 
 Write $r_\pm=\beta_\pm/\alpha_+$ for the number of closures and openings per
-arrival. Each arrival adds a node and a link, each closure adds a link, and each
+arrival, and
+\begin{equation}
+  \Delta=r_+-r_-=\frac{\beta_+-\beta_-}{\alpha_+}
+  \label{eq:Delta}
+\end{equation}
+for the net growth, the number of links that closure adds, net of opening,
+per arrival. Each arrival adds a node and a link, each closure adds a link, and each
 successful opening removes one. A deletion removes a node and, on average,
 $\langle k\rangle$ links. If every opening finds a closed triad, the links grow
 at rate $\alpha_++\beta_+-\beta_--\alpha_-\langle k\rangle$ and the nodes at
 rate $\alpha_+-\alpha_-$, and a stationary density $E/n=\langle k\rangle/2$
 requires
 \begin{equation}
-  \langle k\rangle=\frac{2(1+\Delta)}{1+\alpha_-/\alpha_+},\qquad
-  \Delta=\frac{\beta_+-\beta_-}{\alpha_+}.
+  \langle k\rangle=\frac{2(1+\Delta)}{1+\alpha_-/\alpha_+}.
   \label{eq:kmean}
 \end{equation}
 To keep the density constant the rates must be held in fixed ratio. Without
@@ -193,7 +197,28 @@ opening or deletion, $\beta_+=\alpha_+$ reproduces the density of $LS(n,1)$,
 $\langle k\rangle=4$. All runs below agree with Eq.~\eqref{eq:kmean}; for
 example, at $\Delta=1$ and $n=10^6$, $\langle k\rangle=2.65$--$2.69$ at
 $\alpha_-=\alpha_+/2$ and $2.10$--$2.15$ at $\alpha_-=0.9\,\alpha_+$, against
-$2.67$ and $2.11$. In the rest of this section $\alpha_-=0$.
+$2.67$ and $2.11$.
+
+Total rates are not the only reading of the rates. If instead every node spawns
+a newcomer at rate $\alpha_+$ and every open triad closes at rate $\beta_+$
+($\beta_-=\alpha_-=0$), the closure rate is $\beta_+W$, with $W$ the number of
+open triads, and $W/n$ is not a constant of the dynamics. In the uncorrelated
+mean field the density is $\langle k\rangle=2/(1-x)$, with
+$x=\beta_+m/\alpha_+$ and $m=\langle k(k-1)\rangle/\langle k\rangle$, which is
+finite only for $x<1/2$. The self-consistent solution exists only up to
+$\beta_+/\alpha_+=0.067$, where $\langle k\rangle=2.58$. Simulations run away
+for $\beta_+/\alpha_+\ge0.06$ within $10^3$--$5\times10^4$ nodes. At
+$\beta_+/\alpha_+=0.04$, $\langle k\rangle$ holds at $2.23$ until the network
+condenses near $n=10^6$ (Sec.~\ref{sec:condensed}); then $W\sim n^{3/2}$,
+closures outpace arrivals, and $\langle k\rangle$ reaches $2.67$ at
+$1.6\times10^6$ and keeps rising. Since condensation appears to happen at every
+$u>0$, per-triad rates should have no stationary density at any $\beta_+>0$,
+and total rates in fixed ratio are the consistent choice. On a fixed
+population, per-pair birth rates that grow with the number of common
+neighbours give two stable states, a sparse and a dense one
+\cite{grindrod2012}. With arrivals the dense state takes over.
+
+In the rest of this section $\alpha_-=0$.
 
 Equation~\eqref{eq:kmean} cannot hold for $\beta_-\ge\beta_+$, since it would
 give $\langle k\rangle\le2$ while the network stays connected, $E\ge n-1$. The
@@ -270,12 +295,12 @@ the structure below therefore comes from correlations.
 \begin{figure*}[t]
 \includegraphics[width=\textwidth]{fig-phase.pdf}
 \caption{Phase diagram of rule (w) from the triangle-cluster order parameter
-$f_T$. (a) The plane of turnover $\beta_-/\beta_+$ and deletion
+$P_\triangle$. (a) The plane of turnover $\beta_-/\beta_+$ and deletion
 $\alpha_-/\alpha_+$, at net growth $\Delta=1$ (circles) and $\Delta=1/2$
-(squares). A symbol is filled when $f_T$ rises between $n=10^5$ and $10^6$, or
+(squares). A symbol is filled when $P_\triangle$ rises between $n=10^5$ and $10^6$, or
 exceeds $0.9$ at $10^6$, and open when it falls. Shades: condensed (purple),
 dispersed (green) and tree (grey, $\beta_-\ge\beta_+$) phases. Dashed line: the
-fit of Eq.~\eqref{eq:bnd} to the $\Delta=1$ boundary. (b) $f_T$ against
+fit of Eq.~\eqref{eq:bnd} to the $\Delta=1$ boundary. (b) $P_\triangle$ against
 $\beta_-/\beta_+$ at $\Delta=1$, without deletion (purple) and with
 $\alpha_-=\alpha_+/2$ (orange), for $n=10^4$ (dotted lines, open circles),
 $10^5$ (dashed lines, open squares) and $10^6$ (solid lines, filled triangles),
@@ -289,17 +314,20 @@ parameter should say so without a choice of scale. Call two triangles adjacent
 when they share a link, and a \emph{triangle cluster} a connected set of
 adjacent triangles: a 3-clique community in the language of clique percolation
 \cite{derenyi2005,palla2005}. Every closure creates at least one triangle, so
-the clusters record where the closures went. We take as order parameter the
-fraction of all triangles in the largest cluster,
+the clusters record where the closures went. Let $T$ be the number of
+triangles in the network and $T_{\max}$ the number of triangles in its largest
+triangle cluster. We take as order parameter the fraction of all triangles in
+the largest cluster,
 \begin{equation}
-  f_T=\frac{T_{\max}}{T},
+  P_\triangle=\frac{T_{\max}}{T},
   \label{eq:fT}
 \end{equation}
-together with the fractions $f_N$ and $f_E$ of all nodes and all links that it
-spans. If the triangles are scattered over finite clusters, $f_T\to0$. If $f_T$
-stays finite the triangles percolate, and $f_N$ separates extended percolation,
-$f_N$ finite, from condensation, $f_N\to0$. In $LS(n,1)$, for instance, a single
-cluster holds every triangle and every node, $f_T=f_N=1$. The clusters are
+the analogue for triangles of the fraction $P$ of nodes in the giant component
+of a percolating network. We use with it the fractions $P_\bullet$ and $P_{\bullet{-}\bullet}$ of all nodes and all links that
+the largest cluster spans. If the triangles are scattered over finite clusters, $P_\triangle\to0$. If $P_\triangle$
+stays finite the triangles percolate, and $P_\bullet$ separates extended percolation,
+$P_\bullet$ finite, from condensation, $P_\bullet\to0$. In $LS(n,1)$, for instance, a single
+cluster holds every triangle and every node, $P_\triangle=P_\bullet=1$. The clusters are
 found by union-find over links, joining the three links of every triangle.
 
 We ran rule (w) at $\Delta=1/2$ and $1$, at $\alpha_-/\alpha_+=0$ and $1/2$,
@@ -307,10 +335,10 @@ and at $\beta_-/\beta_+=0$, $0.5$, $0.67$, $0.75$, $0.8$, $0.85$, $0.9$,
 $0.95$, with $n=10^4$, $10^5$, $10^6$. We then refined the turnover near the
 boundaries in steps of $0.02$, with four seeds at $10^5$ and two at $10^6$,
 scanned $\alpha_-/\alpha_+=0.1$--$0.9$ at $\Delta=1$, and followed one point to
-$10^7$. The result is Fig.~\ref{fig:phase}. At small turnover $f_T$ rises to
+$10^7$. The result is Fig.~\ref{fig:phase}. At small turnover $P_\triangle$ rises to
 one with $n$; at large turnover it falls to zero, below $10^{-3}$ at $10^6$.
 Between the two, the curves for different $n$ cross. We call a point condensed
-when $f_T$ rises between $10^5$ and $10^6$ (or exceeds $0.9$) and dispersed
+when $P_\triangle$ rises between $10^5$ and $10^6$ (or exceeds $0.9$) and dispersed
 when it falls. Along every line of fixed $\Delta$ and $\alpha_-/\alpha_+$ the
 label changes once, which brackets the boundary $(\beta_-/\beta_+)_c$:
 \begin{center}
@@ -327,9 +355,9 @@ $\alpha_-/\alpha_+$ & $\Delta=1$ & $\Delta=1/2$\\
 \end{center}
 At $\alpha_-/\alpha_+=0.9$ every turnover up to $0.95$ is condensed. The point
 closest to the boundary, $\Delta=1$, $\alpha_-=0$, $\beta_-/\beta_+=0.76$, has
-$f_T=0.10$, $0.14$, $0.29$ at $n=10^5$, $10^6$, $10^7$. It condenses, but
+$P_\triangle=0.10$, $0.14$, $0.29$ at $n=10^5$, $10^6$, $10^7$. It condenses, but
 slowly, as expected near a critical point. Its four seeds at $10^5$ give
-$f_T=0.05$--$0.19$, spread out but not bimodal.
+$P_\triangle=0.05$--$0.19$, spread out but not bimodal.
 
 Three features stand out. First, the boundary depends only weakly on density:
 without deletion it lies at $0.73$ for $\Delta=1/2$ and $0.77$ for $\Delta=1$,
@@ -343,16 +371,16 @@ the brackets follow
 a least-squares fit to the midpoints. It falls inside every bracket but two,
 which it misses by $0.006$ ($\alpha_-/\alpha_+=0.3$) and $0.005$ ($0.8$). If Eq.~\eqref{eq:bnd} holds up to
 $\alpha_-\to\alpha_+$, the dispersed phase closes there. Third, near the
-boundary $f_T$ varies smoothly with turnover and drifts slowly with $n$, with
+boundary $P_\triangle$ varies smoothly with turnover and drifts slowly with $n$, with
 no jump at the sizes simulated.
 
 There are three phases:
 \begin{itemize}
-\item \emph{condensed}, $\beta_-<(\beta_-)_c$: $f_T\to1$ and $f_N\to0$. One
+\item \emph{condensed}, $\beta_-<(\beta_-)_c$: $P_\triangle\to1$ and $P_\bullet\to0$. One
   triangle cluster holds essentially all the triangles and every net closure
   link, on a vanishing fraction of the nodes (Sec.~\ref{sec:condensed});
 \item \emph{dispersed}, $(\beta_-)_c<\beta_-<\beta_+$: extensive triangles and
-  $\langle k\rangle$ from Eq.~\eqref{eq:kmean}, but $f_T\to0$
+  $\langle k\rangle$ from Eq.~\eqref{eq:kmean}, but $P_\triangle\to0$
   (Sec.~\ref{sec:hubfree});
 \item \emph{tree}, $\beta_-\ge\beta_+$: $\langle k\rangle=2$, $O(1)$ triangles,
   and bounded degrees (Sec.~\ref{sec:tree}).
@@ -382,7 +410,7 @@ random tree, $\beta_\pm=0$ (dotted).}
 \caption{Rules without opening at $u=1/2$ ($\langle k\rangle=4$), $n=10^6$.
 $b$: age exponent, fitted over $10^2<n_i<10^5$; $b_{\rm MF}=eu/2$;
 $\mathcal T$: transitivity; $\bar C$: mean local clustering; $r_k$: degree
-assortativity; $\phi(\sqrt n)$: club fraction of the $\sqrt n$ highest-degree
+assortativity \cite{newman2002}; $\phi(\sqrt n)$: club fraction of the $\sqrt n$ highest-degree
 nodes; $\rho$: link density among them.}
 \label{tab:rules}
 \begin{ruledtabular}
@@ -406,10 +434,10 @@ were born among the first few thousand arrivals. This share does not shrink with
 size: $\phi(\sqrt n)=0.176$, $0.192$, $0.202$ at $n=10^4$, $10^5$, $10^6$, while
 the density climbs to $0.71$, $0.77$, $0.81$. The same holds for every $u\ge0.3$.
 The core is a dense block of $\Theta(\sqrt n)$ nodes inside a sparse network.
-It is the seed of the giant triangle cluster, which holds $f_T=0.99996$ of the
-triangles and $f_E=0.501$ of the links at $n=10^6$, that is, every closure
-link. The cluster spans $f_N=0.074$, $0.027$, $0.0096$ of the nodes at $n=10^4$,
-$10^5$, $10^6$, so $f_N\sim n^{-0.45}$ (Fig.~\ref{fig:cluster}a): about
+It is the seed of the giant triangle cluster, which holds $P_\triangle=0.99996$ of the
+triangles and $P_{\bullet{-}\bullet}=0.501$ of the links at $n=10^6$, that is, every closure
+link. The cluster spans $P_\bullet=0.074$, $0.027$, $0.0096$ of the nodes at $n=10^4$,
+$10^5$, $10^6$, so $P_\bullet\sim n^{-0.45}$ (Fig.~\ref{fig:cluster}a): about
 $10\sqrt n$ nodes, the core and the peripheral nodes tied to it by a closure.
 The number of triangles therefore grows as $T\sim n^{3/2}$. The same scales
 appear in the random triadic process, which below its threshold stops at
@@ -503,10 +531,10 @@ $0.71$ at $\alpha_-=\alpha_+/2$ and $0.97$ at $\alpha_-=0.95\,\alpha_+$.
 We ran rule (w) without opening, at $u=\beta_+/(\alpha_++\beta_+)=0.3$ and $1/2$
 and $\alpha_-/\alpha_+=0$, $0.25$, $0.5$, $0.75$, $0.9$, $0.95$, up to
 $n=10^6$. The condensate survives at every deletion rate. At $u=1/2$ and
-$n=10^6$, $f_T\ge0.9998$ for all $\alpha_-$, the cluster holds the closure
-links, $f_E=0.47$--$0.50$, and it spans $f_N=0.0023$, $0.0013$, $0.0010$ of the
+$n=10^6$, $P_\triangle\ge0.9998$ for all $\alpha_-$, the cluster holds the closure
+links, $P_{\bullet{-}\bullet}=0.47$--$0.50$, and it spans $P_\bullet=0.0023$, $0.0013$, $0.0010$ of the
 nodes at $\alpha_-/\alpha_+=0.5$, $0.9$, $0.95$. Its share falls with size as
-without deletion, $f_N\sim n^{-0.45}$ at $\alpha_-=\alpha_+/2$
+without deletion, $P_\bullet\sim n^{-0.45}$ at $\alpha_-=\alpha_+/2$
 (Fig.~\ref{fig:cluster}a), and the largest degree still grows as $\sqrt n$:
 $k_{\max}=71$, $268$, $986$ at $n=10^4$, $10^5$, $10^6$ for
 $\alpha_-=0.95\,\alpha_+$, against $1619$ at $10^6$ without deletion. At $u=0.3$
@@ -525,14 +553,14 @@ periphery to replace them.
 
 \begin{figure*}[t]
 \includegraphics[width=\textwidth]{fig-cluster.pdf}
-\caption{The largest triangle cluster. (a) Fraction $f_N$ of the nodes that it
+\caption{The largest triangle cluster. (a) Fraction $P_\bullet$ of the nodes that it
 spans, against $n$: rule (w) at $\Delta=1$ without deletion for
 $\beta_-/\beta_+=0$--$0.75$ (condensed, purple, dark to light) and $0.8$
 (dispersed, green); rule (w) at $\beta_-=0$, $\Delta=1$, $\alpha_-=\alpha_+/2$
 (brown crosses); and, without opening at $u=1/2$, rule (p) (orange diamonds),
 the local rules (grey) and $LS(n,1)$ (black). Dash-dotted line, $n^{-1/2}$.
 Means over two seeds at $n=10^4$ and one or two at larger $n$. (b) Fraction of
-the net closure links inside the cluster, $f_E(1+\Delta)/\Delta$, against
+the net closure links inside the cluster, $P_{\bullet{-}\bullet}(1+\Delta)/\Delta$, against
 $\beta_-/\beta_+$ at $n=10^6$, for $\Delta=1$ and $1/2$ with
 $\alpha_-/\alpha_+=0$ and $0.5$. Dotted line: all net closure links.}
 \label{fig:cluster}
@@ -543,10 +571,10 @@ core. The core thins out. At $\langle k\rangle=4$ ($\Delta=1$) and $n=10^6$,
 the share of links among the $\sqrt n$ richest nodes falls from $0.20$ to
 $0.09$, $0.02$, $0.005$ at $\beta_-/\beta_+=0$, $0.33$, $0.5$, $0.67$. The
 triangle cluster does not dissolve, however. At $\beta_-/\beta_+=0.5$,
-$f_T=0.96$, $0.98$, $0.996$ at $n=10^4$, $10^5$, $10^6$, and the cluster holds
+$P_\triangle=0.96$, $0.98$, $0.996$ at $n=10^4$, $10^5$, $10^6$, and the cluster holds
 $99\%$ of the net closure links, whose share of all links is $\Delta/(1+\Delta)$
 (Fig.~\ref{fig:cluster}b). It spreads over more nodes, but their share still
-vanishes: $f_N\sim n^{-\lambda}$ with $\lambda=0.44$, $0.35$, $0.25$ at
+vanishes: $P_\bullet\sim n^{-\lambda}$ with $\lambda=0.44$, $0.35$, $0.25$ at
 $\beta_-/\beta_+=0$, $0.5$, $0.67$, and $\lambda\approx0.2$ at $0.74$--$0.75$
 (Fig.~\ref{fig:cluster}a). Turnover thus turns the dense core into a sparse
 cluster that stays localized. The largest degree follows. Between $n=10^6$ and
@@ -558,7 +586,7 @@ progressively smaller $k$ (Fig.~\ref{fig:degree}b, purple).
 Approaching the boundary, the cluster first loses closure links and then
 triangles. Without deletion the share of net closure links inside it is $0.71$,
 $0.43$, $0.17$ at $\beta_-/\beta_+=0.67$, $0.72$, $0.75$ for $\Delta=1$, while
-$f_T$ is still $0.94$, $0.75$, $0.37$. With $\alpha_-=\alpha_+/2$ the cluster
+$P_\triangle$ is still $0.94$, $0.75$, $0.37$. With $\alpha_-=\alpha_+/2$ the cluster
 keeps $96$--$100\%$ of them up to $\beta_-/\beta_+=0.8$ for both densities.
 
 %=====================================================================
@@ -569,8 +597,8 @@ Above the boundary the triangles break into finite clusters. At $\Delta=1$,
 $\alpha_-=0$ and $n=10^6$ there are $0.14$, $0.10$, $0.08$ triangles per node at
 $\beta_-/\beta_+=0.8$, $0.85$, $0.9$, decreasing only slowly with size ($0.22$,
 $0.18$, $0.14$ at $\beta_-/\beta_+=0.8$ and $n=10^4$, $10^5$, $10^6$). The
-largest cluster holds $f_T<10^{-3}$ of them at $10^6$. At $\beta_-/\beta_+=0.8$
-it has about 50 nodes at every size, so $f_N\sim1/n$
+largest cluster holds $P_\triangle<10^{-3}$ of them at $10^6$. At $\beta_-/\beta_+=0.8$
+it has about 50 nodes at every size, so $P_\bullet\sim1/n$
 (Fig.~\ref{fig:cluster}a, green). The closure links are spread over the whole
 network.
 
@@ -598,7 +626,9 @@ degree is $11$--$13$ for every $\beta_-\ge\beta_+$, at both $n=10^5$ and $10^6$.
 The uniform random tree of the same size reaches $24$. The distribution
 bends down on the log-log plot. The ratio $P(k)/P(k-1)$ falls from $0.6$ at
 $k=2$ to $0.2$ at $k=10$, where the uniform random tree has a constant $1/2$.
-The assortativity is $-0.14$. The critical network at $\beta_+=\beta_-$ has the
+The assortativity is $-0.14$, against $-0.001$ for the uniform random tree:
+leaves attach preferentially to the few nodes of larger degree that the
+pruning of triad centres leaves behind. The critical network at $\beta_+=\beta_-$ has the
 same degree distribution as the tree phase. The two differ only in their
 $O(\sqrt n)$ versus $O(1)$ triangles.
 
@@ -608,9 +638,9 @@ $O(\sqrt n)$ versus $O(1)$ triangles.
 
 \paragraph*{Potential-link rule (p).}
 Rule (p) also condenses, although without a dense core. Its largest triangle
-cluster holds $f_T=0.97$, $0.98$, $0.99$ of the triangles at $n=10^4$, $10^5$,
-$10^6$ ($u=1/2$) and $f_E=0.51$ of the links, every closure link, on a share of
-the nodes that falls as $f_N\sim n^{-0.29}$ ($0.15$, $0.078$, $0.039$;
+cluster holds $P_\triangle=0.97$, $0.98$, $0.99$ of the triangles at $n=10^4$, $10^5$,
+$10^6$ ($u=1/2$) and $P_{\bullet{-}\bullet}=0.51$ of the links, every closure link, on a share of
+the nodes that falls as $P_\bullet\sim n^{-0.29}$ ($0.15$, $0.078$, $0.039$;
 Fig.~\ref{fig:cluster}a). The links concentrate on the oldest nodes
 (Fig.~\ref{fig:degree}a). The $1\%$ richest nodes hold $6.5\%$, $18\%$ and
 $37\%$ of all links at $n=10^4$, $10^5$, $10^6$ ($u=1/2$). Its core is sparse,
@@ -621,16 +651,16 @@ clique, but the links still concentrate. The mean-field exponent of
 Ref.~\cite{book} for this rule ($\gamma=2.62$ at $u=1/2$) assumes a closure rate
 per potential link. That makes the total closure rate proportional to the number
 of potential links, which is not the rule simulated, and which does not
-conserve the density (Sec.~\ref{sec:pertriad}).
+conserve the density (Sec.~\ref{sec:density}).
 
 \paragraph*{Local rules (c) and (f).}
 The local rules never condense. Their triangles percolate on an extended
-cluster: at $u=1/2$ the largest one holds $f_T=0.83$ (f) and $0.77$ (c) of the
-triangles and spans $f_N=0.43$ and $0.37$ of the nodes at $n=10^6$, nearly the
+cluster: at $u=1/2$ the largest one holds $P_\triangle=0.83$ (f) and $0.77$ (c) of the
+triangles and spans $P_\bullet=0.43$ and $0.37$ of the nodes at $n=10^6$, nearly the
 same as at $10^4$ ($0.44$, $0.40$; Fig.~\ref{fig:cluster}a). In $LS(n,1)$ every
 new triangle contains the existing link between $j$ and its neighbour, which
 already lies in a triangle, so a single cluster holds everything,
-$f_T=f_N=1$. Without opening (Fig.~\ref{fig:degree}a and
+$P_\triangle=P_\bullet=1$. Without opening (Fig.~\ref{fig:degree}a and
 Table~\ref{tab:rules}), they follow Eq.~\eqref{eq:gamma} up to corrections from
 correlations and a five-decade window. The age exponent $b$ is $0.31$ for (f)
 (mean field $1/4$) and $0.37$ for (c) (mean field $1/2$), against $0.27$ for
@@ -648,25 +678,9 @@ local rules. Their opening starts from a random node and must find one of $O(1)$
 triangles, which takes too long to simulate.
 
 %=====================================================================
-\section{Degree correlations and communities}
+\section{Communities}
 \label{sec:mixing}
 
-\begin{figure*}[t]
-\includegraphics[width=\textwidth]{fig-corr.pdf}
-\caption{Degree correlations. (a) Assortativity $r$ of rule (w) against
-$\beta_-/\beta_+$ on the grid of Fig.~\ref{fig:phase} (symbols as in
-Fig.~\ref{fig:phase}b), and across $\beta_-=\beta_+$ at $\beta_+=\alpha_+$,
-$n=10^6$ (crosses). The grey band marks the boundary of the condensed phase
-for $\Delta=1/2$ and $1$;
-dotted line, $r=0$. (b) Mean degree of the neighbours of degree-$k$ nodes,
-divided by its uncorrelated value $\langle k^2\rangle/\langle k\rangle$, in
-logarithmic bins, $n=10^6$: rule (w) at $\langle k\rangle=4$ with
-$\beta_-/\alpha_+=0$, $1$ (condensed, purple) and $4$, $8$ (dispersed, light and
-dark green), in the
-tree phase (black), the uniform random tree (dotted), and $LS(n,1)$ and rule
-(f) at $u=1/2$ (grey). Dotted line: no correlations.}
-\label{fig:corr}
-\end{figure*}
 
 \begin{table}[b]
 \caption{Communities at $n=10^5$ (in parentheses, $n=10^4$). $B_{\rm pp}$:
@@ -702,39 +716,6 @@ random tree & 1 (1) & 0 & 1 & --- & 1 & 0\\
 \end{ruledtabular}
 \end{table}
 
-\paragraph*{Assortativity.}
-Census closure joins two nodes that share neighbours, which under rule (w) are
-mostly old and rich, so it makes the network assortative
-\cite{newman2002}. Up to $\beta_-/\beta_+=0.8$ the degree assortativity is
-$r=0.55$--$0.68$ at $n=10^6$ for $\Delta\ge0.25$ (Fig.~\ref{fig:corr}a). It
-does not mark the condensation boundary: it changes little across it, and at
-$\beta_-/\beta_+=0.89$, well inside the dispersed phase, it is still about
-$0.5$ and grows with $n$: $0.46$, $0.51$, $0.55$ at $n=10^5$,
-$10^6$, $10^7$ for $\Delta=1$, $\beta_-/\beta_+=0.89$. It falls to zero only as
-$\beta_-\to\beta_+$, where the closure links that carry it vanish. At
-$\beta_+=\alpha_+$, $r=0.67$, $0.65$, $0.05$ at $\beta_-/\beta_+=0.5$, $0.8$,
-$0.9$. In the tree phase it is $r=-0.14$ for every $\beta_-\ge\beta_+$ at both
-$n=10^5$ and $10^6$. The uniform random tree of the same size has
-$r=-0.001$. The tree phase is therefore mildly disassortative: leaves attach
-preferentially to the few nodes of larger degree that the pruning of triad
-centres leaves behind. The local rules sit in between, with $r=0.05$--$0.28$
-(Table~\ref{tab:rules}).
-
-\paragraph*{Neighbour degree.}
-The mean degree $k_{nn}(k)$ of the neighbours of degree-$k$ nodes
-\cite{pastor2001} shows how the assortativity is built
-(Fig.~\ref{fig:corr}b). Under rule (w) without opening it is a step. Nodes with
-$k\le4$ have neighbours of degree $0.01\,\langle k^2\rangle/\langle k\rangle$,
-about $5$, and nodes with $k\gtrsim30$ have neighbours of twice the uncorrelated
-degree. Between $k\approx5$ and $30$ the curve rises by two decades. The
-periphery is linked to the periphery and the club to the club. Turnover lowers
-the step: the low-$k$ plateau rises to $0.04$, $0.16$ and $0.43$ at
-$\beta_-/\alpha_+=1$, $4$, $8$, and the high-$k$ plateau falls from $2$ to $1.4$. In
-the tree phase $k_{nn}(k)$ falls from $1.2$ at $k=1$ to $0.93$ at $k\ge4$, close
-to the uniform random tree. The local rules instead give a smooth rise, from
-$0.6$--$1.1$ at the smallest degrees to $2$--$3$ at $k\approx100$.
-
-\paragraph*{Communities.}
 Triadic closure is known to generate communities \cite{jin2001,bianconi2014}. We
 look for them by statistical inference with graph-tool \cite{peixoto_graphtool}.
 We fit two models: the planted-partition model \cite{zhang2020}, which
@@ -760,7 +741,7 @@ turnover up to $\beta_-/\beta_+=0.89$, and at most three levels. One group holds
 $73$--$95\%$ of the nodes. The others contain the rich nodes: their mean
 degree is $9$ to $39$, against $\langle k\rangle=4$. With two groups, $93$--$95\%$ of the
 links lie inside a group, so the club and the periphery barely link to each
-other. This is the $k_{nn}$ step seen in block form. The modularity of this
+other. The modularity of this
 split, $0.4$, measures a club against a periphery, not a set of communities. At
 $\beta_-\le\beta_+/2$ the planted-partition fit also cuts the periphery into
 $25$--$35$ groups, but only half the links fall inside them ($Q\approx0.3$). Rule
@@ -768,8 +749,9 @@ $25$--$35$ groups, but only half the links fall inside them ($Q\approx0.3$). Rul
 shrinks the periphery's share, from $95\%$ of the nodes at $\beta_-=0$ to $60\%$ at
 $\beta_-/\beta_+=0.89$. The split is therefore not a signature of the
 condensate. It survives into the dispersed phase, where the closure links are
-no longer held by one triangle cluster but still join nodes of high degree, as
-the assortativity shows. Further in, at $\beta_-/\beta_+=0.94$, there is no
+no longer held by one triangle cluster but still join nodes of high degree:
+the assortativity is still $0.51$ at $\beta_-/\beta_+=0.89$
+(Sec.~\ref{sec:hubfree}). Further in, at $\beta_-/\beta_+=0.94$, there is no
 structure. The critical network, the tree phase and the uniform random tree
 also have none: a tree with bounded degrees offers no evidence for groups.
 
@@ -780,55 +762,12 @@ with uniform rates, when closure draws its triads from the whole network
 instead of from the neighbourhood of a node.
 
 %=====================================================================
-\section{Per-triad rates}
-\label{sec:pertriad}
-
-An alternative reading makes the rates per capita: every node spawns a newcomer
-at rate $\alpha_+$ and every open triad closes at rate $\beta_+$ (here
-$\beta_-=0$). The closure rate is then $\beta_+W$, and $W/n$ is not a constant
-of the dynamics. In the uncorrelated limit $n\propto e^{\alpha_+ t}$ and
-$dk_i/dt=\alpha_++\beta_+mk_i$, with $m=2W/\sum_jk_j$. With $x=\beta_+m/\alpha_+$ and
-age in units of $1/\alpha_+$,
-\begin{equation}
-  k(\tau)=\Bigl(1+\tfrac1x\Bigr)e^{x\tau}-\tfrac1x,\qquad
-  \langle k\rangle=\frac{2}{1-x},\qquad \gamma=1+\frac1x .
-\end{equation}
-Self-consistency requires $m=\langle k(k-1)\rangle/\langle k\rangle$, which is
-finite only for $x<1/2$, and fixes $\beta_+/\alpha_+=x/m(x)$. This function has a
-maximum, $\beta_+/\alpha_+=0.067$ at $x=0.22$, where $\langle k\rangle=2.58$.
-Above it no stationary state exists.
-
-\begin{figure}[t]
-\includegraphics[width=\columnwidth]{fig-pertriad.pdf}
-\caption{Mean degree under per-triad rates, rule (w), $\beta_-=0$ (closure
-probability per event $\beta_+W/(\alpha_+ n+\beta_+W)$). Green lines with
-symbols, light to dark: $\beta_+/\alpha_+=0.02$--$0.15$. Runs to $10^6$ stop at $E/n=50$; the run at
-$0.04$ was continued to $1.6\times10^6$ and stopped inside the runaway. Dashed
-line (MF-max): the largest stationary mean-field density, $2.58$.}
-\label{fig:pertriad}
-\end{figure}
-
-Simulations (Fig.~\ref{fig:pertriad}) show the runaway for
-$\beta_+/\alpha_+\ge0.06$ within $10^3$--$5\times10^4$ nodes. At $0.02$ and
-$0.04$, $\langle k\rangle$ looks stationary for a while, at $2.09$ and $2.23$.
-The plateau at $0.04$ corresponds to an effective $u=1-2/\langle k\rangle\approx0.10$,
-for which Sec.~\ref{sec:condensed} predicts condensation near $2\times10^6$. The
-run condenses near $10^6$ and then runs away ($\langle k\rangle=2.67$ at
-$1.6\times10^6$ and rising): once a core forms, $W\sim n^{3/2}$, and closures
-outpace arrivals. Since condensation appears to happen at every $u>0$,
-per-triad rates should have no stationary density at any $\beta_+>0$. Total
-rates in fixed ratio are the consistent choice. On a fixed population, where
-per-pair birth rates grow with the number of common neighbours and links die at
-a constant rate, the same feedback yields two stable states, a sparse and a
-dense one \cite{grindrod2012}. With arrivals the dense state takes over.
-
-%=====================================================================
 \section{Conclusions}
 
 Once the clock is fixed the model has three parameters: the net growth
 $\Delta=(\beta_+-\beta_-)/\alpha_+$, which with the deletion
 $\alpha_-/\alpha_+$ sets the density, and the turnover $\beta_-/\beta_+$. The
-fraction $f_T$ of triangles in the largest triangle cluster is the order
+fraction $P_\triangle$ of triangles in the largest triangle cluster is the order
 parameter. It is built from the objects that the closure rule creates, and it
 needs no choice of scale. The phase diagram has two boundaries.
 \begin{itemize}
@@ -841,7 +780,7 @@ needs no choice of scale. The phase diagram has two boundaries.
   triangles stop percolating. Below it, one triangle cluster holds essentially
   all the triangles and every net closure link on a vanishing fraction of the
   nodes. The cluster is a dense near-clique of order $\sqrt n$ nodes without
-  opening, and opening spreads it over more nodes, $f_N\sim n^{-\lambda}$ with
+  opening, and opening spreads it over more nodes, $P_\bullet\sim n^{-\lambda}$ with
   $\lambda$ falling from $0.45$ towards $0.2$. Above it the triangles are spread
   over finite clusters. Deletion moves the boundary towards $\beta_-=\beta_+$,
   approximately as Eq.~\eqref{eq:bnd}.
@@ -859,8 +798,8 @@ $\gamma=1+2/(eu)$ at $\beta_-=0$. The friend-of-a-friend version at
 $\beta_+=\alpha_+$ is the faithful generalization of $LS(n,1)$: same density,
 same exponent $\gamma=5$. Local closure also builds a hierarchy of assortative
 communities. Census closure replaces it with a club and a periphery that barely
-link to each other, and an assortativity of about $0.6$ that persists into the
-dispersed phase.
+link to each other, and an assortativity of $0.5$--$0.65$ that persists into
+the dispersed phase.
 
 The condensate differs from Bose--Einstein condensation in fitness models
 \cite{bianconi2001} and from superlinear preferential attachment
@@ -872,7 +811,7 @@ nodes, a sparse graph with a dense spike in graphon language.
 \paragraph*{Open questions.}
 (i) A controlled theory of the onset $n^*(u)$, power law versus essential
 singularity, and of its seed-to-seed distribution. (ii) The nature of the
-condensation boundary. The $f_T$ curves for $n=10^4$--$10^7$ cross smoothly and
+condensation boundary. The $P_\triangle$ curves for $n=10^4$--$10^7$ cross smoothly and
 the seeds are not bimodal, which points to a continuous transition, but its
 exponents, and the form of $(\beta_-/\beta_+)_c$ as a function of $\Delta$ and
 $\alpha_-/\alpha_+$, are open. Closure balanced by decay gives discontinuous
@@ -925,7 +864,6 @@ analysis, the decision to publish or the preparation of the manuscript.
 \bibitem{derenyi2005} I. Der\'enyi, G. Palla, and T. Vicsek, Clique percolation in random networks, Phys. Rev. Lett. \textbf{94}, 160202 (2005).
 \bibitem{palla2005} G. Palla, I. Der\'enyi, I. Farkas, and T. Vicsek, Uncovering the overlapping community structure of complex networks in nature and society, Nature \textbf{435}, 814 (2005).
 \bibitem{newman2002} M. E. J. Newman, Assortative mixing in networks, Phys. Rev. Lett. \textbf{89}, 208701 (2002).
-\bibitem{pastor2001} R. Pastor-Satorras, A. Vazquez, and A. Vespignani, Dynamical and correlation properties of the Internet, Phys. Rev. Lett. \textbf{87}, 258701 (2001).
 \bibitem{peixoto_graphtool} T. P. Peixoto, The graph-tool python library, figshare, doi:10.6084/m9.figshare.1164194 (2014).
 \bibitem{zhang2020} L. Zhang and T. P. Peixoto, Statistical inference of assortative community structures, Phys. Rev. Research \textbf{2}, 043271 (2020).
 \bibitem{karrer2011} B. Karrer and M. E. J. Newman, Stochastic blockmodels and community structure in networks, Phys. Rev. E \textbf{83}, 016107 (2011).
