@@ -29,3 +29,7 @@ figs/_netcache/
 *.nav
 *.snm
 *.vrb
+
+# Built by "cc -O3 -o tc tc.c -lm" and "cc -O3 -o trclust trclust.c"; the sources are tracked.
+triadic_closure/tc
+triadic_closure/trclust
