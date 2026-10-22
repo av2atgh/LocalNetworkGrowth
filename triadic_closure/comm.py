@@ -5,16 +5,19 @@ communities only; B = 1 when there are none) with its modularity, and the
 nested degree-corrected SBM with its bottom-level groups and the description
 length gained over a single group.  The same fits on a configuration-model
 rewiring of each network tell structure from degree sequence.  The best of
-NREP fits (default 3) is kept.  Appends to data/comm.csv (resumes).
+NREP fits (default 3) is kept.  Appends to data/comm.csv (resumes).  With
+SEED set (default 1) the networks use that seed and the rows, with a seed
+column, go to data/rev_comm.csv instead.
 
-    ~/anaconda3/envs/gt/bin/python comm.py SCRATCHDIR N [NAME ...]
+    [SEED=s] ~/anaconda3/envs/gt/bin/python comm.py SCRATCHDIR N [NAME ...]
 """
 import os, sys, csv, subprocess
 import numpy as np
 import graph_tool.all as gt
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(HERE, "data", "comm.csv")
+SEED = os.environ.get("SEED")
+OUT = os.path.join(HERE, "data", "rev_comm.csv" if SEED else "comm.csv")
 NREP = int(os.environ.get("NREP", 3))
 
 
@@ -59,24 +62,27 @@ def main():
     gt.seed_rng(1); np.random.seed(1)
     cf = configs(); names = sys.argv[3:] or list(cf)
     new = not os.path.exists(OUT)
-    done = set() if new else {(r["name"], int(r["n"])) for r in csv.DictReader(open(OUT))}
+    key = (lambda r: (r["name"], int(r["n"]), r["seed"])) if SEED else (lambda r: (r["name"], int(r["n"])))
+    done = set() if new else {key(r) for r in csv.DictReader(open(OUT))}
     f = open(OUT, "a", newline=""); wr = None
     for name in names:
-        if (name, n) in done: continue
+        if ((name, n, SEED) if SEED else (name, n)) in done: continue
         mode, up, um, ratio = cf[name]
-        pre = os.path.join(scratch, f"{name}_{n}")
-        args = [os.path.join(HERE, "tc"), mode, f"{up:.10f}", str(n), "1", pre]
+        pre = os.path.join(scratch, f"{name}_{n}_{SEED or 1}")
+        args = [os.path.join(HERE, "tc"), mode, f"{up:.10f}", str(n), SEED or "1", pre]
         if um > 0: args.append(f"{um:.10f}")
         subprocess.run(args, check=True)
         g = graph(pre)
         row = dict(name=name, n=n, ratio=ratio, E=g.num_edges(), **fits(g))
+        if SEED: row = dict(seed=SEED, **row)
         gt.random_rewire(g, model="configuration", n_iter=10)
         row.update({k + "_null": v for k, v in fits(g).items()})
         if wr is None:
             wr = csv.DictWriter(f, list(row))
             if new: wr.writeheader()
         wr.writerow(row); f.flush()
-        for ext in ("nodes", "edges", "ts", "sum"): os.remove(f"{pre}.{ext}")
+        for ext in ("nodes", "edges", "ts", "sum", "eorig"):
+            if os.path.exists(f"{pre}.{ext}"): os.remove(f"{pre}.{ext}")
         print({k: (round(v, 3) if isinstance(v, float) else v) for k, v in row.items()}, flush=True)
 
 

@@ -2,6 +2,7 @@
 
     python mkfigs.py
       fig-phase.pdf       phase diagram from the triangle-cluster order parameter P_triangle
+      fig-traj.pdf        P_triangle and T/n along trajectories to n = 1e7 near the boundary
       fig-degree.pdf      log-binned degree distributions
       fig-transition.pdf  condensation without opening: trajectories and onset size
       fig-cluster.pdf     nodes and links of the largest triangle cluster
@@ -125,29 +126,56 @@ def fig_phase():
                                  label="boundary fit"),
                           Line2D([], [], ls="", marker="o", color=cm.Purples(0.9), ms=3, label=r"$\Delta=1$"),
                           Line2D([], [], ls="", marker="s", color=cm.Purples(0.55), ms=2.6, label=r"$\Delta=1/2$"),
-                          Line2D([], [], ls="", marker="h", color="0.3", ms=3.2, label=r"$P_\triangle$ rising (filled)"),
-                          Line2D([], [], ls="", marker="h", color="0.3", mfc="white", ms=3.2,
+                          Line2D([], [], ls="", marker="o", color="0.3", ms=3.0, label=r"$P_\triangle$ rising (filled)"),
+                          Line2D([], [], ls="", marker="o", color="0.3", mfc="white", ms=3.0,
                                  label=r"$P_\triangle$ falling (open)")],
                  loc="upper left", bbox_to_anchor=(0.06, 0.99), fontsize=6.0, handlelength=1.6, labelspacing=0.3,
                  frameon=True, facecolor="white", edgecolor="0.6", framealpha=1)
-    # (b) P_triangle against beta_-/beta_+ at Delta = 1, three sizes, alpha_- = 0 and alpha_+/2
+    # (b) P_triangle against beta_-/beta_+ at Delta = 1, three sizes, alpha_- = 0 and alpha_+/2; the alpha_- = 0
+    # curves pool the many-seed runs of rev.py (data/rev_seeds.csv), with standard errors
+    pool = {}
+    for r in order_rows() + [dict(r, D="1.0", a="0.0", ratio=r["x"]) for r in
+                             csv.DictReader(open(os.path.join(HERE, "data/rev_seeds.csv")))]:
+        pool.setdefault((float(r["D"]), float(r["a"]), float(r["ratio"]), int(r["n"])), []).append(float(r["fT"]))
     for a, col in ((0.0, cm.Purples(0.9)), (0.5, "tab:orange")):
         for n, ls, mk in ((10000, ":", "o"), (100000, "--", "s"), (1000000, "-", "^")):
-            pts = sorted((x, v) for (D, a_, x, n_), v in fT.items() if D == 1.0 and a_ == a and n_ == n)
-            ax[1].plot(*zip(*pts), ls, marker=mk, color=col, ms=2.6, lw=0.8, mfc="white" if n < 1000000 else col)
-    for (D, a, x, n), v in fT.items():
-        if n == 10000000:
-            ax[1].plot(x, v, "D", color=cm.Purples(0.9), ms=4.5, mec="k", mew=0.5)
+            pts = sorted((k[2], np.mean(v), np.std(v) / np.sqrt(len(v))) for k, v in pool.items()
+                         if k[0] == 1.0 and k[1] == a and k[3] == n)
+            x, y, e = map(np.array, zip(*pts))
+            ax[1].errorbar(x, y, yerr=e, fmt=ls, marker=mk, color=col, ms=2.6, lw=0.8, elinewidth=0.6, capsize=1.2,
+                           mfc="white" if n < 1000000 else col)
     ax[1].set(xlabel=r"$\beta_-/\beta_+$", ylabel=r"$P_\triangle$", xlim=(-0.02, 1.0), ylim=(-0.03, 1.05))
     hd = [Line2D([], [], color=cm.Purples(0.9), lw=1.2, label=r"$\alpha_-=0$"),
           Line2D([], [], color="tab:orange", lw=1.2, label=r"$\alpha_-=\alpha_+/2$"),
           Line2D([], [], color="0.4", ls=":", marker="o", mfc="white", ms=2.6, lw=0.8, label=r"$n=10^4$"),
           Line2D([], [], color="0.4", ls="--", marker="s", mfc="white", ms=2.6, lw=0.8, label=r"$n=10^5$"),
-          Line2D([], [], color="0.4", ls="-", marker="^", ms=2.6, lw=0.8, label=r"$n=10^6$"),
-          Line2D([], [], color=cm.Purples(0.9), ls="", marker="D", mec="k", mew=0.5, ms=4.5, label=r"$n=10^7$")]
+          Line2D([], [], color="0.4", ls="-", marker="^", ms=2.6, lw=0.8, label=r"$n=10^6$")]
     ax[1].legend(handles=hd, loc="lower left", fontsize=6.2, handlelength=1.8, labelspacing=0.3)
     finish(fig, ax, "fig-phase.pdf")
     return c, br, brackets(cls, 0.5)
+
+
+# ------------------------------------------------------------------ fig 2 (trajectories)
+def fig_traj():
+    """P_triangle and T/n along single trajectories (same seed, growing n) at Delta = 1, alpha_- = 0;
+    the two trajectories at 0.78 continue to 3e7 (rev.py long)."""
+    fig, ax = plt.subplots(1, 2, figsize=(7.0, 2.6))
+    tr = {}
+    for r in list(csv.DictReader(open(os.path.join(HERE, "data/rev_traj.csv")))) + \
+             list(csv.DictReader(open(os.path.join(HERE, "data/rev_long.csv")))):   # 0.78 continued to 3e7
+        tr.setdefault((float(r["x"]), int(r["n"])), []).append((float(r["fT"]), float(r["T"]) / int(r["n"])))
+    xs = sorted({k[0] for k in tr})
+    for i, (x, mk) in enumerate(zip(xs, MK)):
+        nn = sorted(n for x_, n in tr if x_ == x)
+        col = C_COND if x <= 0.76 else C_FREE
+        kw = dict(marker=mk, ms=2.6, lw=0.8, color=col, alpha=1.0 - 0.12 * (i % 3), label=rf"${x:.2f}$")
+        for j in (0, 1):
+            ax[j].semilogx(nn, [np.mean([v[j] for v in tr[(x, n)]]) for n in nn], "-", **kw)
+    ax[0].set(xlabel="$n$", ylabel=r"$P_\triangle$", ylim=(-0.03, 1.05))
+    ax[1].set(xlabel="$n$", ylabel="$T/n$")
+    ax[0].legend(title=r"$\beta_-/\beta_+$", title_fontsize=6.2, loc="center left", fontsize=6.2,
+                 handlelength=1.8, labelspacing=0.3)
+    finish(fig, ax, "fig-traj.pdf")
 
 
 # ------------------------------------------------------------------ fig 2
@@ -161,12 +189,12 @@ def fig_degree():
                                                label=r"$k^{-1}$")
     ax[0].set(xlabel="$k$", ylabel="$P(k)$", ylim=(1e-10, 1))
     ax[0].legend(loc="lower left", fontsize=6.2)
-    runs = [("w_u0.5_n1000000", r"$\beta_-/\alpha_+=0$", cm.Purples(1.0), "-"),
-            ("w_k4_rm1_n1000000", r"$\beta_-/\alpha_+=1$", cm.Purples(0.75), "-"),
-            ("w_k4_rm4_n1000000", r"$\beta_-/\alpha_+=4$", cm.Greens(0.5), "-"),
-            ("w_k4_rm8_n1000000", r"$\beta_-/\alpha_+=8$", C_FREE, "-"),
-            ("w_crit_rp1_rm1_n1000000", r"$\beta_+=\beta_-=\alpha_+$", "0.3", "--"),
-            ("w_tree_rp1_rm2_n1000000", r"$\beta_+=\alpha_+,\ \beta_-=2\alpha_+$", "0.0", "-"),
+    runs = [("w_u0.5_n1000000", r"$\beta_-/\beta_+=0$", cm.Purples(1.0), "-"),
+            ("w_k4_rm1_n1000000", r"$\beta_-/\beta_+=0.5$", cm.Purples(0.75), "-"),
+            ("w_k4_rm4_n1000000", r"$\beta_-/\beta_+=0.8$", cm.Greens(0.5), "-"),
+            ("w_k4_rm8_n1000000", r"$\beta_-/\beta_+=0.89$", C_FREE, "-"),
+            ("w_crit_rp1_rm1_n1000000", r"$\beta_-/\beta_+=1$", "0.3", "--"),
+            ("w_tree_rp1_rm2_n1000000", r"$\beta_-/\beta_+=2$", "0.0", "-"),
             ("w_rrt_n1000000", r"random tree ($\beta_\pm=0$)", "0.6", ":")]
     for (name, lab, col, ls), mk in zip(runs, MK):
         x, p = logbin(degrees(name))
@@ -192,21 +220,24 @@ def fig_transition():
     x = np.array([1e3, 1e7]); ax[0].loglog(x, 1.0 * x ** 0.5, color="0.3", lw=0.5, ls="-.", label=r"$n^{1/2}$")
     ax[0].set(xlabel="$n$", ylabel="$T/n$", ylim=(1e-2, 1e6))
     ax[0].legend(loc="upper left", fontsize=6.2, ncol=2, columnspacing=0.6)
-    rows = [r for r in csv.DictReader(open(os.path.join(HERE, "data/onset.csv"))) if r["theta"] == "1.0"]
+    rows = list(csv.DictReader(open(os.path.join(HERE, "data/rev_onset.csv"))))   # onset2.py
     U, M, F = [], [], []
     first = True
     for u in sorted({float(r["u"]) for r in rows}):
-        v = np.array([float(r["nstar"]) for r in rows if float(r["u"]) == u]); ok = v[np.isfinite(v)]
+        v = np.array([float(r["nstar2"]) for r in rows if float(r["u"]) == u]); ok = v[np.isfinite(v)]
         if len(ok) == 0:
             nmax = max(float(r["nmax"]) for r in rows if float(r["u"]) == u)
             ax[1].plot(1 / u, np.log(nmax), "v", color="0.5", ms=4, mfc="none", label=r"no onset up to this $n$")
             continue
+        if len(ok) < len(v):                            # seeds without an onset: lower bounds
+            nmax = max(float(r["nmax"]) for r in rows if float(r["u"]) == u)
+            ax[1].plot(1 / u, np.log(nmax), "v", color="0.5", ms=4, mfc="none", label=r"no onset up to this $n$")
         U.append(u); M.append(np.log(ok).mean()); F.append(len(ok) == len(v))
         ax[1].errorbar(1 / u, M[-1], yerr=np.log(ok).std() if len(ok) > 1 else 0, fmt="o", color="tab:blue",
                        ms=3, capsize=1.5, lw=0.7, label="simulation, mean $\\pm$ s.d." if first else None)
         first = False
     U, M, F = np.array(U), np.array(M), np.array(F)
-    sel = F & (U >= 0.1) & (U <= 0.3)       # censored runs (no onset yet) keep u out of the fit
+    sel = F & (U >= 0.08) & (U <= 0.3)
     c = np.polyfit(np.log(U[sel]), M[sel], 1); c2 = np.polyfit(1 / U[sel], M[sel], 1)
     xx = np.linspace(2.5, 22, 100)
     ax[1].plot(xx, c[1] + c[0] * np.log(1 / xx), color="0.3", lw=0.6, label=rf"fit $n^*\propto u^{{{c[0]:.1f}}}$")
@@ -221,7 +252,7 @@ def fig_transition():
 # ------------------------------------------------------------------ fig 4
 def fig_cluster():
     fig, ax = plt.subplots(1, 2, figsize=(7.0, 2.7))
-    rows = order_rows(); fN = mean_by(rows, "fN"); fE = mean_by(rows, "fE")
+    rows = order_rows(); fN = mean_by(rows, "fN")
     # (a) P_bullet (node fraction) against n
     xs = (0.0, 0.5, 0.67, 0.75, 0.8)
     for x, col, mk in zip(xs, [cm.Purples(v) for v in (1.0, 0.8, 0.6, 0.45)] + [C_FREE], MK):
@@ -239,20 +270,25 @@ def fig_cluster():
     x = np.array([1e4, 1e6]); ax[0].loglog(x, 6 * x ** -0.5, color="0.3", lw=0.6, ls="-.", label=r"$n^{-1/2}$")
     ax[0].set(xlabel="$n$", ylabel=r"$P_\bullet$", ylim=(3e-8, 3))
     ax[0].legend(loc="lower left", fontsize=5.8, ncol=2, columnspacing=0.6, handlelength=1.6, labelspacing=0.25)
-    # (b) share of the net closure links inside the cluster, n = 1e6
+    # (b) measured fraction of the closure links inside the cluster, n = 1e6, seed 1 (rev.py hubs and tags)
+    tagged = {(1.0, 0.0): sorted((float(r["x"]), float(r["closure_in"])) for r in
+                                 csv.DictReader(open(os.path.join(HERE, "data/rev_hubs.csv"))) if r["n"] == "1000000")}
+    for r in csv.DictReader(open(os.path.join(HERE, "data/rev_tags.csv"))):
+        D, a, x = map(float, r["x"].split("_"))
+        tagged.setdefault((D, a), []).append((x, float(r["closure_in"])))
     for (D, a), col, mk in (((1.0, 0.0), cm.Purples(0.9), "o"), ((0.5, 0.0), cm.Purples(0.55), "s"),
                             ((1.0, 0.5), "tab:orange", "^"), ((0.5, 0.5), "tab:red", "D")):
-        pts = sorted((x, v * (1 + D) / D) for (D_, a_, x, n), v in fE.items() if D_ == D and a_ == a and n == 1000000)
-        ax[1].plot(*zip(*pts), "-", marker=mk, color=col, ms=2.8, lw=0.8,
+        ax[1].plot(*zip(*sorted(tagged[(D, a)])), "-", marker=mk, color=col, ms=2.8, lw=0.8,
                    label=rf"$\Delta={D:g}$, $\alpha_-/\alpha_+={a:g}$")
     ax[1].axhline(1, color="0.6", lw=0.5, ls=":")
-    ax[1].set(xlabel=r"$\beta_-/\beta_+$", ylabel=r"$P_{\bullet{-}\bullet}\,(1+\Delta)/\Delta$", xlim=(-0.02, 1.0), ylim=(-0.03, 1.15))
+    ax[1].set(xlabel=r"$\beta_-/\beta_+$", ylabel="closure links in the cluster", xlim=(-0.02, 1.0), ylim=(-0.03, 1.15))
     ax[1].legend(loc="lower left", fontsize=6.2, handlelength=1.8, labelspacing=0.3)
     finish(fig, ax, "fig-cluster.pdf")
 
 
 if __name__ == "__main__":
     print(fig_phase())
+    fig_traj()
     fig_degree()
     print(fig_transition())
     print(fig_cluster())

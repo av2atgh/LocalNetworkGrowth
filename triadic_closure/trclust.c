@@ -1,14 +1,16 @@
 /* Edge-connected triangle clusters (3-clique communities).
  *
  *   cc -O3 -o trclust trclust.c
- *   ./trclust EDGES N
+ *   ./trclust EDGES N [MEMBERS]
  *
  * Two links are in the same cluster when they lie in a common triangle, and
  * clusters are closed under this relation (union-find over links).  Links in no
  * triangle are left out.  Prints one line:
  *   T clusters T_max N_max E_max
  * T: triangles; clusters: number of clusters; T_max, N_max, E_max: triangles,
- * nodes and links of the cluster with most triangles.
+ * nodes and links of the cluster with most triangles.  With MEMBERS, one byte
+ * per link (in the order of EDGES) is written there: 1 if the link belongs to
+ * that cluster.
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -88,6 +90,11 @@ int main(int argc, char **argv) {
                 if (!seen[b]) { seen[b] = 1; nmax++; }
             }
         emax = ce[best]; tmax = ct[best] / 3;
+    }
+    if (argc > 3) {
+        FILE *fm = fopen(argv[3], "wb");
+        for (long i = 0; i < E; i++) fputc(best >= 0 && te[i] && find((int)i) == best, fm);
+        fclose(fm);
     }
     printf("%ld %ld %ld %ld %ld\n", T, clusters, tmax, nmax, emax);
     return 0;

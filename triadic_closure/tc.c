@@ -46,6 +46,8 @@
  *                    w_open = open triads with the node as an endpoint; born =
  *                    arrival index (= id when there are no deletions)
  *   OUTPREFIX.edges  int32 pairs (a<b), binary
+ *   OUTPREFIX.eorig  one byte per link, in the order of .edges: 1 if the link
+ *                    was made by a closure, 0 if by an arrival (or LS step)
  *   OUTPREFIX.sum    one line: degree assortativity and totals
  *   With TSONLY set in the environment only OUTPREFIX.ts is written.
  *   MAXEV=x stops after x events (needed when the network does not grow);
@@ -129,6 +131,7 @@ static void hash_delete(int a, int b) {                 /* linear probing, backw
 static fenwick FW; static int64_t Wall;
 /* links: id -> endpoints, triangles t_e; Fenwicks over t_e and over [t_e > 0] */
 static int *ea, *eb, *te, *freeid, nfree, nid, TE;
+static unsigned char *eo, orig;                          /* link origin: 1 closure, 0 arrival */
 static long EMAX;
 static fenwick FT, FI; static int64_t Tsum3, Nin;       /* sum t_e = 3T, links with t_e > 0 */
 static long T;                                          /* triangles */
@@ -172,7 +175,7 @@ static void add_edge(int a, int b) {
     push(a, b); push(b, a);
     if (!nfree && nid >= EMAX) { fprintf(stderr, "tc: more than %ld links\n", EMAX); exit(2); }
     int id = nfree ? freeid[--nfree] : nid++;
-    ea[id] = a; eb[id] = b; te[id] = 0;
+    ea[id] = a; eb[id] = b; te[id] = 0; eo[id] = orig;
     if (TE) te_add(id, c);
     hash_insert(a, b, id); E++;
 }
@@ -268,14 +271,19 @@ int main(int argc, char **argv) {
     TE = par2 > 0 && !local;                     /* t_e bookkeeping only when needed */
 
     EMAX = mode == 'r' ? 10L * NMAX + 16
-              : mode == 'l' ? 2L * NMAX + 16 : (long)(1.05 * NMAX * (1 + par / (1 - par - par2 - par3))) + 1024;
-    /* fluctuations in the closures exceed the mean link count without opening */
+              : mode == 'l' ? 2L * NMAX + 16
+              : par2 > 0 ? (long)(1.1 * NMAX * (1 + (par - par2) / (1 - par - par2 - par3))) + 65536
+              : (long)(1.05 * NMAX * (1 + par / (1 - par - par2 - par3))) + 1024;
+    /* fluctuations in the closures exceed the mean link count without opening; with
+       opening the links follow the net closures, and the storage does not change the
+       random stream */
     adj = calloc(NMAX, sizeof(int *)); deg = calloc(NMAX, sizeof(int)); cap = calloc(NMAX, sizeof(int));
     born = calloc(NMAX, sizeof(long));
     uint64_t hs = 1; while (hs < (uint64_t)(2 * EMAX)) hs <<= 1;
     H = calloc(hs, sizeof(uint64_t)); HV = calloc(hs, sizeof(int32_t)); HMASK = hs - 1;
     fw_init(&FW, NMAX);
     ea = malloc(EMAX * sizeof(int)); eb = malloc(EMAX * sizeof(int)); te = calloc(EMAX, sizeof(int));
+    eo = calloc(EMAX, 1);
     freeid = malloc(EMAX * sizeof(int));
     if (TE) { fw_init(&FT, EMAX); fw_init(&FI, EMAX); }
 
@@ -313,7 +321,7 @@ int main(int argc, char **argv) {
                 if (!ok || mode != 'p') break;
                 if (unif() * common(a, b) < 1.0) break;   /* 1/(common neighbours) */
             }
-            if (ok) { add_edge(a, b); closures++; }
+            if (ok) { orig = 1; add_edge(a, b); orig = 0; closures++; }
             else { failed++; int j = randint(N), i = add_node(); add_edge(i, j); }
         } else if (open) {
             int a, b;
@@ -369,10 +377,14 @@ int main(int argc, char **argv) {
     }
     fclose(fn_);
     snprintf(fn, sizeof fn, "%s.edges", pre); FILE *fe = fopen(fn, "wb");
+    snprintf(fn, sizeof fn, "%s.eorig", pre); FILE *fo = fopen(fn, "wb");
     for (int a = 0; a < N; a++)
         for (int i = 0; i < deg[a]; i++)
-            if (adj[a][i] > a) { int32_t e2[2] = {a, adj[a][i]}; fwrite(e2, sizeof e2, 1, fe); }
-    fclose(fe);
+            if (adj[a][i] > a) {
+                int32_t e2[2] = {a, adj[a][i]}; fwrite(e2, sizeof e2, 1, fe);
+                fputc(eo[edge_id(a, adj[a][i])], fo);
+            }
+    fclose(fe); fclose(fo);
     double r = (sxy / E - pow(sx / E, 2)) / (sx2 / E - pow(sx / E, 2));
     snprintf(fn, sizeof fn, "%s.sum", pre); FILE *fs = fopen(fn, "w");
     fprintf(fs, "mode %c param %g param2 %g N %d E %ld kmean %.6f T %ld transitivity %.6f assort %.6f "
