@@ -1,0 +1,6 @@
+EBA (paper n=20)   n= 20 density(w>0)=0.947 mean_w=2.40 | k=3 dens_k=0.35 SBM B=1 Sigma=0.000; curveball null: P(B>=2)=0.00 Sigma=0.000+-0.000 | Mantel r(w,dist)=-0.048 p_low=0.241 | within-minus-between form=-0.11 p=0.746
+MBA (paper n=45)   n= 45 density(w>0)=0.921 mean_w=3.08 | k=4 dens_k=0.36 SBM B=1 Sigma=0.000; curveball null: P(B>=2)=0.02 Sigma=0.000+-0.002 | Mantel r(w,dist)=-0.204 p_low=0.003 | within-minus-between form=+0.43 p=0.008
+EMBA (n=35)        n= 35 density(w>0)=0.943 mean_w=3.69 | k=5 dens_k=0.34 SBM B=1 Sigma=0.000; curveball null: P(B>=2)=0.00 Sigma=0.000+-0.000 | Mantel r(w,dist)=-0.072 p_low=0.116 | within-minus-between form=-0.04 p=0.529
+EBA+EMBA (n=55)    n= 55 density(w>0)=0.943 mean_w=3.19 | k=5 dens_k=0.25 SBM B=1 Sigma=0.000; curveball null: P(B>=2)=0.00 Sigma=0.000+-0.000 | Mantel r(w,dist)=-0.067 p_low=0.056 | within-minus-between form=-0.14 p=0.839
+MBA+EMBA (n=80)    n= 80 density(w>0)=0.934 mean_w=3.36 | k=5 dens_k=0.27 SBM B=2 Sigma=0.003; curveball null: P(B>=2)=0.24 Sigma=0.001+-0.002 | Mantel r(w,dist)=-0.092 p_low=0.004 | within-minus-between form=+0.07 p=0.262
+all (n=100)        n=100 density(w>0)=0.937 mean_w=3.15 | k=5 dens_k=0.24 SBM B=2 Sigma=0.004; curveball null: P(B>=2)=0.52 Sigma=0.003+-0.004 | Mantel r(w,dist)=-0.076 p_low=0.003 | within-minus-between form=+0.04 p=0.335

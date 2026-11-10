@@ -1,0 +1,77 @@
+{
+ "window": [
+  2011,
+  2014
+ ],
+ "n_gps": 83,
+ "n_labelled": 57,
+ "n_label1": 18,
+ "R2_weights_on_space": 0.192,
+ "raw_network": {
+  "auc": 0.914,
+  "bal_acc": 0.806
+ },
+ "spatial_fit": {
+  "auc": 0.977,
+  "bal_acc": 0.891
+ },
+ "residual_network": {
+  "auc": 0.289,
+  "bal_acc": 0.301,
+  "null_mean": 0.423,
+  "null_q95": 0.563,
+  "p": 0.939060939060939
+ },
+ "ambiguous_space_third": {
+  "n": 19,
+  "space_bal": 0.702,
+  "resid_bal": 0.238,
+  "resid_auc": 0.238
+ },
+ "matched_same_group": {
+  "n_pairs": 1596,
+  "n_cells_with_both": 24,
+  "pairs_in_mixed_cells": 738,
+  "mean_logw_same": 0.152,
+  "mean_logw_diff": 0.053,
+  "matched_diff": -0.066,
+  "matched_ci": [
+   -0.179,
+   0.005
+  ],
+  "regression_same_coef": -0.102,
+  "regression_ci": [
+   -0.205,
+   0.002
+  ],
+  "sd_logw": 0.334
+ },
+ "matched_same_group_sexpair": {
+  "matched_diff": -0.044,
+  "ci": [
+   -0.136,
+   0.026
+  ],
+  "regression_coef": -0.059,
+  "by_sexpair": {
+   "MM": {
+    "n": 435,
+    "same": 0.406,
+    "diff": 0.212,
+    "matched": -0.211
+   },
+   "MF": {
+    "n": 810,
+    "same": 0.055,
+    "diff": 0.008,
+    "matched": -0.004
+   },
+   "FF": {
+    "n": 351,
+    "same": 0.0,
+    "diff": 0.0,
+    "matched": 0.0
+   }
+  }
+ }
+}

@@ -1,0 +1,664 @@
+{
+ "cv": {
+  "tie=union, within-hh pairs as edges=False": {
+   "demo(sex,age,wealth)": {
+    "auc": 0.647345129889741,
+    "auc_sd": 0.018234889343543153,
+    "logloss": 0.6423305055905459
+   },
+   "kin": {
+    "auc": 0.7071145790355671,
+    "auc_sd": 0.013166048356498195,
+    "logloss": 0.5998952771658709
+   },
+   "space(log dist)": {
+    "auc": 0.5383033894938586,
+    "auc_sd": 0.010590760911117091,
+    "logloss": 0.6786894723989827
+   },
+   "attr=demo+kin+space": {
+    "auc": 0.74662687703447,
+    "auc_sd": 0.01585995175193711,
+    "logloss": 0.5772483556740452
+   },
+   "degree only": {
+    "auc": 0.7813387350656887,
+    "auc_sd": 0.006998400608341203,
+    "logloss": 0.5556455681846426
+   },
+   "attr+degree": {
+    "auc": 0.8233990627450094,
+    "auc_sd": 0.011407960394248089,
+    "logloss": 0.5058755306493993
+   },
+   "net: degree+closure": {
+    "auc": 0.797097077698821,
+    "auc_sd": 0.010037773894454895,
+    "logloss": 0.5369060159674417
+   },
+   "net: degree+SBM": {
+    "auc": 0.7807143550358989,
+    "auc_sd": 0.009177967320405916,
+    "logloss": 0.6406369628195452
+   },
+   "net: degree+closure+SBM": {
+    "auc": 0.7925422822579574,
+    "auc_sd": 0.009505118712724326,
+    "logloss": 0.6167494145649516
+   },
+   "attr-block DC-SBM: household": {
+    "auc": 0.8143195558733206,
+    "auc_sd": 0.009975473473822064,
+    "logloss": 0.6935781275168414
+   },
+   "attr-block DC-SBM: sex x age": {
+    "auc": 0.7815400603648535,
+    "auc_sd": 0.008150089959876719,
+    "logloss": 0.5590971584477735
+   },
+   "attr-block DC-SBM: spatial clusters": {
+    "auc": 0.7811980934101429,
+    "auc_sd": 0.006733330456021996,
+    "logloss": 0.5592731760311216
+   },
+   "attr+degree+closure": {
+    "auc": 0.8316258293338965,
+    "auc_sd": 0.012182018984154552,
+    "logloss": 0.49607873766033156
+   },
+   "attr+degree+SBM": {
+    "auc": 0.8175979683366738,
+    "auc_sd": 0.009478836447241179,
+    "logloss": 0.5816266643773743
+   },
+   "all": {
+    "auc": 0.8242759058867597,
+    "auc_sd": 0.009945682480680906,
+    "logloss": 0.5677727843839634
+   }
+  },
+  "tie=union, within-hh pairs as edges=True": {
+   "demo(sex,age,wealth)": {
+    "auc": 0.647345129889741,
+    "auc_sd": 0.018234889343543153,
+    "logloss": 0.6423305055905459
+   },
+   "kin": {
+    "auc": 0.7071145790355671,
+    "auc_sd": 0.013166048356498195,
+    "logloss": 0.5998952771658709
+   },
+   "space(log dist)": {
+    "auc": 0.5383033894938586,
+    "auc_sd": 0.010590760911117091,
+    "logloss": 0.6786894723989827
+   },
+   "attr=demo+kin+space": {
+    "auc": 0.74662687703447,
+    "auc_sd": 0.01585995175193711,
+    "logloss": 0.5772483556740452
+   },
+   "degree only": {
+    "auc": 0.7794546453135378,
+    "auc_sd": 0.007278474922613655,
+    "logloss": 0.5560874321323397
+   },
+   "attr+degree": {
+    "auc": 0.8235762867722969,
+    "auc_sd": 0.011968867962768767,
+    "logloss": 0.5053573787868466
+   },
+   "net: degree+closure": {
+    "auc": 0.8293622169143002,
+    "auc_sd": 0.013207205765130785,
+    "logloss": 0.5005215837231928
+   },
+   "net: degree+SBM": {
+    "auc": 0.8145981637757792,
+    "auc_sd": 0.012898147465189476,
+    "logloss": 0.5256011512880324
+   },
+   "net: degree+closure+SBM": {
+    "auc": 0.8304350009277466,
+    "auc_sd": 0.014194976051102943,
+    "logloss": 0.5006671624105811
+   },
+   "attr-block DC-SBM: household": {
+    "auc": 0.8128344909071876,
+    "auc_sd": 0.011153054548983308,
+    "logloss": 0.6955485242928792
+   },
+   "attr-block DC-SBM: sex x age": {
+    "auc": 0.7796927823775034,
+    "auc_sd": 0.00850718855304376,
+    "logloss": 0.5581747794278733
+   },
+   "attr-block DC-SBM: spatial clusters": {
+    "auc": 0.7796795659950048,
+    "auc_sd": 0.006768096958279526,
+    "logloss": 0.5616794873217948
+   },
+   "attr+degree+closure": {
+    "auc": 0.8459861970228459,
+    "auc_sd": 0.01318352845396997,
+    "logloss": 0.4777934179850149
+   },
+   "attr+degree+SBM": {
+    "auc": 0.8369621273964608,
+    "auc_sd": 0.013618465979911796,
+    "logloss": 0.4925718906479618
+   },
+   "all": {
+    "auc": 0.8449755658142546,
+    "auc_sd": 0.01402068658966708,
+    "logloss": 0.47956985766318666
+   }
+  },
+  "tie=recipient, within-hh pairs as edges=False": {
+   "demo(sex,age,wealth)": {
+    "auc": 0.63734131726169,
+    "auc_sd": 0.01985320132981598,
+    "logloss": 0.6018304109024395
+   },
+   "kin": {
+    "auc": 0.6957562836437428,
+    "auc_sd": 0.014869051687425453,
+    "logloss": 0.5634536077079453
+   },
+   "space(log dist)": {
+    "auc": 0.5170386703020123,
+    "auc_sd": 0.00971712865198302,
+    "logloss": 0.6296199821995773
+   },
+   "attr=demo+kin+space": {
+    "auc": 0.7266450435062881,
+    "auc_sd": 0.015757716550858687,
+    "logloss": 0.5500761412144347
+   },
+   "degree only": {
+    "auc": 0.7752216153676026,
+    "auc_sd": 0.011163384262671702,
+    "logloss": 0.5211506585945601
+   },
+   "attr+degree": {
+    "auc": 0.8169260676152745,
+    "auc_sd": 0.011808875385052127,
+    "logloss": 0.4784160808738944
+   },
+   "net: degree+closure": {
+    "auc": 0.7966227792925066,
+    "auc_sd": 0.01263606198053712,
+    "logloss": 0.5008891263572416
+   },
+   "net: degree+SBM": {
+    "auc": 0.7964616585429527,
+    "auc_sd": 0.011765755440018037,
+    "logloss": 0.5165222437720542
+   },
+   "net: degree+closure+SBM": {
+    "auc": 0.7999431378178967,
+    "auc_sd": 0.011566199051925583,
+    "logloss": 0.509886355299311
+   },
+   "attr-block DC-SBM: household": {
+    "auc": 0.808873157747769,
+    "auc_sd": 0.015365799907843826,
+    "logloss": 0.6614941370674161
+   },
+   "attr-block DC-SBM: sex x age": {
+    "auc": 0.7757126617227926,
+    "auc_sd": 0.012237009935522762,
+    "logloss": 0.5239547930729491
+   },
+   "attr-block DC-SBM: spatial clusters": {
+    "auc": 0.7748986321573053,
+    "auc_sd": 0.0114812767627003,
+    "logloss": 0.5256536581977916
+   },
+   "attr+degree+closure": {
+    "auc": 0.8275749740403893,
+    "auc_sd": 0.010117288765517023,
+    "logloss": 0.46791029158081787
+   },
+   "attr+degree+SBM": {
+    "auc": 0.821389557920212,
+    "auc_sd": 0.011584631846079278,
+    "logloss": 0.4843695030264117
+   },
+   "all": {
+    "auc": 0.8237022927172379,
+    "auc_sd": 0.011251119593371984,
+    "logloss": 0.48073022067409654
+   }
+  },
+  "tie=recipient, within-hh pairs as edges=True": {
+   "demo(sex,age,wealth)": {
+    "auc": 0.63734131726169,
+    "auc_sd": 0.01985320132981598,
+    "logloss": 0.6018304109024395
+   },
+   "kin": {
+    "auc": 0.6957562836437428,
+    "auc_sd": 0.014869051687425453,
+    "logloss": 0.5634536077079453
+   },
+   "space(log dist)": {
+    "auc": 0.5170386703020123,
+    "auc_sd": 0.00971712865198302,
+    "logloss": 0.6296199821995773
+   },
+   "attr=demo+kin+space": {
+    "auc": 0.7266450435062881,
+    "auc_sd": 0.015757716550858687,
+    "logloss": 0.5500761412144347
+   },
+   "degree only": {
+    "auc": 0.7708980385143811,
+    "auc_sd": 0.012077905361320963,
+    "logloss": 0.5238804172982968
+   },
+   "attr+degree": {
+    "auc": 0.8160978399569905,
+    "auc_sd": 0.012255612288399324,
+    "logloss": 0.4793483442828624
+   },
+   "net: degree+closure": {
+    "auc": 0.8358096064999403,
+    "auc_sd": 0.012441958334700916,
+    "logloss": 0.46102414486579957
+   },
+   "net: degree+SBM": {
+    "auc": 0.8052580293009435,
+    "auc_sd": 0.012895170392170882,
+    "logloss": 0.4997498527588034
+   },
+   "net: degree+closure+SBM": {
+    "auc": 0.831469519135065,
+    "auc_sd": 0.012662121730636121,
+    "logloss": 0.4661290834400605
+   },
+   "attr-block DC-SBM: household": {
+    "auc": 0.8073724228773788,
+    "auc_sd": 0.014820037625855209,
+    "logloss": 0.6824002515399387
+   },
+   "attr-block DC-SBM: sex x age": {
+    "auc": 0.7712694306527194,
+    "auc_sd": 0.012714120331629417,
+    "logloss": 0.5252845313685965
+   },
+   "attr-block DC-SBM: spatial clusters": {
+    "auc": 0.7719585544257053,
+    "auc_sd": 0.012183600456094283,
+    "logloss": 0.5260364418426084
+   },
+   "attr+degree+closure": {
+    "auc": 0.8483473583099903,
+    "auc_sd": 0.010585258028151147,
+    "logloss": 0.44477724958486486
+   },
+   "attr+degree+SBM": {
+    "auc": 0.8275965442202062,
+    "auc_sd": 0.01170396203672895,
+    "logloss": 0.47162952637731614
+   },
+   "all": {
+    "auc": 0.843081984572642,
+    "auc_sd": 0.010916081765042008,
+    "logloss": 0.45088989550078484
+   }
+  }
+ },
+ "communities": {
+  "within-hh as edges=False": {
+   "table": [
+    {
+     "partition": "flat DC-SBM",
+     "B": 3,
+     "attribute": "household",
+     "NMI": 0.265,
+     "NMI_null": 0.163,
+     "p": 0.001,
+     "ARI": 0.03
+    },
+    {
+     "partition": "flat DC-SBM",
+     "B": 3,
+     "attribute": "sex",
+     "NMI": 0.001,
+     "NMI_null": 0.01,
+     "p": 0.8561,
+     "ARI": -0.011
+    },
+    {
+     "partition": "flat DC-SBM",
+     "B": 3,
+     "attribute": "age tercile",
+     "NMI": 0.041,
+     "NMI_null": 0.018,
+     "p": 0.0599,
+     "ARI": 0.029
+    },
+    {
+     "partition": "flat DC-SBM",
+     "B": 3,
+     "attribute": "sex x age",
+     "NMI": 0.04,
+     "NMI_null": 0.034,
+     "p": 0.3037,
+     "ARI": 0.009
+    },
+    {
+     "partition": "flat DC-SBM",
+     "B": 3,
+     "attribute": "spatial clusters (k=3)",
+     "NMI": 0.037,
+     "NMI_null": 0.035,
+     "p": 0.4695,
+     "ARI": -0.004
+    },
+    {
+     "partition": "flat DC-SBM",
+     "B": 3,
+     "attribute": "kin-graph SBM blocks",
+     "NMI": 0.268,
+     "NMI_null": 0.055,
+     "p": 0.001,
+     "ARI": 0.19
+    },
+    {
+     "partition": "nested level 0",
+     "B": 3,
+     "attribute": "household",
+     "NMI": 0.292,
+     "NMI_null": 0.163,
+     "p": 0.001,
+     "ARI": 0.041
+    },
+    {
+     "partition": "nested level 0",
+     "B": 3,
+     "attribute": "sex",
+     "NMI": 0.001,
+     "NMI_null": 0.01,
+     "p": 0.9151,
+     "ARI": -0.011
+    },
+    {
+     "partition": "nested level 0",
+     "B": 3,
+     "attribute": "age tercile",
+     "NMI": 0.034,
+     "NMI_null": 0.018,
+     "p": 0.1039,
+     "ARI": 0.018
+    },
+    {
+     "partition": "nested level 0",
+     "B": 3,
+     "attribute": "sex x age",
+     "NMI": 0.029,
+     "NMI_null": 0.033,
+     "p": 0.5794,
+     "ARI": -0.003
+    },
+    {
+     "partition": "nested level 0",
+     "B": 3,
+     "attribute": "spatial clusters (k=3)",
+     "NMI": 0.036,
+     "NMI_null": 0.035,
+     "p": 0.4905,
+     "ARI": -0.006
+    },
+    {
+     "partition": "nested level 0",
+     "B": 3,
+     "attribute": "kin-graph SBM blocks",
+     "NMI": 0.256,
+     "NMI_null": 0.055,
+     "p": 0.001,
+     "ARI": 0.19
+    },
+    {
+     "partition": "nested level 1",
+     "B": 1,
+     "attribute": "household",
+     "NMI": 0.0,
+     "NMI_null": 0.0,
+     "p": 1.0,
+     "ARI": 0.0
+    },
+    {
+     "partition": "nested level 1",
+     "B": 1,
+     "attribute": "sex",
+     "NMI": 0.0,
+     "NMI_null": 0.0,
+     "p": 1.0,
+     "ARI": 0.0
+    },
+    {
+     "partition": "nested level 1",
+     "B": 1,
+     "attribute": "age tercile",
+     "NMI": 0.0,
+     "NMI_null": 0.0,
+     "p": 1.0,
+     "ARI": 0.0
+    },
+    {
+     "partition": "nested level 1",
+     "B": 1,
+     "attribute": "sex x age",
+     "NMI": 0.0,
+     "NMI_null": 0.0,
+     "p": 1.0,
+     "ARI": 0.0
+    },
+    {
+     "partition": "nested level 1",
+     "B": 1,
+     "attribute": "spatial clusters (k=3)",
+     "NMI": 0.0,
+     "NMI_null": 0.0,
+     "p": 1.0,
+     "ARI": 0.0
+    },
+    {
+     "partition": "nested level 1",
+     "B": 1,
+     "attribute": "kin-graph SBM blocks",
+     "NMI": 0.0,
+     "NMI_null": 0.0,
+     "p": 1.0,
+     "ARI": 0.0
+    }
+   ],
+   "DL": {
+    "free DC-SBM (flat)": 4241.033320020863,
+    "household blocks": 4749.8124481387085,
+    "sex x age blocks": 4480.716452210509,
+    "spatial clusters": 4305.67953487395,
+    "kin-graph blocks": 4474.0112170958155,
+    "one block": 4255.290936611199
+   },
+   "B": 3
+  },
+  "within-hh as edges=True": {
+   "table": [
+    {
+     "partition": "flat DC-SBM",
+     "B": 4,
+     "attribute": "household",
+     "NMI": 0.343,
+     "NMI_null": 0.217,
+     "p": 0.001,
+     "ARI": 0.049
+    },
+    {
+     "partition": "flat DC-SBM",
+     "B": 4,
+     "attribute": "sex",
+     "NMI": 0.012,
+     "NMI_null": 0.014,
+     "p": 0.4635,
+     "ARI": -0.004
+    },
+    {
+     "partition": "flat DC-SBM",
+     "B": 4,
+     "attribute": "age tercile",
+     "NMI": 0.104,
+     "NMI_null": 0.024,
+     "p": 0.002,
+     "ARI": 0.048
+    },
+    {
+     "partition": "flat DC-SBM",
+     "B": 4,
+     "attribute": "sex x age",
+     "NMI": 0.099,
+     "NMI_null": 0.048,
+     "p": 0.006,
+     "ARI": 0.025
+    },
+    {
+     "partition": "flat DC-SBM",
+     "B": 4,
+     "attribute": "spatial clusters (k=4)",
+     "NMI": 0.077,
+     "NMI_null": 0.057,
+     "p": 0.1119,
+     "ARI": 0.003
+    },
+    {
+     "partition": "flat DC-SBM",
+     "B": 4,
+     "attribute": "kin-graph SBM blocks",
+     "NMI": 0.346,
+     "NMI_null": 0.077,
+     "p": 0.001,
+     "ARI": 0.195
+    },
+    {
+     "partition": "nested level 0",
+     "B": 5,
+     "attribute": "household",
+     "NMI": 0.415,
+     "NMI_null": 0.258,
+     "p": 0.001,
+     "ARI": 0.068
+    },
+    {
+     "partition": "nested level 0",
+     "B": 5,
+     "attribute": "sex",
+     "NMI": 0.016,
+     "NMI_null": 0.017,
+     "p": 0.4466,
+     "ARI": -0.002
+    },
+    {
+     "partition": "nested level 0",
+     "B": 5,
+     "attribute": "age tercile",
+     "NMI": 0.122,
+     "NMI_null": 0.03,
+     "p": 0.001,
+     "ARI": 0.075
+    },
+    {
+     "partition": "nested level 0",
+     "B": 5,
+     "attribute": "sex x age",
+     "NMI": 0.131,
+     "NMI_null": 0.063,
+     "p": 0.004,
+     "ARI": 0.05
+    },
+    {
+     "partition": "nested level 0",
+     "B": 5,
+     "attribute": "spatial clusters (k=4)",
+     "NMI": 0.087,
+     "NMI_null": 0.063,
+     "p": 0.0679,
+     "ARI": 0.005
+    },
+    {
+     "partition": "nested level 0",
+     "B": 5,
+     "attribute": "kin-graph SBM blocks",
+     "NMI": 0.422,
+     "NMI_null": 0.097,
+     "p": 0.001,
+     "ARI": 0.247
+    },
+    {
+     "partition": "nested level 1",
+     "B": 1,
+     "attribute": "household",
+     "NMI": 0.0,
+     "NMI_null": 0.0,
+     "p": 1.0,
+     "ARI": 0.0
+    },
+    {
+     "partition": "nested level 1",
+     "B": 1,
+     "attribute": "sex",
+     "NMI": 0.0,
+     "NMI_null": 0.0,
+     "p": 1.0,
+     "ARI": 0.0
+    },
+    {
+     "partition": "nested level 1",
+     "B": 1,
+     "attribute": "age tercile",
+     "NMI": 0.0,
+     "NMI_null": 0.0,
+     "p": 1.0,
+     "ARI": 0.0
+    },
+    {
+     "partition": "nested level 1",
+     "B": 1,
+     "attribute": "sex x age",
+     "NMI": 0.0,
+     "NMI_null": 0.0,
+     "p": 1.0,
+     "ARI": 0.0
+    },
+    {
+     "partition": "nested level 1",
+     "B": 1,
+     "attribute": "spatial clusters (k=4)",
+     "NMI": 0.0,
+     "NMI_null": 0.0,
+     "p": 1.0,
+     "ARI": 0.0
+    },
+    {
+     "partition": "nested level 1",
+     "B": 1,
+     "attribute": "kin-graph SBM blocks",
+     "NMI": 0.0,
+     "NMI_null": 0.0,
+     "p": 1.0,
+     "ARI": 0.0
+    }
+   ],
+   "DL": {
+    "free DC-SBM (flat)": 4426.686336083386,
+    "household blocks": 4997.985181491697,
+    "sex x age blocks": 4708.260439542258,
+    "spatial clusters": 4559.560373387199,
+    "kin-graph blocks": 4638.206168873793,
+    "one block": 4482.689222158611
+   },
+   "B": 4
+  }
+ }
+}

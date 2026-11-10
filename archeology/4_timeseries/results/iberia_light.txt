@@ -1,0 +1,12 @@
+  var(w) obs=2.356 curveball=2.471+-0.216 (p_high=0.677)
+EBA (paper n=20)   n= 20 density(w>0)=0.947 mean_w=2.40 | k=3 dens_k=0.35 SBM B=-1 Sigma=nan; curveball null: P(B>=2)=nan Sigma=nan+-nan | Mantel r(w,dist)=-0.048 p_low=0.263 | within-minus-between form=-0.11 p=0.742
+  var(w) obs=3.682 curveball=3.552+-0.133 (p_high=0.169)
+MBA (paper n=45)   n= 45 density(w>0)=0.921 mean_w=3.08 | k=4 dens_k=0.36 SBM B=-1 Sigma=nan; curveball null: P(B>=2)=nan Sigma=nan+-nan | Mantel r(w,dist)=-0.204 p_low=0.001 | within-minus-between form=+0.43 p=0.015
+  var(w) obs=7.174 curveball=7.121+-0.157 (p_high=0.358)
+EMBA (n=35)        n= 35 density(w>0)=0.943 mean_w=3.69 | k=5 dens_k=0.34 SBM B=-1 Sigma=nan; curveball null: P(B>=2)=nan Sigma=nan+-nan | Mantel r(w,dist)=-0.072 p_low=0.098 | within-minus-between form=-0.04 p=0.505
+  var(w) obs=5.405 curveball=5.347+-0.117 (p_high=0.303)
+EBA+EMBA (n=55)    n= 55 density(w>0)=0.943 mean_w=3.19 | k=5 dens_k=0.25 SBM B=-1 Sigma=nan; curveball null: P(B>=2)=nan Sigma=nan+-nan | Mantel r(w,dist)=-0.067 p_low=0.062 | within-minus-between form=-0.14 p=0.854
+  var(w) obs=5.108 curveball=5.033+-0.100 (p_high=0.254)
+MBA+EMBA (n=80)    n= 80 density(w>0)=0.934 mean_w=3.36 | k=5 dens_k=0.27 SBM B=-1 Sigma=nan; curveball null: P(B>=2)=nan Sigma=nan+-nan | Mantel r(w,dist)=-0.092 p_low=0.004 | within-minus-between form=+0.07 p=0.285
+  var(w) obs=4.623 curveball=4.555+-0.091 (p_high=0.249)
+all (n=100)        n=100 density(w>0)=0.937 mean_w=3.15 | k=5 dens_k=0.24 SBM B=-1 Sigma=nan; curveball null: P(B>=2)=nan Sigma=nan+-nan | Mantel r(w,dist)=-0.076 p_low=0.006 | within-minus-between form=+0.04 p=0.338

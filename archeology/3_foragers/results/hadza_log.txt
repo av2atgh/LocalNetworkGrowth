@@ -1,0 +1,23 @@
+
+== Camp 1: n=33, friendship (undirected) ties=55, density=0.104, proximity>0 frac=0.96, nomination values=[0.0, 1.0, 2.0, 3.0]
+  AUC of raw proximity for friendship (in-sample, no fit): 0.769
+  proximity (dyad)                   held-out AUC 0.775 +- 0.073
+  proximity + prox-closure           held-out AUC 0.787 +- 0.082
+  degree                             held-out AUC 0.489 +- 0.103
+  degree+friend-closure              held-out AUC 0.699 +- 0.075
+  proximity+degree                   held-out AUC 0.765 +- 0.068
+  proximity+degree+friend-closure    held-out AUC 0.791 +- 0.063
+  friendship SBM B = 2 | vs proximity SBM: {'prox top 1x': {'B_prox': 2, 'NMI': 0.004, 'NMI_null': 0.023, 'p': 0.741}, 'prox top 2x': {'B_prox': 2, 'NMI': 0.559, 'NMI_null': 0.024, 'p': 0.0}}
+
+== Camp 2: n=38, friendship (undirected) ties=69, density=0.098, proximity>0 frac=0.84, nomination values=[0.0, 1.0, 2.0, 3.0]
+  AUC of raw proximity for friendship (in-sample, no fit): 0.747
+  proximity (dyad)                   held-out AUC 0.749 +- 0.066
+  proximity + prox-closure           held-out AUC 0.756 +- 0.066
+  degree                             held-out AUC 0.576 +- 0.052
+  degree+friend-closure              held-out AUC 0.731 +- 0.078
+  proximity+degree                   held-out AUC 0.753 +- 0.061
+  proximity+degree+friend-closure    held-out AUC 0.831 +- 0.061
+  friendship SBM B = 2 | vs proximity SBM: {'prox top 1x': {'B_prox': 2, 'NMI': 0.029, 'NMI_null': 0.02, 'p': 0.309}, 'prox top 2x': {'B_prox': 2, 'NMI': 0.048, 'NMI_null': 0.02, 'p': 0.18}}
+
+== Camp 3: n=10, friendship (undirected) ties=12, density=0.267, proximity>0 frac=1.00, nomination values=[0.0, 1.0, 2.0, 3.0]
+  too small for CV/SBM; skipped

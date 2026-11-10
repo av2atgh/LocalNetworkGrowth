@@ -1,0 +1,116 @@
+individuals 108 households 32 between-hh dyads 5594 ties(union) 2368 density 0.423 ties(recipient report only) 1816
+within-household pairs (not surveyed): 183
+
+== tie=union, within-hh pairs as edges=False
+  demo(sex,age,wealth)                     AUC 0.647 +- 0.018  logloss 0.6423  (null 0.6813)
+  kin                                      AUC 0.707 +- 0.013  logloss 0.5999  (null 0.6813)
+  space(log dist)                          AUC 0.538 +- 0.011  logloss 0.6787  (null 0.6813)
+  attr=demo+kin+space                      AUC 0.747 +- 0.016  logloss 0.5772  (null 0.6813)
+  degree only                              AUC 0.781 +- 0.007  logloss 0.5556  (null 0.6813)
+  attr+degree                              AUC 0.823 +- 0.011  logloss 0.5059  (null 0.6813)
+  net: degree+closure                      AUC 0.797 +- 0.010  logloss 0.5369  (null 0.6813)
+  net: degree+SBM                          AUC 0.781 +- 0.009  logloss 0.6406  (null 0.6813)
+  net: degree+closure+SBM                  AUC 0.793 +- 0.010  logloss 0.6167  (null 0.6813)
+  attr-block DC-SBM: household             AUC 0.814 +- 0.010  logloss 0.6936  (null 0.6813)
+  attr-block DC-SBM: sex x age             AUC 0.782 +- 0.008  logloss 0.5591  (null 0.6813)
+  attr-block DC-SBM: spatial clusters      AUC 0.781 +- 0.007  logloss 0.5593  (null 0.6813)
+  attr+degree+closure                      AUC 0.832 +- 0.012  logloss 0.4961  (null 0.6813)
+  attr+degree+SBM                          AUC 0.818 +- 0.009  logloss 0.5816  (null 0.6813)
+  all                                      AUC 0.824 +- 0.010  logloss 0.5678  (null 0.6813)
+
+== tie=union, within-hh pairs as edges=True
+  demo(sex,age,wealth)                     AUC 0.647 +- 0.018  logloss 0.6423  (null 0.6813)
+  kin                                      AUC 0.707 +- 0.013  logloss 0.5999  (null 0.6813)
+  space(log dist)                          AUC 0.538 +- 0.011  logloss 0.6787  (null 0.6813)
+  attr=demo+kin+space                      AUC 0.747 +- 0.016  logloss 0.5772  (null 0.6813)
+  degree only                              AUC 0.779 +- 0.007  logloss 0.5561  (null 0.6813)
+  attr+degree                              AUC 0.824 +- 0.012  logloss 0.5054  (null 0.6813)
+  net: degree+closure                      AUC 0.829 +- 0.013  logloss 0.5005  (null 0.6813)
+  net: degree+SBM                          AUC 0.815 +- 0.013  logloss 0.5256  (null 0.6813)
+  net: degree+closure+SBM                  AUC 0.830 +- 0.014  logloss 0.5007  (null 0.6813)
+  attr-block DC-SBM: household             AUC 0.813 +- 0.011  logloss 0.6955  (null 0.6813)
+  attr-block DC-SBM: sex x age             AUC 0.780 +- 0.009  logloss 0.5582  (null 0.6813)
+  attr-block DC-SBM: spatial clusters      AUC 0.780 +- 0.007  logloss 0.5617  (null 0.6813)
+  attr+degree+closure                      AUC 0.846 +- 0.013  logloss 0.4778  (null 0.6813)
+  attr+degree+SBM                          AUC 0.837 +- 0.014  logloss 0.4926  (null 0.6813)
+  all                                      AUC 0.845 +- 0.014  logloss 0.4796  (null 0.6813)
+
+== tie=recipient, within-hh pairs as edges=False
+  demo(sex,age,wealth)                     AUC 0.637 +- 0.020  logloss 0.6018  (null 0.6303)
+  kin                                      AUC 0.696 +- 0.015  logloss 0.5635  (null 0.6303)
+  space(log dist)                          AUC 0.517 +- 0.010  logloss 0.6296  (null 0.6303)
+  attr=demo+kin+space                      AUC 0.727 +- 0.016  logloss 0.5501  (null 0.6303)
+  degree only                              AUC 0.775 +- 0.011  logloss 0.5212  (null 0.6303)
+  attr+degree                              AUC 0.817 +- 0.012  logloss 0.4784  (null 0.6303)
+  net: degree+closure                      AUC 0.797 +- 0.013  logloss 0.5009  (null 0.6303)
+  net: degree+SBM                          AUC 0.796 +- 0.012  logloss 0.5165  (null 0.6303)
+  net: degree+closure+SBM                  AUC 0.800 +- 0.012  logloss 0.5099  (null 0.6303)
+  attr-block DC-SBM: household             AUC 0.809 +- 0.015  logloss 0.6615  (null 0.6303)
+  attr-block DC-SBM: sex x age             AUC 0.776 +- 0.012  logloss 0.5240  (null 0.6303)
+  attr-block DC-SBM: spatial clusters      AUC 0.775 +- 0.011  logloss 0.5257  (null 0.6303)
+  attr+degree+closure                      AUC 0.828 +- 0.010  logloss 0.4679  (null 0.6303)
+  attr+degree+SBM                          AUC 0.821 +- 0.012  logloss 0.4844  (null 0.6303)
+  all                                      AUC 0.824 +- 0.011  logloss 0.4807  (null 0.6303)
+
+== tie=recipient, within-hh pairs as edges=True
+  demo(sex,age,wealth)                     AUC 0.637 +- 0.020  logloss 0.6018  (null 0.6303)
+  kin                                      AUC 0.696 +- 0.015  logloss 0.5635  (null 0.6303)
+  space(log dist)                          AUC 0.517 +- 0.010  logloss 0.6296  (null 0.6303)
+  attr=demo+kin+space                      AUC 0.727 +- 0.016  logloss 0.5501  (null 0.6303)
+  degree only                              AUC 0.771 +- 0.012  logloss 0.5239  (null 0.6303)
+  attr+degree                              AUC 0.816 +- 0.012  logloss 0.4793  (null 0.6303)
+  net: degree+closure                      AUC 0.836 +- 0.012  logloss 0.4610  (null 0.6303)
+  net: degree+SBM                          AUC 0.805 +- 0.013  logloss 0.4997  (null 0.6303)
+  net: degree+closure+SBM                  AUC 0.831 +- 0.013  logloss 0.4661  (null 0.6303)
+  attr-block DC-SBM: household             AUC 0.807 +- 0.015  logloss 0.6824  (null 0.6303)
+  attr-block DC-SBM: sex x age             AUC 0.771 +- 0.013  logloss 0.5253  (null 0.6303)
+  attr-block DC-SBM: spatial clusters      AUC 0.772 +- 0.012  logloss 0.5260  (null 0.6303)
+  attr+degree+closure                      AUC 0.848 +- 0.011  logloss 0.4448  (null 0.6303)
+  attr+degree+SBM                          AUC 0.828 +- 0.012  logloss 0.4716  (null 0.6303)
+  all                                      AUC 0.843 +- 0.011  logloss 0.4509  (null 0.6303)
+
+== Full-graph SBM partitions vs attributes
+
+-- within-hh as edges=False | flat B = 3 | nested B per level: [3, 1, 1, 1]
+     partition  B              attribute   NMI  NMI_null      p    ARI
+   flat DC-SBM  3              household 0.265     0.163 0.0010  0.030
+   flat DC-SBM  3                    sex 0.001     0.010 0.8561 -0.011
+   flat DC-SBM  3            age tercile 0.041     0.018 0.0599  0.029
+   flat DC-SBM  3              sex x age 0.040     0.034 0.3037  0.009
+   flat DC-SBM  3 spatial clusters (k=3) 0.037     0.035 0.4695 -0.004
+   flat DC-SBM  3   kin-graph SBM blocks 0.268     0.055 0.0010  0.190
+nested level 0  3              household 0.292     0.163 0.0010  0.041
+nested level 0  3                    sex 0.001     0.010 0.9151 -0.011
+nested level 0  3            age tercile 0.034     0.018 0.1039  0.018
+nested level 0  3              sex x age 0.029     0.033 0.5794 -0.003
+nested level 0  3 spatial clusters (k=3) 0.036     0.035 0.4905 -0.006
+nested level 0  3   kin-graph SBM blocks 0.256     0.055 0.0010  0.190
+nested level 1  1              household 0.000     0.000 1.0000  0.000
+nested level 1  1                    sex 0.000     0.000 1.0000  0.000
+nested level 1  1            age tercile 0.000     0.000 1.0000  0.000
+nested level 1  1              sex x age 0.000     0.000 1.0000  0.000
+nested level 1  1 spatial clusters (k=3) 0.000     0.000 1.0000  0.000
+nested level 1  1   kin-graph SBM blocks 0.000     0.000 1.0000  0.000
+  description length (nats): {'free DC-SBM (flat)': 4241.0, 'household blocks': 4749.8, 'sex x age blocks': 4480.7, 'spatial clusters': 4305.7, 'kin-graph blocks': 4474.0, 'one block': 4255.3}
+
+-- within-hh as edges=True | flat B = 4 | nested B per level: [5, 1, 1, 1]
+     partition  B              attribute   NMI  NMI_null      p    ARI
+   flat DC-SBM  4              household 0.343     0.217 0.0010  0.049
+   flat DC-SBM  4                    sex 0.012     0.014 0.4635 -0.004
+   flat DC-SBM  4            age tercile 0.104     0.024 0.0020  0.048
+   flat DC-SBM  4              sex x age 0.099     0.048 0.0060  0.025
+   flat DC-SBM  4 spatial clusters (k=4) 0.077     0.057 0.1119  0.003
+   flat DC-SBM  4   kin-graph SBM blocks 0.346     0.077 0.0010  0.195
+nested level 0  5              household 0.415     0.258 0.0010  0.068
+nested level 0  5                    sex 0.016     0.017 0.4466 -0.002
+nested level 0  5            age tercile 0.122     0.030 0.0010  0.075
+nested level 0  5              sex x age 0.131     0.063 0.0040  0.050
+nested level 0  5 spatial clusters (k=4) 0.087     0.063 0.0679  0.005
+nested level 0  5   kin-graph SBM blocks 0.422     0.097 0.0010  0.247
+nested level 1  1              household 0.000     0.000 1.0000  0.000
+nested level 1  1                    sex 0.000     0.000 1.0000  0.000
+nested level 1  1            age tercile 0.000     0.000 1.0000  0.000
+nested level 1  1              sex x age 0.000     0.000 1.0000  0.000
+nested level 1  1 spatial clusters (k=4) 0.000     0.000 1.0000  0.000
+nested level 1  1   kin-graph SBM blocks 0.000     0.000 1.0000  0.000
+  description length (nats): {'free DC-SBM (flat)': 4426.7, 'household blocks': 4998.0, 'sex x age blocks': 4708.3, 'spatial clusters': 4559.6, 'kin-graph blocks': 4638.2, 'one block': 4482.7}

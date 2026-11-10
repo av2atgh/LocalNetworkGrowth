@@ -1,0 +1,44 @@
+rows 1312 egos 272 camps 18 gifts 492
+rows whose reverse dyad is present: 1.0
+recip column vs reverse gift (where reverse present):
+col_0    0    1
+recip          
+0      820    0
+1        0  492
+  camp 54: n=7, rows=42, n(n-1)=42, gifts=23
+  camp 59: n=39, rows=76, n(n-1)=1482, gifts=15
+  camp 62: n=9, rows=72, n(n-1)=72, gifts=34
+  camp 64: n=14, rows=46, n(n-1)=182, gifts=26
+  camp 66: n=26, rows=102, n(n-1)=650, gifts=44
+  camp 67: n=12, rows=110, n(n-1)=132, gifts=3
+  camp 67.2: n=18, rows=106, n(n-1)=306, gifts=24
+  camp 74: n=33, rows=62, n(n-1)=1056, gifts=17
+  camp 77: n=9, rows=72, n(n-1)=72, gifts=6
+  camp 78: n=14, rows=86, n(n-1)=182, gifts=0
+  camp 79: n=20, rows=58, n(n-1)=380, gifts=20
+  camp 84: n=10, rows=54, n(n-1)=90, gifts=32
+  camp M1: n=15, rows=96, n(n-1)=210, gifts=65
+  camp M2: n=14, rows=106, n(n-1)=182, gifts=50
+  camp M3.1: n=8, rows=56, n(n-1)=56, gifts=32
+  camp M3.3: n=8, rows=56, n(n-1)=56, gifts=30
+  camp M4: n=8, rows=56, n(n-1)=56, gifts=32
+  camp M5: n=8, rows=56, n(n-1)=56, gifts=39
+
+held-out (5x5-fold CV over directed dyads); null logloss 0.6616
+  demo(sex,age)                        AUC 0.559 +- 0.024  logloss 0.6583
+  kin category                         AUC 0.566 +- 0.033  logloss 0.6533
+  household proximity                  AUC 0.538 +- 0.035  logloss 0.6617
+  coop (game) incl. similarity         AUC 0.864 +- 0.023  logloss 0.4305
+  need                                 AUC 0.481 +- 0.021  logloss 0.6628
+  attr=demo+kin+prox+coop+need         AUC 0.877 +- 0.017  logloss 0.4175
+  degree only                          AUC 0.768 +- 0.030  logloss 0.6248
+  attr+degree                          AUC 0.832 +- 0.025  logloss 0.5360
+  net: degree+reciprocity              AUC 0.770 +- 0.030  logloss 0.6238
+  net: degree+reciprocity+closure      AUC 0.764 +- 0.030  logloss 0.7354
+  attr+degree+reciprocity              AUC 0.831 +- 0.026  logloss 0.5381
+  all                                  AUC 0.826 +- 0.027  logloss 0.6350
+
+leave-one-camp-out (attributes only; network features need in-camp ties)
+  attr                 pooled AUC 0.875 logloss 0.4209
+  kin                  pooled AUC 0.458 logloss 0.6750
+  household proximity  pooled AUC 0.396 logloss 0.6837

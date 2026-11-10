@@ -1,0 +1,12 @@
+# Third-party downloads: public, cited in NOTES.md and the manuscript, re-downloadable.
+# 0_power/data holds our own simulation output and is tracked.
+1_fission/data/
+2_adna/data/
+3_foragers/data/
+4_timeseries/data/
+# Superseded run logs and a buggy intermediate table
+0_power/scratch/
+*.pdf
+!manuscript.pdf
+!cover_letter.pdf
+!figs_ms/*.pdf

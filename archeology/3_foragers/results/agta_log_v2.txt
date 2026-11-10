@@ -1,0 +1,22 @@
+held-out (5x5-fold CV over directed dyads); null logloss 0.6616
+  demo(sex,age)                        AUC 0.559 +- 0.024  logloss 0.6583
+  kin category                         AUC 0.566 +- 0.033  logloss 0.6533
+  household proximity                  AUC 0.538 +- 0.035  logloss 0.6617
+  coop (game) incl. similarity         AUC 0.864 +- 0.023  logloss 0.4305
+  need                                 AUC 0.481 +- 0.021  logloss 0.6628
+  attr=demo+kin+prox+coop+need         AUC 0.877 +- 0.017  logloss 0.4175
+  exog attr=demo+kin+prox+need (no coop) AUC 0.590 +- 0.027  logloss 0.6520
+  exog attr+degree                     AUC 0.788 +- 0.028  logloss 0.5340
+  exog attr+degree+reciprocity+closure AUC 0.793 +- 0.027  logloss 0.5302
+  degree only                          AUC 0.769 +- 0.028  logloss 0.5480
+  attr+degree                          AUC 0.882 +- 0.017  logloss 0.4126
+  net: degree+reciprocity              AUC 0.777 +- 0.030  logloss 0.5429
+  net: degree+reciprocity+closure      AUC 0.776 +- 0.029  logloss 0.5416
+  attr+degree+reciprocity              AUC 0.883 +- 0.016  logloss 0.4120
+  all                                  AUC 0.885 +- 0.016  logloss 0.4086
+
+leave-one-camp-out (attributes only; network features need in-camp ties)
+  attr                 pooled AUC 0.875 logloss 0.4209
+  exog attr (no coop)  pooled AUC 0.501 logloss 0.6874
+  kin                  pooled AUC 0.458 logloss 0.6750
+  household proximity  pooled AUC 0.396 logloss 0.6837

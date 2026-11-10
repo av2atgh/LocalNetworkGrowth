@@ -1,0 +1,54 @@
+{
+ "1": {
+  "n": 33,
+  "cv": {
+   "proximity (dyad)": 0.7748137309348168,
+   "proximity + prox-closure": 0.7866027746346803,
+   "degree": 0.48880925375248374,
+   "degree+friend-closure": 0.6992188363197755,
+   "proximity+degree": 0.7649908289249212,
+   "proximity+degree+friend-closure": 0.7907245944099281
+  },
+  "B_friend": 2,
+  "sbm": {
+   "prox top 1x": {
+    "B_prox": 2,
+    "NMI": 0.004478533344034803,
+    "NMI_null": 0.02309166142163063,
+    "p": 0.7411294352823589
+   },
+   "prox top 2x": {
+    "B_prox": 2,
+    "NMI": 0.5587925311312625,
+    "NMI_null": 0.02365634899006227,
+    "p": 0.0004997501249375312
+   }
+  }
+ },
+ "2": {
+  "n": 38,
+  "cv": {
+   "proximity (dyad)": 0.7492057772665557,
+   "proximity + prox-closure": 0.7558520709078489,
+   "degree": 0.57628847230008,
+   "degree+friend-closure": 0.7314025914191875,
+   "proximity+degree": 0.7529214688288056,
+   "proximity+degree+friend-closure": 0.8307779377634646
+  },
+  "B_friend": 2,
+  "sbm": {
+   "prox top 1x": {
+    "B_prox": 2,
+    "NMI": 0.028582903537986235,
+    "NMI_null": 0.019710632194901094,
+    "p": 0.30934532733633185
+   },
+   "prox top 2x": {
+    "B_prox": 2,
+    "NMI": 0.047628652032759955,
+    "NMI_null": 0.01953003076017914,
+    "p": 0.18040979510244878
+   }
+  }
+ }
+}

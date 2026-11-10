@@ -1,0 +1,21 @@
+{
+ "region": "CE",
+ "TH": 12.0,
+ "n_dyads": 20270,
+ "n_links": 1258,
+ "frac_same_culture": 0.42994573260976815,
+ "MH_OR_same_culture": 2.601029283648157,
+ "null_MH_OR_mean": 1.3414089285165616,
+ "null_q95": 1.8825122220444537,
+ "p_spatial_null": 0.003992015968063872,
+ "strata": "bin_d",
+ "DL_culture@bin": 16328.620252535384,
+ "DL_locality": 20076.40516142286,
+ "DL_culture@locality": 20386.137061255544,
+ "B_locality": 161,
+ "DL_voronoi_mean": 16473.198820951045,
+ "DL_voronoi_min": 16274.530101898992,
+ "DL_inferred_flat_DCSBM": 13002.512419351604,
+ "B_inferred": 8,
+ "B_culture@bin": 52
+}

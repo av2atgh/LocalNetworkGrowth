@@ -1,0 +1,4 @@
+fiedler acc 0.941 errors 2 ARI 0.772
+modularity acc 0.971 errors 1 ARI 0.882
+DC-SBM B=2 found B 2 ARI -0.013 DL 227.4
+DC-SBM B=None found B 1 ARI 0.0 DL 222.9

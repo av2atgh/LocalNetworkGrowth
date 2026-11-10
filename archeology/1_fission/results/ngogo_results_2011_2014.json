@@ -1,0 +1,166 @@
+{
+ "window": [
+  2011,
+  2014
+ ],
+ "n_active_gcc": 126,
+ "n_eval": 90,
+ "n_label1": 29,
+ "n_label0": 61,
+ "n_unlabeled_in_gcc": 36,
+ "unsupervised": {
+  "spectral_fiedler": {
+   "acc": 0.856,
+   "acc_p": 0.000999000999000999,
+   "acc_null": 0.557,
+   "ari": 0.496,
+   "ari_p": 0.000999000999000999
+  },
+  "modularity_leading_eig": {
+   "acc": 0.833,
+   "acc_p": 0.000999000999000999,
+   "acc_null": 0.542,
+   "ari": 0.438,
+   "ari_p": 0.000999000999000999
+  },
+  "louvain": {
+   "ari": 0.333,
+   "ari_p": 0.000999000999000999,
+   "n_blocks": 3
+  },
+  "dcsbm_B2_binary": {
+   "ari": -0.025,
+   "ari_p": 1.0,
+   "n_blocks": 2,
+   "acc": 0.511,
+   "acc_p": 1.0,
+   "acc_null": 0.567
+  },
+  "dcsbm_B2_weighted": {
+   "ari": -0.021,
+   "ari_p": 1.0,
+   "n_blocks": 2,
+   "acc": 0.511,
+   "acc_p": 1.0,
+   "acc_null": 0.56
+  },
+  "dcsbm_Bfree_binary": {
+   "ari": 0.292,
+   "ari_p": 0.000999000999000999,
+   "n_blocks": 5
+  }
+ },
+ "louvain_Q": 0.115,
+ "dl": {
+  "B2": 4102.8,
+  "Bfree": 4023.6,
+  "Bfree_B": 5
+ },
+ "common_subset": {
+  "n": 67,
+  "n_label1": 21,
+  "n_male": 31,
+  "majority_baseline": 0.687
+ },
+ "supervised_LOO_common_subset": {
+  "net_fiedler": {
+   "acc": 0.731,
+   "bal_acc": 0.584,
+   "auc": 0.908,
+   "logloss": 0.539,
+   "auc_perm_p": 0.004975124378109453,
+   "auc_null_mean": 0.108
+  },
+  "net_neigh": {
+   "acc": 0.955,
+   "bal_acc": 0.929,
+   "auc": 0.972,
+   "logloss": 0.191,
+   "auc_perm_p": 0.004975124378109453,
+   "auc_null_mean": 0.414
+  },
+  "attr(sex,age)": {
+   "acc": 0.657,
+   "bal_acc": 0.478,
+   "auc": 0.519,
+   "logloss": 0.662,
+   "auc_perm_p": 0.15422885572139303,
+   "auc_null_mean": 0.395
+  },
+  "space": {
+   "acc": 1.0,
+   "bal_acc": 1.0,
+   "auc": 1.0,
+   "logloss": 0.09,
+   "auc_perm_p": 0.004975124378109453,
+   "auc_null_mean": 0.376
+  },
+  "attr+net_fiedler": {
+   "acc": 0.746,
+   "bal_acc": 0.595,
+   "auc": 0.666,
+   "logloss": 0.577,
+   "auc_perm_p": 0.009950248756218905,
+   "auc_null_mean": 0.388
+  },
+  "space+net_fiedler": {
+   "acc": 1.0,
+   "bal_acc": 1.0,
+   "auc": 1.0,
+   "logloss": 0.089,
+   "auc_perm_p": 0.004975124378109453,
+   "auc_null_mean": 0.397
+  },
+  "attr+space": {
+   "acc": 0.985,
+   "bal_acc": 0.976,
+   "auc": 1.0,
+   "logloss": 0.1,
+   "auc_perm_p": 0.004975124378109453,
+   "auc_null_mean": 0.434
+  },
+  "attr+space+net_fiedler": {
+   "acc": 0.985,
+   "bal_acc": 0.976,
+   "auc": 1.0,
+   "logloss": 0.1,
+   "auc_perm_p": 0.004975124378109453,
+   "auc_null_mean": 0.432
+  }
+ },
+ "majority_baseline_all": 0.678,
+ "descriptive": {
+  "n": {
+   "0.0": 61,
+   "1.0": 29
+  },
+  "male_frac": {
+   "0.0": 0.593,
+   "1.0": 0.414
+  },
+  "age_mean": {
+   "0.0": 25.197,
+   "1.0": 20.388
+  },
+  "cx": {
+   "0.0": 0.92,
+   "1.0": -0.937
+  },
+  "cy": {
+   "0.0": -0.298,
+   "1.0": -0.322
+  }
+ },
+ "fiedler_by_sex": {
+  "males": {
+   "n": 47,
+   "fiedler_acc": 0.872,
+   "p": 0.000999000999000999
+  },
+  "females": {
+   "n": 41,
+   "fiedler_acc": 0.829,
+   "p": 0.000999000999000999
+  }
+ }
+}

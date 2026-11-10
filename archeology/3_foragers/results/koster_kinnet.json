@@ -1,0 +1,65 @@
+{
+ "attr+kinnet+degree": {
+  "auc": 0.836,
+  "sd": 0.01,
+  "delta_vs_base": 0.0,
+  "delta_sd": 0.0,
+  "folds_better": 0
+ },
+ "+CN via kin/co-residents": {
+  "auc": 0.837,
+  "sd": 0.01,
+  "delta_vs_base": 0.0006,
+  "delta_sd": 0.0015,
+  "folds_better": 18
+ },
+ "+CN via non-kin": {
+  "auc": 0.837,
+  "sd": 0.009,
+  "delta_vs_base": 0.0007,
+  "delta_sd": 0.0015,
+  "folds_better": 16
+ },
+ "+both": {
+  "auc": 0.839,
+  "sd": 0.009,
+  "delta_vs_base": 0.003,
+  "delta_sd": 0.0027,
+  "folds_better": 21
+ },
+ "attr(no kinnet)+degree+both": {
+  "auc": 0.83,
+  "sd": 0.011,
+  "delta_vs_base": -0.0061,
+  "delta_sd": 0.0045,
+  "folds_better": 2
+ },
+ "attr+degree (no kinnet)": {
+  "auc": 0.824,
+  "sd": 0.013,
+  "delta_vs_base": -0.0122,
+  "delta_sd": 0.0048,
+  "folds_better": 0
+ },
+ "kinnet only": {
+  "auc": 0.679,
+  "sd": 0.016,
+  "delta_vs_base": -0.1572,
+  "delta_sd": 0.0119,
+  "folds_better": 0
+ },
+ "attr only": {
+  "auc": 0.748,
+  "sd": 0.011,
+  "delta_vs_base": -0.0887,
+  "delta_sd": 0.0094,
+  "folds_better": 0
+ },
+ "desc": {
+  "mean_cn_nonkin_tied": 5.279,
+  "mean_cn_nonkin_untied": 3.244,
+  "mean_cn_kin_tied": 22.969,
+  "mean_cn_kin_untied": 12.052,
+  "frac_pairs_unrelated": 0.554
+ }
+}

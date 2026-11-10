@@ -1,0 +1,10 @@
+import sys, pandas as pd
+k = pd.read_csv(sys.argv[1])
+print(k.shape); print(k.describe(include='all').T.to_string())
+ids = set(k.i_ID)|set(k.j_ID); hh=set(k.k_ID)|set(k.l_ID)
+print('n indiv', len(ids), 'n households', len(hh), 'ties', k.y.sum(), 'dyads', len(k))
+print(k.groupby(['i_ID']).size().describe())
+a = pd.read_excel(sys.argv[2])
+print(a.shape, 'egos', a['i.d'].nunique(), 'alters', a.alter_id.nunique(), 'camps', a.camp.nunique())
+print(a.groupby('camp').agg(egos=('i.d','nunique'),alters=('alter_id','nunique'),rows=('gift','size'),gifts=('gift','sum')).to_string())
+print(a.kinship.value_counts()); print(a.prox.value_counts())

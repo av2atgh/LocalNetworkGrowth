@@ -1,0 +1,2 @@
+males n_gcc 46 density 0.696 fiedler bal_acc 0.943 perm p 0.0005
+females n_gcc 25 density 0.1 fiedler bal_acc 0.917 perm p 0.0005
