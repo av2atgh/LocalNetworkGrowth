@@ -1,5 +1,5 @@
 \documentclass[11pt]{article}
-% J. R. Soc. Interface submission draft (generic layout; first submissions may be a single PDF)
+% Proc. R. Soc. B research article, anonymised for double-anonymous review (author details in title_page.tex)
 \usepackage[a4paper,margin=2.5cm]{geometry}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -16,9 +16,7 @@
 \linenumbers
 
 \title{What comes first, connectivity or homophily? From chimpanzees to prehistoric villages}
-\author{Alexei Vazquez\\[2pt]
-\small Nodes \& Links Ltd, Salisbury House, Station Road, Cambridge, CB1 2LA, UK\\
-\small Author for correspondence: Alexei Vazquez, alexei@nodeslinks.com}
+\author{}
 \date{}
 
 \begin{document}
@@ -41,8 +39,8 @@ a stationary null). Network structure often precedes similarity, and the two act
 communities.
 \end{abstract}
 
-\noindent\textbf{Keywords:} social networks, homophily, triadic closure, community structure, group
-fission, archaeological networks
+\noindent\textbf{Keywords:} homophily, social networks, community structure, cultural evolution,
+archaeological networks
 
 %======================================================================
 \section{Introduction}
@@ -81,6 +79,9 @@ three-century time series of ceramic exchange.
 %======================================================================
 \section{Material and methods}
 
+All analyses use previously published, public data, cited below. Code and derived results for every
+analysis are provided as electronic supplementary material.
+
 \subsection{Synthetic societies}
 Networks grow by adding one node with two links per step. In the local-search model LS$(n,1)$ the first
 link goes to a uniformly chosen anchor and the second to a random neighbour of the anchor (triadic
@@ -114,7 +115,7 @@ limitation of all snapshot tests.
 
 \subsection{Ngogo chimpanzees}
 We used the published learned weighted networks (grooming, proximity and party association; monthly,
-1998--2022), post-fission group labels and the GPS subsample with sex and birth year~\cite{Sandel2026}.
+1998--2022), post-fission group labels and the GPS subsample with sex and birth year~\cite{Sandel2026,NgogoData}.
 Edges were $\log(1+w)$ summed over the window; analyses used the giant component (126 individuals in
 2011--2014, 90 with a post-fission label). Unsupervised cuts were the Fiedler vector of the normalised
 Laplacian and the leading modularity eigenvector, compared with 1,000 label permutations. Supervised
@@ -134,10 +135,10 @@ across strata weighted by the smaller group. Intervals come from 500 node-bootst
 \subsection{Human support networks}
 Arang Dak: undirected ties are any report of monthly tangible support between adults of different
 households (5,594 dyads); attributes are sex, age, wealth, consanguineal and affinal relatedness,
-godparenthood and inter-household distance~\cite{Koster2018}. Agta: directed gifts in a sharing game,
+godparenthood and inter-household distance~\cite{Koster2018,KosterData}. Agta: directed gifts in a sharing game,
 with sex, age, kin category, household proximity and need; the game's cooperation score is endogenous
-and was excluded~\cite{Smith2018Agta}. Hadza: friendship nominations and GPS proximity in camps of 33 and
-38~\cite{Fedurek2024}. Ties were predicted with L2-regularised logistic regression under repeated
+and was excluded~\cite{Smith2018Agta,AgtaData}. Hadza: friendship nominations and GPS proximity in camps of 33 and
+38~\cite{Fedurek2024,HadzaData}. Ties were predicted with L2-regularised logistic regression under repeated
 five-fold cross-validation over dyads; network features (degree with the dyad's own tie removed, common
 neighbours, Adamic--Adar, Jaccard, reciprocity, SBM block scores) were recomputed from training ties
 only. DC-SBM partitions were compared with households, sex, age, spatial clusters and blocks of the
@@ -150,8 +151,8 @@ intermediary is related ($r\ge0.0625$ or affinal $r\ge0.0625$) to, or co-residen
 the pair. Increments were evaluated on identical folds (five folds, five repetitions).
 
 \subsection{Ancient genomes}
-IBD segments were taken from the ancIBD release for 4,248 ancient Eurasians~\cite{Ringbauer2024}, with
-metadata from the Allen Ancient DNA Resource~\cite{Mallick2024}. We kept individuals older than 2000 BP
+IBD segments were taken from the ancIBD release for 4,248 ancient Eurasians~\cite{Ringbauer2024,ancIBDData}, with
+metadata from the Allen Ancient DNA Resource~\cite{Mallick2024,AADRData}. We kept individuals older than 2000 BP
 in 45--55$^\circ$N, 8--24$^\circ$E (705 individuals, 203 localities) and defined a tie as at least one
 segment $\ge12$ cM. Culture was assigned by keyword rules on group labels after removing genetic
 qualifiers (83\% assigned). The Mantel--Haenszel odds ratio of a tie given same culture was computed over
@@ -163,9 +164,9 @@ culture sharing; nulls were distance-decay graphs, stratified permutations, and 
 edge-length-preserving rewiring.
 
 \subsection{Ceramic networks}
-Chaco: apportioned ware counts for 280 sites in 25-year intervals~\cite{Mills2018,Daems2023} were summed
+Chaco: apportioned ware counts for 280 sites in 25-year intervals~\cite{Mills2018,Daems2023,ChacoData} were summed
 to 50-year slices; sites with at least 10 sherds and known location were kept. Southwest Social
-Networks: published similarity matrices for five 50-year slices AD 1200--1450~\cite{Mills2013}.
+Networks: published similarity matrices for five 50-year slices AD 1200--1450~\cite{Mills2013,SWSNData}.
 Similarity $s$ is the Brainerd--Robinson coefficient of ware proportions; edges are similarities
 $\ge0.75$; communities are DC-SBM partitions of the largest component (best of five fits). For each pair
 of slices $t<t'$, on the shared sites, we fitted forward convergence
@@ -379,30 +380,6 @@ measures of interaction, such as obsidian sourcing, in the Southwest. These will
 social structure the network built for itself.
 
 %======================================================================
-\section*{Ethics}
-This study analyses previously published, publicly available data. No new data were collected from
-humans or animals.
-
-\section*{Data accessibility}
-All data analysed are public and cited in the text. Code, intermediate results and run logs are
-available at \url{https://github.com/av2atgh/LocalNetworkGrowth/tree/master/archeology}.
-
-\section*{Declaration of AI use}
-The calculations were assisted by Claude Opus~5.5, an AI assistant developed by Anthropic.
-
-\section*{Authors' contributions}
-A.V.: conceptualization, formal analysis, methodology, software, writing (original draft),
-writing (review and editing).
-
-\section*{Conflict of interest declaration}
-I declare I have no competing interests.
-
-\section*{Funding}
-Nodes \& Links Ltd provided support in the form of salary for Alexei Vazquez but did not have any additional
-role in the conceptualization of the study, the analysis, the decision to publish or the preparation of
-the manuscript.
-
-%======================================================================
 \begin{thebibliography}{99}
 \setlength{\itemsep}{0pt}\small
 
@@ -427,7 +404,7 @@ Toivonen R, Onnela J-P, Saram\"aki J, Hyv\"onen J, Kaski K. 2006 A model for soc
 \textit{Physica A} \textbf{371}, 851--860.
 
 \bibitem{VazquezBook}
-V\'azquez A. \textit{Local network growth}. In preparation.
+[Reference anonymised for review.]
 
 \bibitem{Shalizi2011}
 Shalizi CR, Thomas AC. 2011 Homophily and contagion are generically confounded in observational social
@@ -444,26 +421,51 @@ Peixoto TP. 2014 Hierarchical block structures and high-resolution model selecti
 \bibitem{Sandel2026}
 Sandel AA \textit{et al.} 2026 [Title]. \textit{Science} \textbf{392}, 216--220.
 
+\bibitem{NgogoData}
+Sandel AA \textit{et al.} 2026 Ngogo chimpanzee learned social networks, community labels and GPS
+subsample. Zenodo. (doi:10.5281/zenodo.19210783; doi:10.5281/zenodo.18626723;
+doi:10.5281/zenodo.18603419)
+
 \bibitem{Koster2018}
 Koster J. 2018 Family ties: the multilevel effects of households and kinship on the networks of
 individuals. \textit{R. Soc. Open Sci.} \textbf{5}, 172159.
+
+\bibitem{KosterData}
+Koster J. 2018 Data from: Family ties: the multilevel effects of households and kinship on the networks
+of individuals. Figshare. (doi:10.6084/m9.figshare.6056963)
 
 \bibitem{Smith2018Agta}
 Smith D \textit{et al.} 2018 A friend in need is a friend indeed: need-based sharing, rather than
 cooperative assortment, predicts experimental resource transfers among Agta hunter-gatherers.
 \textit{Evol. Hum. Behav.}
 
+\bibitem{AgtaData}
+Smith D \textit{et al.} 2018 Data from: A friend in need is a friend indeed. Figshare.
+(doi:10.6084/m9.figshare.6960998)
+
 \bibitem{Fedurek2024}
 Fedurek P \textit{et al.} 2024 The relationship between perceived friendship and proximity networks
 among Tanzanian Hadza. \textit{Hunter Gatherer Res.}
+
+\bibitem{HadzaData}
+Fedurek P \textit{et al.} 2024 Data from: The relationship between perceived friendship and proximity
+networks among Tanzanian Hadza. Figshare. (doi:10.6084/m9.figshare.24989361)
 
 \bibitem{Ringbauer2024}
 Ringbauer H \textit{et al.} 2024 Accurate detection of identity-by-descent segments in human ancient DNA.
 \textit{Nat. Genet.} \textbf{56}, 143--151.
 
+\bibitem{ancIBDData}
+Ringbauer H \textit{et al.} 2023 ancIBD identity-by-descent segments for 4,248 ancient Eurasians.
+Zenodo. (doi:10.5281/zenodo.8417049)
+
 \bibitem{Mallick2024}
 Mallick S \textit{et al.} 2024 The Allen Ancient DNA Resource (AADR): a curated compendium of ancient
 human genomes. \textit{Sci. Data} \textbf{11}, 182.
+
+\bibitem{AADRData}
+Mallick S \textit{et al.} 2024 Allen Ancient DNA Resource. Harvard Dataverse.
+(doi:10.7910/DVN/FFIDCW)
 
 \bibitem{Mills2018}
 Mills BJ \textit{et al.} 2018 Evaluating Chaco migration scenarios using dynamic social network
@@ -473,9 +475,17 @@ analysis. \textit{Antiquity} \textbf{92}, 922--939.
 Daems D, Coco E, Gillreath-Brown A, Kafetzaki D. 2023 The effects of time-averaging on archaeological
 networks. \textit{J. Archaeol. Method Theory} \textbf{31}, 473--506.
 
+\bibitem{ChacoData}
+Coco E, Daems D \textit{et al.} 2023 time-averaged-networks: Chaco ceramic data. GitHub.
+(\url{https://github.com/cocoemily/time-averaged-networks})
+
 \bibitem{Mills2013}
 Mills BJ \textit{et al.} 2013 Transformation of social networks in the late pre-Hispanic US Southwest.
 \textit{Proc. Natl Acad. Sci. USA} \textbf{110}, 5785--5790.
+
+\bibitem{SWSNData}
+Peeples MA \textit{et al.} 2013 SWSN\_2013: Southwest Social Networks similarity matrices. GitHub.
+(\url{https://github.com/mpeeples2008/SWSN_2013})
 
 \bibitem{Migliano2017}
 Migliano AB \textit{et al.} 2017 Characterization of hunter-gatherer networks and implications for

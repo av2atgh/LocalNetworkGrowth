@@ -10,3 +10,6 @@
 !manuscript.pdf
 !cover_letter.pdf
 !figs_ms/*.pdf
+*.zip
+# Cover letter goes to the editor only
+cover_letter.*
