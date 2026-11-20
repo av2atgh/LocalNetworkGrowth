@@ -43,15 +43,20 @@ plain language, and the mathematics is set aside in boxes that can be skipped.
 | 5 | `projects.tex` | Activity specialization — project schedules, the vanishing critical path, delay risk as percolation |
 | 6 | `communities.tex` | Emergence of communities — the Ramsey community number, exactly solvable cases, how many communities real networks have |
 | 7 | `graphons.tex` | The limit of a network — graphons and the three sparsity regimes, block models as step functions, how many communities can be seen, what clustering rules out |
-| 8 | `distance.tex` | Boosting shortest path multiplicity — mean-field theory, cycles and the boost, real networks |
-| 9 | `outlook.tex` | One principle, many faces; what remains to be done |
+| 8 | `motifs.tex` | Communities with network motifs |
+| 9 | `bubbles.tex` | Eureka: motifs are blueprinted communities |
+| 10 | `distance.tex` | Boosting shortest path multiplicity — mean-field theory, cycles and the boost, real networks |
+| 11 | `diffusion.tex` | Diffusion and the scales it finds |
+| 12 | `quantum.tex` | Localization of quantum walks |
+| 13 | `societies.tex` | Communities in primate and human societies — locality vs homophily in synthetic societies, the Ngogo chimpanzee fission, human support networks, ancient genomes, the Chaco arrow of time (from `archeology/`) |
+| 14 | `outlook.tex` | One principle, many faces; what remains to be done |
 
 `main.tex` is the driver (title page, preface, front matter); `references.bib`
 holds the bibliography.
 
 ## Building
 
-Print edition (5×8 in trim, 156 pages):
+Print edition (5×8 in trim, 301 pages):
 
 ```sh
 latexmk -pdf main.tex     # -> main.pdf
@@ -78,6 +83,7 @@ passes EPUBCheck 5.3 with 0 errors and 0 warnings.
 | `ebook/` | EPUB3 build toolchain and the generated `book-ebook.epub` |
 | `paperback_edition_1/` | **Frozen** snapshot of the first edition (see [Editions](#editions)) |
 | `paperback_edition_2/` | **Frozen** snapshot of the second edition |
+| `paperback_edition_3/` | **Frozen** snapshot of the third edition |
 | `new_in_the_second_edition.log` | Running changelog of the first → second edition delta |
 | `issues.log` | Working notes: verified defects and open questions |
 
@@ -87,18 +93,20 @@ passes EPUBCheck 5.3 with 0 errors and 0 warnings.
 ## Editions
 
 Each published paperback is frozen in its own directory, so its source keeps
-matching the printed book. Both are **read-only**: corrections belong in the
+matching the printed book. All are **read-only**: corrections belong in the
 root, even when the same defect exists in a snapshot.
 
 | Edition | Snapshot | Committed `main.pdf` |
 |---------|----------|----------------------|
 | First | [`paperback_edition_1/`](paperback_edition_1/) | 84 pages |
 | Second | [`paperback_edition_2/`](paperback_edition_2/) | 141 pages |
+| Third | [`paperback_edition_3/`](paperback_edition_3/) | frozen 2026-08-05 |
+| Fourth (in progress) | repo root | 301 pages |
 
 Each directory is self-contained: `latexmk -pdf main.tex` inside it typesets
 that edition without reaching outside. The root `.tex` files are the live
-working copy and are currently identical to the second edition, so a
-root-vs-`paperback_edition_1/` diff is exactly the first → second delta.
+working copy of the fourth edition (Chapters 11–13 are new in it), so a
+root-vs-`paperback_edition_3/` diff is the third → fourth delta.
 
 Both `main.pdf` files now rebuild exactly as committed.
 
