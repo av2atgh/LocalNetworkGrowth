@@ -59,7 +59,7 @@ for i, st in enumerate(["conv", "align_ari", "b_same"]):
     line(a, t.n, t.auc, i)
 a.axhline(0.5, c="0.5", lw=0.5, ls=":")
 a.text(22, 0.97, "temporal order", fontsize=6.5, ha="left", va="bottom")
-a.text(110, 0.60, "community–trait\noverlap", fontsize=6.5, ha="left", va="bottom")
+a.text(46, 0.57, "community–trait\noverlap", fontsize=6.5, ha="left", va="bottom")
 a.text(22, 0.17, "trait similarity\nof ties", fontsize=6.5, ha="left", va="top")
 logn(a)
 a.set_ylim(-0.05, 1.08)
